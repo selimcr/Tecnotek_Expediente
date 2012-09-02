@@ -10,8 +10,3 @@ $kernel = new AppKernel('prod', true);
 $kernel->loadClassCache();
 //$kernel = new AppCache($kernel);
 $kernel->handle(Request::createFromGlobals())->send();
-
-
-//$kernel = new AppKernel('dev', true);
-//$kernel->loadClassCache();
-//$kernel->handle(Request::createFromGlobals())->send();
