@@ -1,0 +1,34 @@
+#System
+system.title: Tecnotek :: Expediente
+system.description: Sistema_de_Expediente_Electronico_para_Escuelas_y_Colegios
+system.tags: tecnotek, expediente, escuela, colegios, electronico
+
+#Labels
+label.loginTitle: Ingrese su usuario y password
+label.username: Username
+label.password: Password
+label.password.reenter: Reingrese el Password
+label.active: Activo
+label.email: Email
+label.status: Estado
+label.logout: Logout
+label.home: Home
+label.add: Agregar
+label.cancelar: Cancelar
+label.save: Guardar
+label.usuarios: Usuarios
+label.usuarios.admin: Administradores
+label.usuarios.coordinador: Coordinadores
+label.usuarios.profesor: Profesor
+label.usuarios.admin.new: Crear nuevo administrador
+label.usuarios.admin.listar: Lista de Usuarios Administradores
+
+button.label.login: LOGIN
+
+usuarios.estado.1: Activo
+usuarios.estado.2: Inactivo
+
+#USER ROLES
+user.roles.1: Administrador del Sistema
+user.roles.2: Administrador
+user.roles.3: Profesor

@@ -1,0 +1,40 @@
+   
+TecnotekExpedienteBundle_homepage:
+    pattern:  /
+    defaults: { _controller: TecnotekExpedienteBundle:Default:index }
+    
+_expediente_secured:
+    resource: "@TecnotekExpedienteBundle/Controller/SecuredController.php"
+    type:     annotation
+
+#_expediente:
+#    resource: "@TecnotekExpedienteBundle/Controller/DefaultController.php"
+#    type:     annotation
+#    prefix:   /expediente
+
+#Super Administrador
+_expediente_sysadmin:
+    pattern:  /sysadmin
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:index }
+    
+_expediente_sysadmin_administrador:
+    pattern:  /sysadmin/administrador
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:administradorList }
+    
+_expediente_sysadmin_admin_create:
+    pattern:  /sysadmin/administrador/create
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:administradorCreate }
+
+_expediente_sysadmin_admin_save:
+    pattern:  /sysadmin/administrador/save
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:administradorSave }
+    
+#Administrador
+_expediente_admin:
+    pattern:  /admin
+    defaults: { _controller: TecnotekExpedienteBundle:Default:index }
+    
+#Profesor
+_expediente_profesor:
+    pattern:  /profesor
+    defaults: { _controller: TecnotekExpedienteBundle:Default:index }

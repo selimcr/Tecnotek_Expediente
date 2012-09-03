@@ -1,0 +1,69 @@
+{% extends 'TecnotekExpedienteBundle::logged_layout.html.twig' %}
+
+{% block htmlTitle %}
+    Tecnotek :: Expediente :: Super Administrador :: Usuarios
+{% endblock %}
+
+{% block extrajs %}
+<script type="text/javascript">
+    Tecnotek.UI.urls["api"] = "";
+    Tecnotek.UI.translates["btnDone"] = "";
+    Tecnotek.module = "administratorList";
+    Tecnotek.imagesURL = "/images";
+    Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="container_24">
+    <div class="grid_24">
+        <div>
+            <div class="left"><h1>{% trans %}label.usuarios.admin.listar{% endtrans %}</h1></div>
+            <div class="right"><a href="{{ path('_expediente_sysadmin_admin_create') }}" class="btn add"><span></span>{% trans %}label.add{% endtrans %}</a></div>
+            <div class="clear"></div>
+        </div>
+        
+        <div class="row tableHeader">
+            <div class="option_width" style="float: left; width: 200px;">{% trans %}label.username{% endtrans %}</div>
+            <div class="option_width" style="float: left; width: 250px;">{% trans %}label.email{% endtrans %}</div>
+            <div class="option_width" style="float: left; width: 200px;">{% trans %}label.status{% endtrans %}</div>
+        </div>
+            
+        {% set counter = 0 %}   
+
+        {% for entity in pagination %}            
+            <div class="row {% if counter%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
+                <div class="option_width" style="float: left; width: 200px;">{{ entity.username }}</div>
+                <div class="option_width" style="float: left; width: 250px;">{{ entity.email }}</div>
+                <div class="option_width" style="float: left; width: 200px;">{% if entity.active %}{% trans %}usuarios.estado.1{% endtrans %}{% else %} {% trans %}usuarios.estado.2{% endtrans %} {% endif %}</div>
+            </div>
+            {% set counter = counter + 1 %}
+        {% endfor %}
+        <br/>
+    
+        <div style="margin-bottom:75px;">
+            {# display navigation #}    
+            {{ pagination.render()|raw }}
+
+            <div id="search-teacher" style="float: left">
+                    <div id="pageslinks" style="float: left"></div>
+            </div>
+
+            <span style="padding-left: 15px; font-size: 12px;">Rows per Page: </span>
+            <select id="rowsPerPage">
+                <option value="10" {{ (rowsPerPage == 10)? 'selected="selected"':''}}>10</option>
+                <option value="25" {{ (rowsPerPage == 25)? 'selected="selected"':''}}>25</option>
+                <option value="50" {{ (rowsPerPage == 50)? 'selected="selected"':''}}>50</option>
+                <option value="100" {{ (rowsPerPage == 100)? 'selected="selected"':''}}>100</option>
+            </select>  
+        </div>    
+        <div class="clear"></div>
+    </div>
+    <div class="clear"></div>
+    <div class="wrapper">
+            <div class="grid_24 padline">
+                    <div class="lineH"></div>
+            </div>
+    </div>
+</div>
+{% endblock %}

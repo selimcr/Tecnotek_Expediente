@@ -1,0 +1,20 @@
+parameters:
+    database_driver: pdo_mysql
+    database_host: localhost
+    database_port: '3306'
+    database_name: Expediente
+    database_user: root
+    database_password: root
+    mailer_transport: smtp
+    mailer_host: localhost
+    mailer_user: null
+    mailer_password: null
+    locale: es
+    secret: 3e551a721eab3d69c4868a15f4f4200c3378296f
+    
+    environment: Development
+    loggly_key: 1b6c8c7f-85b9-44da-9b1a-f19c5986cd30
+    simulation.games.api: http://ci.local/student/teams/webapi/
+    simulation.games.url: http://ci.local/student/teams/
+    reports_server: http://ci.local:8080/
+    nodejsqueue: http://ci.local:3327

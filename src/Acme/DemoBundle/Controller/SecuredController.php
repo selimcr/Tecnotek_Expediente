@@ -58,11 +58,11 @@ class SecuredController extends Controller
     }
 
     /**
-     * @Route("/hello/admin/{name}", name="_demo_secured_hello_admin")
+     * @Route("/admin/{name}", name="_demo_secured_index_admin")
      * @Secure(roles="ROLE_ADMIN")
      * @Template()
      */
-    public function helloadminAction($name)
+    public function indexadminAction($name)
     {
         return array('name' => $name);
     }
