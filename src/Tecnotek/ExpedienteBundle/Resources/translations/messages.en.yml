@@ -1,0 +1,8 @@
+#General Area
+
+#USER ROLES
+ROLE_ADMIN: System Administrator
+ROLE_TEACHER: Teacher
+ROLE_STUDENT: Student
+ROLE_STAFF: Staff Member
+ROLE_PAC: Administrator(PAC)

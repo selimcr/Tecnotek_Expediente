@@ -1,10 +1,10 @@
 imports:
-    - { resource: parameters.ini }
+    - { resource: parameters.yml }
     - { resource: security.yml }
 
 framework:
     #esi:             ~
-    #translator:      { fallback: %locale% }
+    translator:      { fallback: %locale% }
     secret:          %secret%
     charset:         UTF-8
     router:          { resource: "%kernel.root_dir%/config/routing.yml" }
@@ -55,6 +55,10 @@ swiftmailer:
     username:  %mailer_user%
     password:  %mailer_password%
 
+knp_paginator:
+    templating: ~
+    # enables view helper and twig
+    
 jms_security_extra:
     secure_controllers:  true
     secure_all_services: false
