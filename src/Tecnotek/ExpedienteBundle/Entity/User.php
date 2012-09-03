@@ -93,6 +93,14 @@ class User implements AdvancedUserInterface
     /**
      * @inheritDoc
      */
+    public function setActive($value)
+    {
+        return $this->isActive = $value;
+    }
+    
+    /**
+     * @inheritDoc
+     */
     public function getUsername()
     {
         return $this->username;
@@ -134,6 +142,14 @@ class User implements AdvancedUserInterface
      * @inheritDoc
      */
     public function getRoles()
+    {
+        return $this->roles->toArray();
+    }
+    
+    /**
+     * @inheritDoc
+     */
+    public function getUserRoles()
     {
         return $this->roles;
     }

@@ -14,7 +14,7 @@ class SuperAdminController extends Controller
         return $this->render('TecnotekExpedienteBundle:SuperAdmin:index.html.twig', array('name' => $name));
     }
     
-    public function administradorListAction($rowsPerPage = 1)
+    public function administradorListAction($rowsPerPage = 2)
     {
         //$list = null;
         //return $this->render('TecnotekExpedienteBundle:SuperAdmin:Administrador/list.html.twig', array('userList' => $list));
@@ -62,7 +62,7 @@ class SuperAdminController extends Controller
             $em = $this->getDoctrine()->getEntityManager();
             $role = $em->getRepository('TecnotekExpedienteBundle:Role')->
                 findOneBy(array('role' => 'ROLE_ADMIN'));
-            $entity->getRoles()->add($role);
+            $entity->getUserRoles()->add($role);
             $em->persist($entity);
             $em->flush();            
             return $this->redirect($this->generateUrl('_expediente_sysadmin_administrador',

@@ -11,14 +11,13 @@ security:
         ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
 
     providers:
-        users:
+        db_users:
             entity: { class: TecnotekExpedienteBundle:User }
         in_memory:
             users:
-                superadmin:  { password: abc123, roles: [ 'ROLE_SUPERADMIN' ] }
                 user:  { password: userpass, roles: [ 'ROLE_USER' ] }
                 admin: { password: adminpass, roles: [ 'ROLE_ADMIN' ] }
-
+                superadminm: { password: abc123, roles: [ 'ROLE_SUPERADMIN' ] }
     firewalls:
         dev:
             pattern:  ^/(_(profiler|wdt)|css|images|js)/
