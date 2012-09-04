@@ -34,6 +34,9 @@ var Tecnotek = {
 				case "administratorList":
 					Tecnotek.AdministratorList.init();
 					break;
+                                case "showAdministrador":
+					Tecnotek.AdministratorShow.init();
+					break;
 				default:
 					break;
 				}
@@ -145,6 +148,39 @@ var Tecnotek = {
 			initButtons : function() {
 				$('.userRow').dblclick(function(event){
                     location.href = Tecnotek.UI.urls["show"] + "/" + $(this).attr("rel");
+				});
+			},
+			submit : function() {
+				//$("#frmCreateAccount").submit();
+			}
+		},
+		AdministratorShow : {
+			init : function() {
+				Tecnotek.AdministratorShow.initComponents();
+				Tecnotek.AdministratorShow.initButtons();
+			},
+			initComponents : function() {
+			},
+			initButtons : function() {
+				$('#btnEditar').click(function(event){
+                                    console.debug("editar");
+				});
+                                $('#btnCambiarPass').click(function(event){
+                                    console.debug("Cambiar password");
+                                    $("#buttonsContainer").hide();
+                                    $("#changePasswordContainer").fadeIn('slow', function() {
+                                        // Animation complete
+                                    });
+				});
+                                $('#btnEliminar').click(function(event){
+                                    console.debug("eliminar");
+				});
+                                $('#btnActualizarPassword').click(function(event){
+                                    console.debug("btnActualizarPassword");
+                                    $("#changePasswordContainer").hide();
+                                    $("#buttonsContainer").fadeIn('slow', function() {
+                                        // Animation complete
+                                    });
 				});
 			},
 			submit : function() {

@@ -20,6 +20,7 @@ label.volver: Volver
 label.editar: Editar
 label.eliminar: Eliminar
 label.usuarios: Usuarios
+label.actualizar: Actualizar
 label.password.cambiar: Cambiar Password
 label.usuarios.admin: Administradores
 label.usuarios.coordinador: Coordinadores
@@ -27,7 +28,8 @@ label.usuarios.profesor: Profesor
 label.usuarios.admin.new: Crear nuevo administrador
 label.usuarios.admin.show: Información de Administrador
 label.usuarios.admin.listar: Lista de Usuarios Administradores
-
+label.new.password: Nuevo Password
+label.confirm.password: Confirmar password
 button.label.login: LOGIN
 
 usuarios.estado.1: Activo

@@ -27,23 +27,29 @@
             <div class="formContainer" style="width: 920px;">
                 <div>
                     <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.username{%endtrans%}</div>
-                    <div class="left">{{ entity.username }}</div>
+                    <div id="labelUsername" class="left">{{ entity.username }}</div>
                     <div class="clear"></div>
                 </div>
                 <div>
                     <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.email{%endtrans%}</div>
-                    <div class="left">{{ entity.email }}</div>
+                    <div id="labelEmail" class="left">{{ entity.email }}</div>
                     <div class="clear"></div>
                 </div>
                 <div>
                     <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.status{%endtrans%}</div>
-                    <div class="left">{% if entity.active %}{% trans %}usuarios.estado.1{% endtrans %}{% else %} {% trans %}usuarios.estado.2{% endtrans %} {% endif %}</div>
+                    <div id="labelActive" est class="left">{% if entity.active %}{% trans %}usuarios.estado.1{% endtrans %}{% else %} {% trans %}usuarios.estado.2{% endtrans %} {% endif %}</div>
                     <div class="clear"></div>
                 </div>
-                <div style="margin-top: 25px;">
-                    <div class="left"><a href="{{ path('_expediente_sysadmin_administrador') }}" class="btn"><span></span>{% trans %}label.editar{% endtrans %}</a></div>
-                    <div class="left" style="margin-left: 25px;"><a href="{{ path('_expediente_sysadmin_administrador') }}" class="btn"><span></span>{% trans %}label.password.cambiar{% endtrans %}</a></div>
-                    <div class="left" style="margin-left: 25px;"><a href="{{ path('_expediente_sysadmin_administrador') }}" class="btn"><span></span>{% trans %}label.eliminar{% endtrans %}</a></div>
+                <div id="buttonsContainer" style="margin-top: 25px;">
+                    <div class="left btn" id="btnEditar">{% trans %}label.editar{% endtrans %}</div>
+                    <div class="left btn" id="btnCambiarPass" style="margin-left: 25px;">{% trans %}label.password.cambiar{% endtrans %}</div>
+                    <div class="left btn" id="btnEliminar" style="margin-left: 25px;">{% trans %}label.eliminar{% endtrans %}</div>
+                    <div class="clear"></div>
+                </div>
+                <div id="changePasswordContainer" style="margin-top: 25px; display: none; line-height: 30px; height: 30px; vertical-align: middle; border-top: solid 1px; padding-top: 5px;">
+                    <div class="left" style="font-weight: bold; width: 400px;">{%trans%}label.new.password{%endtrans%}: <input type="password" id="newPassword" name="newPassword" value=""/></div>
+                    <div class="left" style="font-weight: bold; width: 410px;">{%trans%}label.confirm.password{%endtrans%}: <input type="password" id="confirmPassword" name="confirmPassword" value=""/></div>
+                    <div class="left btn" id="btnActualizarPassword" style="margin-left: 25px;">{% trans %}label.actualizar{% endtrans %}</div>
                     <div class="clear"></div>
                 </div>
             </div>    
