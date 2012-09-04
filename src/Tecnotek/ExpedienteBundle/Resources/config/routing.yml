@@ -28,7 +28,15 @@ _expediente_sysadmin_admin_create:
 _expediente_sysadmin_admin_save:
     pattern:  /sysadmin/administrador/save
     defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:administradorSave }
-    
+
+_expediente_sysadmin_admin_show:
+    pattern:  /sysadmin/administrador/show/{id}
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:administradorShow }
+
+_expediente_sysadmin_admin_show_simple:
+    pattern:  /sysadmin/administrador/show
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:administradorShow }
+
 #Administrador
 _expediente_admin:
     pattern:  /admin

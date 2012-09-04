@@ -12,3 +12,6 @@ app/config/parameters.yml
 
 # Netbeans IDE Files
 nbproject/*
+
+# Php Storm IDE Files
+.idea/

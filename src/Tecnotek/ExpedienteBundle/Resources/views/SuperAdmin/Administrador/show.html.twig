@@ -1,0 +1,60 @@
+{% extends 'TecnotekExpedienteBundle::logged_layout.html.twig' %}
+
+{% block htmlTitle %}
+    Tecnotek :: Expediente :: Super Administrador :: Usuarios
+{% endblock %}
+
+{% block extrajs %}
+<script type="text/javascript">
+    Tecnotek.UI.urls["api"] = "";
+    Tecnotek.UI.translates["btnDone"] = "";
+    Tecnotek.module = "showAdministrador";
+    Tecnotek.imagesURL = "/images";
+    Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="container_24">
+    <div class="grid_24">
+        <div>
+            <div class="left"><h1>{% trans %}label.usuarios.admin.show{% endtrans %}</h1></div>
+            <div class="right"><a href="{{ path('_expediente_sysadmin_administrador') }}" class="btn"><span></span>{% trans %}label.volver{% endtrans %}</a></div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="centeredDiv">
+            <div class="formContainer" style="width: 920px;">
+                <div>
+                    <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.username{%endtrans%}</div>
+                    <div class="left">{{ entity.username }}</div>
+                    <div class="clear"></div>
+                </div>
+                <div>
+                    <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.email{%endtrans%}</div>
+                    <div class="left">{{ entity.email }}</div>
+                    <div class="clear"></div>
+                </div>
+                <div>
+                    <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.status{%endtrans%}</div>
+                    <div class="left">{% if entity.active %}{% trans %}usuarios.estado.1{% endtrans %}{% else %} {% trans %}usuarios.estado.2{% endtrans %} {% endif %}</div>
+                    <div class="clear"></div>
+                </div>
+                <div style="margin-top: 25px;">
+                    <div class="left"><a href="{{ path('_expediente_sysadmin_administrador') }}" class="btn"><span></span>{% trans %}label.editar{% endtrans %}</a></div>
+                    <div class="left" style="margin-left: 25px;"><a href="{{ path('_expediente_sysadmin_administrador') }}" class="btn"><span></span>{% trans %}label.password.cambiar{% endtrans %}</a></div>
+                    <div class="left" style="margin-left: 25px;"><a href="{{ path('_expediente_sysadmin_administrador') }}" class="btn"><span></span>{% trans %}label.eliminar{% endtrans %}</a></div>
+                    <div class="clear"></div>
+                </div>
+            </div>    
+        </div>        
+        <div class="clear"></div>
+    </div>
+    <div class="clear"></div>
+    <div class="wrapper">
+            <div class="grid_24 padline">
+                    <div class="lineH"></div>
+            </div>
+    </div>
+</div>
+{% endblock %}

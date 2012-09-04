@@ -184,7 +184,7 @@ footer h4{ color:#fff;}
 
 .tableRow{border-bottom: 1px solid #DDD;}
 .tableRowOdd{border-bottom: 1px solid #DDD; background: transparent}
-.row:hover{background-color: palegoldenrod;}
+.row:hover{background-color: palegoldenrod; cursor: pointer;}
 
 .row a{float:right; margin-right:0px}
 .option_width{height:18px;}

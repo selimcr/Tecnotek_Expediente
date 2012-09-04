@@ -11,6 +11,8 @@
     Tecnotek.module = "administratorList";
     Tecnotek.imagesURL = "/images";
     Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
+    Tecnotek.UI.urls["show"] = "{{ path('_expediente_sysadmin_admin_show_simple')}}";
+
 </script>
 {% endblock %}
 
@@ -32,7 +34,7 @@
         {% set counter = 0 %}   
 
         {% for entity in pagination %}            
-            <div class="row {% if counter%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
+            <div class="row userRow {% if counter%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}" rel="{{ entity.id }}">
                 <div class="option_width" style="float: left; width: 200px;">{{ entity.username }}</div>
                 <div class="option_width" style="float: left; width: 250px;">{{ entity.email }}</div>
                 <div class="option_width" style="float: left; width: 200px;">{% if entity.active %}{% trans %}usuarios.estado.1{% endtrans %}{% else %} {% trans %}usuarios.estado.2{% endtrans %} {% endif %}</div>

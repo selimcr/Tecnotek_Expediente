@@ -16,11 +16,7 @@ class SuperAdminController extends Controller
     
     public function administradorListAction($rowsPerPage = 2)
     {
-        //$list = null;
-        //return $this->render('TecnotekExpedienteBundle:SuperAdmin:Administrador/list.html.twig', array('userList' => $list));
-        
         $em = $this->getDoctrine()->getEntityManager();
-        //$dql = "SELECT users FROM TecnotekExpedienteBundle:User users JOIN users.roles r WHERE r.name = 'ROLE_ADMIN'";
         $dql = "SELECT users FROM TecnotekExpedienteBundle:User users JOIN users.roles r WHERE r.role = 'ROLE_ADMIN'";
         $query = $em->createQuery($dql);
 
@@ -30,7 +26,6 @@ class SuperAdminController extends Controller
 
         $dql2 = "SELECT count(users) FROM TecnotekExpedienteBundle:User users JOIN users.roles r WHERE r.role = 'ROLE_ADMIN'";
         $page = $this->getPaginationPage($dql2, $this->get('request')->query->get('page', 1), $rowsPerPage);
-
 
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
@@ -51,7 +46,14 @@ class SuperAdminController extends Controller
         return $this->render('TecnotekExpedienteBundle:SuperAdmin:Administrador/new.html.twig', array('entity' => $entity,
             'form'   => $form->createView()));
     }
-    
+
+    public function administradorShowAction($id)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $entity = $em->getRepository("TecnotekExpedienteBundle:User")->find($id);
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Administrador/show.html.twig', array('entity' => $entity));
+    }
+
     public function administradorSaveAction(){        
         $entity  = new User();
         $request = $this->getRequest();

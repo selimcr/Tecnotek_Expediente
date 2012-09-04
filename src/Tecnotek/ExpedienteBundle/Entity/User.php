@@ -188,5 +188,10 @@ class User implements AdvancedUserInterface
     {
         return $this->isActive;
     }
+
+    public function __toString()
+    {
+        return $this->username;
+    }
 }
 ?>

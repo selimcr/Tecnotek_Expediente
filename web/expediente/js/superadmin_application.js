@@ -137,19 +137,15 @@ var Tecnotek = {
 		},
 		AdministratorList : {
 			init : function() {
-				console.debug("AdministratorList init.");
 				Tecnotek.AdministratorList.initComponents();
 				Tecnotek.AdministratorList.initButtons();
 			},
 			initComponents : function() {
 			},
 			initButtons : function() {
-				console.debug("AdministratorList initButtons");
-				/*$('#editButton').click(function(event){
-					console.debug('editButton click');
-					$("#normalView").hide();
-					$("#editView").show();
-				});*/
+				$('.userRow').dblclick(function(event){
+                    location.href = Tecnotek.UI.urls["show"] + "/" + $(this).attr("rel");
+				});
 			},
 			submit : function() {
 				//$("#frmCreateAccount").submit();

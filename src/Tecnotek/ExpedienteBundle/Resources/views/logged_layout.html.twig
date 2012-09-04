@@ -74,15 +74,15 @@
 		<nav class="main-menu">
                         
 			<ul class="sf-menu">
-                                {% if is_granted('ROLE_SUPERADMIN') %}
-                                    <li class="current"><a href="{{ path('_expediente_sysadmin_administrador') }}"><em>{% trans %}label.usuarios{% endtrans %}</em><strong></strong></a>
-                                        <ul>
-						<li><a href="{{ path('_expediente_sysadmin_administrador') }}">{% trans %}label.usuarios.admin{% endtrans %}</a></li>
-                                                <li><a href="{{ path('_expediente_sysadmin_administrador') }}">{% trans %}label.usuarios.coordinador{% endtrans %}</a></li>
-                                                <li><a href="{{ path('_expediente_sysadmin_administrador') }}">{% trans %}label.usuarios.profesor{% endtrans %}</a></li>
-					</ul>
-                                    </li>
-                                {% endif %}
+            {% if is_granted('ROLE_SUPERADMIN') %}
+                <li class="current"><a href="{{ path('_expediente_sysadmin_administrador') }}"><em>{% trans %}label.usuarios{% endtrans %}</em><strong></strong></a>
+                    <ul>
+                        <li><a style="text-align: left;" href="{{ path('_expediente_sysadmin_administrador') }}">{% trans %}label.usuarios.admin{% endtrans %}</a></li>
+                        <li><a style="text-align: left;" href="{{ path('_expediente_sysadmin_administrador') }}">{% trans %}label.usuarios.coordinador{% endtrans %}</a></li>
+                        <li><a style="text-align: left;" href="{{ path('_expediente_sysadmin_administrador') }}">{% trans %}label.usuarios.profesor{% endtrans %}</a></li>
+                    </ul>
+                </li>
+            {% endif %}
 				<li><a href="index-1.html"><em>services</em><strong></strong></a></li>
 				<li><a href="index-6.html"><em>contacts</em><strong></strong></a></li>
 			</ul>
