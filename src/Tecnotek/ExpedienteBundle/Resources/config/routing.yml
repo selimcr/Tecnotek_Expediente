@@ -12,6 +12,10 @@ _expediente_secured:
 #    type:     annotation
 #    prefix:   /expediente
 
+_change_admin_password:
+    pattern: /sysadmin/administrador/changePassword
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:changeUserPassword }
+
 #Super Administrador
 _expediente_sysadmin:
     pattern:  /sysadmin
@@ -28,6 +32,10 @@ _expediente_sysadmin_admin_create:
 _expediente_sysadmin_admin_save:
     pattern:  /sysadmin/administrador/save
     defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:administradorSave }
+
+_expediente_sysadmin_admin_update:
+    pattern:  /sysadmin/administrador/update
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:administradorUpdate }
 
 _expediente_sysadmin_admin_show:
     pattern:  /sysadmin/administrador/show/{id}

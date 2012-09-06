@@ -44,6 +44,37 @@ var Tecnotek = {
 			Tecnotek.UI.init();
 			
 		},
+        ajaxCall : function(url, params, succedFunction, errorFunction, showSpinner) {
+            var request = $.ajax({
+                url: url,
+                type: "POST",
+                data: params,
+                dataType: "json"
+            });
+
+            request.done(succedFunction);
+
+            request.fail(errorFunction);
+        },
+        showInfoMessage : function(message, showAlert, divId, showDiv) {
+            if ( showAlert ) {
+                alert(message);
+            }
+            if ( showDiv ) {
+                $("#" + divId).html(message);
+            }
+        },
+        showErrorMessage : function(message, showAlert, divId, showDiv) {
+            if ( showAlert ) {
+                alert(message);
+            }
+            if ( showDiv ) {
+                $("#" + divId).html(message);
+            }
+        },
+        showConfirmationQuestion : function(message) {
+            return confirm(message);
+        },
 		UI : {
 			translates : {},
 			urls : {},
@@ -163,24 +194,48 @@ var Tecnotek = {
 			},
 			initButtons : function() {
 				$('#btnEditar').click(function(event){
-                                    console.debug("editar");
+                    $("#username").val($("#labelUsername").html());
+                    $("#email").val($("#labelEmail").html());
+
+                    $("#showContainer").hide();
+                    $("#editContainer").fadeIn('slow', function() {});
 				});
-                                $('#btnCambiarPass').click(function(event){
-                                    console.debug("Cambiar password");
-                                    $("#buttonsContainer").hide();
-                                    $("#changePasswordContainer").fadeIn('slow', function() {
-                                        // Animation complete
-                                    });
+                $('#btnCancelEdit').click(function(event){
+                    $("#editContainer").hide();
+                    $("#showContainer").fadeIn('slow', function() {});
+                });
+                $('#btnCambiarPass').click(function(event){
+                    $("#buttonsContainer").hide();
+                    $("#changePasswordContainer").fadeIn('slow', function() {});
 				});
-                                $('#btnEliminar').click(function(event){
-                                    console.debug("eliminar");
+                $('#btnEliminar').click(function(event){
+                    if (Tecnotek.showConfirmationQuestion(Tecnotek.UI.translates["confirmDelete"])){
+                        console.debug("Eliminar!!!");
+                    } else {
+                        console.debug("NO ELIMINAR!!!");
+                    }
 				});
-                                $('#btnActualizarPassword').click(function(event){
-                                    console.debug("btnActualizarPassword");
-                                    $("#changePasswordContainer").hide();
-                                    $("#buttonsContainer").fadeIn('slow', function() {
-                                        // Animation complete
-                                    });
+                $('#btnCancelarPassword').click(function(event){
+                    $("#changePasswordContainer").hide();
+                    $("#buttonsContainer").fadeIn('slow', function() {});
+                });
+                $('#btnActualizarPassword').click(function(event){
+                    Tecnotek.ajaxCall(Tecnotek.UI.urls["changePasswordURL"],
+                        {newPassword: $("#newPassword").val(), confirmPassword: $("#confirmPassword").val(),
+                        userId: $("#userId").val()},
+                        function(data){
+                            if(data.error === true) {
+                                Tecnotek.showErrorMessage(data.message,true, "", false);
+                            } else {
+                                $("#changePasswordContainer").hide();
+                                $("#buttonsContainer").fadeIn('slow', function() {});
+                                Tecnotek.showInfoMessage(data.message,true, "", false);
+                            }
+                        },
+                        function(jqXHR, textStatus){
+                            Tecnotek.showErrorMessage("Error updating password: " + textStatus + ".",
+                                true, "", false);
+                        }, true);
 				});
 			},
 			submit : function() {

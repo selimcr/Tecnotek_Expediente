@@ -35,6 +35,13 @@ button.label.login: LOGIN
 usuarios.estado.1: Activo
 usuarios.estado.2: Inactivo
 
+messages.confirmation.password.change: El password ha sido actualizado correctamente.
+messages.confirmation.user.delete: ¿Está seguro que desea eliminar el usuario?
+
+error.entity.not.found: El objeto no se ha encontrado.
+error.passwords.dont.match: Los passwords no coinciden.
+error.password.emtpy: El password no puede estar en blanco.
+
 #USER ROLES
 user.roles.1: Administrador del Sistema
 user.roles.2: Administrador

@@ -6,8 +6,8 @@
 
 {% block extrajs %}
 <script type="text/javascript">
-    Tecnotek.UI.urls["api"] = "";
-    Tecnotek.UI.translates["btnDone"] = "";
+    Tecnotek.UI.urls["changePasswordURL"] = "{{ path("_change_admin_password") }}";
+    Tecnotek.UI.translates["confirmDelete"] = "{% trans %}messages.confirmation.user.delete{% endtrans %}";
     Tecnotek.module = "showAdministrador";
     Tecnotek.imagesURL = "/images";
     Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
@@ -25,30 +25,52 @@
 
         <div class="centeredDiv">
             <div class="formContainer" style="width: 920px;">
-                <div>
-                    <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.username{%endtrans%}</div>
-                    <div id="labelUsername" class="left">{{ entity.username }}</div>
-                    <div class="clear"></div>
+                <div id="showContainer">
+                    <div>
+                        <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.username{%endtrans%}</div>
+                        <div id="labelUsername" class="left">{{ entity.username }}</div>
+                        <div class="clear"></div>
+                    </div>
+                    <div>
+                        <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.email{%endtrans%}</div>
+                        <div id="labelEmail" class="left">{{ entity.email }}</div>
+                        <div class="clear"></div>
+                    </div>
+                    <div>
+                        <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.status{%endtrans%}</div>
+                        <div id="labelActive" est class="left">{% if entity.active %}{% trans %}usuarios.estado.1{% endtrans %}{% else %} {% trans %}usuarios.estado.2{% endtrans %} {% endif %}</div>
+                        <div class="clear"></div>
+                    </div>
+                    <div id="buttonsContainer" style="margin-top: 25px;">
+                        <div class="left btn" id="btnEditar">{% trans %}label.editar{% endtrans %}</div>
+                        <div class="left btn" id="btnCambiarPass" style="margin-left: 25px;">{% trans %}label.password.cambiar{% endtrans %}</div>
+                        <div class="left btn" id="btnEliminar" style="margin-left: 25px;">{% trans %}label.eliminar{% endtrans %}</div>
+                        <div class="clear"></div>
+                    </div>
                 </div>
-                <div>
-                    <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.email{%endtrans%}</div>
-                    <div id="labelEmail" class="left">{{ entity.email }}</div>
-                    <div class="clear"></div>
-                </div>
-                <div>
-                    <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.status{%endtrans%}</div>
-                    <div id="labelActive" est class="left">{% if entity.active %}{% trans %}usuarios.estado.1{% endtrans %}{% else %} {% trans %}usuarios.estado.2{% endtrans %} {% endif %}</div>
-                    <div class="clear"></div>
-                </div>
-                <div id="buttonsContainer" style="margin-top: 25px;">
-                    <div class="left btn" id="btnEditar">{% trans %}label.editar{% endtrans %}</div>
-                    <div class="left btn" id="btnCambiarPass" style="margin-left: 25px;">{% trans %}label.password.cambiar{% endtrans %}</div>
-                    <div class="left btn" id="btnEliminar" style="margin-left: 25px;">{% trans %}label.eliminar{% endtrans %}</div>
-                    <div class="clear"></div>
+
+                <div id="editContainer" style="display: none;">
+                    <form class="customForm" id="createAdminForm" action="{{ path('_expediente_sysadmin_admin_update') }}" method="post">
+                        <input type="hidden" id="userId" name="userId" value="{{ entity.id }}">
+
+                        <div class="formErrors">{{ form_errors(form.username) }}</div>
+                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.username{% endtrans %}</span><input type="text" id="username" name="username" required="required" value=""></label>
+
+                        <div class="formErrors">{{ form_errors(form.email) }}</div>
+                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.email{% endtrans %}</span><input type="text" id="email" name="email" required="required" value=""></label>
+
+                        <div class="formErrors">{{ form_errors(form.active) }}</div>
+                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.active{% endtrans %}:</span><input type="checkbox" id="active" name="active" checked="checked"></label>
+
+                        <div class="left btn" id="btnCancelEdit" style="margin-left: 25px;">{% trans %}label.cancelar{% endtrans %}</div>
+                        <div class="left" style="margin-left: 25px;"><input class="btn" style="margin-top: 0px;" type="submit" name="save" value="{% trans %}label.save{% endtrans %}"/></div>
+                        <div class="clear"></div>
+                    </form>
                 </div>
                 <div id="changePasswordContainer" style="margin-top: 25px; display: none; line-height: 30px; height: 30px; vertical-align: middle; border-top: solid 1px; padding-top: 5px;">
-                    <div class="left" style="font-weight: bold; width: 400px;">{%trans%}label.new.password{%endtrans%}: <input type="password" id="newPassword" name="newPassword" value=""/></div>
-                    <div class="left" style="font-weight: bold; width: 410px;">{%trans%}label.confirm.password{%endtrans%}: <input type="password" id="confirmPassword" name="confirmPassword" value=""/></div>
+                    <div class="left" style="font-weight: bold; width: 325px;">{%trans%}label.new.password{%endtrans%}: <input type="password" style="width: 185px;" id="newPassword" name="newPassword" value=""/></div>
+                    <div class="left" style="font-weight: bold; width: 325px;">{%trans%}label.confirm.password{%endtrans%}: <input type="password" style="width: 185px;" id="confirmPassword" name="confirmPassword" value=""/></div>
+                    <div class="left btn" id="btnCancelarPassword" style="margin-left: 25px;">{% trans %}label.cancelar{% endtrans %}</div>
                     <div class="left btn" id="btnActualizarPassword" style="margin-left: 25px;">{% trans %}label.actualizar{% endtrans %}</div>
                     <div class="clear"></div>
                 </div>
