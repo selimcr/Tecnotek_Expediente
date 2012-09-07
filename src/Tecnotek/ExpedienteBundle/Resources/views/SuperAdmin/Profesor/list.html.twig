@@ -8,10 +8,10 @@
 <script type="text/javascript">
     Tecnotek.UI.urls["api"] = "";
     Tecnotek.UI.translates["btnDone"] = "";
-    Tecnotek.module = "administratorList";
+    Tecnotek.module = "profesorList";
     Tecnotek.imagesURL = "/images";
     Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
-    Tecnotek.UI.urls["show"] = "{{ path('_expediente_sysadmin_admin_show_simple')}}";
+    Tecnotek.UI.urls["show"] = "{{ path('_expediente_sysadmin_profesor_show_simple')}}";
 
 </script>
 {% endblock %}
@@ -20,8 +20,8 @@
 <div class="container_24">
     <div class="grid_24">
         <div>
-            <div class="left"><h1>{% trans %}label.usuarios.admin.listar{% endtrans %}</h1></div>
-            <div class="right"><a href="{{ path('_expediente_sysadmin_admin_create') }}" class="btn add"><span></span>{% trans %}label.add{% endtrans %}</a></div>
+            <div class="left"><h1>{% trans %}label.usuarios.profesor.listar{% endtrans %}</h1></div>
+            <div class="right"><a href="{{ path('_expediente_sysadmin_profesor_create') }}" class="btn add"><span></span>{% trans %}label.add{% endtrans %}</a></div>
             <div class="clear"></div>
         </div>
         

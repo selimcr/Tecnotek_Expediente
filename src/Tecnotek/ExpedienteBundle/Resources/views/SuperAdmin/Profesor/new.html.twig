@@ -8,7 +8,7 @@
 <script type="text/javascript">
     Tecnotek.UI.urls["api"] = "";
     Tecnotek.UI.translates["btnDone"] = "";
-    Tecnotek.module = "administratorList";
+    Tecnotek.module = "profesorList";
     Tecnotek.imagesURL = "/images";
     Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
 </script>
@@ -18,12 +18,12 @@
 <div class="container_24">
     <div class="grid_24">
         <div>
-            <div class="left"><h1>{% trans %}label.usuarios.admin.new{% endtrans %}</h1></div>
+            <div class="left"><h1>{% trans %}label.usuarios.profesor.new{% endtrans %}</h1></div>
             <div class="clear"></div>
         </div>
         <div class="centeredDiv" style="width: 700px;">
             <div class="formContainer">
-                <form class="customForm" id="createAdminForm" action="{{ path('_expediente_sysadmin_admin_save') }}" method="post" {{ form_enctype(form) }}>
+                <form class="customForm" id="createAdminForm" action="{{ path('_expediente_sysadmin_profesor_save') }}" method="post" {{ form_enctype(form) }}>
                     {{ form_errors(form) }}
 
                     {{ form_widget(form._token) }}
@@ -47,7 +47,7 @@
                     <div class="formErrors">{{ form_errors(form.active) }}</div>
                     <label><span class="text-form" style="min-width: 150px;">{% trans %}label.active{% endtrans %}:</span>{{ form_widget(form.active) }}</label>
 
-                    <div class="left"><a href="{{ path('_expediente_sysadmin_administrador') }}" class="btn"><span></span>{% trans %}label.cancelar{% endtrans %}</a></div>                    
+                    <div class="left"><a href="{{ path('_expediente_sysadmin_profesor') }}" class="btn"><span></span>{% trans %}label.cancelar{% endtrans %}</a></div>
                     <div class="left" style="margin-left: 25px;"><input class="btn" style="margin-top: 0px;" type="submit" name="save" value="{% trans %}label.save{% endtrans %}"/></div>
                     <div class="clear"></div>                    
                 </form>

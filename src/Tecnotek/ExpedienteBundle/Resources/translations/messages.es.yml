@@ -5,6 +5,9 @@ system.tags: tecnotek, expediente, escuela, colegios, electronico
 
 #Labels
 label.loginTitle: Ingrese su usuario y password
+label.name: Name
+label.firstname: Nombre
+label.lastname: Apellidos
 label.username: Username
 label.password: Password
 label.password.reenter: Reingrese el Password
@@ -25,9 +28,19 @@ label.password.cambiar: Cambiar Password
 label.usuarios.admin: Administradores
 label.usuarios.coordinador: Coordinadores
 label.usuarios.profesor: Profesor
+
 label.usuarios.admin.new: Crear nuevo administrador
+label.usuarios.coordinador.new: Crear nuevo Coordinador
+label.usuarios.profesor.new: Crear nuevo Profesor
+
 label.usuarios.admin.show: Información de Administrador
+label.usuarios.coordinador.show: Información de Coordinador
+label.usuarios.profesor.show: Información de Profesor
+
 label.usuarios.admin.listar: Lista de Usuarios Administradores
+label.usuarios.coordinador.listar: Lista de Coordinadores
+label.usuarios.profesor.listar: Lista de Profesores
+
 label.new.password: Nuevo Password
 label.confirm.password: Confirmar password
 button.label.login: LOGIN

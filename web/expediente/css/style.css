@@ -195,3 +195,42 @@ footer h4{ color:#fff;}
 .formContainer {width: 600px; padding: 15px; border: 1px solid #DDD;  background: transparent;}
 .centeredDiv {margin-left: auto; margin-right: auto;}
 .formErrors ul li {color: red;}
+
+/*KPaginator Style*/
+.pagination .next, .pagination .previous, .pagination .page, .pagination .first, .pagination .last, .pagination .current  {
+    display:inline-block;
+    border: 1px solid #DDD;
+    border-radius: 3px;
+    text-shadow: 0 1px 1px white;
+    box-shadow:0 1px 1px #fff;
+    font: bold 11px Sans-Serif;
+    padding: 6px 10px;
+    white-space: nowrap;
+    vertical-align: middle;
+    color: #666;
+    background: transparent;
+    cursor: pointer;
+    border-color: #ddd;
+    background-color:#E0E0E0;
+    background: -webkit-linear-gradient(top, white, #E0E0E0);
+    background:    -moz-linear-gradient(top, white, #E0E0E0);
+    background:     -ms-linear-gradient(top, white, #E0E0E0);
+    background:      -o-linear-gradient(top, white, #E0E0E0);
+    background:      linear-gradient(top, white, #E0E0E0);
+    -pie-background:      linear-gradient(top, white, #E0E0E0);
+    box-shadow:         0 1px 2px rgba(0,0,0,0.25), inset 0 0 3px #fff;
+}
+
+.pagination .next:hover, .pagination .page:hover, .pagination .last:hover { box-shadow:inset 0 0 3px #fff;border-color: #999; text-decoration:none;}
+
+.pagination .current {
+    /*border: 1px solid #AAA;
+    border-bottom-color: #CCC;
+    border-top-color: #999;
+    box-shadow:inset 0 1px 2px #aaa;*/
+    background: -webkit-linear-gradient(top, #E6E6E6, gainsboro);
+    background:    -moz-linear-gradient(top, #E6E6E6, gainsboro);
+    background:     -ms-linear-gradient(top, #E6E6E6, gainsboro);
+    background:      -o-linear-gradient(top, #E6E6E6, gainsboro);
+    background:      -o-linear-gradient(top, #E6E6E6, gainsboro);
+    -pie-background:     linear-gradient(top, #E6E6E6, gainsboro);}

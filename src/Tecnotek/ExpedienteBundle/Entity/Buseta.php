@@ -1,0 +1,268 @@
+<?php
+namespace Tecnotek\ExpedienteBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\ManyToOne as ManyToOne;
+use Doctrine\ORM\Mapping\JoinColumn as JoinColumn;
+use Doctrine\Common\Collections\ArrayCollection;
+
+/**
+ *
+ * @ORM\Table(name="tek_bus")
+ * @ORM\Entity()
+ */
+class Buseta
+{
+    /**
+     * @ORM\Column(type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @ORM\Column(type="string", length=60)
+     */
+    private $name;
+
+    /**
+     * @ORM\Column(type="string", length=30)
+     */
+    private $licensePlate;
+
+    /**
+     * @ORM\Column(type="string", length=30)
+     */
+    private $color;
+
+    /**
+     * @ORM\Column(type="string", length=60)
+     */
+    private $driver;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $capacity;
+
+    /**
+     * @ORM\Column(type="date")
+     */
+    private $riteve;
+
+    /**
+     * @ORM\Column(type="date")
+     */
+    private $ins;
+
+    /**
+     * @ORM\Column(type="date")
+     */
+    private $permission;
+
+    /**
+     * @ManyToOne(targetEntity="Route")
+     * @JoinColumn(name="route_id", referencedColumnName="id")
+     */
+    private $route;
+
+    public function __construct()
+    {
+
+    }
+
+    public function __toString()
+    {
+        return $this->name . " :: " . $this->licensePlate;
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set name
+     *
+     * @param string $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string 
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set licensePlate
+     *
+     * @param string $licensePlate
+     */
+    public function setLicensePlate($licensePlate)
+    {
+        $this->licensePlate = $licensePlate;
+    }
+
+    /**
+     * Get licensePlate
+     *
+     * @return string 
+     */
+    public function getLicensePlate()
+    {
+        return $this->licensePlate;
+    }
+
+    /**
+     * Set color
+     *
+     * @param string $color
+     */
+    public function setColor($color)
+    {
+        $this->color = $color;
+    }
+
+    /**
+     * Get color
+     *
+     * @return string 
+     */
+    public function getColor()
+    {
+        return $this->color;
+    }
+
+    /**
+     * Set driver
+     *
+     * @param string $driver
+     */
+    public function setDriver($driver)
+    {
+        $this->driver = $driver;
+    }
+
+    /**
+     * Get driver
+     *
+     * @return string 
+     */
+    public function getDriver()
+    {
+        return $this->driver;
+    }
+
+    /**
+     * Set capacity
+     *
+     * @param integer $capacity
+     */
+    public function setCapacity($capacity)
+    {
+        $this->capacity = $capacity;
+    }
+
+    /**
+     * Get capacity
+     *
+     * @return integer 
+     */
+    public function getCapacity()
+    {
+        return $this->capacity;
+    }
+
+    /**
+     * Set riteve
+     *
+     * @param date $riteve
+     */
+    public function setRiteve($riteve)
+    {
+        $this->riteve = $riteve;
+    }
+
+    /**
+     * Get riteve
+     *
+     * @return date 
+     */
+    public function getRiteve()
+    {
+        return $this->riteve;
+    }
+
+    /**
+     * Set ins
+     *
+     * @param date $ins
+     */
+    public function setIns($ins)
+    {
+        $this->ins = $ins;
+    }
+
+    /**
+     * Get ins
+     *
+     * @return date 
+     */
+    public function getIns()
+    {
+        return $this->ins;
+    }
+
+    /**
+     * Set permission
+     *
+     * @param date $permission
+     */
+    public function setPermission($permission)
+    {
+        $this->permission = $permission;
+    }
+
+    /**
+     * Get permission
+     *
+     * @return date 
+     */
+    public function getPermission()
+    {
+        return $this->permission;
+    }
+
+    /**
+     * Set route
+     *
+     * @param \Tecnotek\ExpedienteBundle\Entity\Route $route
+     */
+    public function setRoute(\Tecnotek\ExpedienteBundle\Entity\Route $route)
+    {
+        $this->route = $route;
+    }
+
+    /**
+     * Get route
+     *
+     * @return \Tecnotek\ExpedienteBundle\Entity\Route
+     */
+    public function getRoute()
+    {
+        return $this->route;
+    }
+}

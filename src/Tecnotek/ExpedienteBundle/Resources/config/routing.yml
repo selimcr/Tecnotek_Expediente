@@ -49,6 +49,66 @@ _expediente_sysadmin_admin_show_simple:
     pattern:  /sysadmin/administrador/show
     defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:administradorShow }
 
+#CRUD de Coordinadores para SysAdmin
+_expediente_sysadmin_coordinador:
+    pattern:  /sysadmin/coordinador
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:coordinadorList }
+
+_delete_coordinador:
+    pattern:  /sysadmin/coordinador/delete/{id}
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:coordinadorDelete }
+
+_expediente_sysadmin_coordinador_create:
+    pattern:  /sysadmin/coordinador/create
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:coordinadorCreate }
+
+_expediente_sysadmin_coordinador_save:
+    pattern:  /sysadmin/coordinador/save
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:coordinadorSave }
+
+_expediente_sysadmin_coordinador_update:
+    pattern:  /sysadmin/coordinador/update
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:coordinadorUpdate }
+
+_expediente_sysadmin_coordinador_show:
+    pattern:  /sysadmin/coordinador/show/{id}
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:coordinadorShow }
+
+_expediente_sysadmin_coordinador_show_simple:
+    pattern:  /sysadmin/coordinador/show
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:coordinadorShow }
+#Fin de CRUD de Coordinadores para SysAdmin
+
+#CRUD de Profesores para SysAdmin
+_expediente_sysadmin_profesor:
+    pattern:  /sysadmin/profesor
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:profesorList }
+
+_delete_profesor:
+    pattern:  /sysadmin/profesor/delete/{id}
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:profesorDelete }
+
+_expediente_sysadmin_profesor_create:
+    pattern:  /sysadmin/profesor/create
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:profesorCreate }
+
+_expediente_sysadmin_profesor_save:
+    pattern:  /sysadmin/profesor/save
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:profesorSave }
+
+_expediente_sysadmin_profesor_update:
+    pattern:  /sysadmin/profesor/update
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:profesorUpdate }
+
+_expediente_sysadmin_profesor_show:
+    pattern:  /sysadmin/profesor/show/{id}
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:profesorShow }
+
+_expediente_sysadmin_profesor_show_simple:
+    pattern:  /sysadmin/profesor/show
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:profesorShow }
+#Fin de CRUD de Coordinadores para Profesor
+
 #Administrador
 _expediente_admin:
     pattern:  /admin

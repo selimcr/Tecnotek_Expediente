@@ -10,13 +10,15 @@ class UserFormType extends AbstractType
     public function buildForm(FormBuilder $builder, array $options)
     {
         $builder->
-                add('username', 'text', array('trim' => true))->
-                add('email', 'email')->
-                add('active', 'checkbox', array(
-                    'label'     => 'Active?',
-                    'required'  => false,
-                    ))->
-                add('password', 'repeated', array (
+            add('firstname', 'text', array('trim' => true))->
+            add('lastname', 'text', array('trim' => true))->
+            add('username', 'text', array('trim' => true))->
+            add('email', 'email')->
+            add('active', 'checkbox', array(
+                'label'     => 'Active?',
+                'required'  => false,
+                ))->
+            add('password', 'repeated', array (
             'type'            => 'password',
             'first_name'      => "Password",
             'second_name'     => "Re-enter Password",

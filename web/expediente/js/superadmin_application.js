@@ -32,11 +32,13 @@ var Tecnotek = {
 			if (module) {
 				switch (module) {
 				case "administratorList":
-					Tecnotek.AdministratorList.init();
-					break;
-                                case "showAdministrador":
-					Tecnotek.AdministratorShow.init();
-					break;
+                case "coordinadorList":
+                case "profesorList":
+                        Tecnotek.AdministratorList.init(); break;
+                case "showAdministrador":
+                case "showCoordinador":
+                case "showProfesor":
+                        Tecnotek.AdministratorShow.init(); break;
 				default:
 					break;
 				}
@@ -194,6 +196,8 @@ var Tecnotek = {
 			},
 			initButtons : function() {
 				$('#btnEditar').click(function(event){
+                    $("#firstname").val($("#labelFirstname").html());
+                    $("#lastname").val($("#labelLastname").html());
                     $("#username").val($("#labelUsername").html());
                     $("#email").val($("#labelEmail").html());
                     if($("#labelActive").html() == "Activo") {

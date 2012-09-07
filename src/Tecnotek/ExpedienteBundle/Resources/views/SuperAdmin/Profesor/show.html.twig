@@ -7,9 +7,9 @@
 {% block extrajs %}
 <script type="text/javascript">
     Tecnotek.UI.urls["changePasswordURL"] = "{{ path("_change_admin_password") }}";
-    Tecnotek.UI.urls["deleteAdminURL"] = "{{ path("_delete_admin", {id: entity.id}) }}";
+    Tecnotek.UI.urls["deleteAdminURL"] = "{{ path("_delete_profesor", {id: entity.id}) }}";
     Tecnotek.UI.translates["confirmDelete"] = "{% trans %}messages.confirmation.user.delete{% endtrans %}";
-    Tecnotek.module = "showAdministrador";
+    Tecnotek.module = "showProfesor";
     Tecnotek.imagesURL = "/images";
     Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
 </script>
@@ -19,8 +19,8 @@
 <div class="container_24">
     <div class="grid_24">
         <div>
-            <div class="left"><h1>{% trans %}label.usuarios.admin.show{% endtrans %}</h1></div>
-            <div class="right"><a href="{{ path('_expediente_sysadmin_administrador') }}" class="btn"><span></span>{% trans %}label.volver{% endtrans %}</a></div>
+            <div class="left"><h1>{% trans %}label.usuarios.profesor.show{% endtrans %}</h1></div>
+            <div class="right"><a href="{{ path('_expediente_sysadmin_profesor') }}" class="btn"><span></span>{% trans %}label.volver{% endtrans %}</a></div>
             <div class="clear"></div>
         </div>
 
@@ -61,7 +61,7 @@
                 </div>
 
                 <div id="editContainer" style="display: none;">
-                    <form class="customForm" id="createAdminForm" action="{{ path('_expediente_sysadmin_admin_update') }}" method="post">
+                    <form class="customForm" id="createAdminForm" action="{{ path('_expediente_sysadmin_profesor_update') }}" method="post">
                         <input type="hidden" id="userId" name="userId" value="{{ entity.id }}">
 
                         <label><span class="text-form" style="min-width: 150px;">{% trans %}label.firstname{% endtrans %}</span><input type="text" id="firstname" name="firstname" required="required" value=""></label>

@@ -6,7 +6,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 /**
- * Acme\UserBundle\Entity\User
  *
  * @ORM\Table(name="tek_users")
  * @ORM\Entity(repositoryClass="Tecnotek\ExpedienteBundle\Repository\UserRepository")
@@ -24,6 +23,16 @@ class User implements AdvancedUserInterface
      * @ORM\Column(type="string", length=25, unique=true)
      */
     private $username;
+
+    /**
+     * @ORM\Column(type="string", length=150)
+     */
+    private $firstname;
+
+    /**
+     * @ORM\Column(type="string", length=150)
+     */
+    private $lastname;
 
     /**
      * @ORM\Column(type="string", length=32)
@@ -113,7 +122,38 @@ class User implements AdvancedUserInterface
     {
         return $this->username = $username;
     }
-    
+
+    /**
+     * @inheritDoc
+     */
+    public function getFirstname()
+    {
+        return $this->firstname;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setFirstname($firstname)
+    {
+        return $this->firstname = $firstname;
+    }
+    /**
+     * @inheritDoc
+     */
+    public function getLastname()
+    {
+        return $this->lastname;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setLastname($lastname)
+    {
+        return $this->lastname = $lastname;
+    }
+
     /**
      * @inheritDoc
      */

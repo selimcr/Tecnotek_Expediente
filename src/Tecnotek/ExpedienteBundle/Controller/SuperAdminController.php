@@ -15,7 +15,7 @@ class SuperAdminController extends Controller
         return $this->render('TecnotekExpedienteBundle:SuperAdmin:index.html.twig', array('name' => $name));
     }
     
-    public function administradorListAction($rowsPerPage = 2)
+    public function administradorListAction($rowsPerPage = 10)
     {
         $em = $this->getDoctrine()->getEntityManager();
         $dql = "SELECT users FROM TecnotekExpedienteBundle:User users JOIN users.roles r WHERE r.role = 'ROLE_ADMIN'";
@@ -96,6 +96,8 @@ class SuperAdminController extends Controller
         $entity = $em->getRepository("TecnotekExpedienteBundle:User")->find( $request->get('userId'));
 
         if ( isset($entity) ) {
+            $entity->setFirstname($request->get('firstname'));
+            $entity->setLastname($request->get('lastname'));
             $entity->setUsername($request->get('username'));
             $entity->setEmail($request->get('email'));
             $entity->setActive(($request->get('active') == "on"));
@@ -108,6 +110,202 @@ class SuperAdminController extends Controller
             return $this->redirect($this->generateUrl('_expediente_sysadmin_administrador'));
         }
     }
+
+    /* Metodos para CRUD de Coordinador */
+    public function coordinadorListAction($rowsPerPage = 10)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $dql = "SELECT users FROM TecnotekExpedienteBundle:User users JOIN users.roles r WHERE r.role = 'ROLE_COORDINADOR'";
+        $query = $em->createQuery($dql);
+
+        $param = $this->get('request')->query->get('rowsPerPage');
+        if(isset($param) && $param != "")
+            $rowsPerPage = $param;
+
+        $dql2 = "SELECT count(users) FROM TecnotekExpedienteBundle:User users JOIN users.roles r WHERE r.role = 'ROLE_COORDINADOR'";
+        $page = $this->getPaginationPage($dql2, $this->get('request')->query->get('page', 1), $rowsPerPage);
+
+        $paginator = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $query,
+            $page/*page number*/,
+            $rowsPerPage/*limit per page*/
+        );
+
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Coordinador/list.html.twig', array(
+            'pagination' => $pagination, 'isTeacher' => true, 'rowsPerPage' => $rowsPerPage
+        ));
+    }
+
+    public function coordinadorCreateAction()
+    {
+        $entity = new User();
+        $form   = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\UserFormType(), $entity);
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Coordinador/new.html.twig', array('entity' => $entity,
+            'form'   => $form->createView()));
+    }
+
+    public function coordinadorShowAction($id)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $entity = $em->getRepository("TecnotekExpedienteBundle:User")->find($id);
+        $form   = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\UserFormType(), $entity);
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Coordinador/show.html.twig', array('entity' => $entity,
+            'form'   => $form->createView()));
+    }
+
+    public function coordinadorSaveAction(){
+        $entity  = new User();
+        $request = $this->getRequest();
+        $form    = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\UserFormType(), $entity);
+        $form->bindRequest($request);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getEntityManager();
+            $role = $em->getRepository('TecnotekExpedienteBundle:Role')->
+                findOneBy(array('role' => 'ROLE_COORDINADOR'));
+            $entity->getUserRoles()->add($role);
+            $em->persist($entity);
+            $em->flush();
+            return $this->redirect($this->generateUrl('_expediente_sysadmin_coordinador',
+                array('id' => $entity->getId())));
+        } else {
+            return $this->render('TecnotekExpedienteBundle:SuperAdmin:Coordinador/new.html.twig', array(
+                'entity' => $entity,
+                'form'   => $form->createView()
+            ));
+        }
+    }
+
+    public function coordinadorDeleteAction($id){
+        $em = $this->getDoctrine()->getEntityManager();
+        $entity = $em->getRepository("TecnotekExpedienteBundle:User")->find( $id );
+        if ( isset($entity) ) {
+            $em->remove($entity);
+            $em->flush();
+        }
+        return $this->redirect($this->generateUrl('_expediente_sysadmin_coordinador'));
+    }
+
+    public function coordinadorUpdateAction(){
+        $em = $this->getDoctrine()->getEntityManager();
+        $request = $this->get('request')->request;
+        $entity = $em->getRepository("TecnotekExpedienteBundle:User")->find( $request->get('userId'));
+
+        if ( isset($entity) ) {
+            $entity->setFirstname($request->get('firstname'));
+            $entity->setLastname($request->get('lastname'));
+            $entity->setUsername($request->get('username'));
+            $entity->setEmail($request->get('email'));
+            $entity->setActive(($request->get('active') == "on"));
+            $em->persist($entity);
+            $em->flush();
+            $form   = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\UserFormType(), $entity);
+            return $this->render('TecnotekExpedienteBundle:SuperAdmin:Coordinador/show.html.twig', array('entity' => $entity,
+                'form'   => $form->createView()));
+        } else {
+            return $this->redirect($this->generateUrl('_expediente_sysadmin_coordinador'));
+        }
+    }
+    /* Final de los metodos para CRUD de Coordinador*/
+
+    /* Metodos para CRUD de Profesor */
+    public function profesorListAction($rowsPerPage = 10)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $dql = "SELECT users FROM TecnotekExpedienteBundle:User users JOIN users.roles r WHERE r.role = 'ROLE_PROFESOR'";
+        $query = $em->createQuery($dql);
+
+        $param = $this->get('request')->query->get('rowsPerPage');
+        if(isset($param) && $param != "")
+            $rowsPerPage = $param;
+
+        $dql2 = "SELECT count(users) FROM TecnotekExpedienteBundle:User users JOIN users.roles r WHERE r.role = 'ROLE_PROFESOR'";
+        $page = $this->getPaginationPage($dql2, $this->get('request')->query->get('page', 1), $rowsPerPage);
+
+        $paginator = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $query,
+            $page/*page number*/,
+            $rowsPerPage/*limit per page*/
+        );
+
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Profesor/list.html.twig', array(
+            'pagination' => $pagination, 'isTeacher' => true, 'rowsPerPage' => $rowsPerPage
+        ));
+    }
+
+    public function profesorCreateAction()
+    {
+        $entity = new User();
+        $form   = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\UserFormType(), $entity);
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Profesor/new.html.twig', array('entity' => $entity,
+            'form'   => $form->createView()));
+    }
+
+    public function profesorShowAction($id)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $entity = $em->getRepository("TecnotekExpedienteBundle:User")->find($id);
+        $form   = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\UserFormType(), $entity);
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Profesor/show.html.twig', array('entity' => $entity,
+            'form'   => $form->createView()));
+    }
+
+    public function profesorSaveAction(){
+        $entity  = new User();
+        $request = $this->getRequest();
+        $form    = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\UserFormType(), $entity);
+        $form->bindRequest($request);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getEntityManager();
+            $role = $em->getRepository('TecnotekExpedienteBundle:Role')->
+                findOneBy(array('role' => 'ROLE_PROFESOR'));
+            $entity->getUserRoles()->add($role);
+            $em->persist($entity);
+            $em->flush();
+            return $this->redirect($this->generateUrl('_expediente_sysadmin_profesor',
+                array('id' => $entity->getId())));
+        } else {
+            return $this->render('TecnotekExpedienteBundle:SuperAdmin:Profesor/new.html.twig', array(
+                'entity' => $entity,
+                'form'   => $form->createView()
+            ));
+        }
+    }
+
+    public function profesorDeleteAction($id){
+        $em = $this->getDoctrine()->getEntityManager();
+        $entity = $em->getRepository("TecnotekExpedienteBundle:User")->find( $id );
+        if ( isset($entity) ) {
+            $em->remove($entity);
+            $em->flush();
+        }
+        return $this->redirect($this->generateUrl('_expediente_sysadmin_profesor'));
+    }
+
+    public function profesorUpdateAction(){
+        $em = $this->getDoctrine()->getEntityManager();
+        $request = $this->get('request')->request;
+        $entity = $em->getRepository("TecnotekExpedienteBundle:User")->find( $request->get('userId'));
+
+        if ( isset($entity) ) {
+            $entity->setFirstname($request->get('firstname'));
+            $entity->setLastname($request->get('lastname'));
+            $entity->setUsername($request->get('username'));
+            $entity->setEmail($request->get('email'));
+            $entity->setActive(($request->get('active') == "on"));
+            $em->persist($entity);
+            $em->flush();
+            $form   = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\UserFormType(), $entity);
+            return $this->render('TecnotekExpedienteBundle:SuperAdmin:Profesor/show.html.twig', array('entity' => $entity,
+                'form'   => $form->createView()));
+        } else {
+            return $this->redirect($this->generateUrl('_expediente_sysadmin_profesor'));
+        }
+    }
+    /* Final de los metodos para CRUD de Profesor*/
 
     public function getPaginationPage($dql, $currentPage, $rowsPerPage){
         if(isset($currentPage) == false || $currentPage <= 1){
