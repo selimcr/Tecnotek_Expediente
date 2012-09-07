@@ -7,6 +7,7 @@
 {% block extrajs %}
 <script type="text/javascript">
     Tecnotek.UI.urls["changePasswordURL"] = "{{ path("_change_admin_password") }}";
+    Tecnotek.UI.urls["deleteAdminURL"] = "{{ path("_delete_admin", {id: entity.id}) }}";
     Tecnotek.UI.translates["confirmDelete"] = "{% trans %}messages.confirmation.user.delete{% endtrans %}";
     Tecnotek.module = "showAdministrador";
     Tecnotek.imagesURL = "/images";
@@ -53,13 +54,10 @@
                     <form class="customForm" id="createAdminForm" action="{{ path('_expediente_sysadmin_admin_update') }}" method="post">
                         <input type="hidden" id="userId" name="userId" value="{{ entity.id }}">
 
-                        <div class="formErrors">{{ form_errors(form.username) }}</div>
                         <label><span class="text-form" style="min-width: 150px;">{% trans %}label.username{% endtrans %}</span><input type="text" id="username" name="username" required="required" value=""></label>
 
-                        <div class="formErrors">{{ form_errors(form.email) }}</div>
                         <label><span class="text-form" style="min-width: 150px;">{% trans %}label.email{% endtrans %}</span><input type="text" id="email" name="email" required="required" value=""></label>
 
-                        <div class="formErrors">{{ form_errors(form.active) }}</div>
                         <label><span class="text-form" style="min-width: 150px;">{% trans %}label.active{% endtrans %}:</span><input type="checkbox" id="active" name="active" checked="checked"></label>
 
                         <div class="left btn" id="btnCancelEdit" style="margin-left: 25px;">{% trans %}label.cancelar{% endtrans %}</div>

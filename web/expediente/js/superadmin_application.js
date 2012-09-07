@@ -196,7 +196,11 @@ var Tecnotek = {
 				$('#btnEditar').click(function(event){
                     $("#username").val($("#labelUsername").html());
                     $("#email").val($("#labelEmail").html());
-
+                    if($("#labelActive").html() == "Activo") {
+                        $("#active").attr('checked', true);
+                    } else {
+                        $("#active").attr('checked', false);
+                    }
                     $("#showContainer").hide();
                     $("#editContainer").fadeIn('slow', function() {});
 				});
@@ -210,9 +214,7 @@ var Tecnotek = {
 				});
                 $('#btnEliminar').click(function(event){
                     if (Tecnotek.showConfirmationQuestion(Tecnotek.UI.translates["confirmDelete"])){
-                        console.debug("Eliminar!!!");
-                    } else {
-                        console.debug("NO ELIMINAR!!!");
+                        location.href = Tecnotek.UI.urls["deleteAdminURL"];
                     }
 				});
                 $('#btnCancelarPassword').click(function(event){

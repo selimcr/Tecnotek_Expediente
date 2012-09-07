@@ -80,6 +80,16 @@ class SuperAdminController extends Controller
         }
     }
 
+    public function administradorDeleteAction($id){
+        $em = $this->getDoctrine()->getEntityManager();
+        $entity = $em->getRepository("TecnotekExpedienteBundle:User")->find( $id );
+        if ( isset($entity) ) {
+            $em->remove($entity);
+            $em->flush();
+        }
+        return $this->redirect($this->generateUrl('_expediente_sysadmin_administrador'));
+    }
+
     public function administradorUpdateAction(){
         $em = $this->getDoctrine()->getEntityManager();
         $request = $this->get('request')->request;
@@ -88,8 +98,9 @@ class SuperAdminController extends Controller
         if ( isset($entity) ) {
             $entity->setUsername($request->get('username'));
             $entity->setEmail($request->get('email'));
-            $entity->setActive(false);
+            $entity->setActive(($request->get('active') == "on"));
             $em->persist($entity);
+            $em->flush();
             $form   = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\UserFormType(), $entity);
             return $this->render('TecnotekExpedienteBundle:SuperAdmin:Administrador/show.html.twig', array('entity' => $entity,
                 'form'   => $form->createView()));

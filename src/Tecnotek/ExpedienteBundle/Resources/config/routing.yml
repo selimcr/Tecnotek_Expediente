@@ -24,7 +24,11 @@ _expediente_sysadmin:
 _expediente_sysadmin_administrador:
     pattern:  /sysadmin/administrador
     defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:administradorList }
-    
+
+_delete_admin:
+    pattern:  /sysadmin/administrador/delete/{id}
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:administradorDelete }
+
 _expediente_sysadmin_admin_create:
     pattern:  /sysadmin/administrador/create
     defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:administradorCreate }
