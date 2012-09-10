@@ -109,6 +109,66 @@ _expediente_sysadmin_profesor_show_simple:
     defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:profesorShow }
 #Fin de CRUD de Coordinadores para Profesor
 
+#CRUD de routes para SysAdmin
+_expediente_sysadmin_route:
+    pattern:  /sysadmin/route
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:routeList }
+
+_delete_route:
+    pattern:  /sysadmin/route/delete/{id}
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:routeDelete }
+
+_expediente_sysadmin_route_create:
+    pattern:  /sysadmin/route/create
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:routeCreate }
+
+_expediente_sysadmin_route_save:
+    pattern:  /sysadmin/route/save
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:routeSave }
+
+_expediente_sysadmin_route_update:
+    pattern:  /sysadmin/route/update
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:routeUpdate }
+
+_expediente_sysadmin_route_show:
+    pattern:  /sysadmin/route/show/{id}
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:routeShow }
+
+_expediente_sysadmin_route_show_simple:
+    pattern:  /sysadmin/route/show
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:routeShow }
+#Fin de CRUD de routes
+
+#CRUD de bus para SysAdmin
+_expediente_sysadmin_bus:
+    pattern:  /sysadmin/bus
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:busList }
+
+_delete_bus:
+    pattern:  /sysadmin/bus/delete/{id}
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:busDelete }
+
+_expediente_sysadmin_bus_create:
+    pattern:  /sysadmin/bus/create
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:busCreate }
+
+_expediente_sysadmin_bus_save:
+    pattern:  /sysadmin/bus/save
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:busSave }
+
+_expediente_sysadmin_bus_update:
+    pattern:  /sysadmin/bus/update
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:busUpdate }
+
+_expediente_sysadmin_bus_show:
+    pattern:  /sysadmin/bus/show/{id}
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:busShow }
+
+_expediente_sysadmin_bus_show_simple:
+    pattern:  /sysadmin/bus/show
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:busShow }
+#Fin de CRUD de routes
+
 #Administrador
 _expediente_admin:
     pattern:  /admin

@@ -5,7 +5,7 @@ system.tags: tecnotek, expediente, escuela, colegios, electronico
 
 #Labels
 label.loginTitle: Ingrese su usuario y password
-label.name: Name
+label.name: Nombre
 label.firstname: Nombre
 label.lastname: Apellidos
 label.username: Username
@@ -24,6 +24,22 @@ label.editar: Editar
 label.eliminar: Eliminar
 label.usuarios: Usuarios
 label.actualizar: Actualizar
+label.routes: Rutas
+label.route: Ruta
+label.licensePlate: Placa
+label.color: Color
+label.driver: Conductor
+label.capacity: Capacidad
+label.riteve: R.T.V.
+label.permission: Permiso
+label.ins: I.N.S.
+
+label.bus: Buseta
+label.buses: Busetas
+
+label.code: Codigo
+label.description: Descripcion
+
 label.password.cambiar: Cambiar Password
 label.usuarios.admin: Administradores
 label.usuarios.coordinador: Coordinadores
@@ -41,6 +57,14 @@ label.usuarios.admin.listar: Lista de Usuarios Administradores
 label.usuarios.coordinador.listar: Lista de Coordinadores
 label.usuarios.profesor.listar: Lista de Profesores
 
+label.route.new: Crear nueva Ruta
+label.route.show: Información de Ruta
+label.route.listar: Lista de Ruta
+
+label.bus.new: Crear nueva Buseta
+label.bus.show: Información de Buseta
+label.bus.listar: Lista de Busetas
+
 label.new.password: Nuevo Password
 label.confirm.password: Confirmar password
 button.label.login: LOGIN
@@ -50,6 +74,8 @@ usuarios.estado.2: Inactivo
 
 messages.confirmation.password.change: El password ha sido actualizado correctamente.
 messages.confirmation.user.delete: ¿Está seguro que desea eliminar el usuario?
+messages.confirmation.route.delete: ¿Está seguro que desea eliminar la ruta?
+messages.confirmation.bus.delete: ¿Está seguro que desea eliminar la buseta?
 
 error.entity.not.found: El objeto no se ha encontrado.
 error.passwords.dont.match: Los passwords no coinciden.

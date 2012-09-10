@@ -1,0 +1,58 @@
+{% extends 'TecnotekExpedienteBundle::logged_layout.html.twig' %}
+
+{% block htmlTitle %}
+    Tecnotek :: Expediente :: Super Administrador :: Ruta
+{% endblock %}
+
+{% block extrajs %}
+<script type="text/javascript">
+    Tecnotek.UI.urls["api"] = "";
+    Tecnotek.UI.translates["btnDone"] = "";
+    Tecnotek.module = "routeList";
+    Tecnotek.imagesURL = "/images";
+    Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="container_24">
+    <div class="grid_24">
+        <div>
+            <div class="left"><h1>{% trans %}label.route.new{% endtrans %}</h1></div>
+            <div class="clear"></div>
+        </div>
+        <div class="centeredDiv" style="width: 700px;">
+            <div class="formContainer">
+                <form class="customForm" id="createAdminForm" action="{{ path('_expediente_sysadmin_route_save') }}" method="post" {{ form_enctype(form) }}>
+                    {{ form_errors(form) }}
+
+                    {{ form_widget(form._token) }}
+
+                    <div class="formErrors">{{ form_errors(form.code) }}</div>
+                    <label><span class="text-form" style="min-width: 150px;">{% trans %}label.code{% endtrans %}</span>{{ form_widget(form.code) }}</label>
+
+                    <div class="formErrors">{{ form_errors(form.name) }}</div>
+                    <label><span class="text-form" style="min-width: 150px;">{% trans %}label.name{% endtrans %}</span>{{ form_widget(form.name) }}</label>
+
+                    <div class="formErrors">{{ form_errors(form.description) }}</div>
+                    <label><span class="text-form" style="min-width: 150px;">{% trans %}label.description{% endtrans %}</span>{{ form_widget(form.description) }}</label>
+
+                    <div class="formErrors">{{ form_errors(form.mapUrl) }}</div>
+                    <label><span class="text-form" style="min-width: 150px;">{% trans %}label.route{% endtrans %}</span>{{ form_widget(form.mapUrl) }}</label>
+
+                    <div class="left"><a href="{{ path('_expediente_sysadmin_route') }}" class="btn"><span></span>{% trans %}label.cancelar{% endtrans %}</a></div>
+                    <div class="left" style="margin-left: 25px;"><input class="btn" style="margin-top: 0px;" type="submit" name="save" value="{% trans %}label.save{% endtrans %}"/></div>
+                    <div class="clear"></div>                    
+                </form>
+            </div>    
+        </div>        
+        <div class="clear"></div>
+    </div>
+    <div class="clear"></div>
+    <div class="wrapper">
+            <div class="grid_24 padline">
+                    <div class="lineH"></div>
+            </div>
+    </div>
+</div>
+{% endblock %}

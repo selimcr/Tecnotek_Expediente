@@ -39,7 +39,7 @@ class Route
 
     public function __construct()
     {
-
+        $this->mapUrl = "";
     }
 
     public function __toString()

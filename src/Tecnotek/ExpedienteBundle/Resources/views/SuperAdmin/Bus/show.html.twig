@@ -1,0 +1,123 @@
+{% extends 'TecnotekExpedienteBundle::logged_layout.html.twig' %}
+
+{% block htmlTitle %}
+    Tecnotek :: Expediente :: Super Administrador :: Ruta
+{% endblock %}
+
+{% block extracss %}
+{% endblock %}
+
+{% block extrajs %}
+<script type="text/javascript">
+    Tecnotek.UI.urls["deleteBusURL"] = "{{ path("_delete_bus", {id: entity.id}) }}";
+    Tecnotek.UI.translates["confirmDelete"] = "{% trans %}messages.confirmation.bus.delete{% endtrans %}";
+    Tecnotek.module = "showBus";
+    Tecnotek.imagesURL = "/images";
+    Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="container_24">
+    <div class="grid_24">
+        <div>
+            <div class="left"><h1>{% trans %}label.bus.show{% endtrans %}</h1></div>
+            <div class="right"><a href="{{ path('_expediente_sysadmin_bus') }}" class="btn"><span></span>{% trans %}label.volver{% endtrans %}</a></div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="centeredDiv">
+            <div class="formContainer" style="width: 920px;">
+                <div id="showContainer">
+                    <div>
+                        <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.name{%endtrans%}</div>
+                        <div id="labelName" class="left">{{ entity.name }}</div>
+                        <div class="clear"></div>
+                    </div>
+                    <div>
+                        <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.licensePlate{%endtrans%}</div>
+                        <div id="labelLicensePlate" class="left">{{ entity.licensePlate }}</div>
+                        <div class="clear"></div>
+                    </div>
+                    <div>
+                        <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.color{%endtrans%}</div>
+                        <div id="labelColor" class="left">{{ entity.color }}</div>
+                        <div class="clear"></div>
+                    </div>
+                    <div>
+                        <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.driver{%endtrans%}</div>
+                        <div id="labelDriver" class="left">{{ entity.driver }}</div>
+                        <div class="clear"></div>
+                    </div>
+                    <div>
+                        <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.capacity{%endtrans%}</div>
+                        <div id="labelCapacity" class="left">{{ entity.capacity }}</div>
+                        <div class="clear"></div>
+                    </div>
+                    <div>
+                        <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.riteve{%endtrans%}</div>
+                        <div id="labelRiteve" class="left">{{ entity.riteve|date("d/M/y") }}</div>
+                        <div class="clear"></div>
+                    </div>
+                    <div>
+                        <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.ins{%endtrans%}</div>
+                        <div id="labelIns" class="left">{{ entity.ins|date("d/M/y") }}</div>
+                        <div class="clear"></div>
+                    </div>
+                    <div>
+                        <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.permission{%endtrans%}</div>
+                        <div id="labelPermission" class="left">{{ entity.permission|date("d/M/y") }}</div>
+                        <div class="clear"></div>
+                    </div>
+                    <div>
+                        <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.route{%endtrans%}</div>
+                        <div id="labelRoute" class="left">{{ entity.route }}</div>
+                        <div class="clear"></div>
+                    </div>
+
+                    <div id="buttonsContainer" style="margin-top: 25px;">
+                        <div class="left btn" id="btnEditar">{% trans %}label.editar{% endtrans %}</div>
+                        <div class="left btn" id="btnEliminar" style="margin-left: 25px;">{% trans %}label.eliminar{% endtrans %}</div>
+                        <div class="clear"></div>
+                    </div>
+                </div>
+
+                <div id="editContainer" style="display: none;">
+                    <form class="customForm" id="createBusForm" action="{{ path('_expediente_sysadmin_bus_update') }}" method="post">
+                        <input type="hidden" id="id" name="id" value="{{ entity.id }}">
+
+                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.name{% endtrans %}</span><input type="text" id="name" name="name" required="required" value=""></label>
+
+                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.licensePlate{% endtrans %}</span><input type="text" id="licensePlate" name="licensePlate" required="required" value=""></label>
+
+                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.color{% endtrans %}</span><input type="text" id="color" name="color" required="required" value=""></label>
+
+                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.driver{% endtrans %}</span><input type="text" id="driver" name="driver" required="required" value=""></label>
+
+                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.capacity{% endtrans %}</span><input type="text" id="capacity" name="capacity" required="required" value=""></label>
+
+                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.riteve{% endtrans %}</span><input type="text" id="riteve" name="riteve" required="required" value=""></label>
+
+                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.ins{% endtrans %}</span><input type="text" id="ins" name="ins" required="required" value=""></label>
+
+                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.permission{% endtrans %}</span><input type="text" id="permission" name="permission" required="required" value=""></label>
+
+                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.route{% endtrans %}</span><input type="text" id="route" name="route" required="required" value=""></label>
+
+                        <div class="left btn" id="btnCancelEdit">{% trans %}label.cancelar{% endtrans %}</div>
+                        <div class="left" style="margin-left: 25px;"><input class="btn" style="margin-top: 0px;" type="submit" name="save" value="{% trans %}label.save{% endtrans %}"/></div>
+                        <div class="clear"></div>
+                    </form>
+                </div>
+            </div>    
+        </div>        
+        <div class="clear"></div>
+    </div>
+    <div class="clear"></div>
+    <div class="wrapper">
+            <div class="grid_24 padline">
+                    <div class="lineH"></div>
+            </div>
+    </div>
+</div>
+{% endblock %}
