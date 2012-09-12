@@ -388,18 +388,25 @@ class SuperAdminController extends Controller
         $entity = $em->getRepository("TecnotekExpedienteBundle:Route")->find( $request->get('id'));
 
         if ( isset($entity) ) {
-            $entity->setCode($request->get('code'));
-            $entity->setName($request->get('name'));
-            $entity->setDescription($request->get('description'));
-            $entity->setMapUrl($request->get('mapUrl'));
-            $em->persist($entity);
-            $em->flush();
-            $form   = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\RouteFormType(), $entity);
-            return $this->render('TecnotekExpedienteBundle:SuperAdmin:Ruta/show.html.twig', array('entity' => $entity,
-                'form'   => $form->createView()));
+            $request = $this->getRequest();
+            $form    = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\RouteFormType(), $entity);
+            $form->bindRequest($request);
+
+            if ($form->isValid()) {
+                $em->persist($entity);
+                $em->flush();
+                $form   = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\RouteFormType(), $entity);
+                return $this->render('TecnotekExpedienteBundle:SuperAdmin:Ruta/show.html.twig', array('entity' => $entity,
+                    'form'   => $form->createView()));
+            } else {
+                return $this->render('TecnotekExpedienteBundle:SuperAdmin:Ruta/show.html.twig', array(
+                    'entity' => $entity, 'form'   => $form->createView(), 'updateRejected' => true
+                ));
+            }
         } else {
             return $this->redirect($this->generateUrl('_expediente_sysadmin_route'));
         }
+
     }
     /* Final de los metodos para CRUD de routes*/
 
@@ -482,6 +489,25 @@ class SuperAdminController extends Controller
         $entity = $em->getRepository("TecnotekExpedienteBundle:Buseta")->find( $request->get('id'));
 
         if ( isset($entity) ) {
+            $request = $this->getRequest();
+            $form    = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\BusFormType(), $entity);
+            $form->bindRequest($request);
+
+            if ($form->isValid()) {
+                $em->persist($entity);
+                $em->flush();
+                return $this->render('TecnotekExpedienteBundle:SuperAdmin:Bus/show.html.twig', array('entity' => $entity,
+                    'form'   => $form->createView()));
+            } else {
+                return $this->render('TecnotekExpedienteBundle:SuperAdmin:Bus/show.html.twig', array(
+                    'entity' => $entity, 'form'   => $form->createView(), 'updateRejected' => true
+                ));
+            }
+        } else {
+            return $this->redirect($this->generateUrl('_expediente_sysadmin_bus'));
+        }
+
+        /*if ( isset($entity) ) {
             $entity->setCode($request->get('code'));
             $entity->setName($request->get('name'));
             $entity->setDescription($request->get('description'));
@@ -493,7 +519,7 @@ class SuperAdminController extends Controller
                 'form'   => $form->createView()));
         } else {
             return $this->redirect($this->generateUrl('_expediente_sysadmin_bus'));
-        }
+        }*/
     }
     /* Final de los metodos para CRUD de buses*/
 

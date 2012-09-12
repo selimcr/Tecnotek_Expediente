@@ -12,8 +12,8 @@ class RouteFormType extends AbstractType
         $builder->
             add('code', 'integer')->
             add('name', 'text', array('trim' => true))->
-            add('description', 'text', array('trim' => true))->
-            add('mapUrl', 'text', array('trim' => true));
+            add('description', 'text', array('trim' => true, 'required' => false))->
+            add('mapUrl', 'text', array('trim' => true, 'required' => false));
     }
 
     public function getName()

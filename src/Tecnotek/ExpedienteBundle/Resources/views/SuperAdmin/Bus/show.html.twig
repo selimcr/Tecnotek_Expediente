@@ -14,6 +14,7 @@
     Tecnotek.module = "showBus";
     Tecnotek.imagesURL = "/images";
     Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
+    Tecnotek.updateFail = {% if updateRejected is defined %} true {% else %} false {% endif %};
 </script>
 {% endblock %}
 
@@ -86,7 +87,38 @@
                     <form class="customForm" id="createBusForm" action="{{ path('_expediente_sysadmin_bus_update') }}" method="post">
                         <input type="hidden" id="id" name="id" value="{{ entity.id }}">
 
-                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.name{% endtrans %}</span><input type="text" id="name" name="name" required="required" value=""></label>
+                        {{ form_errors(form) }}
+
+                        {{ form_widget(form._token) }}
+
+                        <div class="formErrors">{{ form_errors(form.name) }}</div>
+                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.name{% endtrans %}</span>{{ form_widget(form.name) }}</label>
+
+                        <div class="formErrors">{{ form_errors(form.licensePlate) }}</div>
+                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.licensePlate{% endtrans %}</span>{{ form_widget(form.licensePlate) }}</label>
+
+                        <div class="formErrors">{{ form_errors(form.color) }}</div>
+                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.color{% endtrans %}</span>{{ form_widget(form.color) }}</label>
+
+                        <div class="formErrors">{{ form_errors(form.driver) }}</div>
+                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.driver{% endtrans %}</span>{{ form_widget(form.driver) }}</label>
+
+                        <div class="formErrors">{{ form_errors(form.capacity) }}</div>
+                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.capacity{% endtrans %}</span>{{ form_widget(form.capacity) }}</label>
+
+                        <div class="formErrors">{{ form_errors(form.riteve) }}</div>
+                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.riteve{% endtrans %}</span>{{ form_widget(form.riteve) }}</label>
+
+                        <div class="formErrors">{{ form_errors(form.ins) }}</div>
+                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.ins{% endtrans %}</span>{{ form_widget(form.ins) }}</label>
+
+                        <div class="formErrors">{{ form_errors(form.permission) }}</div>
+                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.permission{% endtrans %}</span>{{ form_widget(form.permission) }}</label>
+
+                        <div class="formErrors">{{ form_errors(form.route) }}</div>
+                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.route{% endtrans %}</span>{{ form_widget(form.route) }}</label>
+
+                        <!-- <label><span class="text-form" style="min-width: 150px;">{% trans %}label.name{% endtrans %}</span><input type="text" id="name" name="name" required="required" value=""></label>
 
                         <label><span class="text-form" style="min-width: 150px;">{% trans %}label.licensePlate{% endtrans %}</span><input type="text" id="licensePlate" name="licensePlate" required="required" value=""></label>
 
@@ -103,7 +135,7 @@
                         <label><span class="text-form" style="min-width: 150px;">{% trans %}label.permission{% endtrans %}</span><input type="text" id="permission" name="permission" required="required" value=""></label>
 
                         <label><span class="text-form" style="min-width: 150px;">{% trans %}label.route{% endtrans %}</span><input type="text" id="route" name="route" required="required" value=""></label>
-
+-->
                         <div class="left btn" id="btnCancelEdit">{% trans %}label.cancelar{% endtrans %}</div>
                         <div class="left" style="margin-left: 25px;"><input class="btn" style="margin-top: 0px;" type="submit" name="save" value="{% trans %}label.save{% endtrans %}"/></div>
                         <div class="clear"></div>

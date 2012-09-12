@@ -3,10 +3,15 @@ namespace Tecnotek\ExpedienteBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+
+use Symfony\Component\Validator\Constraints as Assert;
+
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  *
  * @ORM\Table(name="tek_route")
  * @ORM\Entity()
+ * @UniqueEntity("code")
  */
 class Route
 {
@@ -18,22 +23,29 @@ class Route
     private $id;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", unique=true)
+     * @Assert\NotBlank()
+     * @Assert\Min(limit = 1)
      */
     private $code;
 
     /**
      * @ORM\Column(type="string", length=60)
+     * @Assert\NotBlank()
+     * @Assert\MinLength(limit = 3)
+     * @Assert\MaxLength(limit = 60)
      */
     private $name;
 
     /**
-     * @ORM\Column(type="string", length=120)
+     * @ORM\Column(type="string", length=120, nullable = true)
+     * @Assert\MaxLength(limit = 120)
      */
     private $description;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable = true)
+     * @Assert\MaxLength(limit = 255)
      */
     private $mapUrl;
 

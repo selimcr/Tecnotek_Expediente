@@ -6,10 +6,14 @@ use Doctrine\ORM\Mapping\ManyToOne as ManyToOne;
 use Doctrine\ORM\Mapping\JoinColumn as JoinColumn;
 use Doctrine\Common\Collections\ArrayCollection;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  *
  * @ORM\Table(name="tek_bus")
  * @ORM\Entity()
+ * @UniqueEntity("licensePlate")
  */
 class Buseta
 {
@@ -22,41 +26,55 @@ class Buseta
 
     /**
      * @ORM\Column(type="string", length=60)
+     * @Assert\NotBlank()
+     * @Assert\MinLength(limit = 3)
+     * @Assert\MaxLength(limit = 60)
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=30)
+     * @Assert\NotBlank()
+     * @Assert\MinLength(limit = 3)
+     * @Assert\MaxLength(limit = 30)
      */
     private $licensePlate;
 
     /**
      * @ORM\Column(type="string", length=30)
+     * @Assert\NotBlank()
+     * @Assert\MinLength(limit = 3)
+     * @Assert\MaxLength(limit = 30)
      */
     private $color;
 
     /**
      * @ORM\Column(type="string", length=60)
+     * @Assert\NotBlank()
+     * @Assert\MinLength(limit = 3)
+     * @Assert\MaxLength(limit = 60)
      */
     private $driver;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\NotBlank()
+     * @Assert\Min(limit = 1)
      */
     private $capacity;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="date", nullable = true)
      */
     private $riteve;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="date", nullable = true)
      */
     private $ins;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="date", nullable = true)
      */
     private $permission;
 

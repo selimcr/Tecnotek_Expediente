@@ -3,12 +3,19 @@ namespace Tecnotek\ExpedienteBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+
+
 /**
  *
  * @ORM\Table(name="tek_users")
  * @ORM\Entity(repositoryClass="Tecnotek\ExpedienteBundle\Repository\UserRepository")
+ * @UniqueEntity("username")
+ * @UniqueEntity("email")
  */
 class User implements AdvancedUserInterface
 {
@@ -21,31 +28,47 @@ class User implements AdvancedUserInterface
 
     /**
      * @ORM\Column(type="string", length=25, unique=true)
+     * @Assert\NotBlank()
+     * @Assert\MinLength(limit = 4)
+     * @Assert\MaxLength(limit = 25)
      */
     private $username;
 
     /**
      * @ORM\Column(type="string", length=150)
+     * @Assert\NotBlank()
+     * @Assert\MinLength(limit = 3)
+     * @Assert\MaxLength(limit = 150)
      */
     private $firstname;
 
     /**
      * @ORM\Column(type="string", length=150)
+     * @Assert\NotBlank()
+     * @Assert\MinLength(limit = 3)
+     * @Assert\MaxLength(limit = 150)
      */
     private $lastname;
 
     /**
      * @ORM\Column(type="string", length=32)
+     * @Assert\MaxLength(limit = 32)
      */
     private $salt;
 
     /**
      * @ORM\Column(type="string", length=40)
+     * @Assert\NotBlank()
+     * @Assert\MinLength(limit = 3)
+     * @Assert\MaxLength(limit = 40)
      */
     private $password;
 
     /**
      * @ORM\Column(type="string", length=60, unique=true)
+     * @Assert\NotBlank()
+     * @Assert\MinLength(limit = 3)
+     * @Assert\MaxLength(limit = 60)
      */
     private $email;
 

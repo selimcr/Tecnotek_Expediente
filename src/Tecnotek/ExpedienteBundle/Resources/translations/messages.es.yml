@@ -85,3 +85,13 @@ error.password.emtpy: El password no puede estar en blanco.
 user.roles.1: Administrador del Sistema
 user.roles.2: Administrador
 user.roles.3: Profesor
+
+#Validation
+not.blank.name: Probando proband.
+not:
+  blank:
+    name: El nombre no puede estar en blanco.
+    last_name: last name can not be blank!
+    email: E-mail can not be blank!
+    username: Username field can not be blank!
+    password: Password field can not be blank!

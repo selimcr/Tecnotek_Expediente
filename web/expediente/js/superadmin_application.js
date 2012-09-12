@@ -22,6 +22,7 @@ var Tecnotek = {
 		rowsCounter: 0,
 		companiesCounter: 0,
 		ftpCounter: 0,
+        updateFail: false,
 		session : {},
 		logout:function(url){
 			location.href= url;
@@ -42,9 +43,9 @@ var Tecnotek = {
                 case "showProfesor":
                         Tecnotek.AdministratorShow.init(); break;
                 case "showRoute":
-                        Tecnotek.RouteShow.init(); break;
+                        Tecnotek.EntityShow.init(); break;
                 case "showBus":
-                        Tecnotek.BusShow.init(); break;
+                        Tecnotek.EntityShow.init(); break;
                 default:
 					break;
 				}
@@ -254,19 +255,19 @@ var Tecnotek = {
 				//$("#frmCreateAccount").submit();
 			}
 		},
-        RouteShow : {
+        EntityShow : {
             init : function() {
-                Tecnotek.RouteShow.initComponents();
-                Tecnotek.RouteShow.initButtons();
+                Tecnotek.EntityShow.initComponents();
+                Tecnotek.EntityShow.initButtons();
             },
             initComponents : function() {
+                if(Tecnotek.updateFail) {
+                    $("#showContainer").hide();
+                    $("#editContainer").show();
+                }
             },
             initButtons : function() {
                 $('#btnEditar').click(function(event){
-                    $("#code").val($("#labelCode").html());
-                    $("#name").val($("#labelName").html());
-                    $("#description").val($("#labelDescription").html());
-                    $("#mapUrl").val($("#labelMapUrl").html());
                     $("#showContainer").hide();
                     $("#editContainer").fadeIn('slow', function() {});
                 });
@@ -286,9 +287,6 @@ var Tecnotek = {
                     $.modal('<iframe src="' + src + '" height="450" width="830" style="border:0">');
                     return false;*/
                 });
-            },
-            submit : function() {
-                //$("#frmCreateAccount").submit();
             }
         },
         BusShow : {

@@ -15,9 +15,9 @@ class BusFormType extends AbstractType
             add('color', 'text', array('trim' => true))->
             add('driver', 'text', array('trim' => true))->
             add('capacity', 'integer')->
-            add('riteve', 'date', array('widget' => 'single_text', 'format' => 'dd/MM/yyyy'))->
-            add('ins', 'date', array('widget' => 'single_text', 'format' => 'dd/MM/yyyy'))->
-            add('permission', 'date', array('widget' => 'single_text', 'format' => 'dd/MM/yyyy'))->
+            add('riteve', 'date', array('widget' => 'single_text', 'format' => 'dd/MM/yyyy', 'required' => false))->
+            add('ins', 'date', array('widget' => 'single_text', 'format' => 'dd/MM/yyyy', 'required' => false))->
+            add('permission', 'date', array('widget' => 'single_text', 'format' => 'dd/MM/yyyy', 'required' => false))->
             add('route');
 
 
