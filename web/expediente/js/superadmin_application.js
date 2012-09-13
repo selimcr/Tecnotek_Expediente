@@ -17,7 +17,7 @@ $(document).ready(function() {
 var Tecnotek = {
 		module : "",
 		imagesURL : "",
-                assetsURL : "",
+        assetsURL : "",
 		isIe: false,
 		rowsCounter: 0,
 		companiesCounter: 0,
