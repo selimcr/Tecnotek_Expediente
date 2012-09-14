@@ -9,12 +9,10 @@
 
 {% block extrajs %}
 <script type="text/javascript">
-    Tecnotek.UI.urls["deleteRouteURL"] = "{{ path("_delete_route", {id: entity.id}) }}";
+    Tecnotek.UI.urls["deleteURL"] = "{{ path("_delete_route", {id: entity.id}) }}";
     Tecnotek.UI.translates["confirmDelete"] = "{% trans %}messages.confirmation.route.delete{% endtrans %}";
-    Tecnotek.module = "showRoute";
-    Tecnotek.imagesURL = "/images";
+    Tecnotek.module = "showEntity";
     Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
-    Tecnotek.updateFail = {% if updateRejected is defined %} true {% else %} false {% endif %};
 </script>
 {% endblock %}
 
@@ -23,7 +21,7 @@
     <div class="grid_24">
         <div>
             <div class="left"><h1>{% trans %}label.route.show{% endtrans %}</h1></div>
-            <div class="right"><a href="{{ path('_expediente_sysadmin_route') }}" class="btn"><span></span>{% trans %}label.volver{% endtrans %}</a></div>
+            <div class="right"><a href="{{ path('_expediente_sysadmin_route') }}" class="btn list"><span></span>{% trans %}label.back.list{% endtrans %}</a></div>
             <div class="clear"></div>
         </div>
 
@@ -52,44 +50,10 @@
                     </div>
 
                     <div id="buttonsContainer" style="margin-top: 25px;">
-                        <div class="left btn" id="btnEditar">{% trans %}label.editar{% endtrans %}</div>
-                        <div class="left btn" id="btnEliminar" style="margin-left: 25px;">{% trans %}label.eliminar{% endtrans %}</div>
+                        <a href="{{ path('_expediente_sysadmin_route_edit', {'id': entity.id}) }}" class="left btn edit"><span></span>{% trans %}label.edit{% endtrans %}</a>
+                        <div class="left btn delete" id="btnEliminar" style="margin-left: 25px;"><span></span>{% trans %}label.eliminar{% endtrans %}</div>
                         <div class="clear"></div>
                     </div>
-                </div>
-
-                <div id="editContainer" style="display: none;">
-                    <form class="customForm" id="createAdminForm" action="{{ path('_expediente_sysadmin_route_update') }}" method="post">
-                        <input type="hidden" id="id" name="id" value="{{ entity.id }}">
-<!--
-                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.code{% endtrans %}</span><input type="text" id="code" name="code" required="required" value=""></label>
-
-                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.name{% endtrans %}</span><input type="text" id="name" name="name" required="required" value=""></label>
-
-                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.description{% endtrans %}</span><input type="text" id="description" name="description" required="required" value=""></label>
-
-                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.mapUrl{% endtrans %}</span><input type="text" id="mapUrl" name="mapUrl" required="required" value=""></label>
--->
-                        {{ form_errors(form) }}
-
-                        {{ form_widget(form._token) }}
-
-                        <div class="formErrors">{{ form_errors(form.code) }}</div>
-                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.code{% endtrans %}</span>{{ form_widget(form.code) }}</label>
-
-                        <div class="formErrors">{{ form_errors(form.name) }}</div>
-                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.name{% endtrans %}</span>{{ form_widget(form.name) }}</label>
-
-                        <div class="formErrors">{{ form_errors(form.description) }}</div>
-                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.description{% endtrans %}</span>{{ form_widget(form.description) }}</label>
-
-                        <div class="formErrors">{{ form_errors(form.mapUrl) }}</div>
-                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.route{% endtrans %}</span>{{ form_widget(form.mapUrl) }}</label>
-
-                        <div class="left btn" id="btnCancelEdit">{% trans %}label.cancelar{% endtrans %}</div>
-                        <div class="left" style="margin-left: 25px;"><input class="btn" style="margin-top: 0px;" type="submit" name="save" value="{% trans %}label.save{% endtrans %}"/></div>
-                        <div class="clear"></div>
-                    </form>
                 </div>
             </div>    
         </div>        

@@ -6,13 +6,10 @@
 
 {% block extrajs %}
 <script type="text/javascript">
-    Tecnotek.UI.urls["api"] = "";
-    Tecnotek.UI.translates["btnDone"] = "";
-    Tecnotek.module = "routeList";
-    Tecnotek.imagesURL = "/images";
+    Tecnotek.module = "entityList";
     Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
     Tecnotek.UI.urls["show"] = "{{ path('_expediente_sysadmin_route_show_simple')}}";
-
+    Tecnotek.UI.urls["edit"] = "{{ path('_expediente_sysadmin_route_edit_simple')}}";
 </script>
 {% endblock %}
 
@@ -38,6 +35,9 @@
                 <div class="option_width" style="float: left; width: 200px;">{{ entity.code }}</div>
                 <div class="option_width" style="float: left; width: 200px;">{{ entity.name }}</div>
                 <div class="option_width" style="float: left; width: 250px;">{{ entity.description }}</div>
+                <div class="right imageButton editButton"  title="{% trans %}label.edit{% endtrans %}"  rel="{{ entity.id }}"></div>
+                <div class="right imageButton viewButton"  title="{% trans %}label.view{% endtrans %}"  rel="{{ entity.id }}"></div>
+                <div class="clear"></div>
             </div>
             {% set counter = counter + 1 %}
         {% endfor %}

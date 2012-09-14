@@ -16,11 +16,13 @@ label.email: Email
 label.status: Estado
 label.logout: Logout
 label.home: Home
+label.back.list: Volver a la lista
 label.add: Agregar
 label.cancelar: Cancelar
 label.save: Guardar
+label.view: Ver
 label.volver: Volver
-label.editar: Editar
+label.edit: Editar
 label.eliminar: Eliminar
 label.usuarios: Usuarios
 label.actualizar: Actualizar

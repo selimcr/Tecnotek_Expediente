@@ -134,9 +134,17 @@ _expediente_sysadmin_route_show:
     pattern:  /sysadmin/route/show/{id}
     defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:routeShow }
 
+_expediente_sysadmin_route_edit:
+    pattern:  /sysadmin/route/edit/{id}
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:routeEdit }
+
 _expediente_sysadmin_route_show_simple:
     pattern:  /sysadmin/route/show
     defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:routeShow }
+
+_expediente_sysadmin_route_edit_simple:
+    pattern:  /sysadmin/route/edit
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:routeEdit }
 #Fin de CRUD de routes
 
 #CRUD de bus para SysAdmin
@@ -164,9 +172,17 @@ _expediente_sysadmin_bus_show:
     pattern:  /sysadmin/bus/show/{id}
     defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:busShow }
 
+_expediente_sysadmin_bus_edit:
+    pattern:  /sysadmin/bus/edit/{id}
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:busEdit }
+
 _expediente_sysadmin_bus_show_simple:
     pattern:  /sysadmin/bus/show
     defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:busShow }
+
+_expediente_sysadmin_bus_edit_simple:
+    pattern:  /sysadmin/bus/edit
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:editShow }
 #Fin de CRUD de routes
 
 #Administrador

@@ -69,6 +69,10 @@ class User implements AdvancedUserInterface
      * @Assert\NotBlank()
      * @Assert\MinLength(limit = 3)
      * @Assert\MaxLength(limit = 60)
+     * @Assert\Email(
+     *     message = "The email '{{ value }}' is not a valid email.",
+     *     checkMX = true
+     * )
      */
     private $email;
 

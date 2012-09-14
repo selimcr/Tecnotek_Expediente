@@ -75,15 +75,15 @@
                         
 			<ul class="sf-menu">
             {% if is_granted('ROLE_SUPERADMIN') %}
-                <li class="current"><a href="{{ path('_expediente_sysadmin_administrador') }}"><em>{% trans %}label.usuarios{% endtrans %}</em><strong></strong></a>
+                <li {% if menuIndex is defined and menuIndex == 1%}class="current"{% endif %}><a href="{{ path('_expediente_sysadmin_administrador') }}"><em>{% trans %}label.usuarios{% endtrans %}</em><strong></strong></a>
                     <ul>
                         <li><a style="text-align: left;" href="{{ path('_expediente_sysadmin_administrador') }}">{% trans %}label.usuarios.admin{% endtrans %}</a></li>
                         <li><a style="text-align: left;" href="{{ path('_expediente_sysadmin_coordinador') }}">{% trans %}label.usuarios.coordinador{% endtrans %}</a></li>
                         <li><a style="text-align: left;" href="{{ path('_expediente_sysadmin_profesor') }}">{% trans %}label.usuarios.profesor{% endtrans %}</a></li>
                     </ul>
                 </li>
-                <li><a href="{{ path('_expediente_sysadmin_route') }}"><em>{% trans %}label.routes{% endtrans %}</em><strong></strong></a></li>
-                <li><a href="{{ path('_expediente_sysadmin_bus') }}"><em>{% trans %}label.buses{% endtrans %}</em><strong></strong></a></li>
+                <li {% if menuIndex is defined and menuIndex == 2%}class="current"{% endif %}><a href="{{ path('_expediente_sysadmin_route') }}"><em>{% trans %}label.routes{% endtrans %}</em><strong></strong></a></li>
+                <li {% if menuIndex is defined and menuIndex == 3%}class="current"{% endif %}><a href="{{ path('_expediente_sysadmin_bus') }}"><em>{% trans %}label.buses{% endtrans %}</em><strong></strong></a></li>
             {% endif %}
 				<li><a href="index-1.html"><em>services</em><strong></strong></a></li>
 				<li><a href="index-6.html"><em>contacts</em><strong></strong></a></li>

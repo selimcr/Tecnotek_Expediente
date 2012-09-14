@@ -35,16 +35,13 @@ var Tecnotek = {
 				case "administratorList":
                 case "coordinadorList":
                 case "profesorList":
-                case "routeList":
-                case "busList":
+                case "entityList":
                         Tecnotek.AdministratorList.init(); break;
                 case "showAdministrador":
                 case "showCoordinador":
                 case "showProfesor":
                         Tecnotek.AdministratorShow.init(); break;
-                case "showRoute":
-                        Tecnotek.EntityShow.init(); break;
-                case "showBus":
+                case "showEntity":
                         Tecnotek.EntityShow.init(); break;
                 default:
 					break;
@@ -186,9 +183,14 @@ var Tecnotek = {
 			initComponents : function() {
 			},
 			initButtons : function() {
-				$('.userRow').dblclick(function(event){
+				$('.viewButton').click(function(event){
+                    event.preventDefault();
                     location.href = Tecnotek.UI.urls["show"] + "/" + $(this).attr("rel");
 				});
+                $('.editButton').click(function(event){
+                    event.preventDefault();
+                    location.href = Tecnotek.UI.urls["edit"] + "/" + $(this).attr("rel");
+                });
 			},
 			submit : function() {
 				//$("#frmCreateAccount").submit();
@@ -261,66 +263,13 @@ var Tecnotek = {
                 Tecnotek.EntityShow.initButtons();
             },
             initComponents : function() {
-                if(Tecnotek.updateFail) {
-                    $("#showContainer").hide();
-                    $("#editContainer").show();
-                }
             },
             initButtons : function() {
-                $('#btnEditar').click(function(event){
-                    $("#showContainer").hide();
-                    $("#editContainer").fadeIn('slow', function() {});
-                });
-                $('#btnCancelEdit').click(function(event){
-                    $("#editContainer").hide();
-                    $("#showContainer").fadeIn('slow', function() {});
-                });
                 $('#btnEliminar').click(function(event){
                     if (Tecnotek.showConfirmationQuestion(Tecnotek.UI.translates["confirmDelete"])){
-                        location.href = Tecnotek.UI.urls["deleteRouteURL"];
+                        location.href = Tecnotek.UI.urls["deleteURL"];
                     }
                 });
-                $('#viewMap').click(function(event){
-                    console.debug("viewMap!!!!");
-                    //var src = "" + $(this).attr("url");
-                    /*var src = "http://www.google.com";
-                    $.modal('<iframe src="' + src + '" height="450" width="830" style="border:0">');
-                    return false;*/
-                });
-            }
-        },
-        BusShow : {
-            init : function() {
-                Tecnotek.BusShow.initComponents();
-                Tecnotek.BusShow.initButtons();
-            },
-            initComponents : function() {
-            },
-            initButtons : function() {
-                $('#btnEditar').click(function(event){
-                    $("#name").val($("#labelName").html());
-                    $("#licensePlate").val($("#labelLicensePlate").html());
-                    $("#color").val($("#labelColor").html());
-                    $("#driver").val($("#labelDriver").html());
-                    $("#capacity").val($("#labelCapacity").html());
-                    $("#riteve").val($("#labelRiteve").html());
-                    $("#ins").val($("#labelIns").html());
-                    $("#permission").val($("#labelPermission").html());
-                    $("#showContainer").hide();
-                    $("#editContainer").fadeIn('slow', function() {});
-                });
-                $('#btnCancelEdit').click(function(event){
-                    $("#editContainer").hide();
-                    $("#showContainer").fadeIn('slow', function() {});
-                });
-                $('#btnEliminar').click(function(event){
-                    if (Tecnotek.showConfirmationQuestion(Tecnotek.UI.translates["confirmDelete"])){
-                        location.href = Tecnotek.UI.urls["deleteBusURL"];
-                    }
-                });
-            },
-            submit : function() {
-                //$("#frmCreateAccount").submit();
             }
         }
 	};

@@ -6,13 +6,10 @@
 
 {% block extrajs %}
 <script type="text/javascript">
-    Tecnotek.UI.urls["api"] = "";
-    Tecnotek.UI.translates["btnDone"] = "";
-    Tecnotek.module = "busList";
-    Tecnotek.imagesURL = "/images";
+    Tecnotek.module = "entityList";
     Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
     Tecnotek.UI.urls["show"] = "{{ path('_expediente_sysadmin_bus_show_simple')}}";
-
+    Tecnotek.UI.urls["edit"] = "{{ path('_expediente_sysadmin_bus_edit_simple')}}";
 </script>
 {% endblock %}
 
@@ -30,26 +27,25 @@
             <div class="option_width" style="float: left; width: 75px;">{% trans %}label.licensePlate{% endtrans %}</div>
             <div class="option_width" style="float: left; width: 75px;">{% trans %}label.color{% endtrans %}</div>
             <div class="option_width" style="float: left; width: 150px;">{% trans %}label.driver{% endtrans %}</div>
-            <div class="option_width" style="float: left; width: 75px;">{% trans %}label.capacity{% endtrans %}</div>
-            <div class="option_width" style="float: left; width: 80px;">{% trans %}label.riteve{% endtrans %}</div>
-            <div class="option_width" style="float: left; width: 80px;">{% trans %}label.ins{% endtrans %}</div>
-            <div class="option_width" style="float: left; width: 80px;">{% trans %}label.permission{% endtrans %}</div>
-            <div class="option_width" style="float: left; width: 100px;">{% trans %}label.route{% endtrans %}</div>
+            <div class="option_width" style="float: left; width: 80px;">{% trans %}label.capacity{% endtrans %}</div>
+            <div class="option_width" style="float: left; width: 150px;">{% trans %}label.permission{% endtrans %}</div>
+            <div class="option_width" style="float: left; width: 150px;">{% trans %}label.route{% endtrans %}</div>
         </div>
             
         {% set counter = 0 %}   
 
         {% for entity in pagination %}            
-            <div class="row userRow {% if counter%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}" rel="{{ entity.id }}">
+            <div class="row userRow {% if counter%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
                 <div class="option_width" style="float: left; width: 150px;">{{ entity.name }}</div>
                 <div class="option_width" style="float: left; width: 75px;">{{ entity.licensePlate }}</div>
                 <div class="option_width" style="float: left; width: 75px;">{{ entity.color }}</div>
                 <div class="option_width" style="float: left; width: 150px;">{{ entity.driver }}</div>
-                <div class="option_width" style="float: left; width: 75px;">{{ entity.capacity }}</div>
-                <div class="option_width" style="float: left; width: 80px;">{{ entity.riteve|date("d/M/y") }}</div>
-                <div class="option_width" style="float: left; width: 80px;">{{ entity.ins|date("d/M/y") }}</div>
-                <div class="option_width" style="float: left; width: 80px;">{{ entity.permission|date("d/M/y") }}</div>
-                <div class="option_width" style="float: left; width: 100px;">{{ entity.route }}</div>
+                <div class="option_width" style="float: left; width: 80px;">{{ entity.capacity }}</div>
+                <div class="option_width" style="float: left; width: 150px;">{% if entity.permission != null %} {{ entity.permission|date("d/M/y") }} {% else %} &nbsp; {% endif %}</div>
+                <div class="option_width" style="float: left; width: 150px;">{{ entity.route }}</div>
+                <div class="right imageButton editButton"  title="{% trans %}label.edit{% endtrans %}"  rel="{{ entity.id }}"></div>
+                <div class="right imageButton viewButton"  title="{% trans %}label.view{% endtrans %}"  rel="{{ entity.id }}"></div>
+                <div class="clear"></div>
             </div>
             {% set counter = counter + 1 %}
         {% endfor %}
