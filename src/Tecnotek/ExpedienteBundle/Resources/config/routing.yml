@@ -183,7 +183,96 @@ _expediente_sysadmin_bus_show_simple:
 _expediente_sysadmin_bus_edit_simple:
     pattern:  /sysadmin/bus/edit
     defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:editShow }
-#Fin de CRUD de routes
+#Fin de CRUD de bus
+
+#CRUD de Students para SysAdmin
+_expediente_sysadmin_student:
+    pattern:  /sysadmin/student
+    defaults: { _controller: TecnotekExpedienteBundle:Student:studentList }
+
+_delete_student:
+    pattern:  /sysadmin/student/delete/{id}
+    defaults: { _controller: TecnotekExpedienteBundle:Student:studentDelete }
+
+_expediente_sysadmin_student_create:
+    pattern:  /sysadmin/student/create
+    defaults: { _controller: TecnotekExpedienteBundle:Student:studentCreate }
+
+_expediente_sysadmin_student_save:
+    pattern:  /sysadmin/student/save
+    defaults: { _controller: TecnotekExpedienteBundle:Student:studentSave }
+
+_expediente_sysadmin_student_update:
+    pattern:  /sysadmin/student/update
+    defaults: { _controller: TecnotekExpedienteBundle:Student:studentUpdate }
+
+_expediente_sysadmin_student_show:
+    pattern:  /sysadmin/student/show/{id}
+    defaults: { _controller: TecnotekExpedienteBundle:Student:studentShow }
+
+_expediente_sysadmin_student_edit:
+    pattern:  /sysadmin/student/edit/{id}
+    defaults: { _controller: TecnotekExpedienteBundle:Student:studentEdit }
+
+_expediente_sysadmin_student_show_simple:
+    pattern:  /sysadmin/student/show
+    defaults: { _controller: TecnotekExpedienteBundle:Student:studentShow }
+
+_expediente_sysadmin_student_edit_simple:
+    pattern:  /sysadmin/student/edit
+    defaults: { _controller: TecnotekExpedienteBundle:Student:studentEdit }
+#Fin de CRUD de Students
+
+#CRUD de Clubs para SysAdmin
+_expediente_sysadmin_club:
+    pattern:  /sysadmin/club
+    defaults: { _controller: TecnotekExpedienteBundle:Student:clubList }
+
+_delete_club:
+    pattern:  /sysadmin/club/delete/{id}
+    defaults: { _controller: TecnotekExpedienteBundle:Student:clubDelete }
+
+_expediente_sysadmin_club_create:
+    pattern:  /sysadmin/club/create
+    defaults: { _controller: TecnotekExpedienteBundle:Student:clubCreate }
+
+_expediente_sysadmin_club_save:
+    pattern:  /sysadmin/club/save
+    defaults: { _controller: TecnotekExpedienteBundle:Student:clubSave }
+
+_expediente_sysadmin_club_update:
+    pattern:  /sysadmin/club/update
+    defaults: { _controller: TecnotekExpedienteBundle:Student:clubUpdate }
+
+_expediente_sysadmin_club_show:
+    pattern:  /sysadmin/club/show/{id}
+    defaults: { _controller: TecnotekExpedienteBundle:Student:clubShow }
+
+_expediente_sysadmin_club_edit:
+    pattern:  /sysadmin/club/edit/{id}
+    defaults: { _controller: TecnotekExpedienteBundle:Student:clubEdit }
+
+_expediente_sysadmin_club_show_simple:
+    pattern:  /sysadmin/club/show
+    defaults: { _controller: TecnotekExpedienteBundle:Student:clubShow }
+
+_expediente_sysadmin_club_edit_simple:
+    pattern:  /sysadmin/club/edit
+    defaults: { _controller: TecnotekExpedienteBundle:Student:clubEdit }
+#Fin de CRUD de Clubs
+
+#Obtener lista de estudiantes
+_expediente_get_students_list:
+    pattern:  /sysadmin/students/list
+    defaults: { _controller: TecnotekExpedienteBundle:Student:getList }
+
+_expediente_associate_student:
+    pattern:  /sysadmin/students/associateToClub
+    defaults: { _controller: TecnotekExpedienteBundle:Student:associateStudentToClub }
+
+_expediente_remove_student_from_club:
+    pattern:  /sysadmin/students/removeStudentFromClub
+    defaults: { _controller: TecnotekExpedienteBundle:Student:removeStudentFromClub }
 
 #Administrador
 _expediente_admin:

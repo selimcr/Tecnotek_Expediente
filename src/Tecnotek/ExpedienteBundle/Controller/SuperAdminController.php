@@ -437,7 +437,7 @@ class SuperAdminController extends Controller
         );
 
         return $this->render('TecnotekExpedienteBundle:SuperAdmin:Bus/list.html.twig', array(
-            'pagination' => $pagination, 'rowsPerPage' => $rowsPerPage, 'menuIndex' => 3
+            'pagination' => $pagination, 'rowsPerPage' => $rowsPerPage, 'menuIndex' => 2
         ));
     }
 
@@ -446,7 +446,7 @@ class SuperAdminController extends Controller
         $entity = new Buseta();
         $form   = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\BusFormType(), $entity);
         return $this->render('TecnotekExpedienteBundle:SuperAdmin:Bus/new.html.twig', array('entity' => $entity,
-            'form'   => $form->createView(), 'menuIndex' => 3));
+            'form'   => $form->createView(), 'menuIndex' => 2));
     }
 
     public function busShowAction($id)
@@ -455,7 +455,7 @@ class SuperAdminController extends Controller
         $entity = $em->getRepository("TecnotekExpedienteBundle:Buseta")->find($id);
         $form   = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\BusFormType(), $entity);
         return $this->render('TecnotekExpedienteBundle:SuperAdmin:Bus/show.html.twig', array('entity' => $entity,
-            'form'   => $form->createView(), 'menuIndex' => 3));
+            'form'   => $form->createView(), 'menuIndex' => 2));
     }
 
     public function busEditAction($id)
@@ -464,7 +464,7 @@ class SuperAdminController extends Controller
         $entity = $em->getRepository("TecnotekExpedienteBundle:Buseta")->find($id);
         $form   = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\BusFormType(), $entity);
         return $this->render('TecnotekExpedienteBundle:SuperAdmin:Bus/edit.html.twig', array('entity' => $entity,
-            'form'   => $form->createView(), 'menuIndex' => 3));
+            'form'   => $form->createView(), 'menuIndex' => 2));
     }
 
     public function busSaveAction(){
@@ -478,11 +478,11 @@ class SuperAdminController extends Controller
             $em->persist($entity);
             $em->flush();
             return $this->redirect($this->generateUrl('_expediente_sysadmin_bus',
-                array('id' => $entity->getId(), 'menuIndex' => 3)));
+                array('id' => $entity->getId(), 'menuIndex' => 2)));
         } else {
             return $this->render('TecnotekExpedienteBundle:SuperAdmin:Bus/new.html.twig', array(
                 'entity' => $entity,
-                'form'   => $form->createView(), 'menuIndex' => 3
+                'form'   => $form->createView(), 'menuIndex' => 2
             ));
         }
     }
@@ -511,7 +511,7 @@ class SuperAdminController extends Controller
                 return $this->redirect($this->generateUrl('_expediente_sysadmin_bus_show_simple') . "/" . $entity->getId());
             } else {
                 return $this->render('TecnotekExpedienteBundle:SuperAdmin:Bus/edit.html.twig', array(
-                    'entity' => $entity, 'form'   => $form->createView(), 'updateRejected' => true, 'menuIndex' => 3
+                    'entity' => $entity, 'form'   => $form->createView(), 'updateRejected' => true, 'menuIndex' => 2
                 ));
             }
         } else {

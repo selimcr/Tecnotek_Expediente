@@ -1,0 +1,57 @@
+{% extends 'TecnotekExpedienteBundle::logged_layout.html.twig' %}
+
+{% block htmlTitle %}
+    Tecnotek :: Expediente :: Super Administrador :: Club
+{% endblock %}
+
+{% block extrajs %}
+<script type="text/javascript">
+    Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="container_24">
+    <div class="grid_24">
+        <div>
+            <div class="left"><h1>{% trans %}label.club.new{% endtrans %}</h1></div>
+            <div class="clear"></div>
+        </div>
+        <div class="centeredDiv" style="width: 700px;">
+            <div class="formContainer">
+                <form class="customForm" id="mainForm" action="{{ path('_expediente_sysadmin_club_save') }}" method="post" {{ form_enctype(form) }}>
+                    {{ form_errors(form) }}
+
+                    {{ form_widget(form._token) }}
+
+                    <div class="formErrors">{{ form_errors(form.name) }}</div>
+                    <label><span class="text-form" style="min-width: 150px;">{% trans %}label.name{% endtrans %}</span>{{ form_widget(form.name) }}</label>
+
+                    <div class="formErrors">{{ form_errors(form.coordinator) }}</div>
+                    <label><span class="text-form" style="min-width: 150px;">{% trans %}label.coordinator{% endtrans %}</span>{{ form_widget(form.coordinator) }}</label>
+
+                    <div class="formErrors">{{ form_errors(form.day) }}</div>
+                    <label><span class="text-form" style="min-width: 150px;">{% trans %}label.day{% endtrans %}</span>{{ form_widget(form.day) }}</label>
+
+                    <div class="formErrors">{{ form_errors(form.timeI) }}</div>
+                    <label><span class="text-form" style="min-width: 150px;">{% trans %}label.timeI{% endtrans %}</span>{{ form_widget(form.timeI) }}</label>
+
+                    <div class="formErrors">{{ form_errors(form.timeO) }}</div>
+                    <label><span class="text-form" style="min-width: 150px;">{% trans %}label.timeO{% endtrans %}</span>{{ form_widget(form.timeO) }}</label>
+
+                    <div class="left"><a href="{{ path('_expediente_sysadmin_club') }}" class="btn delete"><span></span>{% trans %}label.cancelar{% endtrans %}</a></div>
+                    <button style="margin-left: 15px; margin-top: 0px;" type="submit" class="left btn save" name="save"><span></span>{% trans %}label.save{% endtrans %}</button>
+                    <div class="clear"></div>                    
+                </form>
+            </div>    
+        </div>        
+        <div class="clear"></div>
+    </div>
+    <div class="clear"></div>
+    <div class="wrapper">
+            <div class="grid_24 padline">
+                    <div class="lineH"></div>
+            </div>
+    </div>
+</div>
+{% endblock %}

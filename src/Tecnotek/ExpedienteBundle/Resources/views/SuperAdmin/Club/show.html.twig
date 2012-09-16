@@ -1,0 +1,124 @@
+{% extends 'TecnotekExpedienteBundle::logged_layout.html.twig' %}
+
+{% block htmlTitle %}
+    Tecnotek :: Expediente :: Super Administrador :: Club
+{% endblock %}
+
+{% block extracss %}
+{% endblock %}
+
+{% block extrajs %}
+<script type="text/javascript">
+    Tecnotek.UI.urls["getStudentsURL"] = "{{ path("_expediente_get_students_list") }}";
+    Tecnotek.UI.urls["associateStudentsURL"] = "{{ path("_expediente_associate_student") }}";
+    Tecnotek.UI.urls["removeStudentsFromClubURL"] = "{{ path("_expediente_remove_student_from_club") }}";
+    Tecnotek.UI.urls["deleteURL"] = "{{ path("_delete_club", {id: entity.id}) }}";
+    Tecnotek.UI.translates["confirmDelete"] = "{% trans %}messages.confirmation.club.delete{% endtrans %}";
+    Tecnotek.UI.translates["confirmRemoveStudent"] = "{% trans %}messages.confirmation.club.remove.student{% endtrans %}";
+    Tecnotek.module = "showClub";
+    Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
+    Tecnotek.UI.vars["clubId"] = {{ entity.id }};
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="container_24">
+    <div class="grid_24">
+        <div>
+            <div class="left"><h1>{% trans %}label.club.show{% endtrans %}</h1></div>
+            <div class="right"><a href="{{ path('_expediente_sysadmin_club') }}" class="btn list"><span></span>{% trans %}label.back.list{% endtrans %}</a></div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="centeredDiv">
+                <!-- Tabs -->
+                <div id="tabs">
+                    <nav class="tabs">
+                        <div class="tab-header tab-current" id="generalTab">{%trans%}label.general{%endtrans%}</div>
+                        <section class="tabs-content" id="generalSection">
+                            <div id="showContainer" class="left">
+                                <div>
+                                    <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.name{%endtrans%}</div>
+                                    <div id="labelCode" class="left">{{ entity.name }}</div>
+                                    <div class="clear"></div>
+                                </div>
+                                <div>
+                                    <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.coordinator{%endtrans%}</div>
+                                    <div id="labelCoordinator" class="left">{{ entity.coordinator }}</div>
+                                    <div class="clear"></div>
+                                </div>
+                                <div>
+                                    <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.day{%endtrans%}</div>
+                                    <div id="labelDay" class="left">
+                                        {% transchoice entity.day %}
+                                        {1} Lunes|{2} Martes|{3} Miercoles|{4} Jueves|{5} Viernes|{6} Sabado|{7} Domingo
+                                        {% endtranschoice %}</div>
+                                    <div class="clear"></div>
+                                </div>
+                                <div>
+                                    <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.timeI{%endtrans%}</div>
+                                    <div id="labelTimeI" class="left">{% if entity.timeI != null %}{{ entity.timeI|date("d/M/y") }}{% endif %}</div>
+                                    <div class="clear"></div>
+                                </div>
+                                <div>
+                                    <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.timeO{%endtrans%}</div>
+                                    <div id="labelTimeO" class="left">{% if entity.timeO != null %}{{ entity.timeO|date("d/M/y") }}{% endif %}</div>
+                                    <div class="clear"></div>
+                                </div>
+
+                                <div id="buttonsContainer" style="margin-top: 25px;">
+                                    <a href="{{ path('_expediente_sysadmin_club_edit', {'id': entity.id}) }}" class="left btn edit"><span></span>{% trans %}label.edit{% endtrans %}</a>
+                                    <div class="left btn delete" id="btnEliminar" style="margin-left: 25px;"><span></span>{% trans %}label.eliminar{% endtrans %}</div>
+                                    <div class="clear"></div>
+                                </div>
+                            </div>
+                            <div class="clear"></div>
+                            <br/>
+                        </section>
+
+                        <div class="tab-header" id="studentsTab">{%trans%}label.students.in.club{%endtrans%}</div>
+                        <section class="tabs-content" style="display: none;" id="studentsSection">
+
+                            <div class="left" id="studentsList">
+                                <div class="row tableHeader">
+                                    <div class="option_width" style="float: left; width: 300px;">{% trans %}label.name{% endtrans %}</div>
+                                </div>
+                                {% set counter = 0 %}
+
+                                {% for student in entity.students %}
+                                <div id="student_row_{{ student.id }}" class="row userRow rel="{{ student.id }}">
+                                    <div class="option_width" style="float: left; width: 300px;">{{ student }}</div>
+                                    <div class="right imageButton deleteButton" style="height: 16px;"  title="{% trans %}label.delete{% endtrans %}"  rel="{{ student.id }}"></div>
+                                    <div class="clear"></div>
+                                </div>
+                                {% set counter = counter + 1 %}
+                                {% endfor %}
+                            </div>
+
+                            <div class="left" style="margin-left: 50px;">
+                                <form id="searchform">
+                                    <div>
+                                        <div>{% trans %}club.include.students{%endtrans%}</div>
+                                        <div style="font-size: 10px;">{% trans %}club.include.help{%endtrans%}</div>
+
+                                        <input type="text" size="30" value="" id="searchBox"/>
+                                    </div>
+                                    <div id="suggestions"></div>
+                                </form>
+                            </div>
+                            <div class="clear"></div>
+                        </section>
+                    </nav>
+                </div>
+                <!-- End Tabs -->
+        </div>        
+        <div class="clear"></div>
+    </div>
+    <div class="clear"></div>
+    <div class="wrapper">
+            <div class="grid_24 padline">
+                    <div class="lineH"></div>
+            </div>
+    </div>
+</div>
+{% endblock %}

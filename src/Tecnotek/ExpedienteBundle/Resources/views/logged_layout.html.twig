@@ -5,9 +5,11 @@
     <meta charset="utf-8">
     <meta name="description" content={% trans %}system.description{% endtrans %}>
     <meta name="keywords" content="{% trans %}system.tags{% endtrans %}">
-    <meta name="author" content="Selim Diaz A.">    
+    <meta name="author" content="Selim Diaz A.">
     <link rel="stylesheet" href="{{ asset('expediente/css/style.css') }}" type="text/css" media="all" />
-    {% block extracss %}{% endblock %}
+    <link rel="stylesheet" href="{{ asset('expediente/css/tabs.css') }}" type="text/css" media="all" />
+    {% block extracss %}
+    {% endblock %}
     <script type="text/javascript" src="{{ asset('expediente/js/jquery-1.7.1.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('expediente/js/superadmin_application.js') }}"></script>
     {% block extrajs %}{% endblock %}
@@ -82,8 +84,18 @@
                         <li><a style="text-align: left;" href="{{ path('_expediente_sysadmin_profesor') }}">{% trans %}label.usuarios.profesor{% endtrans %}</a></li>
                     </ul>
                 </li>
-                <li {% if menuIndex is defined and menuIndex == 2%}class="current"{% endif %}><a href="{{ path('_expediente_sysadmin_route') }}"><em>{% trans %}label.routes{% endtrans %}</em><strong></strong></a></li>
-                <li {% if menuIndex is defined and menuIndex == 3%}class="current"{% endif %}><a href="{{ path('_expediente_sysadmin_bus') }}"><em>{% trans %}label.buses{% endtrans %}</em><strong></strong></a></li>
+                <li {% if menuIndex is defined and menuIndex == 2%}class="current"{% endif %}><a href="#"><em>{% trans %}label.transport{% endtrans %}</em><strong></strong></a>
+                    <ul>
+                        <li><a style="text-align: left;" href="{{ path('_expediente_sysadmin_route') }}">{% trans %}label.routes{% endtrans %}</a></li>
+                        <li><a style="text-align: left;" href="{{ path('_expediente_sysadmin_bus') }}">{% trans %}label.buses{% endtrans %}</a></li>
+                    </ul>
+                </li>
+                <li {% if menuIndex is defined and menuIndex == 3%}class="current"{% endif %}><a href="#"><em>{% trans %}label.estudiantado{% endtrans %}</em><strong></strong></a>
+                    <ul>
+                        <li><a style="text-align: left;" href="{{ path('_expediente_sysadmin_student') }}">{% trans %}label.students{% endtrans %}</a></li>
+                        <li><a style="text-align: left;" href="{{ path('_expediente_sysadmin_club') }}">{% trans %}label.clubs{% endtrans %}</a></li>
+                    </ul>
+                </li>
             {% endif %}
 				<li><a href="index-1.html"><em>services</em><strong></strong></a></li>
 				<li><a href="index-6.html"><em>contacts</em><strong></strong></a></li>

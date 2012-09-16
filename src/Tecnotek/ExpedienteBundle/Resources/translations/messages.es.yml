@@ -32,12 +32,21 @@ label.licensePlate: Placa
 label.color: Color
 label.driver: Conductor
 label.capacity: Capacidad
+label.general: General
 label.riteve: R.T.V.
 label.permission: Permiso
 label.ins: I.N.S.
+label.coordinator: Coordinador
+label.day: Día
+label.timeI: Time I
+label.timeO: Time O
 
 label.bus: Buseta
 label.buses: Busetas
+label.transport: Transporte
+label.estudiantado: Estudiantado
+label.clubs: Clubes
+label.students: Estudiantes
 
 label.code: Codigo
 label.description: Descripcion
@@ -59,13 +68,29 @@ label.usuarios.admin.listar: Lista de Usuarios Administradores
 label.usuarios.coordinador.listar: Lista de Coordinadores
 label.usuarios.profesor.listar: Lista de Profesores
 
+label.student.new: Ingresar nuevo Estudiante
+label.student.show: Información de Estudiante
+label.student.listar: Lista de Estudiantes
+messages.confirmation.student.delete: ¿Está seguro que desea eliminar el estudiante?
+
 label.route.new: Crear nueva Ruta
 label.route.show: Información de Ruta
 label.route.listar: Lista de Ruta
+messages.confirmation.route.delete: ¿Está seguro que desea eliminar la ruta?
 
 label.bus.new: Crear nueva Buseta
 label.bus.show: Información de Buseta
 label.bus.listar: Lista de Busetas
+messages.confirmation.bus.delete: ¿Está seguro que desea eliminar la buseta?
+
+label.club.new: Crear nuevo Club
+label.club.show: Información de Club
+label.club.listar: Lista de Clubes
+messages.confirmation.club.delete: ¿Está seguro que desea eliminar el club?
+
+label.students.in.club: Estudiantes Asociados
+club.include.students: Incluir estudiantes a este club
+club.include.help: Ingrese el nombre y seleccione el estudiante de la lista de sugeridos.
 
 label.new.password: Nuevo Password
 label.confirm.password: Confirmar password
@@ -76,8 +101,7 @@ usuarios.estado.2: Inactivo
 
 messages.confirmation.password.change: El password ha sido actualizado correctamente.
 messages.confirmation.user.delete: ¿Está seguro que desea eliminar el usuario?
-messages.confirmation.route.delete: ¿Está seguro que desea eliminar la ruta?
-messages.confirmation.bus.delete: ¿Está seguro que desea eliminar la buseta?
+messages.confirmation.club.remove.student: ¿Está seguro que desea desasociar el estudiante?
 
 error.entity.not.found: El objeto no se ha encontrado.
 error.passwords.dont.match: Los passwords no coinciden.
@@ -87,6 +111,15 @@ error.password.emtpy: El password no puede estar en blanco.
 user.roles.1: Administrador del Sistema
 user.roles.2: Administrador
 user.roles.3: Profesor
+
+#Days
+monday: Lunes
+tuesday: Martes
+wednesday: Miercoles
+thrusday: Jueves
+friday: Viernes
+saturday: Sabado
+sunday: Domingo
 
 #Validation
 not.blank.name: Probando proband.
