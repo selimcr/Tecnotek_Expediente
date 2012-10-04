@@ -29,39 +29,40 @@
 <![endif]-->
 </head>
 <body>
-<!-- PRO Framework Panel Begin -->
-<div id="advanced">
-    <span class="trigger"><strong></strong><em></em></span>
-    <div class="bg_pro">
-        <div class="pro_main">
-            <a href="" class="pro_logo"></a>
-            <div>
-                <div style="float: left;">
-                    <ul class="pro_menu">
-                        <li><a href="index.html"><img src="{{ asset('expediente/images/pro_home.png') }}" alt=""></a></li>
-                        
-                    </ul>
+
+<div style="min-height:100%;position:relative;">
+    <!-- PRO Framework Panel Begin -->
+    <div id="advanced">
+        <div class="bg_pro">
+            <div class="pro_main">
+                <a href="" class="pro_logo"></a>
+                <div>
+                    <div style="float: left;">
+                        <ul class="pro_menu">
+                            <li><a href="index.html"><img src="{{ asset('expediente/images/pro_home.png') }}" alt=""></a></li>
+
+                        </ul>
+                    </div>
+                    <div style="float: right;">
+                        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                        <ul class="pro_menu">
+                            <li class="current"><a href="#">{{ app.user.username }}<span></span></a>
+                                <ul>
+                                    <li class="current"><a href="{{ path('_expediente_logout') }}">{% trans %}label.logout{% endtrans %}</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                        {% endif %}
+                    </div>
                 </div>
-                <div style="float: right;">
-                    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                    <ul class="pro_menu">
-                        <li class="current"><a href="#">{{ app.user.username }}<span></span></a>
-                            <ul>	
-                                <li class="current"><a href="{{ path('_expediente_logout') }}">{% trans %}label.logout{% endtrans %}</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                    {% endif %}
-                </div>    
+
+
+                <div class="clear"></div>
             </div>
-            
-            
-            <div class="clear"></div>
         </div>
+        <div class="bg_pro2"></div>
     </div>
-    <div class="bg_pro2"></div>
-</div>
-<!-- PRO Framework Panel End -->
+    <!-- PRO Framework Panel End -->
 <div class="bg-main">
 	<header>
 		<div class="container_24">
@@ -148,5 +149,6 @@
 		</div>
 	</div>
 </footer>
+</div>
 </body>
 </html>
