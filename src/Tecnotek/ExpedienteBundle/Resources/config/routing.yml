@@ -274,6 +274,10 @@ _expediente_remove_student_from_club:
     pattern:  /sysadmin/students/removeStudentFromClub
     defaults: { _controller: TecnotekExpedienteBundle:Student:removeStudentFromClub }
 
+_expediente_save_new_contact:
+    pattern:  /sysadmin/students/newContact
+    defaults: { _controller: TecnotekExpedienteBundle:Student:createContact }
+
 #Administrador
 _expediente_admin:
     pattern:  /admin

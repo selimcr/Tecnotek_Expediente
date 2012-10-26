@@ -92,9 +92,24 @@ label.students.in.club: Estudiantes Asociados
 club.include.students: Incluir estudiantes a este club
 club.include.help: Ingrese el nombre y seleccione el estudiante de la lista de sugeridos.
 
+label.relatives.in.student: Personas Autorizadas
+student.include.contact: Incluir contacto autorizado
+student.include.help: Ingrese el nombre y seleccione el contacto de la lista de sugeridos.
+
 label.new.password: Nuevo Password
 label.confirm.password: Confirmar password
 button.label.login: LOGIN
+
+label.asociate: Asociar
+student.create.new.contact: Ingrese la información de la persona autorizada
+label.identification: Identificación
+
+label.kinship: Relación
+label.father: Padre
+label.mother: Madre
+label.brother: Hermano
+label.sister: Hermana
+label.other: Otro
 
 usuarios.estado.1: Activo
 usuarios.estado.2: Inactivo
@@ -102,6 +117,7 @@ usuarios.estado.2: Inactivo
 messages.confirmation.password.change: El password ha sido actualizado correctamente.
 messages.confirmation.user.delete: ¿Está seguro que desea eliminar el usuario?
 messages.confirmation.club.remove.student: ¿Está seguro que desea desasociar el estudiante?
+messages.empty.fields: Debe completar todos los campos
 
 error.entity.not.found: El objeto no se ha encontrado.
 error.passwords.dont.match: Los passwords no coinciden.

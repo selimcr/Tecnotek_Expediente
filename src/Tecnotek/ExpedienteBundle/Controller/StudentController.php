@@ -2,8 +2,11 @@
 
 namespace Tecnotek\ExpedienteBundle\Controller;
 
+use Tecnotek\ExpedienteBundle\Entity\Contact;
 use Tecnotek\ExpedienteBundle\Entity\Club as Club;
+use Tecnotek\ExpedienteBundle\Entity\Relative as Relative;
 use Tecnotek\ExpedienteBundle\Entity\Student;
+use Tecnotek\ExpedienteBundle\Form\ContactFormType;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
@@ -48,9 +51,12 @@ class StudentController extends Controller
     {
         $em = $this->getDoctrine()->getEntityManager();
         $entity = $em->getRepository("TecnotekExpedienteBundle:Student")->find($id);
-        $form   = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\StudentFormType(), $entity);
+        $relatives = $em->getRepository("TecnotekExpedienteBundle:Relative")->findByStudent($id);
+        $contact = new \Tecnotek\ExpedienteBundle\Entity\Contact();
+        $form   = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\ContactFormType(), $contact);
+
         return $this->render('TecnotekExpedienteBundle:SuperAdmin:Student/show.html.twig', array('entity' => $entity,
-            'form'   => $form->createView(), 'menuIndex' => 3));
+            'form'   => $form->createView(), 'menuIndex' => 3, 'relatives' => $relatives));
     }
 
     public function studentSaveAction(){
@@ -335,6 +341,80 @@ class StudentController extends Controller
             catch (Exception $e) {
                 $info = toString($e);
                 $logger->err('Student::removeStudentFromClub [' . $info . "]");
+                return new Response(json_encode(array('error' => true, 'message' => $info)));
+            }
+        }// endif this is an ajax request
+        else
+        {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+    }
+
+    public function createContactAction(){
+        $logger = $this->get('logger');
+        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
+        {
+            try {
+                $request = $this->get('request')->request;
+                $studentId = $request->get('studentId');
+                $firstname = $request->get('tecnotek_expediente_contactformtype[firstname]');
+                $lastname = $request->get('tecnotek_expediente_contactformtype[lastname]');
+                $identification = $request->get('tecnotek_expediente_contactformtype[identification]');
+
+                $em = $this->getDoctrine()->getEntityManager();
+                $student = $em->getRepository("TecnotekExpedienteBundle:Student")->find($studentId);
+                if ( isset($student) ) {
+                    $contact = new Contact();
+                    $contact->setFirstname($firstname);
+                    $contact->setLastname($lastname);
+                    $contact->setIdentification($identification);
+
+                    $form = $this->createForm(new ContactFormType(), $contact);
+                    $form->bindRequest($this->getRequest());
+                    if ($form->isValid()) {
+                        $em->persist($contact);
+
+                        $relative = new Relative();
+                        $relative->setContact($contact);
+                        $relative->setStudent($student);
+                        $relative->setKinship(Relative.FATHER);
+                        $em->persist($relative);
+
+                        $em->flush();
+
+                        return new Response(json_encode(array('error' => false, 'id' => $contact->getId())));
+                    } else {
+                        $errors = $this->get('validator')->validate( $contact );
+                        $result = '';
+
+                        foreach( $errors as $error )
+                        {
+                            $result .= "[" . $error->getPropertyPath() . ": " . $error->getMessage() . "]\n";
+                        }
+
+                        if($result == ""){
+                            $em->persist($contact);
+
+                            $relative = new Relative();
+                            $relative->setContact($contact);
+                            $relative->setStudent($student);
+                            $relative->setKinship($relative->getOtherType());
+                            $em->persist($relative);
+
+                            $em->flush();
+
+                            return new Response(json_encode(array('error' => false, 'id' => $relative->getId())));
+                        } else {
+                            return new Response(json_encode(array('error' => true, 'message' => $result)));
+                        }
+                    }
+                } else {
+                    return new Response(json_encode(array('error' => true, 'message' => "Student not found.")));
+                }
+            }
+            catch (Exception $e) {
+                $info = toString($e);
+                $logger->err('Student::createContactAction [' . $info . "]");
                 return new Response(json_encode(array('error' => true, 'message' => $info)));
             }
         }// endif this is an ajax request
