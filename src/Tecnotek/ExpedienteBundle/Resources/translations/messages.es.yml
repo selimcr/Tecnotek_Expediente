@@ -47,6 +47,7 @@ label.transport: Transporte
 label.estudiantado: Estudiantado
 label.clubs: Clubes
 label.students: Estudiantes
+label.tickets: Boletas de Salida
 
 label.code: Codigo
 label.description: Descripcion
@@ -104,6 +105,14 @@ label.asociate: Asociar
 student.create.new.contact: Ingrese la información de la persona autorizada
 label.identification: Identificación
 
+label.ticket.today.list: Boletas de Hoy
+label.ticket.new: Ingresar nueva boleta
+tickets.not.found: No se han registrado boletas hoy.
+label.student: Estudiante
+label.relative: Familiar
+label.time: Hora
+label.comments: Comentarios
+
 label.kinship: Relación
 label.father: Padre
 label.mother: Madre
@@ -118,6 +127,10 @@ messages.confirmation.password.change: El password ha sido actualizado correctam
 messages.confirmation.user.delete: ¿Está seguro que desea eliminar el usuario?
 messages.confirmation.club.remove.student: ¿Está seguro que desea desasociar el estudiante?
 messages.empty.fields: Debe completar todos los campos
+messages.confirm.relative: Se ha asociado el autorizado correctamente.
+message.relative.not.selected: No puede ingresar una boleta sin seleccionar una persona asociada.
+message.student.not.selected: No ha seleccionado un estudiante.
+message.relative.not.exists: Este estudiante no tiene personas autorizadas para salir.
 
 error.entity.not.found: El objeto no se ha encontrado.
 error.passwords.dont.match: Los passwords no coinciden.

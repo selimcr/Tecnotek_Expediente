@@ -6,6 +6,7 @@ use Tecnotek\ExpedienteBundle\Entity\Contact;
 use Tecnotek\ExpedienteBundle\Entity\Club as Club;
 use Tecnotek\ExpedienteBundle\Entity\Relative as Relative;
 use Tecnotek\ExpedienteBundle\Entity\Student;
+use Tecnotek\ExpedienteBundle\Entity\Ticket;
 use Tecnotek\ExpedienteBundle\Form\ContactFormType;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -360,6 +361,8 @@ class StudentController extends Controller
                 $firstname = $request->get('tecnotek_expediente_contactformtype[firstname]');
                 $lastname = $request->get('tecnotek_expediente_contactformtype[lastname]');
                 $identification = $request->get('tecnotek_expediente_contactformtype[identification]');
+                $kinship = $request->get('kinship');
+                $detail = $request->get('detail');
 
                 $em = $this->getDoctrine()->getEntityManager();
                 $student = $em->getRepository("TecnotekExpedienteBundle:Student")->find($studentId);
@@ -377,7 +380,8 @@ class StudentController extends Controller
                         $relative = new Relative();
                         $relative->setContact($contact);
                         $relative->setStudent($student);
-                        $relative->setKinship(Relative.FATHER);
+                        $relative->setKinship($kinship);
+                        $relative->setDescription($detail);
                         $em->persist($relative);
 
                         $em->flush();
@@ -398,7 +402,8 @@ class StudentController extends Controller
                             $relative = new Relative();
                             $relative->setContact($contact);
                             $relative->setStudent($student);
-                            $relative->setKinship($relative->getOtherType());
+                            $relative->setKinship($kinship);
+                            $relative->setDescription($detail);
                             $em->persist($relative);
 
                             $em->flush();
@@ -423,4 +428,295 @@ class StudentController extends Controller
             return new Response("<b>Not an ajax call!!!" . "</b>");
         }
     }
+
+    public function removeRelativeAction(){
+        $logger = $this->get('logger');
+        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
+        {
+            try {
+                $request = $this->get('request')->request;
+                $relativeId = $request->get('relativeId');
+
+                $em = $this->getDoctrine()->getEntityManager();
+                $relative = $em->getRepository("TecnotekExpedienteBundle:Relative")->find($relativeId);
+                if ( isset($relative) ) {
+                    $em->remove($relative);
+                    $em->flush();
+                    return new Response(json_encode(array('error' => false)));
+                } else {
+                    return new Response(json_encode(array('error' => true, 'message' => "Relative not found.")));
+                }
+            }
+            catch (Exception $e) {
+                $info = toString($e);
+                $logger->err('Student::createContactAction [' . $info . "]");
+                return new Response(json_encode(array('error' => true, 'message' => $info)));
+            }
+        }// endif this is an ajax request
+        else
+        {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+    }
+
+    public function getContactListAction(){
+        $logger = $this->get('logger');
+        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
+        {
+            try {
+                $request = $this->get('request')->request;
+                $text = $request->get('text');
+                $studentId = $request->get('studentId');
+
+                $em = $this->getDoctrine()->getEntityManager();
+                $sql = "SELECT c.id, c.firstname, c.lastname "
+                    . " FROM tek_contacts c"
+                    . " WHERE (c.firstname like '%" . $text . "%' OR c.lastname like '%" . $text . "%')"
+                    . " AND c.id NOT IN (SELECT r.contact_id FROM tek_relatives r WHERE r.student_id = " . $studentId . ")"
+                    . " ORDER BY c.firstname, c.lastname";
+
+                $logger->err($sql);
+                $stmt = $em->getConnection()->prepare($sql);
+                $stmt->execute();
+                $contacts = $stmt->fetchAll();
+
+                if ( isset($contacts) ) {
+                    return new Response(json_encode(array('error' => false, 'contacts' => $contacts)));
+                } else {
+                    return new Response(json_encode(array('error' => true, 'message' => "Data not found.")));
+                }
+            }
+            catch (Exception $e) {
+                $info = toString($e);
+                $logger->err('Student::getContactList [' . $info . "]");
+                return new Response(json_encode(array('error' => true, 'message' => $info)));
+            }
+        }// endif this is an ajax request
+        else
+        {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+    }
+
+    /* Metodos para CRUD de Tickets */
+    public function ticketIndexAction()
+    {
+        $logger = $this->get('logger');
+        $em = $this->getDoctrine()->getEntityManager();
+        $dql = "SELECT tickets FROM TecnotekExpedienteBundle:Ticket tickets WHERE tickets.date BETWEEN :initial AND :final";
+        $today = new \DateTime();
+        $query = $em->createQuery($dql)
+            ->setParameter('initial', $today->format('Y-m-d') . " 00:00:00")
+            ->setParameter('final', $today->format('Y-m-d') . " 23:59:59");
+        $logger->err("--------> " . $query->getSQL() . " :: " . $today->format('Y-m-d') . " 00:00:00 ::" .  $today->format('Y-m-d') . " 23:59:59");
+        $tickets = $query->getResult();
+
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Ticket/index.html.twig', array(
+            'tickets' => $tickets, 'menuIndex' => 3
+        ));
+    }
+
+    public function ticketSaveAction(){
+        $logger = $this->get('logger');
+        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
+        {
+            try {
+                $request = $this->get('request')->request;
+                $studentId = $request->get('studentId');
+                $relativeId = $request->get('relativeId');
+                $comments = $request->get('comments');
+
+                $em = $this->getDoctrine()->getEntityManager();
+                $student = $em->getRepository("TecnotekExpedienteBundle:Student")->find($studentId);
+                $relative = $em->getRepository("TecnotekExpedienteBundle:Relative")->find($relativeId);
+
+                if ( isset($student) && isset($relative) ) {
+                    $entity = new Ticket();
+                    $entity->setStudent($student);
+                    $entity->setRelative($relative);
+                    $entity->setComments($comments);
+                    $entity->setDate(new \DateTime());
+                    $em->persist($entity);
+                    $em->flush();
+                    return new Response(json_encode(array('error' => false)));
+                } else {
+                    return new Response(json_encode(array('error' => true, 'message' => "Student or Relative not found.")));
+                }
+            }
+            catch (Exception $e) {
+                $info = toString($e);
+                $logger->err('Student::ticketSaveAction [' . $info . "]");
+                return new Response(json_encode(array('error' => true, 'message' => $info)));
+            }
+        }// endif this is an ajax request
+        else
+        {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+    }
+
+
+
+    /*
+    public function ticketListAction($rowsPerPage = 10)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $dql = "SELECT clubs FROM TecnotekExpedienteBundle:Club clubs";
+        $query = $em->createQuery($dql);
+
+        $param = $this->get('request')->query->get('rowsPerPage');
+        if(isset($param) && $param != "")
+            $rowsPerPage = $param;
+
+        $dql2 = "SELECT count(clubs) FROM TecnotekExpedienteBundle:Club clubs";
+        $page = $this->getPaginationPage($dql2, $this->get('request')->query->get('page', 1), $rowsPerPage);
+
+        $paginator = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $query,
+            $page,
+            $rowsPerPage
+        );
+
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Club/list.html.twig', array(
+            'pagination' => $pagination, 'rowsPerPage' => $rowsPerPage, 'menuIndex' => 3
+        ));
+    }
+
+    public function ticketCreateAction()
+    {
+        $entity = new Club();
+        $form   = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\ClubFormType(), $entity);
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Club/new.html.twig', array('entity' => $entity,
+            'form'   => $form->createView(), 'menuIndex' => 3));
+    }
+
+    public function ticketShowAction($id)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $entity = $em->getRepository("TecnotekExpedienteBundle:Club")->find($id);
+        $form   = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\ClubFormType(), $entity);
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Club/show.html.twig', array('entity' => $entity,
+            'form'   => $form->createView(), 'menuIndex' => 3));
+    }
+
+
+
+    public function ticketDeleteAction($id){
+        $em = $this->getDoctrine()->getEntityManager();
+        $entity = $em->getRepository("TecnotekExpedienteBundle:Club")->find( $id );
+        if ( isset($entity) ) {
+            $em->remove($entity);
+            $em->flush();
+        }
+        return $this->redirect($this->generateUrl('_expediente_sysadmin_club'));
+    }
+
+    public function ticketEditAction($id)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $entity = $em->getRepository("TecnotekExpedienteBundle:Club")->find($id);
+        $form   = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\ClubFormType(), $entity);
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Club/edit.html.twig', array('entity' => $entity,
+            'form'   => $form->createView(), 'menuIndex' => 3));
+    }
+
+    public function ticketUpdateAction(){
+        $em = $this->getDoctrine()->getEntityManager();
+        $request = $this->get('request')->request;
+        $entity = $em->getRepository("TecnotekExpedienteBundle:Club")->find( $request->get('id'));
+
+        if ( isset($entity) ) {
+            $request = $this->getRequest();
+            $form    = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\ClubFormType(), $entity);
+            $form->bindRequest($request);
+
+            if ($form->isValid()) {
+                $em->persist($entity);
+                $em->flush();
+                return $this->redirect($this->generateUrl('_expediente_sysadmin_club_show_simple') . "/" . $entity->getId());
+            } else {
+                return $this->render('TecnotekExpedienteBundle:SuperAdmin:Club/edit.html.twig', array(
+                    'entity' => $entity, 'form'   => $form->createView(), 'menuIndex' => 3
+                ));
+            }
+        } else {
+            return $this->redirect($this->generateUrl('_expediente_sysadmin_club'));
+        }
+
+    }*/
+
+    public function getStudentListAction(){
+        $logger = $this->get('logger');
+        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
+        {
+            try {
+                $request = $this->get('request')->request;
+                $text = $request->get('text');
+
+                $em = $this->getDoctrine()->getEntityManager();
+                $sql = "SELECT e.id, e.firstname, e.lastname "
+                    . " FROM tek_students e"
+                    . " WHERE (e.firstname like '%" . $text . "%' OR e.lastname like '%" . $text . "%')"
+                    . " ORDER BY e.firstname, e.lastname";
+                $stmt = $em->getConnection()->prepare($sql);
+                $stmt->execute();
+                $students = $stmt->fetchAll();
+
+                if ( isset($students) ) {
+                    return new Response(json_encode(array('error' => false, 'students' => $students)));
+                } else {
+                    return new Response(json_encode(array('error' => true, 'message' => "Data not found.")));
+                }
+            }
+            catch (Exception $e) {
+                $info = toString($e);
+                $logger->err('Student::getStudentListAction [' . $info . "]");
+                return new Response(json_encode(array('error' => true, 'message' => $info)));
+            }
+        }// endif this is an ajax request
+        else
+        {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+    }
+
+    public function getRelativesListAction(){
+        $logger = $this->get('logger');
+        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
+        {
+            try {
+                $request = $this->get('request')->request;
+                $studentId = $request->get('studentId');
+
+                $em = $this->getDoctrine()->getEntityManager();
+                $student = $em->getRepository("TecnotekExpedienteBundle:Student")->find($studentId);
+                $result = array();
+                $counter = 0;
+                foreach($student->getRelatives() as $relative){
+                    $obj = array( 'id' => $relative->getId(),
+                        'contact' => $relative->getContact()->getFirstname() . " " . $relative->getContact()->getLastname(),
+                        'kinship' => $relative->getDescription()
+                    );
+                    $result[$counter] = $obj;
+                    $counter++;
+                }
+                if ( isset($student) ) {
+                    return new Response(json_encode(array('error' => false, 'relatives' => $result)));
+                } else {
+                    return new Response(json_encode(array('error' => true, 'message' => "Data not found.")));
+                }
+            }
+            catch (Exception $e) {
+                $info = toString($e);
+                $logger->err('Student::getRelativesListAction [' . $info . "]");
+                return new Response(json_encode(array('error' => true, 'message' => $info)));
+            }
+        }// endif this is an ajax request
+        else
+        {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+    }
+    /* Final de los metodos para CRUD de tickets*/
 }

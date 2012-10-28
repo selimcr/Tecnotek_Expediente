@@ -9,22 +9,21 @@
 
 {% block extrajs %}
 <script type="text/javascript">
-    Tecnotek.UI.urls["deleteURL"] = "{{ path("_delete_student", {id: entity.id}) }}";
-    Tecnotek.UI.translates["confirmDelete"] = "{% trans %}messages.confirmation.student.delete{% endtrans %}";
-    Tecnotek.module = "showEntity";
     Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
-
-
-
-    Tecnotek.UI.urls["getStudentsURL"] = "{{ path("_expediente_get_students_list") }}";
-    Tecnotek.UI.urls["associateStudentsURL"] = "{{ path("_expediente_associate_student") }}";
-    Tecnotek.UI.urls["removeStudentsFromClubURL"] = "{{ path("_expediente_remove_student_from_club") }}";
-    Tecnotek.UI.translates["confirmRemoveStudent"] = "{% trans %}messages.confirmation.club.remove.student{% endtrans %}";
-    Tecnotek.module = "showStudent";
-    Tecnotek.UI.vars["studentId"] = {{ entity.id }};
+    Tecnotek.UI.urls["deleteURL"] = "{{ path("_delete_student", {id: entity.id}) }}";
+    Tecnotek.UI.urls["removeRelativeURL"] = "{{ path("_expediente_remove_relative") }}";
     Tecnotek.UI.urls["saveNewContactURL"] = "{{ path("_expediente_save_new_contact") }}";
 
+    Tecnotek.UI.translates["confirmDelete"] = "{% trans %}messages.confirmation.student.delete{% endtrans %}";
+    Tecnotek.UI.translates["confirmRemoveRelative"] = "{% trans %}messages.confirmation.remove.relative{% endtrans %}";
     Tecnotek.StudentShow.translates["emptyFields"] = "{% trans %}messages.empty.fields{% endtrans %}";
+    Tecnotek.StudentShow.translates["confirmRelative"] = "{% trans %}messages.confirm.relative{% endtrans %}";
+
+    Tecnotek.module = "showStudent";
+    Tecnotek.UI.vars["studentId"] = {{ entity.id }};
+
+    Tecnotek.UI.urls["getContactsURL"] = "{{ path("_expediente_get_contacts_list") }}";
+    Tecnotek.UI.urls["associateStudentsURL"] = "{{ path("_expediente_associate_student") }}";
 </script>
 {% endblock %}
 
@@ -39,7 +38,7 @@
 
         <div class="centeredDiv">
             <!-- Tabs -->
-            <div id="tabs">
+            <div id="tabs" style="height: 600px">
                 <nav class="tabs">
                     <div class="tab-header tab-current" id="generalTab">{%trans%}label.general{%endtrans%}</div>
                     <section class="tabs-content" id="generalSection">
@@ -72,13 +71,15 @@
 
                         <div class="left" id="relativesList">
                             <div class="row tableHeader">
-                                <div class="option_width" style="float: left; width: 300px;">{% trans %}label.name{% endtrans %}</div>
+                                <div class="option_width" style="float: left; width: 200px;">{% trans %}label.name{% endtrans %}</div>
+                                <div class="option_width" style="float: left; width: 100px;">{% trans %}label.kinship{% endtrans %}</div>
                             </div>
                             {% set counter = 0 %}
 
                             {% for relative in relatives %}
-                            <div id="student_row_{{ relative.id }}" class="row userRow rel="{{ relative.id }}">
-                                <div class="option_width" style="float: left; width: 300px;">{{ relative.contact }}</div>
+                            <div id="relative_row_{{ relative.id }}" class="row userRow" rel="{{ relative.id }}">
+                                <div class="option_width" style="float: left; width: 200px;">{{ relative.contact }}</div>
+                                <div class="option_width" style="float: left; width: 100px;">{{ relative.description }}</div>
                                 <div class="right imageButton deleteButton" style="height: 16px;"  title="{% trans %}label.delete{% endtrans %}"  rel="{{ relative.id }}"></div>
                                 <div class="clear"></div>
                             </div>
@@ -127,8 +128,16 @@
                             <form id="searchform">
                                 <div>
                                     <div>{% trans %}student.include.contact{%endtrans%}</div>
-                                    <div style="font-size: 10px;">{% trans %}student.include.help{%endtrans%}</div>
-
+                                    <div style="font-size: 10px;">{% trans %}student.include.help{%endtrans%}</div><br/>
+                                    <label><span class="text-form" style="min-width: 150px;">{% trans %}label.kinship{% endtrans %}</span>
+                                        <select id="kinship2">
+                                            <option value="1">{% trans %}label.father{% endtrans %}</option>
+                                            <option value="2">{% trans %}label.mother{% endtrans %}</option>
+                                            <option value="3">{% trans %}label.brother{% endtrans %}</option>
+                                            <option value="4">{% trans %}label.sister{% endtrans %}</option>
+                                            <option value="99">{% trans %}label.other{% endtrans %}</option>
+                                        </select>
+                                    </label><br/><br/>
                                     <input type="text" size="30" value="" id="searchBox"/>
                                 </div>
                                 <div id="suggestions"></div>

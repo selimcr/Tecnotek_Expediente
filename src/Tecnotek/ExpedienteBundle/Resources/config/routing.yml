@@ -261,6 +261,60 @@ _expediente_sysadmin_club_edit_simple:
     defaults: { _controller: TecnotekExpedienteBundle:Student:clubEdit }
 #Fin de CRUD de Clubs
 
+#CRUD de Tickets para SysAdmin
+_expediente_sysadmin_ticket:
+    pattern:  /sysadmin/ticket
+    defaults: { _controller: TecnotekExpedienteBundle:Student:ticketIndex }
+
+_expediente_sysadmin_ticket_save:
+    pattern:  /sysadmin/ticket/save
+    defaults: { _controller: TecnotekExpedienteBundle:Student:ticketSave }
+
+
+##################
+_expediente_sysadmin_ticket_list:
+    pattern:  /sysadmin/ticket/list
+    defaults: { _controller: TecnotekExpedienteBundle:Student:ticketList }
+
+_delete_ticket:
+    pattern:  /sysadmin/ticket/delete/{id}
+    defaults: { _controller: TecnotekExpedienteBundle:Student:ticketDelete }
+
+_expediente_sysadmin_ticket_create:
+    pattern:  /sysadmin/ticket/create
+    defaults: { _controller: TecnotekExpedienteBundle:Student:ticketCreate }
+
+
+
+_expediente_sysadmin_ticket_update:
+    pattern:  /sysadmin/ticket/update
+    defaults: { _controller: TecnotekExpedienteBundle:Student:ticketUpdate }
+
+_expediente_sysadmin_ticket_show:
+    pattern:  /sysadmin/ticket/show/{id}
+    defaults: { _controller: TecnotekExpedienteBundle:Student:ticketShow }
+
+_expediente_sysadmin_ticket_edit:
+    pattern:  /sysadmin/ticket/edit/{id}
+    defaults: { _controller: TecnotekExpedienteBundle:Student:ticketEdit }
+
+_expediente_sysadmin_ticket_show_simple:
+    pattern:  /sysadmin/ticket/show
+    defaults: { _controller: TecnotekExpedienteBundle:Student:ticketShow }
+
+_expediente_sysadmin_ticket_edit_simple:
+    pattern:  /sysadmin/ticket/edit
+    defaults: { _controller: TecnotekExpedienteBundle:Student:ticketEdit }
+
+_expediente_sysadmin_student_ajax_list:
+    pattern:  /sysadmin/student/ajaxList
+    defaults: { _controller: TecnotekExpedienteBundle:Student:getStudentList }
+
+_expediente_sysadmin_relatives_list:
+    pattern:  /sysadmin/student/relativesList
+    defaults: { _controller: TecnotekExpedienteBundle:Student:getRelativesList }
+#Fin de CRUD de Tickets
+
 #Obtener lista de estudiantes
 _expediente_get_students_list:
     pattern:  /sysadmin/students/list
@@ -277,6 +331,14 @@ _expediente_remove_student_from_club:
 _expediente_save_new_contact:
     pattern:  /sysadmin/students/newContact
     defaults: { _controller: TecnotekExpedienteBundle:Student:createContact }
+
+_expediente_remove_relative:
+    pattern:  /sysadmin/students/removeRelative
+    defaults: { _controller: TecnotekExpedienteBundle:Student:removeRelative}
+
+_expediente_get_contacts_list:
+    pattern:  /sysadmin/students/contact/list
+    defaults: { _controller: TecnotekExpedienteBundle:Student:getContactList }
 
 #Administrador
 _expediente_admin:

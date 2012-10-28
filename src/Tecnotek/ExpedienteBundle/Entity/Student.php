@@ -41,6 +41,13 @@ class Student
      */
     private $clubs;
 
+    /**
+     * @var Relative
+     *
+     * @ORM\OneToMany(targetEntity="Relative", mappedBy="student", cascade={"all"})
+     */
+    private $relatives;
+
     public function __construct()
     {
         $this->clubs = new ArrayCollection();
@@ -107,5 +114,9 @@ class Student
     public function getClubs()
     {
         return $this->clubs->toArray();
+    }
+
+    public function getRelatives(){
+        return $this->relatives;
     }
 }

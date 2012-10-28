@@ -237,3 +237,9 @@ footer h4{ color:#fff;}
     background:      -o-linear-gradient(top, #E6E6E6, gainsboro);
     background:      -o-linear-gradient(top, #E6E6E6, gainsboro);
     -pie-background:     linear-gradient(top, #E6E6E6, gainsboro);}
+
+.form-ticket{border: solid 1px #000; padding: 5px;}
+.form-ticket .internal{ background-color: #e6e6fa; padding: 10px; color: #0e0e0e; font-weight: bold; line-height: 36px;}
+.form-ticket .internal input{ width: 300px; height: 24px;}
+.form-ticket .internal select{ width: 305px; height: 24px;}
+.form-ticket .internal textarea{ width: 290px;}
