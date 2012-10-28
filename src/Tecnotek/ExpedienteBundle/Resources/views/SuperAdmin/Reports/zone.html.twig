@@ -1,0 +1,79 @@
+{% extends 'TecnotekExpedienteBundle::logged_layout.html.twig' %}
+
+{% block htmlTitle %}
+    Tecnotek :: Expediente :: Super Administrador :: Reportes
+{% endblock %}
+
+{% block extrajs %}
+<script type="text/javascript">
+    Tecnotek.module = "reports";
+    Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
+    Tecnotek.UI.urls["getStudentsURL"] = "{{ path('_expediente_sysadmin_student_ajax_list')}}";
+    Tecnotek.UI.urls["loadStudentRelativesURL"] = "{{ path('_expediente_sysadmin_relatives_list')}}";
+    Tecnotek.UI.urls["saveTicketURL"] = "{{ path('_expediente_sysadmin_ticket_save')}}";
+    Tecnotek.StudentShow.translates["relative.not.selected"] = "{% trans %}message.relative.not.selected{% endtrans %}";
+    Tecnotek.StudentShow.translates["student.not.selected"] = "{% trans %}message.student.not.selected{% endtrans %}";
+    Tecnotek.StudentShow.translates["relative.not.exists"] = "{% trans %}message.relative.not.exists{% endtrans %}";
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="container_24">
+    <div class="grid_24">
+        <div>
+            <div class="left">
+                <h1>{% trans %}label.reports.routes{% endtrans %}</h1>
+            </div>
+            <div class="left" style="line-height: 48px; margin-left: 25px;">
+                <span>{% trans %}label.reports.routes.message{% endtrans %}</span>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="search-results" style="margin-top: 25px;">
+            <div class="row tableHeader" style="height: 32px; line-height: 32px;">
+                <div class="option_width" style="float: left; width: 150px;">{% trans %}label.name{% endtrans %}</div>
+                <div class="option_width" style="float: left; width: 115px;">{% trans %}label.licensePlate{% endtrans %}</div>
+                <div class="option_width" style="float: left; width: 150px;">{% trans %}label.driver{% endtrans %}</div>
+                <div class="option_width" style="float: left; width: 110px;">{% trans %}label.color{% endtrans %}</div>
+                <div class="option_width" style="float: left; width: 110px;">{% trans %}label.capacity{% endtrans %}</div>
+                <div class="option_width" style="float: left; width: 110px;">{% trans %}label.route{% endtrans %}</div>
+                <button style="margin-left: 15px; margin-top: 0px;" type="button" class="right btn print" name="search"><span></span>{% trans %}label.print{% endtrans %}</button>
+            </div>
+
+            {% for entity in entities %}
+                <div class="row userRow " style="background-color: #fff5ee;">
+                    <div class="option_width" style="float: left; width: 150px;">{{ entity.name }}</div>
+                    <div class="clear"></div>
+                </div>
+                {% for route in entity.routes %}
+                    <div class="row userRow tableRowOdd">
+                        <div class="option_width" style="float: left; width: 50px;"></div>
+                        <div class="option_width" style="float: left; width: 150px;">{{ route.code }}</div>
+                        <div class="option_width" style="float: left; width: 115px;">{{ route.name }}</div>
+                        <div class="clear"></div>
+                    </div>
+                    {% for bus in route.buses %}
+                    <div class="row userRow tableRow">
+                        <div class="option_width" style="float: left; width: 100px;"></div>
+                        <div class="option_width" style="float: left; width: 150px;">{{ bus.name }}</div>
+                        <div class="option_width" style="float: left; width: 115px;">{{ bus.licensePlate }}</div>
+                        <div class="clear"></div>
+                    </div>
+                    {% endfor %}
+                {% endfor %}
+            {% else %}
+            <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
+                <div class="option_width" style="float: left; width: 375px;">{% trans %}results.not.found{% endtrans %}</div>
+                <div class="clear"></div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div class="wrapper">
+            <div class="grid_24 padline">
+                    <div class="lineH"></div>
+            </div>
+    </div>
+</div>
+{% endblock %}
