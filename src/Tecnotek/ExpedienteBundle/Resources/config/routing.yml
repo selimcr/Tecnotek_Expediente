@@ -349,3 +349,18 @@ _expediente_admin:
 _expediente_profesor:
     pattern:  /profesor
     defaults: { _controller: TecnotekExpedienteBundle:Default:index }
+
+###########      REPORTS      ###########
+_expediente_report_bus:
+    pattern:  /reports/bus/
+    defaults: { _controller: TecnotekExpedienteBundle:Report:reportBus }
+
+_expediente_report_bus_search:
+    pattern:  /reports/bus/search/
+    defaults: { _controller: TecnotekExpedienteBundle:Report:searchBus }
+
+_expediente_report_zones:
+    pattern:  /reports/zones/
+    defaults: { _controller: TecnotekExpedienteBundle:Report:reportZones }
+
+#########################################

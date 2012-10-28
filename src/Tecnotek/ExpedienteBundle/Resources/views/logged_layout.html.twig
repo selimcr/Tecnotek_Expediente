@@ -98,8 +98,13 @@
                         <li><a style="text-align: left;" href="{{ path('_expediente_sysadmin_ticket') }}">{% trans %}label.tickets{% endtrans %}</a></li>
                     </ul>
                 </li>
+                <li {% if menuIndex is defined and menuIndex == 4%}class="current"{% endif %}><a href="#"><em>{% trans %}label.reports{% endtrans %}</em><strong></strong></a>
+                    <ul>
+                        <li><a style="text-align: left;" href="{{ path('_expediente_report_bus') }}">{% trans %}label.buses{% endtrans %}</a></li>
+                        <li><a style="text-align: left;" href="{{ path('_expediente_report_zones') }}">{% trans %}label.routes{% endtrans %}</a></li>
+                    </ul>
+                </li>
             {% endif %}
-				<li><a href="index-1.html"><em>services</em><strong></strong></a></li>
 				<li><a href="index-6.html"><em>contacts</em><strong></strong></a></li>
 			</ul>
 			<div class="clear"></div>

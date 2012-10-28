@@ -4,9 +4,13 @@ namespace Tecnotek\ExpedienteBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
+use Doctrine\ORM\Mapping\ManyToOne as ManyToOne;
+use Doctrine\ORM\Mapping\JoinColumn as JoinColumn;
+
 use Symfony\Component\Validator\Constraints as Assert;
 
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
 /**
  *
  * @ORM\Table(name="tek_route")
@@ -48,6 +52,19 @@ class Route
      * @Assert\MaxLength(limit = 255)
      */
     private $mapUrl;
+
+    /**
+     * @ManyToOne(targetEntity="Zone")
+     * @JoinColumn(name="zone_id", referencedColumnName="id")
+     */
+    private $zone;
+
+    /**
+     * @var Buses
+     *
+     * @ORM\OneToMany(targetEntity="Buseta", mappedBy="route")
+     */
+    private $buses;
 
     public function __construct()
     {
@@ -147,5 +164,29 @@ class Route
     public function getMapUrl()
     {
         return $this->mapUrl;
+    }
+
+    /**
+     * Set zone
+     *
+     * @param \Tecnotek\ExpedienteBundle\Entity\Zone $zone
+     */
+    public function setZone(\Tecnotek\ExpedienteBundle\Entity\Zone $zone)
+    {
+        $this->zone = $zone;
+    }
+
+    /**
+     * Get zone
+     *
+     * @return \Tecnotek\ExpedienteBundle\Entity\Zone
+     */
+    public function getZone()
+    {
+        return $this->zone;
+    }
+
+    public function getBuses(){
+        return $this->buses;
     }
 }

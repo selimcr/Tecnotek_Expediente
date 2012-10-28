@@ -40,6 +40,11 @@ label.coordinator: Coordinador
 label.day: Día
 label.timeI: Time I
 label.timeO: Time O
+label.search: Buscar
+label.filter: Filtrar
+label.print: Imprimir
+label.all: Todos
+
 
 label.bus: Buseta
 label.buses: Busetas
@@ -48,6 +53,7 @@ label.estudiantado: Estudiantado
 label.clubs: Clubes
 label.students: Estudiantes
 label.tickets: Boletas de Salida
+label.reports: Reportes
 
 label.code: Codigo
 label.description: Descripcion
@@ -119,6 +125,14 @@ label.mother: Madre
 label.brother: Hermano
 label.sister: Hermana
 label.other: Otro
+
+label.reports.bus: Reporte de Busetas
+label.reports.bus.message: Ingrese las opciones de filtrado deseadas y presione el boton de filtrar.
+
+label.reports.routes: Reporte de zonas y rutas
+label.reports.routes.message: Esta es la lista de zonas, rutas y sus busetas asociadas a cada una.
+
+results.not.found: No se han encontrado resultados.
 
 usuarios.estado.1: Activo
 usuarios.estado.2: Inactivo

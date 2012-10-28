@@ -243,3 +243,11 @@ footer h4{ color:#fff;}
 .form-ticket .internal input{ width: 300px; height: 24px;}
 .form-ticket .internal select{ width: 305px; height: 24px;}
 .form-ticket .internal textarea{ width: 290px;}
+
+/*Reports*/
+.filter-search{border: thin solid silver; padding: 2px;}
+.filter-search .internal{padding: 5px; background-color: silver;}
+.filter-search .internal .filter-row{line-height: 28px; height: 28px; display: block; padding: 8px 25px; background-color: #F9F9F9;}
+.filter-search .internal #searchForm .field{float: left; width: 50%;}
+.filter-search .internal #searchForm .field label{display: inline-block; width: 75px;}
+.filter-search .internal #searchForm .field select{height: 30px; width: 300px;}

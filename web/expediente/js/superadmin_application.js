@@ -54,6 +54,9 @@ var Tecnotek = {
                 case "ticketsIndex":
                     Tecnotek.Tickets.init();
                     break;
+                case "reports":
+                    Tecnotek.Reports.init();
+                    break;
                 default:
 					break;
 				}
@@ -187,6 +190,29 @@ var Tecnotek = {
 				return result;
 			}
 		},
+        Reports : {
+            init : function() {
+                Tecnotek.Reports.initComponents();
+                Tecnotek.Reports.initButtons();
+            },
+            initComponents : function() {
+                $('.check').change(function(event){
+                    $("#" + $(this).attr("rel")).val("");
+                    if($(this).is(':checked')){
+                        $("#" + $(this).attr("rel")).attr("disabled",false);
+                    } else {
+                        $("#" + $(this).attr("rel")).attr("disabled",true);
+                    }
+                });
+            },
+            initButtons : function() {
+                $('#btnEliminar').click(function(event){
+                    if (Tecnotek.showConfirmationQuestion(Tecnotek.UI.translates["confirmDelete"])){
+                        location.href = Tecnotek.UI.urls["deleteURL"];
+                    }
+                });
+            }
+        },
 		AdministratorList : {
 			init : function() {
 				Tecnotek.AdministratorList.initComponents();
@@ -670,20 +696,6 @@ var Tecnotek = {
                                     Tecnotek.showErrorMessage("Error saving: " + textStatus + ".",
                                         true, "", false);
                                 }, true);
-                            /*
-                            //Insertar la fila
-                            $data = '<div class="row userRow tableRow">';
-                            $data += '    <div class="option_width" style="float: left; width: 150px;">' + $('#student').val() + '</div>';
-                            $data += '    <div class="option_width" style="float: left; width: 150px;">' + $('#relative').find(":selected").text() + '</div>';
-                            $data += '    <div class="option_width" style="float: left; width: 75px;">' + '</div>';
-                            $data += '    <div class="clear"></div>';
-                            $data += '</div>';
-                            $("#ticketsList").append($data);
-                            //Limpiar valores
-                            $('#student').attr("rel", 0);
-                            $('#student').val("");
-                            $("#relative").empty();
-                            $("#comments").val("");*/
                         } else {
                             Tecnotek.showErrorMessage(Tecnotek.StudentShow.translates["relative.not.selected"], true, "", false);
                         }

@@ -501,14 +501,12 @@ class StudentController extends Controller
     /* Metodos para CRUD de Tickets */
     public function ticketIndexAction()
     {
-        $logger = $this->get('logger');
         $em = $this->getDoctrine()->getEntityManager();
         $dql = "SELECT tickets FROM TecnotekExpedienteBundle:Ticket tickets WHERE tickets.date BETWEEN :initial AND :final";
         $today = new \DateTime();
         $query = $em->createQuery($dql)
             ->setParameter('initial', $today->format('Y-m-d') . " 00:00:00")
             ->setParameter('final', $today->format('Y-m-d') . " 23:59:59");
-        $logger->err("--------> " . $query->getSQL() . " :: " . $today->format('Y-m-d') . " 00:00:00 ::" .  $today->format('Y-m-d') . " 23:59:59");
         $tickets = $query->getResult();
 
         return $this->render('TecnotekExpedienteBundle:SuperAdmin:Ticket/index.html.twig', array(

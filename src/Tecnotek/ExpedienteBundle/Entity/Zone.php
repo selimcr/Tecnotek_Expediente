@@ -34,6 +34,13 @@ class Zone
      */
     private $description;
 
+    /**
+     * @var Routes
+     *
+     * @ORM\OneToMany(targetEntity="Route", mappedBy="zone")
+     */
+    private $routes;
+
     public function __construct()
     {
     }
@@ -92,5 +99,9 @@ class Zone
     public function getDescription()
     {
         return $this->description;
+    }
+
+    public function getRoutes(){
+        return $this->routes;
     }
 }
