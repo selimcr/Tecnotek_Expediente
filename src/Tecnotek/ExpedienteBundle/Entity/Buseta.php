@@ -57,6 +57,12 @@ class Buseta
     private $driver;
 
     /**
+     * @ORM\Column(type="string", length=60, nullable = true)
+     * @Assert\MaxLength(limit = 60)
+     */
+    private $telephone;
+
+    /**
      * @ORM\Column(type="integer")
      * @Assert\NotBlank()
      * @Assert\Min(limit = 1)
@@ -77,12 +83,6 @@ class Buseta
      * @ORM\Column(type="date", nullable = true)
      */
     private $permission;
-
-    /**
-     * @ManyToOne(targetEntity="Route")
-     * @JoinColumn(name="route_id", referencedColumnName="id")
-     */
-    private $route;
 
     public function __construct()
     {
@@ -185,6 +185,26 @@ class Buseta
     }
 
     /**
+     * Set telephone
+     *
+     * @param string $telephone
+     */
+    public function setTelephone($telephone)
+    {
+        $this->telephone = $telephone;
+    }
+
+    /**
+     * Get telephone
+     *
+     * @return string
+     */
+    public function getTelephone()
+    {
+        return $this->telephone;
+    }
+
+    /**
      * Set capacity
      *
      * @param integer $capacity
@@ -264,23 +284,4 @@ class Buseta
         return $this->permission;
     }
 
-    /**
-     * Set route
-     *
-     * @param \Tecnotek\ExpedienteBundle\Entity\Route $route
-     */
-    public function setRoute(\Tecnotek\ExpedienteBundle\Entity\Route $route)
-    {
-        $this->route = $route;
-    }
-
-    /**
-     * Get route
-     *
-     * @return \Tecnotek\ExpedienteBundle\Entity\Route
-     */
-    public function getRoute()
-    {
-        return $this->route;
-    }
 }

@@ -40,9 +40,9 @@ class ReportController extends Controller
         if( $licensePlate != ""){ $where .= ($where=="")? " e.licensePlate like '%$licensePlate%'":" AND e.licensePlate like '%$licensePlate%'"; }
         if( $driver != ""){ $where .= ($where=="")? " e.driver like '%$driver%'":" AND e.driver like '%$driver%'"; }
         if( $color != ""){ $where .= ($where=="")? " e.color like '%$color%'":" AND e.color like '%$color%'"; }
-        if( $route != 0){
+        /*if( $route != 0){
             $where .= ($where=="")? " e.route = $route":" AND e.route = $route";
-        }
+        }*/
 
         $logger->err("Parametros de busqueda de busetas: " . $name . "-" . $licensePlate . "-" . $driver. "-" . $color. "-" . $capacity. "-" . $route . "<-");
         $em = $this->getDoctrine()->getEntityManager();
@@ -56,6 +56,14 @@ class ReportController extends Controller
         ));
     }
 
+    public function reportRouteAction(){
+        $em = $this->getDoctrine()->getEntityManager();
+        $entities = $em->getRepository("TecnotekExpedienteBundle:Route")->findAll();
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Reports/routes.html.twig', array('menuIndex' => 4,
+            'entities' => $entities
+        ));
+    }
+
     public function reportZonesAction(){
         $em = $this->getDoctrine()->getEntityManager();
         $entities = $em->getRepository("TecnotekExpedienteBundle:Zone")->findAll();
@@ -63,4 +71,14 @@ class ReportController extends Controller
             'entities' => $entities
         ));
     }
+
+    public function reportStudentByRouteAction(){
+        $em = $this->getDoctrine()->getEntityManager();
+        $entities = $em->getRepository("TecnotekExpedienteBundle:Route")->findAll();
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Reports/students_by_route.html.twig', array('menuIndex' => 4,
+            'entities' => $entities
+        ));
+    }
+
+
 }

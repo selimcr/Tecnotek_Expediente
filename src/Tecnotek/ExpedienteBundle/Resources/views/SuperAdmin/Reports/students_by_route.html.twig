@@ -1,0 +1,94 @@
+{% extends 'TecnotekExpedienteBundle::logged_layout.html.twig' %}
+
+{% block htmlTitle %}
+    Tecnotek :: Expediente :: Super Administrador :: Reportes
+{% endblock %}
+
+{% block extrajs %}
+<script type="text/javascript" src="{{ asset('expediente/js/jquery.printElement.min.js') }}"></script>
+<script type="text/javascript">
+    Tecnotek.module = "reports";
+    Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="container_24">
+    <div class="grid_24">
+        <div>
+            <div class="left">
+                <h1>{% trans %}label.reports.students.by.route{% endtrans %}</h1>
+            </div>
+            <button style="margin-left: 15px; margin-top: 0px;" type="button" class="right btn print" id="btnPrint" name="btnPrint" rel="Rutas por Zona"><span></span>{% trans %}label.print{% endtrans %}</button>
+            <div class="clear"></div>
+        </div>
+
+        <div id="report" style="margin-top: 25px;">
+
+            <div class="titles" style="font-size: 10px;">
+                <div class="left">Corporación Educativa Saint Michael S.A.</div>
+                <div class="right">Control de Buses Escuela.</div>
+                <div class="clear"></div>
+
+                <div class="left">{{ "now"|date("d/M/Y H:i:s") }}</div>
+                <div class="clear"></div>
+
+                <p style="text-align: center;padding-bottom: 0px;">Estudiantes por Ruta</p>
+                <p style="text-align: center; padding-bottom: 0px;">Ordenados por Nombre</p>
+            </div>
+
+            {% for route in entities %}
+            <div class="fields_row route">
+                <p style="text-decoration: underline; padding-bottom: 0px;">Ruta {{ loop.index }}: {{ route.code ~ " - " ~ route.description }}</p>
+                {% if route.bus != "" %}
+                <p style="font-size: 10px; padding-bottom: 0px;">Chofer: {{ route.bus.driver}} &emsp;Placa: {{ route.bus.licensePlate }} &emsp;Teléfono: {{ route.bus.telephone }}&emsp; Capacidad: {{ route.bus.capacity }}</p>
+                {% else %}
+                <p style="font-size: 10px; padding-bottom: 0px;">No se ha definido la buseta.</p>
+                {% endif %}
+            </div>
+            <div class="fields_row student_title">
+                <div style="float: left; width: 50px;">{%trans%}label.carne{%endtrans%}</div>
+                <div style="float: left; width: 200px;">{%trans%}label.student.name{%endtrans%}</div>
+                <div style="float: left; width: 60px;">{%trans%}label.section{%endtrans%}</div>
+                <div style="float: left; width: 315px;">{%trans%}label.address{%endtrans%}</div>
+                <div style="float: left; width: 50px;">{%trans%}label.schedule{%endtrans%}</div>
+                <div style="float: left; width: 55px;">{%trans%}label.pickUp{%endtrans%}</div>
+                <div style="float: left; width: 50px;">{%trans%}label.leaveTime{%endtrans%}</div>
+                <div style="float: left; width: 70px;">{%trans%}label.fatherPhoneShort{%endtrans%}</div>
+                <div style="float: left; width: 70px;">{%trans%}label.motherPhoneShort{%endtrans%}</div>
+
+                <div class="clear"></div>
+            </div>
+                {% for student in route.students %}
+                <div class="student_row">
+                    <div style="float: left; width: 50px;">{{ student.carne }}</div>
+                    <div style="float: left; width: 200px;">{{ student }}</div>
+                    <div style="float: left; width: 60px;">&nbsp;</div>
+                    <div style="float: left; width: 315px;">{{ student.address }}</div>
+                    <div style="float: left; width: 50px;">&nbsp;</div>
+                    <div style="float: left; width: 55px;">{{ student.pickUp }}</div>
+                    <div style="float: left; width: 50px;">{{ student.leaveTime }}</div>
+                    <div style="float: left; width: 70px;">{{ student.fatherPhone }}</div>
+                    <div style="float: left; width: 70px;">{{ student.motherPhone }}</div>
+                </div>
+                <div class="clear"></div>
+                {% endfor %}
+                <div class="student_footer">
+                    Total de estudiantes por ruta: {{ route.students|length}}
+                </div>
+            {% else %}
+            <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
+                <div class="option_width" style="float: left; width: 375px;">{% trans %}results.not.found{% endtrans %}</div>
+                <div class="clear"></div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div class="wrapper">
+            <div class="grid_24 padline">
+                    <div class="lineH"></div>
+            </div>
+    </div>
+</div>
+{% endblock %}

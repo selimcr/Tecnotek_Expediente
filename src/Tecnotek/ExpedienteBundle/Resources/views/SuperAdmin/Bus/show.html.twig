@@ -49,6 +49,11 @@
                         <div class="clear"></div>
                     </div>
                     <div>
+                        <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.telephone{%endtrans%}</div>
+                        <div id="labelTelephone" class="left">{{ entity.telephone }}</div>
+                        <div class="clear"></div>
+                    </div>
+                    <div>
                         <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.capacity{%endtrans%}</div>
                         <div id="labelCapacity" class="left">{{ entity.capacity }}</div>
                         <div class="clear"></div>
@@ -66,11 +71,6 @@
                     <div>
                         <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.permission{%endtrans%}</div>
                         <div id="labelPermission" class="left">{% if entity.permission != null %}{{ entity.permission|date("d/M/y") }} {% endif %}</div>
-                        <div class="clear"></div>
-                    </div>
-                    <div>
-                        <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.route{%endtrans%}</div>
-                        <div id="labelRoute" class="left">{{ entity.route }}</div>
                         <div class="clear"></div>
                     </div>
 

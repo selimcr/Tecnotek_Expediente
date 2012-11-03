@@ -26,10 +26,9 @@
             <div class="option_width" style="float: left; width: 150px;">{% trans %}label.name{% endtrans %}</div>
             <div class="option_width" style="float: left; width: 75px;">{% trans %}label.licensePlate{% endtrans %}</div>
             <div class="option_width" style="float: left; width: 75px;">{% trans %}label.color{% endtrans %}</div>
-            <div class="option_width" style="float: left; width: 150px;">{% trans %}label.driver{% endtrans %}</div>
+            <div class="option_width" style="float: left; width: 200px;">{% trans %}label.driver{% endtrans %}</div>
             <div class="option_width" style="float: left; width: 80px;">{% trans %}label.capacity{% endtrans %}</div>
-            <div class="option_width" style="float: left; width: 150px;">{% trans %}label.permission{% endtrans %}</div>
-            <div class="option_width" style="float: left; width: 150px;">{% trans %}label.route{% endtrans %}</div>
+            <div class="option_width" style="float: left; width: 100px;">{% trans %}label.permission{% endtrans %}</div>
         </div>
             
         {% set counter = 0 %}   
@@ -39,10 +38,9 @@
                 <div class="option_width" style="float: left; width: 150px;">{{ entity.name }}</div>
                 <div class="option_width" style="float: left; width: 75px;">{{ entity.licensePlate }}</div>
                 <div class="option_width" style="float: left; width: 75px;">{{ entity.color }}</div>
-                <div class="option_width" style="float: left; width: 150px;">{{ entity.driver }}</div>
+                <div class="option_width" style="float: left; width: 200px;">{{ entity.driver }}</div>
                 <div class="option_width" style="float: left; width: 80px;">{{ entity.capacity }}</div>
-                <div class="option_width" style="float: left; width: 150px;">{% if entity.permission != null %} {{ entity.permission|date("d/M/y") }} {% else %} &nbsp; {% endif %}</div>
-                <div class="option_width" style="float: left; width: 150px;">{{ entity.route }}</div>
+                <div class="option_width" style="float: left; width: 100px;">{% if entity.permission != null %} {{ entity.permission|date("d/M/y") }} {% else %} &nbsp; {% endif %}</div>
                 <div class="right imageButton editButton"  title="{% trans %}label.edit{% endtrans %}"  rel="{{ entity.id }}"></div>
                 <div class="right imageButton viewButton"  title="{% trans %}label.view{% endtrans %}"  rel="{{ entity.id }}"></div>
                 <div class="clear"></div>

@@ -717,4 +717,15 @@ class StudentController extends Controller
         }
     }
     /* Final de los metodos para CRUD de tickets*/
+
+
+    /* Metodos para CRUD de Absences*/
+    public function absencesIndexAction(){
+        $em = $this->getDoctrine()->getEntityManager();
+        $entities = $em->getRepository("TecnotekExpedienteBundle:Absence")->findAll();
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Absence/index.html.twig', array('menuIndex' => 3,
+            'entities' => $entities
+        ));
+    }
+    /* Final de los metodos para CRUD de Absences*/
 }

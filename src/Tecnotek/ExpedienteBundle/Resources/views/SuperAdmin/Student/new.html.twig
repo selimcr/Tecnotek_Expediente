@@ -30,6 +30,27 @@
                     <div class="formErrors">{{ form_errors(form.lastname) }}</div>
                     <label><span class="text-form" style="min-width: 150px;">{% trans %}label.lastname{% endtrans %}</span>{{ form_widget(form.lastname) }}</label>
 
+                    <div class="formErrors">{{ form_errors(form.carne) }}</div>
+                    <label><span class="text-form" style="min-width: 150px;">{% trans %}label.carne{% endtrans %}</span>{{ form_widget(form.carne) }}</label>
+
+                    <div class="formErrors">{{ form_errors(form.address) }}</div>
+                    <label><span class="text-form" style="min-width: 150px;">{% trans %}label.address{% endtrans %}</span>{{ form_widget(form.address) }}</label>
+
+                    <div class="formErrors">{{ form_errors(form.fatherPhone) }}</div>
+                    <label><span class="text-form" style="min-width: 150px;">{% trans %}label.fatherPhone{% endtrans %}</span>{{ form_widget(form.fatherPhone) }}</label>
+
+                    <div class="formErrors">{{ form_errors(form.motherPhone) }}</div>
+                    <label><span class="text-form" style="min-width: 150px;">{% trans %}label.motherPhone{% endtrans %}</span>{{ form_widget(form.motherPhone) }}</label>
+
+                    <div class="formErrors">{{ form_errors(form.pickUp) }}</div>
+                    <label><span class="text-form" style="min-width: 150px;">{% trans %}label.pickUp{% endtrans %}</span>{{ form_widget(form.pickUp) }}</label>
+
+                    <div class="formErrors">{{ form_errors(form.leaveTime) }}</div>
+                    <label><span class="text-form" style="min-width: 150px;">{% trans %}label.leaveTime{% endtrans %}</span>{{ form_widget(form.leaveTime) }}</label>
+
+                    <div class="formErrors">{{ form_errors(form.route) }}</div>
+                    <label><span class="text-form" style="min-width: 150px;">{% trans %}label.route{% endtrans %}</span>{{ form_widget(form.route) }}</label>
+
                     <div class="left"><a href="{{ path('_expediente_sysadmin_student') }}" class="btn delete"><span></span>{% trans %}label.cancelar{% endtrans %}</a></div>
                     <button style="margin-left: 15px; margin-top: 0px;" type="submit" class="left btn save" name="save"><span></span>{% trans %}label.save{% endtrans %}</button>
                     <div class="clear"></div>                    

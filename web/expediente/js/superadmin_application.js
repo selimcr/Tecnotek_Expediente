@@ -211,6 +211,10 @@ var Tecnotek = {
                         location.href = Tecnotek.UI.urls["deleteURL"];
                     }
                 });
+                $('#btnPrint').click(function(event){
+                    $("#report").printElement({printMode:'iframe', pageTitle:$(this).attr('rel')});
+                });
+
             }
         },
 		AdministratorList : {

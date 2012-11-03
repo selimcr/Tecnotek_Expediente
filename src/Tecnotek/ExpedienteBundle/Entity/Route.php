@@ -60,11 +60,17 @@ class Route
     private $zone;
 
     /**
-     * @var Buses
-     *
-     * @ORM\OneToMany(targetEntity="Buseta", mappedBy="route")
+     * @ManyToOne(targetEntity="Buseta")
+     * @JoinColumn(name="bus_id", referencedColumnName="id")
      */
-    private $buses;
+    private $bus;
+
+    /**
+     * @var Students
+     *
+     * @ORM\OneToMany(targetEntity="Student", mappedBy="route")
+     */
+    private $students;
 
     public function __construct()
     {
@@ -186,7 +192,27 @@ class Route
         return $this->zone;
     }
 
-    public function getBuses(){
-        return $this->buses;
+    /**
+     * Set bus
+     *
+     * @param \Tecnotek\ExpedienteBundle\Entity\Buseta $bus
+     */
+    public function setBus(\Tecnotek\ExpedienteBundle\Entity\Buseta $bus)
+    {
+        $this->bus = $bus;
+    }
+
+    /**
+     * Get bus
+     *
+     * @return \Tecnotek\ExpedienteBundle\Entity\Buseta
+     */
+    public function getBus()
+    {
+        return $this->bus;
+    }
+
+    public function getStudents(){
+        return $this->students;
     }
 }

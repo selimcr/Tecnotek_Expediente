@@ -44,6 +44,12 @@
                         <div class="formErrors">{{ form_errors(form.mapUrl) }}</div>
                         <label><span class="text-form" style="min-width: 150px;">{% trans %}label.route{% endtrans %}</span>{{ form_widget(form.mapUrl) }}</label>
 
+                        <div class="formErrors">{{ form_errors(form.zone) }}</div>
+                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.zone{% endtrans %}</span>{{ form_widget(form.zone) }}</label>
+
+                        <div class="formErrors">{{ form_errors(form.bus) }}</div>
+                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.bus{% endtrans %}</span>{{ form_widget(form.bus) }}</label>
+
                         <a href="{{ path('_expediente_sysadmin_route_show', {'id': entity.id}) }}" class="left btn delete"><span></span>{% trans %}label.cancelar{% endtrans %}</a>
                         <button style="margin-left: 15px; margin-top: 0px;" type="submit" class="left btn save" name="save"><span></span>{% trans %}label.save{% endtrans %}</button>
                         <div class="clear"></div>

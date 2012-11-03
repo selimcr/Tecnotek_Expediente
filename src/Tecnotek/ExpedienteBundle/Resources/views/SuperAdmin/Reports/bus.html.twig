@@ -5,6 +5,7 @@
 {% endblock %}
 
 {% block extrajs %}
+<script type="text/javascript" src="{{ asset('expediente/js/jquery.printElement.min.js') }}"></script>
 <script type="text/javascript">
     Tecnotek.module = "reports";
     Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
@@ -70,25 +71,41 @@
                 </form>
             </div>
         </div>
-        <div class="search-results" style="margin-top: 25px;">
-            <div class="row tableHeader" style="height: 32px; line-height: 32px;">
-                <div class="option_width" style="float: left; width: 150px;">{% trans %}label.name{% endtrans %}</div>
-                <div class="option_width" style="float: left; width: 115px;">{% trans %}label.licensePlate{% endtrans %}</div>
-                <div class="option_width" style="float: left; width: 150px;">{% trans %}label.driver{% endtrans %}</div>
-                <div class="option_width" style="float: left; width: 110px;">{% trans %}label.color{% endtrans %}</div>
-                <div class="option_width" style="float: left; width: 110px;">{% trans %}label.capacity{% endtrans %}</div>
-                <div class="option_width" style="float: left; width: 110px;">{% trans %}label.route{% endtrans %}</div>
-                <button style="margin-left: 15px; margin-top: 0px;" type="button" class="right btn print" name="search"><span></span>{% trans %}label.print{% endtrans %}</button>
+
+        <div style="margin-top: 25px;">
+            <button style="margin-left: 15px; margin-top: 0px;" type="button" class="right btn print" id="btnPrint" name="btnPrint" rel="Cat&aacute;logo de Buses"><span></span>{% trans %}label.print{% endtrans %}</button>
+            <div class="clear"></div>
+        </div>
+
+        <div id="report" style="margin-top: 25px;">
+
+            <div class="titles">
+                <div class="left">Corporación Educativa Saint Michael S.A.</div>
+                <div class="right">Control de Buses Escuela.</div>
+                <div class="clear"></div>
+
+                <div class="left">{{ "now"|date("d/M/Y H:i:s") }}</div>
+                <div class="clear"></div>
+
+                <p style="text-align: center;">Catálogo de Buses</p>
+
+            </div>
+
+            <div class="header_row">
+                <div class="field" style="float: left; width: 115px;">{% trans %}label.licensePlate{% endtrans %}</div>
+                <div class="field" style="float: left; width: 300px;">{% trans %}label.driver{% endtrans %}</div>
+                <div class="field" style="float: left; width: 110px;">{% trans %}label.color{% endtrans %}</div>
+                <div class="field" style="float: left; width: 110px;">{% trans %}label.telephone{% endtrans %}</div>
+                <div class="field" style="float: left; width: 110px;">{% trans %}label.capacity{% endtrans %}</div>
             </div>
 
             {% for entity in entities %}
-            <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
-                <div class="option_width" style="float: left; width: 150px;">{{ entity.name }}</div>
-                <div class="option_width" style="float: left; width: 115px;">{{ entity.licensePlate }}</div>
-                <div class="option_width" style="float: left; width: 150px;">{{ entity.driver }}</div>
-                <div class="option_width" style="float: left; width: 110px;">{{ entity.color }}</div>
-                <div class="option_width" style="float: left; width: 110px;">{{ entity.capacity }}</div>
-                <div class="option_width" style="float: left; width: 110px;">{{ entity.route }}</div>
+            <div class="fields_row">
+                <div class="field_value" style="float: left; width: 115px;">{{ entity.licensePlate }}</div>
+                <div class="field_value" style="float: left; width: 300px;">{{ entity.driver }}</div>
+                <div class="field_value" style="float: left; width: 110px;">{{ entity.color }}</div>
+                <div class="field_value" style="float: left; width: 110px;">{{ entity.telephone }}</div>
+                <div class="field_value" style="float: left; width: 110px;">{{ entity.capacity }}</div>
                 <div class="clear"></div>
             </div>
             {% else %}
@@ -97,7 +114,11 @@
                 <div class="clear"></div>
             </div>
             {% endfor %}
+            <div class="footer">
+                Total de buses: {{ entities|length }}
+            </div>
         </div>
+
     </div>
     <div class="clear"></div>
     <div class="wrapper">

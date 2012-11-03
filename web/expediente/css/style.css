@@ -15,7 +15,7 @@ h5{font-size:16px;}
 h6{font-size:14px;}
 /* Global Structure---------------------------------------- */
 .main{margin:0 auto;position:relative;width:940px; overflow:hidden;}
-.bg-main{ width:100%;padding-bottom:160px;}
+.bg-main{ width:100%;padding-bottom:36px;}
 /*----- txt,links,lines,titles -----*/
 .clear{clear:both;line-height:0;font-size:0;overflow:hidden;height:0;width:100%;}
 .wrapper{overflow:hidden;position:relative;}
@@ -128,7 +128,7 @@ section.padsection7{ padding:21px 0 56px 0;}
 footer{ background:#e2e2e2 url(../images/bg-body2.jpg) 50% 0 repeat; color:#adadad;
     position:absolute; width: 100%;
     bottom:0;
-    height:160px;   /* Height of the footer */}
+    height:36px; line-height: 36px; vertical-align: middle;   /* Height of the footer */}
 footer p{ padding-bottom:9px;}
 footer h4{ padding-top:17px;}
 .privacy{ color:#fff;}
@@ -251,3 +251,14 @@ footer h4{ color:#fff;}
 .filter-search .internal #searchForm .field{float: left; width: 50%;}
 .filter-search .internal #searchForm .field label{display: inline-block; width: 75px;}
 .filter-search .internal #searchForm .field select{height: 30px; width: 300px;}
+
+#report {background-color: #fff; padding: 15px;}
+#report .header_row{border-bottom: thin solid #000; height: 23px; line-height: 23px; vertical-align: bottom; margin-bottom: 15px;}
+#report .header_row .field{font-weight: bold; font-size: 16px; color: #000;}
+#report .fields_row .field_value {font-size: 16px; color: #000;}
+#report .titles{font-size: 18px; color: #000;}
+#report .footer{font-size: 16px; margin-bottom: 15px; margin-top: 15px; font-weight: bold; color: #000;}
+#report .route{font-weight: bold; font-size: 13px; color: #000; margin-top: 25px;}
+#report .student_title{border-bottom: thin solid #000; font-size: 11px; color: #000; font-weight: bold; line-height: 16px; height: 14px; margin-bottom: 15px; margin-top: 15px;}
+#report .student_row{font-size: 11px; height: 14px; line-height: 16px; color: #000;}
+#report .student_footer{font-size: 10px; color: #000; font-weight: bold;}

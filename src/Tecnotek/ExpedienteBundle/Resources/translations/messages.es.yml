@@ -54,6 +54,7 @@ label.clubs: Clubes
 label.students: Estudiantes
 label.tickets: Boletas de Salida
 label.reports: Reportes
+label.absences: Ausencias
 
 label.code: Codigo
 label.description: Descripcion
@@ -103,6 +104,9 @@ label.relatives.in.student: Personas Autorizadas
 student.include.contact: Incluir contacto autorizado
 student.include.help: Ingrese el nombre y seleccione el contacto de la lista de sugeridos.
 
+label.absences.title: Administracion de Ausencias
+label.absences.message: Puede filtrar la informacion y consultar las ausencias deseadas.
+
 label.new.password: Nuevo Password
 label.confirm.password: Confirmar password
 button.label.login: LOGIN
@@ -126,11 +130,35 @@ label.brother: Hermano
 label.sister: Hermana
 label.other: Otro
 
+label.carne: Carne
+label.section: Seccion
+label.student.name: Nombre de Estudiante
+label.address: Direccion
+label.pickUp: Recogen
+label.leaveTime: Dejan
+label.schedule: Horario
+label.zone: Zona
+label.telephone: Telefono
+label.motherPhone: Telefono de la madre
+label.fatherPhone: Telefono del padre
+label.fatherPhoneShort: Tel. Padre
+label.motherPhoneShort: Tel. Madre
+
+label.routes.by.zone: Rutas por Zona
+label.students.by.route: Estudiantes por Ruta
+
+
+
+label.reports.routes.by.zone: Reporte de Rutas por Zona
+label.reports.students.by.route: Reporte de Estudiantes por Ruta
+
 label.reports.bus: Reporte de Busetas
 label.reports.bus.message: Ingrese las opciones de filtrado deseadas y presione el boton de filtrar.
 
-label.reports.routes: Reporte de zonas y rutas
-label.reports.routes.message: Esta es la lista de zonas, rutas y sus busetas asociadas a cada una.
+label.reports.routes: Reporte de rutas
+
+label.reports.routes_zones: Reporte de rutas
+label.reports.routes_zones.message:
 
 results.not.found: No se han encontrado resultados.
 

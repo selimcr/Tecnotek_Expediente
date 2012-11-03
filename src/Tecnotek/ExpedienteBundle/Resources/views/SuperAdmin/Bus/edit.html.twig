@@ -44,6 +44,9 @@
                         <div class="formErrors">{{ form_errors(form.driver) }}</div>
                         <label><span class="text-form" style="min-width: 150px;">{% trans %}label.driver{% endtrans %}</span>{{ form_widget(form.driver) }}</label>
 
+                        <div class="formErrors">{{ form_errors(form.telephone) }}</div>
+                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.telephone{% endtrans %}</span>{{ form_widget(form.telephone) }}</label>
+
                         <div class="formErrors">{{ form_errors(form.capacity) }}</div>
                         <label><span class="text-form" style="min-width: 150px;">{% trans %}label.capacity{% endtrans %}</span>{{ form_widget(form.capacity) }}</label>
 
@@ -55,9 +58,6 @@
 
                         <div class="formErrors">{{ form_errors(form.permission) }}</div>
                         <label><span class="text-form" style="min-width: 150px;">{% trans %}label.permission{% endtrans %}</span>{{ form_widget(form.permission) }}</label>
-
-                        <div class="formErrors">{{ form_errors(form.route) }}</div>
-                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.route{% endtrans %}</span>{{ form_widget(form.route) }}</label>
 
                         <a href="{{ path('_expediente_sysadmin_bus_show', {'id': entity.id}) }}" class="left btn delete"><span></span>{% trans %}label.cancelar{% endtrans %}</a>
                         <button style="margin-left: 15px; margin-top: 0px;" type="submit" class="left btn save" name="save"><span></span>{% trans %}label.save{% endtrans %}</button>

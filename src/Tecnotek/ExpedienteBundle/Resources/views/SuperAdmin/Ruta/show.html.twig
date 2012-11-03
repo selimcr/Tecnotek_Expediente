@@ -48,7 +48,16 @@
                         <div id="labelMapUrl" class="left"><div id="viewMap" url="{{ entity.mapUrl }}">View Route</div></div>
                         <div class="clear"></div>
                     </div>
-
+                    <div>
+                        <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.zone{%endtrans%}</div>
+                        <div id="labelZone" class="left">{{ entity.zone }}</div>
+                        <div class="clear"></div>
+                    </div>
+                    <div>
+                        <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.bus{%endtrans%}</div>
+                        <div id="labelBus" class="left">{{ entity.bus }}</div>
+                        <div class="clear"></div>
+                    </div>
                     <div id="buttonsContainer" style="margin-top: 25px;">
                         <a href="{{ path('_expediente_sysadmin_route_edit', {'id': entity.id}) }}" class="left btn edit"><span></span>{% trans %}label.edit{% endtrans %}</a>
                         <div class="left btn delete" id="btnEliminar" style="margin-left: 25px;"><span></span>{% trans %}label.eliminar{% endtrans %}</div>
