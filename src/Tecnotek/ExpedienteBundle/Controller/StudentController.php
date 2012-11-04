@@ -2,6 +2,7 @@
 
 namespace Tecnotek\ExpedienteBundle\Controller;
 
+use Tecnotek\ExpedienteBundle\Entity\Absence;
 use Tecnotek\ExpedienteBundle\Entity\Contact;
 use Tecnotek\ExpedienteBundle\Entity\Club as Club;
 use Tecnotek\ExpedienteBundle\Entity\Relative as Relative;
@@ -723,9 +724,35 @@ class StudentController extends Controller
     public function absencesIndexAction(){
         $em = $this->getDoctrine()->getEntityManager();
         $entities = $em->getRepository("TecnotekExpedienteBundle:Absence")->findAll();
+
+        $entity = new Absence();
+        $form   = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\AbsenceFormType(), $entity);
+
         return $this->render('TecnotekExpedienteBundle:SuperAdmin:Absence/index.html.twig', array('menuIndex' => 3,
-            'entities' => $entities
+            'entities' => $entities, 'entity' => $entity, 'form'   => $form->createView()
         ));
+    }
+
+    public function absenceSaveAction(){
+        $entity  = new Absence();
+        $request = $this->getRequest();
+        $form    = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\AbsenceFormType(), $entity);
+        $form->bindRequest($request);
+
+        $em = $this->getDoctrine()->getEntityManager();
+        $entities = $em->getRepository("TecnotekExpedienteBundle:Absence")->findAll();
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getEntityManager();
+            $em->persist($entity);
+            $em->flush();
+            return $this->redirect($this->generateUrl('_expediente_absences',
+                array('id' => $entity->getId())));
+        } else {
+            return $this->render('TecnotekExpedienteBundle:SuperAdmin:Absence/index.html.twig', array('menuIndex' => 3,
+                'entities' => $entities, 'entity' => $entity, 'form'   => $form->createView()
+            ));
+        }
     }
     /* Final de los metodos para CRUD de Absences*/
 }

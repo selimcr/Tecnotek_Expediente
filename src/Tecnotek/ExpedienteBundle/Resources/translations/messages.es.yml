@@ -43,6 +43,10 @@ label.timeO: Time O
 label.search: Buscar
 label.filter: Filtrar
 label.print: Imprimir
+label.new: Nuevo
+label.date: Fecha
+label.justify: Justificada
+label.injustify: Injustificada
 label.all: Todos
 
 
@@ -129,6 +133,7 @@ label.mother: Madre
 label.brother: Hermano
 label.sister: Hermana
 label.other: Otro
+label.students.quantity: Cantidad de Estudiantes
 
 label.carne: Carne
 label.section: Seccion

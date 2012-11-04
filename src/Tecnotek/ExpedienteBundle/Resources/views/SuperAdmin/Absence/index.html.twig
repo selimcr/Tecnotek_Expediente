@@ -4,7 +4,13 @@
     Tecnotek :: Expediente :: Super Administrador
 {% endblock %}
 
+{% block extracss %}
+<link rel="stylesheet" href="{{ asset('fancybox/jquery.fancybox.css') }}" type="text/css" media="all" />
+<link rel="stylesheet" href="{{ asset('expediente/css/fancybox_style.css') }}" type="text/css" media="all" />
+{% endblock %}
+
 {% block extrajs %}
+<script type="text/javascript" src="{{ asset('fancybox/jquery.fancybox.js?v=2.0.6') }}"></script>
 <script type="text/javascript">
     Tecnotek.module = "absences";
     Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
@@ -15,6 +21,60 @@
     Tecnotek.StudentShow.translates["relative.not.selected"] = "{% trans %}message.relative.not.selected{% endtrans %}";
     Tecnotek.StudentShow.translates["student.not.selected"] = "{% trans %}message.student.not.selected{% endtrans %}";
     Tecnotek.StudentShow.translates["relative.not.exists"] = "{% trans %}message.relative.not.exists{% endtrans %}";
+</script>
+<!-- basic fancybox setup -->
+<script type="text/javascript">
+    function validateEmail(email) {
+        var reg = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return reg.test(email);
+    }
+
+    $(document).ready(function() {
+        $(".modalbox").fancybox();
+        $("#contact").submit(function() { return false; });
+
+/*
+        $("#send").on("click", function(){
+            var emailval  = $("#email").val();
+            var msgval    = $("#msg").val();
+            var msglen    = msgval.length;
+            var mailvalid = validateEmail(emailval);
+
+            if(mailvalid == false) {
+                $("#email").addClass("error");
+            }
+            else if(mailvalid == true){
+                $("#email").removeClass("error");
+            }
+
+            if(msglen < 4) {
+                $("#msg").addClass("error");
+            }
+            else if(msglen >= 4){
+                $("#msg").removeClass("error");
+            }
+
+            if(mailvalid == true && msglen >= 4) {
+                // if both validate we attempt to send the e-mail
+                // first we hide the submit btn so the user doesnt click twice
+                $("#send").replaceWith("<em>sending...</em>");
+
+                $.ajax({
+                    type: 'POST',
+                    url: 'sendmessage.php',
+                    data: $("#contact").serialize(),
+                    success: function(data) {
+                        if(data == "true") {
+                            $("#contact").fadeOut("fast", function(){
+                                $(this).before("<p><strong>Success! Your feedback has been sent, thanks :)</strong></p>");
+                                setTimeout("$.fancybox.close()", 1000);
+                            });
+                        }
+                    }
+                });
+            }
+        });*/
+    });
 </script>
 {% endblock %}
 
@@ -28,6 +88,7 @@
             <div class="left" style="line-height: 48px; margin-left: 25px;">
                 <span>{% trans %}label.absences.message{% endtrans %}</span>
             </div>
+            <button style="margin-left: 15px; margin-top: 0px;" type="button" class="right btn new" name="buttonNew" id="buttonNew" href="#inline"><a class="modalbox" href="#inline">{% trans %}label.new{% endtrans %}</a></button>
             <div class="clear"></div>
         </div>
         <div class="filter-search">
@@ -35,25 +96,18 @@
                 <form id="searchForm" action="{{ path('_expediente_report_bus_search') }}" method="post">
                     <div class="filter-row">
                         <div class="field">
-                            <label>{%trans%}label.student{%endtrans%}</label><input type="text" id="student" name="student" disabled="disabled"><input type="checkbox" class="check" rel="student">
+                            <label>{%trans%}label.student{%endtrans%}</label><input type="text" id="student" name="student" style="margin-right: 5px;" disabled="disabled"><input type="checkbox" class="check" rel="student">
                         </div>
                         <div class="field">
                             <label style="padding-left: 60px;">{%trans%}label.status{%endtrans%}</label>
-                            <select id="status" name="status">
+                            <select id="status" name="status" style="width: 290px;">
                                 <option value="0">{%trans%}label.all{%endtrans%}</option>
                                 <option value="1">{%trans%}label.justify{%endtrans%}</option>
                                 <option value="2">{%trans%}label.injustify{%endtrans%}</option>
                             </select>
                         </div>
                     </div>
-                    <div class="filter-row">
-                        <div class="field">
-                            <label>{%trans%}label.absences.dates{%endtrans%}</label>
-                            <span>{%trans%}label.between{%endtrans%}</span>
-                            <input type="text" id="driver" name="driver" disabled="disabled">
-                            <span>{%trans%}label.and{%endtrans%}</span>
-                        </div>
-                    </div>
+
                     <div class="filter-row">
                         <button style="margin-left: 15px; margin-top: 0px;" type="submit" class="right btn save" name="search"><span></span>{% trans %}label.filter{% endtrans %}</button>
                     </div>
@@ -64,16 +118,16 @@
         </div>
         <div class="search-results" style="margin-top: 25px;">
             <div class="row tableHeader" style="height: 32px; line-height: 32px;">
-                <div class="option_width" style="float: left; width: 150px;">{% trans %}label.student{% endtrans %}</div>
-                <div class="option_width" style="float: left; width: 115px;">{% trans %}label.date{% endtrans %}</div>
-                <div class="option_width" style="float: left; width: 150px;">{% trans %}label.status{% endtrans %}</div>
+                <div class="option_width" style="float: left; width: 450px;">{% trans %}label.student{% endtrans %}</div>
+                <div class="option_width" style="float: left; width: 150px;">{% trans %}label.date{% endtrans %}</div>
+                <div class="option_width" style="float: left; width: 100px;">{% trans %}label.status{% endtrans %}</div>
             </div>
 
             {% for entity in entities %}
             <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
-                <div class="option_width" style="float: left; width: 150px;">{{ entity.student }}</div>
-                <div class="option_width" style="float: left; width: 115px;">{{ entity.date }}</div>
-                <div class="option_width" style="float: left; width: 150px;">{{ entity.status }}</div>
+                <div class="option_width" style="float: left; width: 450px;">{{ entity.student }}</div>
+                <div class="option_width" style="float: left; width: 150px;">{% if entity.date != null %} {{ entity.date|date("d/M/y") }} {% else %} &nbsp; {% endif %}</div>
+                <div class="option_width" style="float: left; width: 100px;" title="{{ entity.comments }}">{% if entity.justify %}{% trans %}label.justify{% endtrans %}{% else %} {% trans %}label.injustify{% endtrans %} {% endif %}</div>
                 <div class="clear"></div>
             </div>
             {% else %}
@@ -90,5 +144,31 @@
                     <div class="lineH"></div>
             </div>
     </div>
+</div>
+<!-- hidden inline form -->
+<div id="inline">
+    <h2>Registrar nueva ausencia</h2>
+
+    <form class="customForm" id="createAdminForm" action="{{ path('_expediente_absences_save') }}" method="post" {{ form_enctype(form) }}>
+        {{ form_errors(form) }}
+
+        {{ form_widget(form._token) }}
+
+        <div class="formErrors">{{ form_errors(form.student) }}</div>
+        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.student{% endtrans %}</span>{{ form_widget(form.student) }}</label>
+
+        <div class="formErrors">{{ form_errors(form.date) }}</div>
+        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.date{% endtrans %}</span>{{ form_widget(form.date) }}</label>
+
+        <div class="formErrors">{{ form_errors(form.justify) }}</div>
+        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.justify{% endtrans %}</span>{{ form_widget(form.justify) }}</label>
+
+        <div class="formErrors">{{ form_errors(form.comments) }}</div>
+        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.comments{% endtrans %}</span>{{ form_widget(form.comments) }}</label>
+
+        <div class="left"><a href="{{ path('_expediente_sysadmin_administrador') }}" class="btn"><span></span>{% trans %}label.cancelar{% endtrans %}</a></div>
+        <div class="left" style="margin-left: 25px;"><input class="btn" style="margin-top: 0px;" type="submit" name="save" value="{% trans %}label.save{% endtrans %}"/></div>
+        <div class="clear"></div>
+    </form>
 </div>
 {% endblock %}

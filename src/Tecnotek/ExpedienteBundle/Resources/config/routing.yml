@@ -377,4 +377,8 @@ _expediente_report_students_by_route:
 _expediente_absences:
     pattern:  /absences/
     defaults: { _controller: TecnotekExpedienteBundle:Student:absencesIndex }
+
+_expediente_absences_save:
+    pattern:  /absences/save
+    defaults: { _controller: TecnotekExpedienteBundle:Student:absenceSave }
 #########################################

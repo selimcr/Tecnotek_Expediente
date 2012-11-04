@@ -23,18 +23,18 @@
         </div>
         
         <div class="row tableHeader">
-            <div class="option_width" style="float: left; width: 200px;">{% trans %}label.code{% endtrans %}</div>
-            <div class="option_width" style="float: left; width: 200px;">{% trans %}label.name{% endtrans %}</div>
+            <div class="option_width" style="float: left; width: 100px;">{% trans %}label.code{% endtrans %}</div>
             <div class="option_width" style="float: left; width: 400px;">{% trans %}label.description{% endtrans %}</div>
+            <div class="option_width" style="float: left; width: 200px;">{% trans %}label.students.quantity{% endtrans %}</div>
         </div>
             
         {% set counter = 0 %}   
 
         {% for entity in pagination %}            
             <div class="row userRow {% if counter%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}" rel="{{ entity.id }}">
-                <div class="option_width" style="float: left; width: 200px;">{{ entity.code }}</div>
-                <div class="option_width" style="float: left; width: 200px;">{{ entity.name }}</div>
+                <div class="option_width" style="float: left; width: 100px;">{{ entity.code }}</div>
                 <div class="option_width" style="float: left; width: 400px;">{{ entity.description }}</div>
+                <div class="option_width" style="float: left; width: 200px;">{{ entity.students|length }}</div>
                 <div class="right imageButton editButton"  title="{% trans %}label.edit{% endtrans %}"  rel="{{ entity.id }}"></div>
                 <div class="right imageButton viewButton"  title="{% trans %}label.view{% endtrans %}"  rel="{{ entity.id }}"></div>
                 <div class="clear"></div>
