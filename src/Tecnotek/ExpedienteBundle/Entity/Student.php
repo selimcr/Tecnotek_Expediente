@@ -77,6 +77,17 @@ class Student
     private $leaveTime;
 
     /**
+     * @ORM\Column(type="integer", nullable=true)
+     * @Assert\NotBlank()
+     */
+    private $dailyStatus;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $dailyDescription;
+
+    /**
      * @ManyToOne(targetEntity="Route")
      * @JoinColumn(name="route_id", referencedColumnName="id")
      */
@@ -98,6 +109,8 @@ class Student
     public function __construct()
     {
         $this->clubs = new ArrayCollection();
+        $this->dailyStatus = 0;
+        $this->dailyDescription = "";
     }
 
     public function __toString()
@@ -273,6 +286,46 @@ class Student
     public function getLeaveTime()
     {
         return $this->leaveTime;
+    }
+
+    /**
+     * Set dailyStatus
+     *
+     * @param integer $dailyStatus
+     */
+    public function setDailyStatus($dailyStatus)
+    {
+        $this->dailyStatus = $dailyStatus;
+    }
+
+    /**
+     * Get dailyStatus
+     *
+     * @return integer
+     */
+    public function getDailyStatus()
+    {
+        return $this->dailyStatus;
+    }
+
+    /**
+     * Set dailyDescription
+     *
+     * @param string $dailyDescription
+     */
+    public function setDailyDescription($dailyDescription)
+    {
+        $this->dailyDescription = $dailyDescription;
+    }
+
+    /**
+     * Get dailyDescription
+     *
+     * @return string
+     */
+    public function getDailyDescription()
+    {
+        return $this->dailyDescription;
     }
 
     /**

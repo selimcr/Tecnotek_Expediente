@@ -151,11 +151,15 @@ label.motherPhoneShort: Tel. Madre
 
 label.routes.by.zone: Rutas por Zona
 label.students.by.route: Estudiantes por Ruta
-
+label.students.absences.by.route: Est. Ausentes por Ruta
+label.students.daily.by.route: Reporte Diario por Ruta
+label.students.absences: Estudiantes Ausentes
+label.students.precenses: Estudiantes Presentes
 
 
 label.reports.routes.by.zone: Reporte de Rutas por Zona
 label.reports.students.by.route: Reporte de Estudiantes por Ruta
+label.reports.absences.by.route: Reporte de Estudiantes Ausentes por Ruta
 
 label.reports.bus: Reporte de Busetas
 label.reports.bus.message: Ingrese las opciones de filtrado deseadas y presione el boton de filtrar.

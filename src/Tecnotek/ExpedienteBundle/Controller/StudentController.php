@@ -723,13 +723,62 @@ class StudentController extends Controller
     /* Metodos para CRUD de Absences*/
     public function absencesIndexAction(){
         $em = $this->getDoctrine()->getEntityManager();
-        $entities = $em->getRepository("TecnotekExpedienteBundle:Absence")->findAll();
+
+        $today = new \DateTime();
+        $start = $today->format('Y-m-d');
+        $end = $today->format('Y-m-d');
+
+        $qb = $em->createQueryBuilder();
+        $qb->add('select', 'absences')
+            ->add('from', 'TecnotekExpedienteBundle:Absence absences')
+            ->leftJoin("absences.student", "std")
+            ->add('where', "absences.date between :start and :end")
+            ->add('orderBy', 'std.firstname ASC')
+            ->setParameter('start', $start . " 00:00:00")
+            ->setParameter('end', $end . " 23:59:59");
+        $query = $qb->getQuery();
+
+        $entities = $query->getResult();
 
         $entity = new Absence();
         $form   = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\AbsenceFormType(), $entity);
 
         return $this->render('TecnotekExpedienteBundle:SuperAdmin:Absence/index.html.twig', array('menuIndex' => 3,
-            'entities' => $entities, 'entity' => $entity, 'form'   => $form->createView()
+            'entities' => $entities, 'entity' => $entity, 'form'   => $form->createView(),
+            'dateFrom' => $start, "dateTo" => $end, 'status' => "-1"
+        ));
+    }
+
+    public function absencesSearchAction(){
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $request = $this->getRequest();
+        $start = $request->get('from') ;
+        $end = $request->get('to');
+
+        $status = $request->get('status');
+        $statusQuery = "";
+        if($status != "-1")
+            $statusQuery = " AND absences.justify = " . $status;
+
+        $qb = $em->createQueryBuilder();
+        $qb->add('select', 'absences')
+            ->add('from', 'TecnotekExpedienteBundle:Absence absences')
+            ->leftJoin("absences.student", "std")
+            ->add('where', "absences.date between :start and :end " . $statusQuery)
+            ->add('orderBy', 'std.firstname ASC')
+            ->setParameter('start', $start . " 00:00:00")
+            ->setParameter('end', $end . " 23:59:59");
+
+        $query = $qb->getQuery();
+        $entities = $query->getResult();
+
+        $entity = new Absence();
+        $form   = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\AbsenceFormType(), $entity);
+
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Absence/index.html.twig', array('menuIndex' => 3,
+            'entities' => $entities, 'entity' => $entity, 'form'   => $form->createView(),
+            'dateFrom' => $start, "dateTo" => $end, 'status' => $status
         ));
     }
 

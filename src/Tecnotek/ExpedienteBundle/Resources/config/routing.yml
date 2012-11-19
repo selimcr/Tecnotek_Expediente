@@ -371,12 +371,25 @@ _expediente_report_students_by_route:
     pattern:  /reports/studentsByRoute/
     defaults: { _controller: TecnotekExpedienteBundle:Report:reportStudentByRoute }
 
+_expediente_report_students_by_route:
+   pattern:  /reports/absencesByRoute/
+   defaults: { _controller: TecnotekExpedienteBundle:Report:reportStudentAbsencesByRoute }
+
+_expediente_report_daily_by_route:
+   pattern:  /reports/dailyByRoute/
+   defaults: { _controller: TecnotekExpedienteBundle:Report:reportStudentDailyByRoute }
+
+
 #########################################
 
 ###########      REPORTS      ###########
 _expediente_absences:
     pattern:  /absences/
     defaults: { _controller: TecnotekExpedienteBundle:Student:absencesIndex }
+
+_expediente_absences_search:
+    pattern:  /absences/search/
+    defaults: { _controller: TecnotekExpedienteBundle:Student:absencesSearch }
 
 _expediente_absences_save:
     pattern:  /absences/save

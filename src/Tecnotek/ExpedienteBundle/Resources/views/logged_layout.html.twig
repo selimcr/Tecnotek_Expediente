@@ -8,10 +8,17 @@
     <meta name="author" content="Selim Diaz A.">
     <link rel="stylesheet" href="{{ asset('expediente/css/style.css') }}" type="text/css" media="all" />
     <link rel="stylesheet" href="{{ asset('expediente/css/tabs.css') }}" type="text/css" media="all" />
+
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css" />
+    <script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+    <script src="http://code.jquery.com/ui/1.9.1/jquery-ui.js"></script>
+
     {% block extracss %}
     {% endblock %}
-    <script type="text/javascript" src="{{ asset('expediente/js/jquery-1.7.1.min.js') }}"></script>
+
+
     <script type="text/javascript" src="{{ asset('expediente/js/superadmin_application.js') }}"></script>
+
     {% block extrajs %}{% endblock %}
     <script type="text/javascript" src="{{ asset('expediente/js/script.js') }}"></script>
     
@@ -105,6 +112,9 @@
                         <li><a style="text-align: left;" href="{{ path('_expediente_report_routes') }}">{% trans %}label.routes{% endtrans %}</a></li>
                         <li><a style="text-align: left;" href="{{ path('_expediente_report_zones') }}">{% trans %}label.routes.by.zone{% endtrans %}</a></li>
                         <li><a style="text-align: left;" href="{{ path('_expediente_report_students_by_route') }}">{% trans %}label.students.by.route{% endtrans %}</a></li>
+                        <li><a style="text-align: left;" href="{{ path('_expediente_report_students_by_route') }}">{% trans %}label.students.absences.by.route{% endtrans %}</a></li>
+                        <li><a style="text-align: left;" href="{{ path('_expediente_report_daily_by_route') }}">{% trans %}label.students.daily.by.route{% endtrans %}</a></li>
+
                     </ul>
                 </li>
             {% endif %}

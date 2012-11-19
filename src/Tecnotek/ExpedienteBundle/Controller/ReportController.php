@@ -80,5 +80,27 @@ class ReportController extends Controller
         ));
     }
 
+    public function reportStudentAbsencesByRouteAction(){
+        $em = $this->getDoctrine()->getEntityManager();
+        $entities = $em->getRepository("TecnotekExpedienteBundle:Route")->findAll();
+
+        $html = "";
+
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Reports/absences_by_route.html.twig', array('menuIndex' => 4,
+            'entities' => $entities
+        ));
+    }
+
+    public function reportStudentDailyByRouteAction(){
+        $em = $this->getDoctrine()->getEntityManager();
+        $entities = $em->getRepository("TecnotekExpedienteBundle:Route")->findAll();
+
+        $html = "";
+
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Reports/daily_by_route.html.twig', array('menuIndex' => 4,
+            'entities' => $entities
+        ));
+    }
+
 
 }

@@ -7,10 +7,12 @@
 {% block extracss %}
 <link rel="stylesheet" href="{{ asset('fancybox/jquery.fancybox.css') }}" type="text/css" media="all" />
 <link rel="stylesheet" href="{{ asset('expediente/css/fancybox_style.css') }}" type="text/css" media="all" />
+<link rel="stylesheet" href="{{ asset('expediente/css/jquery-ui-timepicker-addon.css') }}" type="text/css" media="all" />
 {% endblock %}
 
 {% block extrajs %}
 <script type="text/javascript" src="{{ asset('fancybox/jquery.fancybox.js?v=2.0.6') }}"></script>
+
 <script type="text/javascript">
     Tecnotek.module = "absences";
     Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
@@ -23,58 +25,37 @@
     Tecnotek.StudentShow.translates["relative.not.exists"] = "{% trans %}message.relative.not.exists{% endtrans %}";
 </script>
 <!-- basic fancybox setup -->
-<script type="text/javascript">
-    function validateEmail(email) {
-        var reg = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        return reg.test(email);
-    }
-
-    $(document).ready(function() {
-        $(".modalbox").fancybox();
-        $("#contact").submit(function() { return false; });
-
-/*
-        $("#send").on("click", function(){
-            var emailval  = $("#email").val();
-            var msgval    = $("#msg").val();
-            var msglen    = msgval.length;
-            var mailvalid = validateEmail(emailval);
-
-            if(mailvalid == false) {
-                $("#email").addClass("error");
+<script>
+    $(function() {
+        $( "#from" ).datepicker({
+            defaultDate: "0d",
+            changeMonth: true,
+            dateFormat: "yy-mm-dd",
+            showButtonPanel: true,
+            currentText: "Hoy",
+            numberOfMonths: 1,
+            onClose: function( selectedDate ) {
+                $( "#to" ).datepicker( "option", "minDate", selectedDate );
             }
-            else if(mailvalid == true){
-                $("#email").removeClass("error");
+        });
+        $( "#to" ).datepicker({
+            defaultDate: "0d",
+            changeMonth: true,
+            dateFormat: "yy-mm-dd",
+            showButtonPanel: true,
+            currentText: "Hoy",
+            numberOfMonths: 1,
+            onClose: function( selectedDate ) {
+                $( "#from" ).datepicker( "option", "maxDate", selectedDate );
             }
-
-            if(msglen < 4) {
-                $("#msg").addClass("error");
-            }
-            else if(msglen >= 4){
-                $("#msg").removeClass("error");
-            }
-
-            if(mailvalid == true && msglen >= 4) {
-                // if both validate we attempt to send the e-mail
-                // first we hide the submit btn so the user doesnt click twice
-                $("#send").replaceWith("<em>sending...</em>");
-
-                $.ajax({
-                    type: 'POST',
-                    url: 'sendmessage.php',
-                    data: $("#contact").serialize(),
-                    success: function(data) {
-                        if(data == "true") {
-                            $("#contact").fadeOut("fast", function(){
-                                $(this).before("<p><strong>Success! Your feedback has been sent, thanks :)</strong></p>");
-                                setTimeout("$.fancybox.close()", 1000);
-                            });
-                        }
-                    }
-                });
-            }
-        });*/
+        });
     });
+</script>
+<script type="text/javascript">
+
+$(function() {
+//$(".modalbox").fancybox();
+//$("#contact").submit(function() { return false; });
 </script>
 {% endblock %}
 
@@ -93,7 +74,7 @@
         </div>
         <div class="filter-search">
             <div class="internal">
-                <form id="searchForm" action="{{ path('_expediente_report_bus_search') }}" method="post">
+                <form id="searchForm" action="{{ path('_expediente_absences_search') }}" method="post">
                     <div class="filter-row">
                         <div class="field">
                             <label>{%trans%}label.student{%endtrans%}</label><input type="text" id="student" name="student" style="margin-right: 5px;" disabled="disabled"><input type="checkbox" class="check" rel="student">
@@ -101,10 +82,20 @@
                         <div class="field">
                             <label style="padding-left: 60px;">{%trans%}label.status{%endtrans%}</label>
                             <select id="status" name="status" style="width: 290px;">
-                                <option value="0">{%trans%}label.all{%endtrans%}</option>
-                                <option value="1">{%trans%}label.justify{%endtrans%}</option>
-                                <option value="2">{%trans%}label.injustify{%endtrans%}</option>
+                                <option value="-1" {% if status == '-1' %}selected="selected"{% endif %}>{%trans%}label.all{%endtrans%}</option>
+                                <option value="1" {% if status == '1' %}selected="selected"{% endif %}>{%trans%}label.justify{%endtrans%}</option>
+                                <option value="0" {% if status == '0' %}selected="selected"{% endif %}>{%trans%}label.injustify{%endtrans%}</option>
                             </select>
+                        </div>
+                    </div>
+                    <div class="filter-row">
+                        <div class="field">
+                            <label for="from">Desde</label>
+                            <input type="text" id="from" name="from" value="{{ dateFrom }}" />
+                        </div>
+                        <div class="field">
+                            <label for="to" style="padding-left: 60px;">Hasta</label>
+                            <input type="text" id="to" name="to" value="{{ dateTo }}" />
                         </div>
                     </div>
 
