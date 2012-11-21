@@ -117,6 +117,14 @@
 
                     </ul>
                 </li>
+                <li {% if menuIndex is defined and menuIndex == 5%}class="current"{% endif %}><a href="#"><em>{% trans %}label.mantenimientos{% endtrans %}</em><strong></strong></a>
+                    <ul>
+                        <li><a style="text-align: left;" href="{{ path('_expediente_sysadmin_period') }}">{% trans %}label.period{% endtrans %}</a></li>
+                        <li><a style="text-align: left;" href="{{ path('_expediente_sysadmin_grade') }}">{% trans %}label.grade{% endtrans %}</a></li>
+                        <li><a style="text-align: left;" href="{{ path('_expediente_sysadmin_course') }}">{% trans %}label.course{% endtrans %}</a></li>
+
+                    </ul>
+                </li>
             {% endif %}
 			</ul>
 			<div class="clear"></div>

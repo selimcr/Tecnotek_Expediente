@@ -5,6 +5,9 @@ namespace Tecnotek\ExpedienteBundle\Controller;
 use Tecnotek\ExpedienteBundle\Entity\User;
 use Tecnotek\ExpedienteBundle\Entity\Route;
 use Tecnotek\ExpedienteBundle\Entity\Buseta;
+use Tecnotek\ExpedienteBundle\Entity\Period;
+use Tecnotek\ExpedienteBundle\Entity\Grade;
+use Tecnotek\ExpedienteBundle\Entity\Course;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
@@ -519,6 +522,321 @@ class SuperAdminController extends Controller
         }
     }
     /* Final de los metodos para CRUD de buses*/
+
+    /* Metodos para CRUD de periods */
+    public function periodListAction($rowsPerPage = 10)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $dql = "SELECT period FROM TecnotekExpedienteBundle:Period period";
+        $query = $em->createQuery($dql);
+
+        $param = $this->get('request')->query->get('rowsPerPage');
+        if(isset($param) && $param != "")
+            $rowsPerPage = $param;
+
+        $dql2 = "SELECT count(periods) FROM TecnotekExpedienteBundle:Period periods";
+        $page = $this->getPaginationPage($dql2, $this->get('request')->query->get('page', 1), $rowsPerPage);
+
+        $paginator = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $query,
+            $page/*page number*/,
+            $rowsPerPage/*limit per page*/
+        );
+
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Period/list.html.twig', array(
+            'pagination' => $pagination, 'rowsPerPage' => $rowsPerPage, 'menuIndex' => 5
+        ));
+    }
+
+    public function periodCreateAction()
+    {
+        $entity = new Period();
+        $form   = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\PeriodFormType(), $entity);
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Period/new.html.twig', array('entity' => $entity,
+            'form'   => $form->createView(), 'menuIndex' => 5));
+    }
+
+    public function periodShowAction($id)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $entity = $em->getRepository("TecnotekExpedienteBundle:Period")->find($id);
+        $form   = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\PeriodFormType(), $entity);
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Period/show.html.twig', array('entity' => $entity,
+            'form'   => $form->createView(), 'menuIndex' => 5));
+    }
+
+    public function periodEditAction($id)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $entity = $em->getRepository("TecnotekExpedienteBundle:Period")->find($id);
+        $form   = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\PeriodFormType(), $entity);
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Period/edit.html.twig', array('entity' => $entity,
+            'form'   => $form->createView(), 'menuIndex' => 5));
+    }
+
+    public function periodSaveAction(){
+        $entity  = new Period();
+        $request = $this->getRequest();
+        $form    = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\PeriodFormType(), $entity);
+        $form->bindRequest($request);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getEntityManager();
+            $em->persist($entity);
+            $em->flush();
+            return $this->redirect($this->generateUrl('_expediente_sysadmin_period',
+                array('id' => $entity->getId(), 'menuIndex' => 5)));
+        } else {
+            return $this->render('TecnotekExpedienteBundle:SuperAdmin:Period/new.html.twig', array(
+                'entity' => $entity,
+                'form'   => $form->createView(), 'menuIndex' => 5
+            ));
+        }
+    }
+
+    public function periodDeleteAction($id){
+        $em = $this->getDoctrine()->getEntityManager();
+        $entity = $em->getRepository("TecnotekExpedienteBundle:Period")->find( $id );
+        if ( isset($entity) ) {
+            $em->remove($entity);
+            $em->flush();
+        }
+        return $this->redirect($this->generateUrl('_expediente_sysadmin_period'));
+    }
+
+    public function periodUpdateAction(){
+        $em = $this->getDoctrine()->getEntityManager();
+        $request = $this->getRequest();
+        $entity = $em->getRepository("TecnotekExpedienteBundle:Period")->find($request->get('id'));
+        if ( isset($entity) ) {
+            $form    = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\PeriodFormType(), $entity);
+            $form->bindRequest($request);
+
+            if ($form->isValid()) {
+                $em->persist($entity);
+                $em->flush();
+                return $this->redirect($this->generateUrl('_expediente_sysadmin_period_show_simple') . "/" . $entity->getId());
+            } else {
+                return $this->render('TecnotekExpedienteBundle:SuperAdmin:Period/edit.html.twig', array(
+                    'entity' => $entity, 'form'   => $form->createView(), 'updateRejected' => true, 'menuIndex' => 5
+                ));
+            }
+        } else {
+            return $this->redirect($this->generateUrl('_expediente_sysadmin_period'));
+        }
+    }
+    /* Final de los metodos para CRUD de periods */
+
+    /* Metodos para CRUD de grades */
+    public function gradeListAction($rowsPerPage = 10)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $dql = "SELECT entity FROM TecnotekExpedienteBundle:Grade entity";
+        $query = $em->createQuery($dql);
+
+        $param = $this->get('request')->query->get('rowsPerPage');
+        if(isset($param) && $param != "")
+            $rowsPerPage = $param;
+
+        $dql2 = "SELECT count(entity) FROM TecnotekExpedienteBundle:Grade entity";
+        $page = $this->getPaginationPage($dql2, $this->get('request')->query->get('page', 1), $rowsPerPage);
+
+        $paginator = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $query,
+            $page/*page number*/,
+            $rowsPerPage/*limit per page*/
+        );
+
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Grade/list.html.twig', array(
+            'pagination' => $pagination, 'rowsPerPage' => $rowsPerPage, 'menuIndex' => 5
+        ));
+    }
+
+    public function gradeCreateAction()
+    {
+        $entity = new Grade();
+        $form   = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\GradeFormType(), $entity);
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Grade/new.html.twig', array('entity' => $entity,
+            'form'   => $form->createView(), 'menuIndex' => 5));
+    }
+
+    public function gradeShowAction($id)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $entity = $em->getRepository("TecnotekExpedienteBundle:Grade")->find($id);
+        $form   = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\GradeFormType(), $entity);
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Grade/show.html.twig', array('entity' => $entity,
+            'form'   => $form->createView(), 'menuIndex' => 5));
+    }
+
+    public function gradeEditAction($id)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $entity = $em->getRepository("TecnotekExpedienteBundle:Grade")->find($id);
+        $form   = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\GradeFormType(), $entity);
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Grade/edit.html.twig', array('entity' => $entity,
+            'form'   => $form->createView(), 'menuIndex' => 5));
+    }
+
+    public function gradeSaveAction(){
+        $entity  = new Grade();
+        $request = $this->getRequest();
+        $form    = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\GradeFormType(), $entity);
+        $form->bindRequest($request);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getEntityManager();
+            $em->persist($entity);
+            $em->flush();
+            return $this->redirect($this->generateUrl('_expediente_sysadmin_grade',
+                array('id' => $entity->getId(), 'menuIndex' => 5)));
+        } else {
+            return $this->render('TecnotekExpedienteBundle:SuperAdmin:Grade/new.html.twig', array(
+                'entity' => $entity,
+                'form'   => $form->createView(), 'menuIndex' => 5
+            ));
+        }
+    }
+
+    public function gradeDeleteAction($id){
+        $em = $this->getDoctrine()->getEntityManager();
+        $entity = $em->getRepository("TecnotekExpedienteBundle:Grade")->find( $id );
+        if ( isset($entity) ) {
+            $em->remove($entity);
+            $em->flush();
+        }
+        return $this->redirect($this->generateUrl('_expediente_sysadmin_grade'));
+    }
+
+    public function gradeUpdateAction(){
+        $em = $this->getDoctrine()->getEntityManager();
+        $request = $this->getRequest();
+        $entity = $em->getRepository("TecnotekExpedienteBundle:Grade")->find($request->get('id'));
+        if ( isset($entity) ) {
+            $form    = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\GradeFormType(), $entity);
+            $form->bindRequest($request);
+
+            if ($form->isValid()) {
+                $em->persist($entity);
+                $em->flush();
+                return $this->redirect($this->generateUrl('_expediente_sysadmin_grade_show_simple') . "/" . $entity->getId());
+            } else {
+                return $this->render('TecnotekExpedienteBundle:SuperAdmin:Grade/edit.html.twig', array(
+                    'entity' => $entity, 'form'   => $form->createView(), 'updateRejected' => true, 'menuIndex' => 5
+                ));
+            }
+        } else {
+            return $this->redirect($this->generateUrl('_expediente_sysadmin_grade'));
+        }
+    }
+    /* Final de los metodos para CRUD de Grades */
+
+    /* Metodos para CRUD de courses */
+    public function courseListAction($rowsPerPage = 10)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $dql = "SELECT entity FROM TecnotekExpedienteBundle:Course entity";
+        $query = $em->createQuery($dql);
+
+        $param = $this->get('request')->query->get('rowsPerPage');
+        if(isset($param) && $param != "")
+            $rowsPerPage = $param;
+
+        $dql2 = "SELECT count(entity) FROM TecnotekExpedienteBundle:Course entity";
+        $page = $this->getPaginationPage($dql2, $this->get('request')->query->get('page', 1), $rowsPerPage);
+
+        $paginator = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $query,
+            $page/*page number*/,
+            $rowsPerPage/*limit per page*/
+        );
+
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Course/list.html.twig', array(
+            'pagination' => $pagination, 'rowsPerPage' => $rowsPerPage, 'menuIndex' => 5
+        ));
+    }
+
+    public function courseCreateAction()
+    {
+        $entity = new Course();
+        $form   = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\CourseFormType(), $entity);
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Course/new.html.twig', array('entity' => $entity,
+            'form'   => $form->createView(), 'menuIndex' => 5));
+    }
+
+    public function courseShowAction($id)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $entity = $em->getRepository("TecnotekExpedienteBundle:Course")->find($id);
+        $form   = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\CourseFormType(), $entity);
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Course/show.html.twig', array('entity' => $entity,
+            'form'   => $form->createView(), 'menuIndex' => 5));
+    }
+
+    public function courseEditAction($id)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $entity = $em->getRepository("TecnotekExpedienteBundle:Course")->find($id);
+        $form   = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\CourseFormType(), $entity);
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Course/edit.html.twig', array('entity' => $entity,
+            'form'   => $form->createView(), 'menuIndex' => 5));
+    }
+
+    public function courseSaveAction(){
+        $entity  = new Course();
+        $request = $this->getRequest();
+        $form    = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\CourseFormType(), $entity);
+        $form->bindRequest($request);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getEntityManager();
+            $em->persist($entity);
+            $em->flush();
+            return $this->redirect($this->generateUrl('_expediente_sysadmin_course',
+                array('id' => $entity->getId(), 'menuIndex' => 5)));
+        } else {
+            return $this->render('TecnotekExpedienteBundle:SuperAdmin:Course/new.html.twig', array(
+                'entity' => $entity,
+                'form'   => $form->createView(), 'menuIndex' => 5
+            ));
+        }
+    }
+
+    public function courseDeleteAction($id){
+        $em = $this->getDoctrine()->getEntityManager();
+        $entity = $em->getRepository("TecnotekExpedienteBundle:Course")->find( $id );
+        if ( isset($entity) ) {
+            $em->remove($entity);
+            $em->flush();
+        }
+        return $this->redirect($this->generateUrl('_expediente_sysadmin_course'));
+    }
+
+    public function courseUpdateAction(){
+        $em = $this->getDoctrine()->getEntityManager();
+        $request = $this->getRequest();
+        $entity = $em->getRepository("TecnotekExpedienteBundle:Course")->find($request->get('id'));
+        if ( isset($entity) ) {
+            $form    = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\CourseFormType(), $entity);
+            $form->bindRequest($request);
+
+            if ($form->isValid()) {
+                $em->persist($entity);
+                $em->flush();
+                return $this->redirect($this->generateUrl('_expediente_sysadmin_course_show_simple') . "/" . $entity->getId());
+            } else {
+                return $this->render('TecnotekExpedienteBundle:SuperAdmin:Course/edit.html.twig', array(
+                    'entity' => $entity, 'form'   => $form->createView(), 'updateRejected' => true, 'menuIndex' => 5
+                ));
+            }
+        } else {
+            return $this->redirect($this->generateUrl('_expediente_sysadmin_course'));
+        }
+    }
+    /* Final de los metodos para CRUD de Courses */
 
     public function getPaginationPage($dql, $currentPage, $rowsPerPage){
         if(isset($currentPage) == false || $currentPage <= 1){

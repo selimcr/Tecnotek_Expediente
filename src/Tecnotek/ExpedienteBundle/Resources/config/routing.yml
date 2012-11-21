@@ -182,7 +182,7 @@ _expediente_sysadmin_bus_show_simple:
 
 _expediente_sysadmin_bus_edit_simple:
     pattern:  /bus/edit
-    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:editShow }
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:busEdit }
 #Fin de CRUD de bus
 
 #CRUD de Students para SysAdmin
@@ -314,6 +314,120 @@ _expediente_sysadmin_relatives_list:
     pattern:  /student/relativesList
     defaults: { _controller: TecnotekExpedienteBundle:Student:getRelativesList }
 #Fin de CRUD de Tickets
+
+#CRUD de period para SysAdmin
+_expediente_sysadmin_period:
+    pattern:  /period
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:periodList }
+
+_delete_period:
+    pattern:  /period/delete/{id}
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:periodDelete }
+
+_expediente_sysadmin_period_create:
+    pattern:  /period/create
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:periodCreate }
+
+_expediente_sysadmin_period_save:
+    pattern:  /period/save
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:periodSave }
+
+_expediente_sysadmin_period_update:
+    pattern:  /period/update
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:periodUpdate }
+
+_expediente_sysadmin_period_show:
+    pattern:  /period/show/{id}
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:periodShow }
+
+_expediente_sysadmin_period_edit:
+    pattern:  /period/edit/{id}
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:periodEdit }
+
+_expediente_sysadmin_period_show_simple:
+    pattern:  /period/show
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:periodShow }
+
+_expediente_sysadmin_period_edit_simple:
+    pattern:  /period/edit
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:periodEdit }
+#Fin de CRUD de periods
+
+#CRUD de grade para SysAdmin
+_expediente_sysadmin_grade:
+    pattern:  /grade
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:gradeList }
+
+_expediente_sysadmin_grade_delete:
+    pattern:  /grade/delete/{id}
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:gradeDelete }
+
+_expediente_sysadmin_grade_create:
+    pattern:  /grade/create
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:gradeCreate }
+
+_expediente_sysadmin_grade_save:
+    pattern:  /grade/save
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:gradeSave }
+
+_expediente_sysadmin_grade_update:
+    pattern:  /grade/update
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:gradeUpdate }
+
+_expediente_sysadmin_grade_show:
+    pattern:  /grade/show/{id}
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:gradeShow }
+
+_expediente_sysadmin_grade_edit:
+    pattern:  /grade/edit/{id}
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:gradeEdit }
+
+_expediente_sysadmin_grade_show_simple:
+    pattern:  /grade/show
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:gradeShow }
+
+_expediente_sysadmin_grade_edit_simple:
+    pattern:  /grade/edit
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:gradeEdit }
+#Fin de CRUD de Grade
+
+#CRUD de course para SysAdmin
+_expediente_sysadmin_course:
+    pattern:  /course
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:courseList }
+
+_expediente_sysadmin_course_delete:
+    pattern:  /course/delete/{id}
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:courseDelete }
+
+_expediente_sysadmin_course_create:
+    pattern:  /course/create
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:courseCreate }
+
+_expediente_sysadmin_course_save:
+    pattern:  /course/save
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:courseSave }
+
+_expediente_sysadmin_course_update:
+    pattern:  /course/update
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:courseUpdate }
+
+_expediente_sysadmin_course_show:
+    pattern:  /course/show/{id}
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:courseShow }
+
+_expediente_sysadmin_course_edit:
+    pattern:  /course/edit/{id}
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:courseEdit }
+
+_expediente_sysadmin_course_show_simple:
+    pattern:  /course/show
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:courseShow }
+
+_expediente_sysadmin_course_edit_simple:
+    pattern:  /course/edit
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:courseEdit }
+#Fin de CRUD de Course
 
 #Obtener lista de estudiantes
 _expediente_get_students_list:

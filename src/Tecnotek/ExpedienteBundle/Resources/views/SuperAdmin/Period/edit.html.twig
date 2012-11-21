@@ -1,0 +1,57 @@
+{% extends 'TecnotekExpedienteBundle::logged_layout.html.twig' %}
+
+{% block htmlTitle %}
+    Tecnotek :: Expediente :: Super Administrador :: Periodo
+{% endblock %}
+
+{% block extracss %}
+{% endblock %}
+
+{% block extrajs %}
+<script type="text/javascript">
+    Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="container_24">
+    <div class="grid_24">
+        <div>
+            <div class="left"><h1>{% trans %}label.period.show{% endtrans %}</h1></div>
+            <div class="right"><a href="{{ path('_expediente_sysadmin_period') }}" class="btn list"><span></span>{% trans %}label.back.list{% endtrans %}</a></div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="centeredDiv">
+            <div class="formContainer" style="width: 920px;">
+                <div id="editContainer">
+                    <form class="customForm" id="mainForm" name="mainForm" action="{{ path('_expediente_sysadmin_period_update') }}" method="post">
+                        <input type="hidden" id="id" name="id" value="{{ entity.id }}">
+
+                        {{ form_errors(form) }}
+
+                        {{ form_widget(form._token) }}
+
+                        <div class="formErrors">{{ form_errors(form.name) }}</div>
+                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.name{% endtrans %}</span>{{ form_widget(form.name) }}</label>
+
+                        <div class="formErrors">{{ form_errors(form.year) }}</div>
+                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.year{% endtrans %}</span>{{ form_widget(form.year) }}</label>
+
+                        <a href="{{ path('_expediente_sysadmin_period_show', {'id': entity.id}) }}" class="left btn delete"><span></span>{% trans %}label.cancelar{% endtrans %}</a>
+                        <button style="margin-left: 15px; margin-top: 0px;" type="submit" class="left btn save" name="save"><span></span>{% trans %}label.save{% endtrans %}</button>
+                        <div class="clear"></div>
+                    </form>
+                </div>
+            </div>    
+        </div>        
+        <div class="clear"></div>
+    </div>
+    <div class="clear"></div>
+    <div class="wrapper">
+            <div class="grid_24 padline">
+                    <div class="lineH"></div>
+            </div>
+    </div>
+</div>
+{% endblock %}

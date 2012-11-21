@@ -48,8 +48,29 @@ label.date: Fecha
 label.justify: Justificada
 label.injustify: Injustificada
 label.all: Todos
+label.number: N&uacute;mero
+label.type: Tipo
 
+label.period.listar: Lista de Periodos
+label.period.new: Nuevo Periodo
+messages.confirmation.period.delete: Esta seguro que desea eliminar el periodo?
+label.period.show: Detalle del Periodo
 
+label.grade.listar: Lista de Grados
+label.grade.new: Nuevo Grado
+messages.confirmation.grade.delete: Esta seguro que desea eliminar el grado?
+label.grade.show: Detalle del Grado
+
+label.course.listar: Lista de Materias
+label.course.new: Nueva Materia
+messages.confirmation.course.delete: Esta seguro que desea eliminar la materia?
+label.course.show: Detalle de la materia
+
+label.year: A&ntilde;o
+label.mantenimientos: Mantenimientos
+label.period: Periodo
+label.grade: Grado
+label.course: Materia
 label.bus: Buseta
 label.buses: Busetas
 label.transport: Transporte

@@ -1,0 +1,54 @@
+{% extends 'TecnotekExpedienteBundle::logged_layout.html.twig' %}
+
+{% block htmlTitle %}
+    Tecnotek :: Expediente :: Super Administrador :: Grado
+{% endblock %}
+
+{% block extrajs %}
+<script type="text/javascript">
+    Tecnotek.module = "entityList";
+    Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
+    Tecnotek.UI.urls["show"] = "{{ path('_expediente_sysadmin_grade_show_simple')}}";
+    Tecnotek.UI.urls["edit"] = "{{ path('_expediente_sysadmin_grade_edit_simple')}}";
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="container_24">
+    <div class="grid_24">
+        <div>
+            <div class="left"><h1>{% trans %}label.grade.listar{% endtrans %}</h1></div>
+            <div class="right"><a href="{{ path('_expediente_sysadmin_grade_create') }}" class="btn add"><span></span>{% trans %}label.add{% endtrans %}</a></div>
+            <div class="clear"></div>
+        </div>
+        
+        <div class="row tableHeader">
+            <div class="option_width" style="float: left; width: 150px;">{% trans %}label.name{% endtrans %}</div>
+            <div class="option_width" style="float: left; width: 75px;">{% trans %}label.number{% endtrans %}</div>
+        </div>
+
+        {% for entity in pagination %}            
+            <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
+                <div class="option_width" style="float: left; width: 150px;">{{ entity.name }}</div>
+                <div class="option_width" style="float: left; width: 75px;">{{ entity.number }}</div>
+                <div class="right imageButton editButton"  title="{% trans %}label.edit{% endtrans %}"  rel="{{ entity.id }}"></div>
+                <div class="right imageButton viewButton"  title="{% trans %}label.view{% endtrans %}"  rel="{{ entity.id }}"></div>
+                <div class="clear"></div>
+            </div>
+        {% endfor %}
+        <br/>
+    
+        <div style="margin-bottom:75px;">
+            {# display navigation #}    
+            {{ pagination.render()|raw }}
+        </div>    
+        <div class="clear"></div>
+    </div>
+    <div class="clear"></div>
+    <div class="wrapper">
+            <div class="grid_24 padline">
+                    <div class="lineH"></div>
+            </div>
+    </div>
+</div>
+{% endblock %}

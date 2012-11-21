@@ -1,0 +1,59 @@
+{% extends 'TecnotekExpedienteBundle::logged_layout.html.twig' %}
+
+{% block htmlTitle %}
+    Tecnotek :: Expediente :: Super Administrador :: Periodo
+{% endblock %}
+
+{% block extracss %}
+{% endblock %}
+
+{% block extrajs %}
+<script type="text/javascript">
+    Tecnotek.UI.urls["deleteURL"] = "{{ path("_delete_period", {id: entity.id}) }}";
+    Tecnotek.UI.translates["confirmDelete"] = "{% trans %}messages.confirmation.period.delete{% endtrans %}";
+    Tecnotek.module = "showEntity";
+    Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="container_24">
+    <div class="grid_24">
+        <div>
+            <div class="left"><h1>{% trans %}label.period.show{% endtrans %}</h1></div>
+            <div class="right"><a href="{{ path('_expediente_sysadmin_period') }}" class="btn list"><span></span>{% trans %}label.back.list{% endtrans %}</a></div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="centeredDiv">
+            <div class="formContainer" style="width: 920px;">
+                <div id="showContainer">
+                    <div>
+                        <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.name{%endtrans%}</div>
+                        <div id="labelName" class="left">{{ entity.name }}</div>
+                        <div class="clear"></div>
+                    </div>
+                    <div>
+                        <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.year{%endtrans%}</div>
+                        <div id="labelYear" class="left">{{ entity.year }}</div>
+                        <div class="clear"></div>
+                    </div>
+
+                    <div id="buttonsContainer" style="margin-top: 25px;">
+                        <a href="{{ path('_expediente_sysadmin_period_edit', {'id': entity.id}) }}" class="left btn edit"><span></span>{% trans %}label.edit{% endtrans %}</a>
+                        <div class="left btn delete" id="btnEliminar" style="margin-left: 25px;"><span></span>{% trans %}label.eliminar{% endtrans %}</div>
+                        <div class="clear"></div>
+                    </div>
+                </div>
+            </div>    
+        </div>        
+        <div class="clear"></div>
+    </div>
+    <div class="clear"></div>
+    <div class="wrapper">
+            <div class="grid_24 padline">
+                    <div class="lineH"></div>
+            </div>
+    </div>
+</div>
+{% endblock %}
