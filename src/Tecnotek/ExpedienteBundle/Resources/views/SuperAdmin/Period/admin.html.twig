@@ -1,0 +1,175 @@
+{% extends 'TecnotekExpedienteBundle::logged_layout.html.twig' %}
+
+{% block htmlTitle %}
+    Tecnotek :: Expediente :: Super Administrador :: Periodo
+{% endblock %}
+
+{% block extracss %}
+<link rel="stylesheet" href="{{ asset('fancybox/jquery.fancybox.css') }}" type="text/css" media="all" />
+<link rel="stylesheet" href="{{ asset('expediente/css/fancybox_style.css') }}" type="text/css" media="all" />
+{% endblock %}
+
+{% block extrajs %}
+<script type="text/javascript" src="{{ asset('fancybox/jquery.fancybox.js?v=2.0.6') }}"></script>
+
+<script type="text/javascript">
+    Tecnotek.UI.urls["deleteURL"] = "{{ path("_delete_period", {id: entity.id}) }}";
+    Tecnotek.UI.translates["confirmDelete"] = "{% trans %}messages.confirmation.period.delete{% endtrans %}";
+
+    Tecnotek.UI.urls["associateCourseURL"] = "{{ path("_expediente_sysadmin_associate_course") }}";
+    Tecnotek.UI.urls["loadAvailableCoursesForGradeURL"] = "{{ path("_expediente_sysadmin_load_courses_by_grade") }}";
+    Tecnotek.UI.urls["deleteGroupURL"] = "{{ path("_expediente_sysadmin_group_remove") }}";
+    Tecnotek.UI.urls["deleteCourseAssociationURL"] = "{{ path("_expediente_sysadmin_course_association_remove") }}";
+    Tecnotek.UI.urls["loadPeriodInfoByGradeURL"] = "{{ path("_expediente_sysadmin_load_period_info") }}";
+    Tecnotek.UI.urls["saveGroupURL"] = "{{ path("_expediente_sysadmin_group_save") }}";
+    Tecnotek.module = "adminPeriod";
+    Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
+    Tecnotek.UI.vars["periodId"] = {{ entity.id }};
+    Tecnotek.UI.vars["groupId"] = 0;
+
+    $(function() {
+        $("#openGroupForm").fancybox({
+            'afterLoad' : function(){
+                Tecnotek.UI.vars["groupId"] = 0;
+                $("#groupFormName").val("");
+            }
+        });
+
+        $("#openCourseForm").fancybox({
+            'beforeLoad' : function(){
+                Tecnotek.AdminPeriod.loadAvailableCoursesForGrade();
+            }
+        });
+
+    });
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="container_24">
+    <div class="grid_24">
+        <div>
+            <div class="left"><h1>{% trans %}label.period.admin{% endtrans %}: {{ entity }}</h1></div>
+            <div class="right"><a href="{{ path('_expediente_sysadmin_period') }}" class="btn list"><span></span>{% trans %}label.back.list{% endtrans %}</a></div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="centeredDiv">
+            <div class="formContainer" style="width: 920px;">
+                <div id="showContainer">
+                    <div>
+                        <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.grade{%endtrans%}</div>
+                        <div id="labelName" class="left">
+                            <select id="grade" name="grade">
+                                {% for grade in grades %}
+                                    <option value="{{ grade.id }}">{{grade}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                    <!-- Tabs -->
+                    <div id="tabs">
+                        <nav class="tabs">
+                            <div class="tab-header tab-current" id="groupTab">{%trans%}label.groups{%endtrans%}</div>
+                            <section class="tabs-content" id="groupSection">
+                                <div class="left">
+                                    <div class="row tableHeader">
+                                        <div class="option_width" style="float: left; width: 250px;">{% trans %}label.name{% endtrans %}</div>
+                                        <div class="option_width" style="float: left; width: 250px;">{% trans %}label.teacher.guide{% endtrans %}</div>
+                                        <button style="margin-left: 15px; margin-top: -5px;" type="button" class="right btn new" name="buttonNew" id="buttonNewGroup" href="#inline"><a id="openGroupForm" class="modalbox" href="#groupFormContainer">{% trans %}label.new{% endtrans %}</a></button>
+                                    </div>
+                                    <div id="groupRows" name="groupRows">
+
+                                    </div>
+                                </div>
+                                <div class="clear"></div>
+                                <br/>
+
+                                <!-- hidden groupForm form -->
+                                <div id="groupFormContainer" style="display: none;">
+                                    <h2 style="margin-bottom: 0px;">Crear nuevo grupo</h2>
+
+                                    <form class="customForm" id="groupForm" name="groupForm">
+                                        <div class="formErrors"></div>
+                                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.name{% endtrans %}</span>
+                                            <input id="groupFormName" name="groupFormName">
+                                        </label>
+
+                                        <div class="formErrors"></div>
+                                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.teacher.guide{% endtrans %}</span>
+                                            <select id="groupFormTeacher" name="groupFormTeacher">
+                                                {% for teacher in teachers %}
+                                                    <option value="{{ teacher.id }}">{{ teacher.firstname ~ " " ~ teacher.lastname }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </label>
+
+                                        <div class="left"><input class="btn" style="margin-top: 0px;" type="button" name="groupFormCancel" id="groupFormCancel" value="{% trans %}label.cancelar{% endtrans %}"/></div>
+                                        <div class="left"><input class="btn" style="margin-top: 0px; margin-left: 25px;" type="submit" name="save" value="{% trans %}label.save{% endtrans %}"/></div>
+                                        <div class="clear"></div>
+                                    </form>
+                                </div>
+                            </section>
+
+                            <div class="tab-header" id="courseTab">{%trans%}label.courses{%endtrans%}</div>
+                            <section class="tabs-content" style="display: none;" id="courseSection">
+
+                                <div class="left">
+                                    <div class="row tableHeader">
+                                        <div class="option_width" style="float: left; width: 250px;">{% trans %}label.name{% endtrans %}</div>
+                                        <div class="option_width" style="float: left; width: 250px;">{% trans %}label.teacher.default{% endtrans %}</div>
+                                        <button style="margin-left: 15px; margin-top: -5px;" type="button" class="right btn new" name="buttonNew" id="buttonNewCourse" href="#inline"><a id="openCourseForm" class="modalbox" href="#courseFormContainer">{% trans %}label.include{% endtrans %}</a></button>
+                                    </div>
+                                    <div id="courseRows" name="courseRows">
+
+                                    </div>
+                                </div>
+                                <div class="clear"></div>
+                                <br/>
+
+                                <!-- hidden courseFormContainer form -->
+                                <div id="courseFormContainer" style="display: none;">
+                                    <h2 style="margin-bottom: 0px;">Incluir materia</h2>
+
+                                    <form class="customForm" id="courseForm" name="courseForm">
+                                        <div class="formErrors"></div>
+                                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.course{% endtrans %}</span>
+                                            <select id="courseToAsociate" name="courseToAsociate">
+
+                                            </select>
+                                        </label>
+
+                                        <div class="formErrors"></div>
+                                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.teacher.default{% endtrans %}</span>
+                                            <select id="courseFormTeacher" name="courseFormTeacher">
+                                                {% for teacher in teachers %}
+                                                <option value="{{ teacher.id }}">{{ teacher.firstname ~ " " ~ teacher.lastname }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </label>
+
+                                        <div class="left"><input class="btn" style="margin-top: 0px;" type="button" name="groupFormCancel" id="courseFormCancel" value="{% trans %}label.cancelar{% endtrans %}"/></div>
+                                        <div class="left"><input class="btn" style="margin-top: 0px; margin-left: 25px;" type="submit" name="save" value="{% trans %}label.include{% endtrans %}"/></div>
+                                        <div class="clear"></div>
+                                    </form>
+                                </div>
+
+                                <div class="clear"></div>
+                            </section>
+                        </nav>
+                    </div>
+                    <!-- End Tabs -->
+                </div>
+            </div>    
+        </div>        
+        <div class="clear"></div>
+    </div>
+    <div class="clear"></div>
+    <div class="wrapper">
+            <div class="grid_24 padline">
+                    <div class="lineH"></div>
+            </div>
+    </div>
+</div>
+{% endblock %}

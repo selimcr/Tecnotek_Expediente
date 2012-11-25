@@ -509,3 +509,35 @@ _expediente_absences_save:
     pattern:  /absences/save
     defaults: { _controller: TecnotekExpedienteBundle:Student:absenceSave }
 #########################################
+
+_expediente_sysadmin_period_admin_simple:
+    pattern:  /period/admin
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:adminPeriod }
+
+_expediente_sysadmin_period_admin:
+    pattern:  /period/admin/{id}
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:adminPeriod }
+
+_expediente_sysadmin_group_save:
+    pattern:  /group/save/
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:createEditGroup }
+
+_expediente_sysadmin_load_period_info:
+  pattern:  /period/load/
+  defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:loadPeriodInfo }
+
+_expediente_sysadmin_group_remove:
+    pattern:  /group/remove/
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:removeGroup }
+
+_expediente_sysadmin_load_courses_by_grade:
+  pattern: /period/loadCoursesByGrade/
+  defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:loadAvailableCourses }
+
+_expediente_sysadmin_associate_course:
+  pattern: /period/associateCourse/
+  defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:associateCourse }
+
+_expediente_sysadmin_course_association_remove:
+  pattern:  /period/couseAssociationRemove/
+  defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:courseAssociationRemove }

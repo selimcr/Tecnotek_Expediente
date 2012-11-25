@@ -51,6 +51,9 @@ var Tecnotek = {
                     Tecnotek.EntityShow.init();
                     Tecnotek.StudentShow.init();
                     break;
+                case "adminPeriod":
+                    Tecnotek.AdminPeriod.init();
+                    break;
                 case "ticketsIndex":
                     Tecnotek.Tickets.init();
                     break;
@@ -62,7 +65,7 @@ var Tecnotek = {
 				}
 			}
 			Tecnotek.UI.init();
-			
+
 		},
         ajaxCall : function(url, params, succedFunction, errorFunction, showSpinner) {
             var request = $.ajax({
@@ -225,13 +228,17 @@ var Tecnotek = {
 			initComponents : function() {
 			},
 			initButtons : function() {
-				$('.viewButton').click(function(event){
-                    event.preventDefault();
-                    location.href = Tecnotek.UI.urls["show"] + "/" + $(this).attr("rel");
-				});
                 $('.editButton').click(function(event){
                     event.preventDefault();
                     location.href = Tecnotek.UI.urls["edit"] + "/" + $(this).attr("rel");
+                });
+                $('.viewButton').click(function(event){
+                    event.preventDefault();
+                    location.href = Tecnotek.UI.urls["show"] + "/" + $(this).attr("rel");
+				});
+                $('.adminButton').click(function(event){
+                    event.preventDefault();
+                    location.href = Tecnotek.UI.urls["admin"] + "/" + $(this).attr("rel");
                 });
 			},
 			submit : function() {
@@ -312,6 +319,276 @@ var Tecnotek = {
                         location.href = Tecnotek.UI.urls["deleteURL"];
                     }
                 });
+            }
+        },
+        AdminPeriod : {
+            init : function() {
+                $('#groupTab').click(function(event){
+                    $('#courseSection').hide();
+                    $('#groupSection').show();
+                    $('#groupTab').toggleClass("tab-current");
+                    $('#courseTab').toggleClass("tab-current");
+                });
+                $('#courseTab').click(function(event){
+                    $('#groupSection').hide();
+                    $('#courseSection').show();
+                    $('#courseTab').toggleClass("tab-current");
+                    $('#groupTab').toggleClass("tab-current");
+                });
+                $('#groupForm').submit(function(event){
+                    event.preventDefault();
+                    Tecnotek.AdminPeriod.saveGroup();
+                });
+                $('#courseForm').submit(function(event){
+                    event.preventDefault();
+                    Tecnotek.AdminPeriod.associateCourse();
+                });
+                Tecnotek.AdminPeriod.initButtons();
+                Tecnotek.AdminPeriod.loadPeriodInfoByGrade();
+            },
+            initButtons : function() {
+                $("#groupFormCancel").click(function(event){
+                    event.preventDefault();
+                    $.fancybox.close();
+                });
+                $("#courseFormCancel").click(function(event){
+                    event.preventDefault();
+                    $.fancybox.close();
+                });
+                $("#grade").change(function(event){
+                    event.preventDefault();
+                    Tecnotek.AdminPeriod.loadPeriodInfoByGrade();
+                });
+            },
+            loadAvailableCoursesForGrade: function() {
+                $('#courseToAsociate').children().remove();
+                Tecnotek.ajaxCall(Tecnotek.UI.urls["loadAvailableCoursesForGradeURL"],
+                    {   periodId: Tecnotek.UI.vars["periodId"],
+                        gradeId: $('#grade').val()},
+                    function(data){
+                        if(data.error === true) {
+                            Tecnotek.showErrorMessage(data.message,true, "", false);
+                        } else {
+                            for(i=0; i<data.courses.length; i++) {
+                                $('#courseToAsociate').append('<option value="' + data.courses[i].id + '">' + data.courses[i].name + '</option>');
+                            }
+                        }
+                    },
+                    function(jqXHR, textStatus){
+                        Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
+                        $(this).val("");
+                    }, true);
+            },
+            loadPeriodInfoByGrade : function() {
+                $('.editGroup').unbind();
+                $('.deleteGroup').unbind();
+                $('#groupRows').empty();
+
+                $('.editCourse').unbind();
+                $('.deleteCourse').unbind();
+                $('#courseRows').empty();
+
+                $gradeId = $('#gradeId').val();
+                Tecnotek.ajaxCall(Tecnotek.UI.urls["loadPeriodInfoByGradeURL"],
+                    {   periodId: Tecnotek.UI.vars["periodId"],
+                        gradeId: $('#grade').val()},
+                    function(data){
+                        if(data.error === true) {
+                            Tecnotek.showErrorMessage(data.message,true, "", false);
+                        } else {
+                            for(i=0; i<data.groups.length; i++) {
+                                $html = '<div id="groupRow_' + data.groups[i].id  + '" class="row userRow tableRowOdd">';
+                                $html += '    <div id="groupNameField_' + data.groups[i].id + '" name="groupNameField_' + data.groups[i].id + '" class="option_width" style="float: left; width: 250px;">' + data.groups[i].name + '</div>';
+                                $html += '    <div id="groupTeacherField_' + data.groups[i].id + '" name="groupTeacherField_' + data.groups[i].id + '" class="option_width" style="float: left; width: 250px;">' + data.groups[i].teacherName + '</div>';
+                                $html += '    <div class="right imageButton deleteButton deleteGroup" style="height: 16px;" title="Eliminar"  rel="' + data.groups[i].id + '"></div>';
+                                $html += '    <div class="right imageButton editButton editGroup"  title="Editar"  rel="' + data.groups[i].id + '" groupName="' + data.groups[i].name + '" teacher="' + data.groups[i].teacherId + '"></div>';
+                                $html += '    <div class="clear"></div>';
+                                $html += '</div>';
+                                $('#groupRows').append($html);
+                            }
+
+                            for(i=0; i<data.courses.length; i++) {
+                                $html = '<div id="courseRow_' + data.courses[i].id  + '" class="row userRow tableRowOdd">';
+                                $html += '    <div id="courseNameField_' + data.courses[i].id + '" name="courseNameField_' + data.courses[i].id + '" class="option_width" style="float: left; width: 250px;">' + data.courses[i].name + '</div>';
+                                $html += '    <div id="courseTeacherField_' + data.courses[i].id + '" name="courseTeacherField_' + data.courses[i].id + '" class="option_width" style="float: left; width: 250px;">' + data.courses[i].teacherName + '</div>';
+                                $html += '    <div class="right imageButton deleteButton deleteCourse" style="height: 16px;" title="Eliminar"  rel="' + data.courses[i].id + '"></div>';
+                                //$html += '    <div class="right imageButton editButton editCourse"  title="Editar"  rel="' + data.courses[i].id + '" teacher="' + data.courses[i].teacherId + '"></div>';
+                                $html += '    <div class="clear"></div>';
+                                $html += '</div>';
+                                $('#courseRows').append($html);
+                            }
+
+                            Tecnotek.AdminPeriod.initializeGroupsButtons();
+                            Tecnotek.AdminPeriod.initializeCourseButtons();
+
+                        }
+                    },
+                    function(jqXHR, textStatus){
+                        Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
+                        $(this).val("");
+                    }, true);
+            },
+            deleteGroup: function(groupId){
+                console.debug("Delete Group with id " + groupId);
+                if(Tecnotek.showConfirmationQuestion("Esta seguro que desea eliminar el grupo?")) {
+                    Tecnotek.ajaxCall(Tecnotek.UI.urls["deleteGroupURL"],
+                        {   groupId: groupId },
+                        function(data){
+                            if(data.error === true) {
+                                Tecnotek.showErrorMessage(data.message,true, "", false);
+                            } else {
+                                $("#groupRow_" + groupId).fadeOut('slow', function(){});
+                            }
+                        },
+                        function(jqXHR, textStatus){
+                            Tecnotek.showErrorMessage("Error deleting group: " + textStatus + ".", true, "", false);
+                        }, true);
+                }
+
+            },
+            deleteCourseAssociation: function(associationId){
+                if(Tecnotek.showConfirmationQuestion("Esta seguro que desea desasociar esta materia del grado?")) {
+                    Tecnotek.ajaxCall(Tecnotek.UI.urls["deleteCourseAssociationURL"],
+                        {   associationId: associationId },
+                        function(data){
+                            if(data.error === true) {
+                                Tecnotek.showErrorMessage(data.message,true, "", false);
+                            } else {
+                                $("#courseRow_" + associationId).fadeOut('slow', function(){});
+                            }
+                        },
+                        function(jqXHR, textStatus){
+                            Tecnotek.showErrorMessage("Error deleting course association: " + textStatus + ".", true, "", false);
+                        }, true);
+                }
+
+            },
+            editGroup: function(groupId, groupName, teacherId){
+                $('#openGroupForm').trigger('click');
+                $("#groupFormName").val(groupName);
+                $("#groupFormTeacher").val(teacherId);
+                Tecnotek.UI.vars["groupId"] = groupId;
+            },
+            initializeGroupsButtons: function(){
+                $('.editGroup').unbind();
+                $('.editGroup').click(function(event){
+                    event.preventDefault();
+                    Tecnotek.UI.vars["groupId"] = $(this).attr("rel");
+                    Tecnotek.UI.vars["teacherId"] = $(this).attr("teacher");
+                    Tecnotek.editingGroup = $(this);
+                    Tecnotek.AdminPeriod.editGroup(Tecnotek.UI.vars["groupId"], $(this).attr("groupName"),
+                        Tecnotek.UI.vars["teacherId"]);
+
+                });
+
+                $('.deleteGroup').unbind();
+                $('.deleteGroup').click(function(event){
+                    event.preventDefault();
+                    Tecnotek.AdminPeriod.deleteGroup($(this).attr("rel"));
+                });
+            },
+            initializeCourseButtons: function(){
+                $('.editCourse').unbind();
+                $('.editCourse').click(function(event){
+                    event.preventDefault();
+                    /*Tecnotek.UI.vars["groupId"] = $(this).attr("rel");
+                    Tecnotek.UI.vars["teacherId"] = $(this).attr("teacher");
+                    Tecnotek.editingGroup = $(this);
+                    Tecnotek.AdminPeriod.editGroup(Tecnotek.UI.vars["groupId"], $(this).attr("groupName"),
+                        Tecnotek.UI.vars["teacherId"]);*/
+
+                });
+
+                $('.deleteCourse').unbind();
+                $('.deleteCourse').click(function(event){
+                    event.preventDefault();
+                    Tecnotek.AdminPeriod.deleteCourseAssociation($(this).attr("rel"));
+                });
+            },
+            saveGroup: function() {
+                $groupId = Tecnotek.UI.vars["groupId"];
+                $gradeId = $('#gradeId').val();
+                $name = $('#groupFormName').val();
+                $teacherId = $('#groupFormTeacher').val();
+                Tecnotek.ajaxCall(Tecnotek.UI.urls["saveGroupURL"],
+                    {   groupId: $groupId,
+                        periodId: Tecnotek.UI.vars["periodId"],
+                        name: $name,
+                        teacherId: $teacherId,
+                        gradeId: $('#grade').val()},
+                    function(data){
+                        if(data.error === true) {
+                            Tecnotek.showErrorMessage(data.message,true, "", false);
+                        } else {
+
+                            if($groupId == 0){
+                                $html = '<div id="groupRow_' + data.groupId  + '" class="row userRow tableRowOdd">';
+                                $html += '    <div id="groupNameField_' + data.groupId + '" name="groupNameField_' + data.groupId + '" class="option_width" style="float: left; width: 250px;">' + $name + '</div>';
+                                $html += '    <div id="groupTeacherField_' + data.groupId + '" name="groupTeacherField_' + data.groupId + '" class="option_width" style="float: left; width: 250px;">' + $('#groupFormTeacher :selected').text() + '</div>';
+                                $html += '    <div class="right imageButton deleteButton deleteGroup" style="height: 16px;" title="Eliminar"  rel="' + data.groupId + '"></div>';
+                                $html += '    <div class="right imageButton editButton editGroup"  title="Editar"  rel="' + data.groupId + '" groupName="' + $name + '" teacher="' + $teacherId + '"></div>';
+                                $html += '    <div class="clear"></div>';
+                                $html += '</div>';
+
+                                $('#groupRows').append($html);
+                                Tecnotek.AdminPeriod.initializeGroupsButtons();
+                                Tecnotek.showInfoMessage("Grupo guardado correctamente.", true);
+                            } else {
+                                $("#groupNameField_" + $groupId).html($name);
+                                $("#groupTeacherField_" + $groupId).html($('#groupFormTeacher :selected').text());
+                                Tecnotek.editingGroup.attr("teacher", $('#groupFormTeacher').val())
+
+                                Tecnotek.showInfoMessage("Grupo actualizado correctamente.", true);
+                            }
+
+                            $.fancybox.close();
+
+                        }
+                    },
+                    function(jqXHR, textStatus){
+                        Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
+                        $(this).val("");
+                    }, true);
+            },
+            associateCourse: function() {
+                Tecnotek.ajaxCall(Tecnotek.UI.urls["associateCourseURL"],
+                    {   courseId: $('#courseToAsociate').val(),
+                        periodId: Tecnotek.UI.vars["periodId"],
+                        teacherId: $('#courseFormTeacher').val(),
+                        gradeId: $('#grade').val()},
+                    function(data){
+                        if(data.error === true) {
+                            Tecnotek.showErrorMessage(data.message,true, "", false);
+                        } else {
+
+                            //if($groupId == 0){
+                                $html = '<div id="courseRow_' + data.courseClass  + '" class="row userRow tableRowOdd">';
+                                $html += '    <div id="courseNameField_' + data.courseClass + '" name="courseNameField_' + data.courseClass + '" class="option_width" style="float: left; width: 250px;">' + $('#courseToAsociate :selected').text() + '</div>';
+                                $html += '    <div id="courseTeacherField_' + data.courseClass + '" name="courseTeacherField_' + data.courseClass + '" class="option_width" style="float: left; width: 250px;">' + $('#courseFormTeacher :selected').text() + '</div>';
+                                $html += '    <div class="right imageButton deleteButton deleteCourse" style="height: 16px;" title="Eliminar"  rel="' + data.courseClass + '"></div>';
+                                //$html += '    <div class="right imageButton editButton editCourse"  title="Editar"  rel="' + data.courseId + '" teacher="' + $('#courseFormTeacher').val() + '"></div>';
+                                $html += '    <div class="clear"></div>';
+                                $html += '</div>';
+
+                                $('#courseRows').append($html);
+                                Tecnotek.AdminPeriod.initializeGroupsButtons();
+                                Tecnotek.showInfoMessage("Materia asociada correctamente.", true);
+                            /*} else {
+                                $("#groupNameField_" + $groupId).html($name);
+                                $("#groupTeacherField_" + $groupId).html($('#groupFormTeacher :selected').text());
+                                Tecnotek.editingGroup.attr("teacher", $('#groupFormTeacher').val())
+
+                                Tecnotek.showInfoMessage("Grupo actualizado correctamente.", true);
+                            }*/
+
+                            $.fancybox.close();
+                            Tecnotek.AdminPeriod.initializeCourseButtons();
+                        }
+                    },
+                    function(jqXHR, textStatus){
+                        Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
+                        $(this).val("");
+                    }, true);
             }
         },
         ClubShow : {

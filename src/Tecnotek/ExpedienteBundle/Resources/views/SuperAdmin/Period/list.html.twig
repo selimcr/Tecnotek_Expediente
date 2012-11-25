@@ -10,6 +10,7 @@
     Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
     Tecnotek.UI.urls["show"] = "{{ path('_expediente_sysadmin_period_show_simple')}}";
     Tecnotek.UI.urls["edit"] = "{{ path('_expediente_sysadmin_period_edit_simple')}}";
+    Tecnotek.UI.urls["admin"] = "{{ path('_expediente_sysadmin_period_admin_simple')}}";
 </script>
 {% endblock %}
 
@@ -31,6 +32,7 @@
             <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
                 <div class="option_width" style="float: left; width: 150px;">{{ entity.name }}</div>
                 <div class="option_width" style="float: left; width: 75px;">{{ entity.year }}</div>
+                <div class="right imageButton adminButton"  title="{% trans %}label.admin{% endtrans %}"  rel="{{ entity.id }}"></div>
                 <div class="right imageButton editButton"  title="{% trans %}label.edit{% endtrans %}"  rel="{{ entity.id }}"></div>
                 <div class="right imageButton viewButton"  title="{% trans %}label.view{% endtrans %}"  rel="{{ entity.id }}"></div>
                 <div class="clear"></div>

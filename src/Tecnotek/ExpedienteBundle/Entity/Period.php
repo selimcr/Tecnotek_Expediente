@@ -11,7 +11,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *
  * @ORM\Table(name="tek_periods")
  * @ORM\Entity()
- * @UniqueEntity("year")
  */
 class Period
 {
@@ -42,7 +41,7 @@ class Period
 
     public function __toString()
     {
-        return $this->name;
+        return $this->name . " - " . $this->year;
     }
 
     /**

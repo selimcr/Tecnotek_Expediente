@@ -51,6 +51,9 @@ label.all: Todos
 label.number: N&uacute;mero
 label.type: Tipo
 
+label.teacher.default: Profesor Asignado
+label.include: Incluir
+
 label.period.listar: Lista de Periodos
 label.period.new: Nuevo Periodo
 messages.confirmation.period.delete: Esta seguro que desea eliminar el periodo?
@@ -66,6 +69,11 @@ label.course.new: Nueva Materia
 messages.confirmation.course.delete: Esta seguro que desea eliminar la materia?
 label.course.show: Detalle de la materia
 
+label.period.admin: Administraci&oacute;n de Periodo
+label.admin: Administrar
+label.groups: Grupos
+label.courses: Materias
+label.teacher.guide: Profesor Gu&iacute;a
 label.year: A&ntilde;o
 label.mantenimientos: Mantenimientos
 label.period: Periodo
@@ -207,6 +215,7 @@ message.relative.not.exists: Este estudiante no tiene personas autorizadas para 
 error.entity.not.found: El objeto no se ha encontrado.
 error.passwords.dont.match: Los passwords no coinciden.
 error.password.emtpy: El password no puede estar en blanco.
+error.paramateres.missing: Parametros incorrectos.
 
 #USER ROLES
 user.roles.1: Administrador del Sistema
