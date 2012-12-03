@@ -1196,4 +1196,66 @@ class SuperAdminController extends Controller
         }
     }
 
+    public  function enterQualificationsAction(){
+        $logger = $this->get("logger");
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $dql = "SELECT e FROM TecnotekExpedienteBundle:CourseEntry e WHERE e.parent IS NULL ORDER BY e.sortOrder";
+        $query = $em->createQuery($dql);
+        $logger->err("-----> SQL: " . $query->getSQL());
+        $entries = $query->getResult();
+        $logger->err("-----> ENTRIES: " . sizeof($entries));
+        $temp = new \Tecnotek\ExpedienteBundle\Entity\CourseEntry();
+        $html = "";
+        /*
+            <div class="itemHeader itemNota" style="margin-left: 125px;">Tarea 2</div>
+            <div class="itemHeader itemPromedio" style="margin-left:150px;">Promedio Tareas </div>
+            <div class="itemHeader itemPorcentage" style="margin-left: 175px;">10 % Tarea</div>*/
+        $marginLeft = 0;
+        foreach( $entries as $entry )
+        {
+            $temp = $entry;
+            $childrens = $temp->getChildrens();
+            $size = sizeof($childrens);
+            $logger->err("-----> Childrens of " . $temp->getName() . ": " . sizeof($childrens));
+
+            if($size == 0){//No child
+                $html .= '<div class="itemHeader itemNota" style="margin-left: ' . $marginLeft . 'px;">' . $temp->getName() . '</div>';
+                $marginLeft += 25;
+                $html .= '<div class="itemHeader itemPorcentage" style="margin-left: ' . $marginLeft . 'px;">' . $temp->getPercentage() . '% ' . $temp->getName() . '</div>';
+                $marginLeft += 25;
+            } else {
+            if($size == 1){//one child
+                foreach ( $childrens as $child){
+                    $html .= '<div class="itemHeader itemNota" style="margin-left: ' . $marginLeft . 'px;">' . $child->getName() . '</div>';
+                    $marginLeft += 25;
+                }
+                $html .= '<div class="itemHeader itemPorcentage" style="margin-left: ' . $marginLeft . 'px;">' . $temp->getPercentage() . '% ' . $temp->getName() . '</div>';
+                $marginLeft += 25;
+            } else {//two or more
+                foreach ( $childrens as $child){
+                    $html .= '<div class="itemHeader itemNota" style="margin-left: ' . $marginLeft . 'px;">' . $child->getName() . '</div>';
+                    $marginLeft += 25;
+                }
+                $html .= '<div class="itemHeader itemPromedio" style="margin-left:' . $marginLeft . 'px;">Promedio ' . $temp->getName() . ' </div>';
+                $marginLeft += 25;
+                $html .= '<div class="itemHeader itemPorcentage" style="margin-left: ' . $marginLeft . 'px;">' . $temp->getPercentage() . '% ' . $temp->getName() . '</div>';
+                $marginLeft += 25;
+            }
+            }
+            /*$assignedTeacher =  new \Tecnotek\ExpedienteBundle\Entity\AssignedTeacher();
+            $assignedTeacher->setCourseClass($courseClass);
+            $assignedTeacher->setGroup($group);
+            $assignedTeacher->setTeacher($teacher);
+            $em->persist($assignedTeacher);*/
+        }
+       /* $entries = $em->getRepository("TecnotekExpedienteBundle:CourseEntry")->findAll();
+
+        $dql = "SELECT users FROM TecnotekExpedienteBundle:User users JOIN users.roles r WHERE r.role = 'ROLE_PROFESOR' ORDER BY users.firstname";
+        $query = $em->createQuery($dql);
+        $teachers = $query->getResult();*/
+
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Qualification/index.html.twig', array('table' => $html,
+            'menuIndex' => 5));
+    }
 }

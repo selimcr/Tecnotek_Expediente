@@ -1,0 +1,91 @@
+{% extends 'TecnotekExpedienteBundle::logged_layout.html.twig' %}
+
+{% block htmlTitle %}
+    Tecnotek :: Expediente :: Super Administrador
+{% endblock %}
+
+
+
+{% block extrajs %}
+<script type="text/javascript" src="{{ asset('fancybox/jquery.fancybox.js?v=2.0.6') }}"></script>
+
+<script type="text/javascript">
+    Tecnotek.module = "absences";
+    Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
+
+    Tecnotek.UI.urls["getStudentsURL"] = "{{ path('_expediente_sysadmin_student_ajax_list')}}";
+    Tecnotek.UI.urls["loadStudentRelativesURL"] = "{{ path('_expediente_sysadmin_relatives_list')}}";
+    Tecnotek.UI.urls["saveTicketURL"] = "{{ path('_expediente_sysadmin_ticket_save')}}";
+    Tecnotek.StudentShow.translates["relative.not.selected"] = "{% trans %}message.relative.not.selected{% endtrans %}";
+    Tecnotek.StudentShow.translates["student.not.selected"] = "{% trans %}message.student.not.selected{% endtrans %}";
+    Tecnotek.StudentShow.translates["relative.not.exists"] = "{% trans %}message.relative.not.exists{% endtrans %}";
+</script>
+<script type="text/javascript">
+
+$(function() {
+   // $(".modalbox").fancybox();
+});
+</script>
+{% endblock %}
+
+{% block extracss %}
+<link rel="stylesheet" href="{{ asset('fancybox/jquery.fancybox.css') }}" type="text/css" media="all" />
+<link rel="stylesheet" href="{{ asset('expediente/css/fancybox_style.css') }}" type="text/css" media="all" />
+<link rel="stylesheet" href="{{ asset('expediente/css/jquery-ui-timepicker-addon.css') }}" type="text/css" media="all" />
+<style>
+    .qualificationTable{ margin-top: 75px; margin-bottom: 50px;}
+    .qualificationTable .itemNota{ background-color: #04D0E6; }
+    .qualificationTable .itemPromedio{ background-color: #0d88c1; }
+    .qualificationTable .itemPorcentage{ background-color: #38255c; }
+    .qualificationTable .itemHeader {font-weight: bold; color: #fff; position: absolute; text-align: center; float: left; width: 150px; height: 25px; line-height: 25px; vertical-align: middle; border: solid thin #000;
+        -moz-transform: rotate(90deg);  /* FF3.5+ */
+        -o-transform: rotate(90deg);  /* Opera 10.5 */
+        -webkit-transform: rotate(90deg);  /* Saf3.1+, Chrome */
+        filter:  progid:DXImageTransform.Microsoft.BasicImage(rotation=0.90);  /* IE6,IE7 */
+        -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=0.90)"; /* IE8 */
+    }
+
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container_24">
+    <div class="grid_24">
+        <div>
+            <div class="left">
+                <h1>{% trans %}label.qualifications{% endtrans %}</h1>
+            </div>
+            <div class="left" style="line-height: 48px; margin-left: 25px;">
+                <span>{% trans %}label.absences.message{% endtrans %}</span>
+            </div>
+            <button style="margin-left: 15px; margin-top: 0px;" type="button" class="right btn new" name="buttonNew" id="buttonNew" href="#inline"><a class="modalbox" href="#inline">{% trans %}label.new{% endtrans %}</a></button>
+            <div class="clear"></div>
+        </div>
+        <div class="clear"></div>
+        <div class="qualificationTable">
+            {{ table|raw }}
+            <div class="clearer"></div>
+        </div>
+
+        <br /><br /> <br /><br /> <br /><br />
+        <div class="qualificationTable">
+            <div class="itemHeader itemNota" style="margin-left: 0px;">Parcial 1</div>
+            <div class="itemHeader itemPorcentage" style="margin-left: 25px;">20 % Parcial 1</div>
+            <div class="itemHeader itemNota" style="margin-left: 50px;">Parcial 2</div>
+            <div class="itemHeader itemPorcentage" style="margin-left: 75px;">20 % Parcial 2</div>
+            <div class="itemHeader itemNota" style="margin-left: 100px;">Tarea 1</div>
+            <div class="itemHeader itemNota" style="margin-left: 125px;">Tarea 2</div>
+            <div class="itemHeader itemPromedio" style="margin-left:150px;">Promedio Tareas </div>
+            <div class="itemHeader itemPorcentage" style="margin-left: 175px;">10 % Tarea</div>
+            <div class="clearer"></div>
+        </div>
+        <br /><br /><br /><br />
+    </div>
+    <div class="clear"></div>
+    <div class="wrapper">
+            <div class="grid_24 padline">
+                    <div class="lineH"></div>
+            </div>
+    </div>
+</div>
+{% endblock %}

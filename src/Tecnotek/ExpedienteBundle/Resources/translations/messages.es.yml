@@ -198,6 +198,8 @@ label.reports.routes: Reporte de rutas
 label.reports.routes_zones: Reporte de rutas
 label.reports.routes_zones.message:
 
+label.qualifications: Calificaciones
+
 results.not.found: No se han encontrado resultados.
 
 usuarios.estado.1: Activo

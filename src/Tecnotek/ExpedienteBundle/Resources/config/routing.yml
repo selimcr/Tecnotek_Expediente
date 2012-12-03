@@ -541,3 +541,7 @@ _expediente_sysadmin_associate_course:
 _expediente_sysadmin_course_association_remove:
   pattern:  /period/couseAssociationRemove/
   defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:courseAssociationRemove }
+
+_expediente_sysadmin_qualifications:
+  pattern:  /qualifications/
+  defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:enterQualifications }
