@@ -1210,8 +1210,21 @@ class SuperAdminController extends Controller
         /*
             <div class="itemHeader itemNota" style="margin-left: 125px;">Tarea 2</div>
             <div class="itemHeader itemPromedio" style="margin-left:150px;">Promedio Tareas </div>
-            <div class="itemHeader itemPorcentage" style="margin-left: 175px;">10 % Tarea</div>*/
+            <div class="itemHeader itemPorcentage" style="margin-left: 175px;">10 % Tarea</div>
+
+        <div class="itemHeaderCode itemNota" style="margin-left: 0px;"></div>
+        */
         $marginLeft = 0;
+        $marginLeftCode = 62;
+        $htmlCodes = "";
+        $jumpRight = 34;
+        $width = 32;
+        $html3 = "";
+        $studentRow = "";
+        $colors = array(
+            "one" => "#38255c",
+            "two" => "#04D0E6"
+        );
         foreach( $entries as $entry )
         {
             $temp = $entry;
@@ -1219,28 +1232,111 @@ class SuperAdminController extends Controller
             $size = sizeof($childrens);
             $logger->err("-----> Childrens of " . $temp->getName() . ": " . sizeof($childrens));
 
-            if($size == 0){//No child
+            /*if($size == 0){//No child
+                $htmlCodes .= '<div class="itemHeaderCode itemNota" style="margin-left: ' . $marginLeftCode . 'px;"></div>';
                 $html .= '<div class="itemHeader itemNota" style="margin-left: ' . $marginLeft . 'px;">' . $temp->getName() . '</div>';
-                $marginLeft += 25;
+                $marginLeft += 25; $marginLeftCode += 25;
+
+                $htmlCodes .= '<div class="itemHeaderCode itemPorcentage" style="margin-left: ' . $marginLeftCode . 'px;">' . $temp->getCode() . '</div>';
                 $html .= '<div class="itemHeader itemPorcentage" style="margin-left: ' . $marginLeft . 'px;">' . $temp->getPercentage() . '% ' . $temp->getName() . '</div>';
-                $marginLeft += 25;
+                $marginLeft += 25; $marginLeftCode += 25;
             } else {
             if($size == 1){//one child
                 foreach ( $childrens as $child){
+                    $htmlCodes .= '<div class="itemHeaderCode itemNota" style="margin-left: ' . $marginLeftCode . 'px;"></div>';
                     $html .= '<div class="itemHeader itemNota" style="margin-left: ' . $marginLeft . 'px;">' . $child->getName() . '</div>';
-                    $marginLeft += 25;
+                    $marginLeft += 25; $marginLeftCode += 25;
                 }
+                $htmlCodes .= '<div class="itemHeaderCode itemPorcentage" style="margin-left: ' . $marginLeftCode . 'px;"></div>';
                 $html .= '<div class="itemHeader itemPorcentage" style="margin-left: ' . $marginLeft . 'px;">' . $temp->getPercentage() . '% ' . $temp->getName() . '</div>';
-                $marginLeft += 25;
+                $marginLeft += 25; $marginLeftCode += 25;
             } else {//two or more
                 foreach ( $childrens as $child){
+                    $htmlCodes .= '<div class="itemHeaderCode itemNota" style="margin-left: ' . $marginLeftCode . 'px;">' . $child->getCode() . '</div>';
                     $html .= '<div class="itemHeader itemNota" style="margin-left: ' . $marginLeft . 'px;">' . $child->getName() . '</div>';
-                    $marginLeft += 25;
+                    $marginLeft += 25; $marginLeftCode += 25;
                 }
+                $htmlCodes .= '<div class="itemHeaderCode itemPromedio" style="margin-left: ' . $marginLeftCode . 'px;"></div>';
                 $html .= '<div class="itemHeader itemPromedio" style="margin-left:' . $marginLeft . 'px;">Promedio ' . $temp->getName() . ' </div>';
-                $marginLeft += 25;
+                $marginLeft += 25; $marginLeftCode += 25;
+                $htmlCodes .= '<div class="itemHeaderCode itemPorcentage" style="margin-left: ' . $marginLeftCode . 'px;">' . $temp->getCode() . '</div>';
                 $html .= '<div class="itemHeader itemPorcentage" style="margin-left: ' . $marginLeft . 'px;">' . $temp->getPercentage() . '% ' . $temp->getName() . '</div>';
-                $marginLeft += 25;
+                $marginLeft += 25; $marginLeftCode += 25;
+            }
+            }*/
+            /*if($size == 0){//No child
+                $htmlCodes .= '<div class="itemHeaderCode itemNota"></div>';
+                $html .= '<div class="itemHeader itemNota">' . $temp->getName() . '</div>';
+                $marginLeft += 25; $marginLeftCode += 25;
+
+                $htmlCodes .= '<div class="itemHeaderCode itemPorcentage">' . $temp->getCode() . '</div>';
+                $html .= '<div class="itemHeader itemPorcentage">' . $temp->getPercentage() . '% ' . $temp->getName() . '</div>';
+                $marginLeft += 25; $marginLeftCode += 25;
+            } else {
+                if($size == 1){//one child
+                    foreach ( $childrens as $child){
+                        $htmlCodes .= '<div class="itemHeaderCode itemNota"></div>';
+                        $html .= '<div class="itemHeader itemNota">' . $child->getName() . '</div>';
+                        $marginLeft += 25; $marginLeftCode += 25;
+                    }
+                    $htmlCodes .= '<div class="itemHeaderCode itemPorcentage"></div>';
+                    $html .= '<div class="itemHeader itemPorcentage">' . $temp->getPercentage() . '% ' . $temp->getName() . '</div>';
+                    $marginLeft += 25; $marginLeftCode += 25;
+                } else {//two or more
+                    foreach ( $childrens as $child){
+                        $htmlCodes .= '<div class="itemHeaderCode itemNota">' . $child->getCode() . '</div>';
+                        $html .= '<div class="itemHeader itemNota">' . $child->getName() . '</div>';
+                        $marginLeft += 25; $marginLeftCode += 25;
+                    }
+                    $htmlCodes .= '<div class="itemHeaderCode itemPromedio"></div>';
+                    $html .= '<div class="itemHeader itemPromedio">Promedio ' . $temp->getName() . ' </div>';
+                    $marginLeft += 25; $marginLeftCode += 25;
+                    $htmlCodes .= '<div class="itemHeaderCode itemPorcentage">' . $temp->getCode() . '</div>';
+                    $html .= '<div class="itemHeader itemPorcentage">' . $temp->getPercentage() . '% ' . $temp->getName() . '</div>';
+                    $marginLeft += 25; $marginLeftCode += 25;
+                }
+            }*/
+
+            if($size == 0){//No child
+                $studentRow .= '<input type="text" class="textField itemNota" tipo="1" rel="total_' . $temp->getId() . '_stdId" perc="' . $temp->getPercentage() . '" >';
+                $htmlCodes .= '<div class="itemHeaderCode itemNota"></div>';
+                $html .= '<div class="itemHeader itemNota" style="margin-left: ' . $marginLeft . 'px;">' . $temp->getName() . '</div>';
+                $marginLeft += $jumpRight; $marginLeftCode += 25;
+
+                $studentRow .= '<div id="total_' . $temp->getId() . '_stdId" class="itemHeaderCode itemPorcentage">-</div>';
+                $htmlCodes .= '<div class="itemHeaderCode itemPorcentage">' . $temp->getCode() . '</div>';
+                $html .= '<div class="itemHeader itemPorcentage" style="margin-left: ' . $marginLeft . 'px;">' . $temp->getPercentage() . '% ' . $temp->getName() . '</div>';
+                $marginLeft += $jumpRight; $marginLeftCode += 25;
+
+                $html3 .= '<div class="itemHeader2 itemNota" style="width: ' . (($width * 2) + 2) . 'px">' . $temp->getName() . '</div>';
+            } else {
+            if($size == 1){//one child
+                foreach ( $childrens as $child){
+                    $htmlCodes .= '<div class="itemHeaderCode itemNota"></div>';
+                    $html .= '<div class="itemHeader itemNota" style="margin-left: ' . $marginLeft . 'px;">' . $child->getName() . '</div>';
+                    $marginLeft += $jumpRight; $marginLeftCode += 25;
+                }
+                $htmlCodes .= '<div class="itemHeaderCode itemPorcentage"></div>';
+                $html .= '<div class="itemHeader itemPorcentage" style="margin-left: ' . $marginLeft . 'px;">' . $temp->getPercentage() . '% ' . $temp->getName() . '</div>';
+                $marginLeft += $jumpRight; $marginLeftCode += 25;
+            } else {//two or more
+                foreach ( $childrens as $child){
+                    $studentRow .= '<input type="text" class="textField itemNota">';
+                    $htmlCodes .= '<div class="itemHeaderCode itemNota">' . $child->getCode() . '</div>';
+                    $html .= '<div class="itemHeader itemNota" style="margin-left: ' . $marginLeft . 'px;">' . $child->getName() . '</div>';
+                    $marginLeft += $jumpRight; $marginLeftCode += 25;
+                }
+                $studentRow .= '<div class="itemHeaderCode itemPromedio">-</div>';
+                $htmlCodes .= '<div class="itemHeaderCode itemPromedio"></div>';
+                $html .= '<div class="itemHeader itemPromedio" style="margin-left:' . $marginLeft . 'px;">Promedio ' . $temp->getName() . ' </div>';
+                $marginLeft += $jumpRight; $marginLeftCode += 25;
+
+                $studentRow .= '<div class="itemHeaderCode itemPorcentage">-</div>';
+                $htmlCodes .= '<div class="itemHeaderCode itemPorcentage">' . $temp->getCode() . '</div>';
+                $html .= '<div class="itemHeader itemPorcentage" style="margin-left: ' . $marginLeft . 'px;">' . $temp->getPercentage() . '% ' . $temp->getName() . '</div>';
+                $marginLeft += $jumpRight; $marginLeftCode += 25;
+
+                $html3 .= '<div class="itemHeader2 itemNota" style="width: ' . (($width * ($size + 2)) + (($size + 1) * 2)) . 'px">' . $temp->getName() . '</div>';
             }
             }
             /*$assignedTeacher =  new \Tecnotek\ExpedienteBundle\Entity\AssignedTeacher();
@@ -1249,6 +1345,19 @@ class SuperAdminController extends Controller
             $assignedTeacher->setTeacher($teacher);
             $em->persist($assignedTeacher);*/
         }
+
+        $html = $htmlCodes . '<div class="clear"></div>' .
+            '<div style="position: relative; height: 152px; margin-left: -59px;">' . $html . '</div>' . '<div class="clear"></div>' .
+            $html3;
+
+        $students = $em->getRepository("TecnotekExpedienteBundle:Student")->findAll();
+        foreach($students as $student){
+            $row = str_replace("stdId", $student->getId(), $studentRow);
+            $html .=  '<div class="clear"></div>' . $row;
+        }
+
+        //'<div class="clear"></div>' . $studentRow . '<div class="clear"></div>' . $studentRow . '<div class="clear"></div>' . $studentRow;
+
        /* $entries = $em->getRepository("TecnotekExpedienteBundle:CourseEntry")->findAll();
 
         $dql = "SELECT users FROM TecnotekExpedienteBundle:User users JOIN users.roles r WHERE r.role = 'ROLE_PROFESOR' ORDER BY users.firstname";
