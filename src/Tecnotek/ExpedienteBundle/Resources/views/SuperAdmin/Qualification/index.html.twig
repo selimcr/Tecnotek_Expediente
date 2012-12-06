@@ -31,6 +31,7 @@ $(function() {
         $this = $(this);
         $type = $this.attr('tipo');
         $nota = $this.val();
+        $stdId = $this.attr('std');
 
         if($type == 1){
             $percentage = $this.attr('perc');
@@ -42,12 +43,65 @@ $(function() {
                 console.debug("Calcular total para " + $(this).attr('rel') + ", total = " + ($percentage * $nota / 100));
                 $totalField.html("" + ($percentage * $nota / 100) + "%");
             }
+            /*$sum = 0;
+            $counter = 0;
+            $('.nota_' + $stdId).each(function() {
+                $temp = $(this).html();
+                if($temp != "-"){
+                    $temp = $temp.slice(0, -1);
+                    $sum += parseFloat( $temp );
+                    $counter++;
+                }
+            });
+            if($counter == 0){
+                $("#total_trim_" + $stdId).html("-");
+            } else {
+                $("#total_trim_" + $stdId).html("" + $sum);
+            }*/
             //p / 100 = x / nota
             //p * nota / 100;
-
-
         } else {
+            $childs = $this.attr('child');
+            $parent = $this.attr('parent');
 
+            console.debug("Type = " + $type + ", Nota: " + $nota + " :: childs = " + $childs + " :: $stdId = " + $stdId);
+            $sum = 0;
+            $counter = 0;
+            $('.item_' + $parent + "_" + $stdId).each(function() {
+                $temp = $(this).val();
+                console.debug("-> " + $temp);
+
+                if($temp != ""){
+                    $sum += parseFloat( $temp );
+                    $counter++;
+                }
+                console.debug("$sum = " + $sum);
+                if($counter == 0){
+                    $("#prom_" + $parent + "_" + $stdId).html("-");
+                    $totalField = $("#" + $this.attr('rel'));
+                    $("#total_" + $parent + "_" + $stdId).html("-");
+                } else {
+                    $percentage =  $("#prom_" + $parent + "_" + $stdId).attr('perc');
+                    $("#prom_" + $parent + "_" + $stdId).html("" + ($sum/$childs));
+                    $("#total_" + $parent + "_" + $stdId).html("" + ($percentage * ($sum/$childs) / 100) + "%");
+                }
+            });
+        }
+
+        $sum = 0;
+        $counter = 0;
+        $('.nota_' + $stdId).each(function() {
+            $temp = $(this).html();
+            if($temp != "-"){
+                $temp = $temp.slice(0, -1);
+                $sum += parseFloat( $temp );
+                $counter++;
+            }
+        });
+        if($counter == 0){
+            $("#total_trim_" + $stdId).html("-");
+        } else {
+            $("#total_trim_" + $stdId).html("" + $sum);
         }
 
     });
@@ -60,10 +114,16 @@ $(function() {
 <link rel="stylesheet" href="{{ asset('expediente/css/fancybox_style.css') }}" type="text/css" media="all" />
 <link rel="stylesheet" href="{{ asset('expediente/css/jquery-ui-timepicker-addon.css') }}" type="text/css" media="all" />
 <style>
-    .qualificationTable{ margin-top: 75px; margin-bottom: 50px;}
+    .itemCarne{ background-color: #82c0fd; width: 75px; color: #000; float: left; font-weight: bold; color: #000; /*position: absolute; */text-align: center; float: left; height: 25px; line-height: 25px;
+        vertical-align: middle; border-bottom: solid thin black; border-right: solid thin black; border-left: solid thin black; border-top: solid thin black; }
+    .itemEstudiante{ background-color: #A4D2FD; color: #000; font-weight: bold; color: #000; /*position: absolute; */text-align: center; float: left; width: 146px; height: 25px; line-height: 25px;
+        vertical-align: middle; border-bottom: solid thin black; border-right: solid thin black; border-left: solid thin black; border-top: solid thin black;}
+
+    .qualificationTable{ /*margin-top: 75px;*/ margin-bottom: 50px;}
     .qualificationTable .itemNota{ background-color: #A4D2FD; }
     .qualificationTable .itemPromedio{ background-color: #5F96E7; }
     .qualificationTable .itemPorcentage{ background-color: #B698EE; }
+    .qualificationTable .itemPromedioPeriodo{ background-color: #2b34ee; color: #fff; font-weight: bold;}
     .qualificationTable .itemHeader {font-weight: bold; color: #000;
         position: absolute;
         text-align: center; float: left; width: 150px; height: 32px; line-height: 32px; vertical-align: middle;
@@ -74,7 +134,7 @@ $(function() {
         filter:  progid:DXImageTransform.Microsoft.BasicImage(rotation=0.90);  /* IE6,IE7 */
         -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=0.90)"; /* IE8 */
     }
-    .qualificationTable .itemHeaderCode {font-weight: bold; color: #000; /*position: absolute; */text-align: center; float: left; width: 32px; height: 25px; line-height: 25px;
+    .itemHeaderCode {font-weight: bold; color: #000; /*position: absolute; */text-align: center; float: left; width: 32px; height: 25px; line-height: 25px;
         vertical-align: middle; border-bottom: solid thin black; border-right: solid thin black; border-left: solid thin black; border-top: solid thin black;}
 
     .qualificationTable .itemHeader2 {font-weight: bold; color: #000; /*position: absolute; */text-align: center; float: left; width: 32px; height: 25px; line-height: 25px;
@@ -93,17 +153,26 @@ $(function() {
                 <h1>{% trans %}label.qualifications{% endtrans %}</h1>
             </div>
             <div class="left" style="line-height: 48px; margin-left: 25px;">
-                <span>{% trans %}label.absences.message{% endtrans %}</span>
+                <span>Ingrese o verifique la informacion de las notas de los estudiantes por grupo</span>
             </div>
-            <button style="margin-left: 15px; margin-top: 0px;" type="button" class="right btn new" name="buttonNew" id="buttonNew" href="#inline"><a class="modalbox" href="#inline">{% trans %}label.new{% endtrans %}</a></button>
             <div class="clear"></div>
         </div>
         <div class="clear"></div>
-        <div class="qualificationTable">
-            {{ table|raw }}
+
+        <div class="left" style="width: 225px; background-color: #d2b48c; position: relative; height: 286px;">
+            <div class="itemCarne">Periodo</div><div class="itemEstudiante">Curso</div><div class="clear"></div>
+
+            <div class="itemCarne" style="height: 150px; line-height: 150px;"></div><div class="itemEstudiante"  style="height: 150px; line-height: 150px;">02-A</div><div class="clear"></div>
+
+            <div class="itemCarne">CARNE</div><div class="itemEstudiante">NOMBRE DEL ESTUDIANTE</div><div class="clear"></div>
+
+            {{ studentsHeader|raw }}
+        </div>
+        <div class="left qualificationTable" style="position: relative;">
+            {{ table|raw}}
             <div class="clear"></div>
         </div>
-
+        <div class="clear"></div>
         <br /><br /> <br /><br /> <br /><br />
         <br /><br /><br /><br />
     </div>

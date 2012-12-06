@@ -78,7 +78,6 @@ class Student
 
     /**
      * @ORM\Column(type="integer", nullable=true)
-     * @Assert\NotBlank()
      */
     private $dailyStatus;
 
