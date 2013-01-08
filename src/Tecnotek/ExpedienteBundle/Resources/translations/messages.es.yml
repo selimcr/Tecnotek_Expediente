@@ -202,6 +202,12 @@ label.qualifications: Calificaciones
 
 label.absence.show: Informacion de Ausencia
 
+label.entries.by.course: Rubros por Materia
+label.percentage: Porcentaje
+label.max_value: Valor Maximo
+label.order: Order
+label.parent: Padre
+
 results.not.found: No se han encontrado resultados.
 
 usuarios.estado.1: Activo

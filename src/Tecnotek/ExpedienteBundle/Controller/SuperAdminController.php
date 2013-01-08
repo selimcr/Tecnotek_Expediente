@@ -8,6 +8,8 @@ use Tecnotek\ExpedienteBundle\Entity\Buseta;
 use Tecnotek\ExpedienteBundle\Entity\Period;
 use Tecnotek\ExpedienteBundle\Entity\Grade;
 use Tecnotek\ExpedienteBundle\Entity\Course;
+use Tecnotek\ExpedienteBundle\Entity\CourseEntry;
+use Tecnotek\ExpedienteBundle\Entity\CourseClass;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
@@ -945,7 +947,7 @@ class SuperAdminController extends Controller
                     $groups = $stmt->fetchAll();
 
                     //Get Courses
-                    $sql = "SELECT cc.id, c.name, cc.user_id as 'teacherId', (CONCAT(u.firstname, ' ', u.lastname)) as 'teacherName' "
+                    $sql = "SELECT cc.id, c.name, cc.user_id as 'teacherId', (CONCAT(u.firstname, ' ', u.lastname)) as 'teacherName', c.id as 'courseId' "
                         . " FROM tek_courses c, tek_course_class cc, tek_users u"
                         . " WHERE cc.period_id = " . $periodId . " AND cc.grade_id = " . $gradeId . " AND cc.course_id = c.id AND u.id = cc.user_id"
                         . " ORDER BY c.name";
@@ -1305,5 +1307,175 @@ class SuperAdminController extends Controller
 
         return $this->render('TecnotekExpedienteBundle:SuperAdmin:Qualification/index.html.twig', array('table' => $html,
             'studentsHeader' => $studentsHeader, 'menuIndex' => 5));
+    }
+
+    public function loadEntriesByCourseAction(){
+        $logger = $this->get('logger');
+        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
+        {
+            try {
+                $request = $this->get('request')->request;
+                $periodId = $request->get('periodId');
+                $gradeId = $request->get('gradeId');
+                $courseId = $request->get('courseId');
+
+                $translator = $this->get("translator");
+
+                if( isset($gradeId) && isset($periodId) && isset($courseId)) {
+                    $em = $this->getDoctrine()->getEntityManager();
+
+                    $dql = "SELECT e FROM TecnotekExpedienteBundle:CourseEntry e, TecnotekExpedienteBundle:CourseClass cc WHERE e.parent IS NULL AND e.courseClass = cc AND cc.period = $periodId AND cc.grade = $gradeId And cc.course = $courseId ORDER BY e.sortOrder";
+                    $query = $em->createQuery($dql);
+                    $entries = $query->getResult();
+
+                    $colors = array(
+                        "one" => "#38255c",
+                        "two" => "#04D0E6"
+                    );
+                    $html = "";
+                    $entriesOptions = "";
+                    $temp = new \Tecnotek\ExpedienteBundle\Entity\CourseEntry();
+                    foreach( $entries as $entry ){
+                        $temp = $entry;
+                        $childrens = $temp->getChildrens();
+                        $size = sizeof($childrens);
+
+                        $entriesOptions .= '<option value="' . $entry->getId() . '">' . $entry->getName() . '</option>';
+                        $html .= '<div id="entryRow_' . $entry->getId() . '" class="row userRow tableRowOdd">';
+                        $html .= '    <div id="entryNameField_' . $entry->getId() . '" name="entryNameField_' . $entry->getId() . '" class="option_width" style="float: left; width: 150px;">' . $entry->getName() . '</div>';
+                        $html .= '    <div id="entryCodeField_' . $entry->getId() . '" name="entryCodeField_' . $entry->getId() . '" class="option_width" style="float: left; width: 100px;">' . $entry->getCode() . '</div>';
+                        $html .= '    <div id="entryPercentageField_' . $entry->getId() . '" name="entryPercentageField_' . $entry->getId() . '" class="option_width" style="float: left; width: 100px;">' . $entry->getPercentage() . '</div>';
+                        $html .= '    <div id="entryMaxValueField_' . $entry->getId() . '" name="entryMaxValueField_' . $entry->getId() . '" class="option_width" style="float: left; width: 100px;">' . $entry->getMaxValue() . '</div>';
+                        $html .= '    <div id="entryOrderField_' . $entry->getId() . '" name="entryOrderField_' . $entry->getId() . '" class="option_width" style="float: left; width: 100px;">' . $entry->getSortOrder() . '</div>';
+                        $html .= '    <div id="entryParentField_' . $entry->getId() . '" name="entryParentField_' . $entry->getId() . '" class="option_width" style="float: left; width: 150px;">' . $entry->getParent() . '</div>';
+
+                        $html .= '    <div class="right imageButton editButton editEntry" title="Editar" rel="' . $entry->getId() . '" entryParent="1"></div>';
+                        $html .= '    <div class="clear"></div>';
+                        $html .= '</div>';
+
+                        foreach ( $childrens as $child){
+                            $html .= '<div id="entryRow_' . $child->getId() . '" class="row userRow tableRowOdd">';
+                            $html .= '    <div id="entryNameField_' . $child->getId() . '" name="entryNameField_' . $child->getId() . '" class="option_width" style="float: left; width: 150px;">' . $child->getName() . '</div>';
+                            $html .= '    <div id="entryCodeField_' . $child->getId() . '" name="entryCodeField_' . $child->getId() . '" class="option_width" style="float: left; width: 100px;">' . $child->getCode() . '</div>';
+                            $html .= '    <div id="entryPercentageField_' . $child->getId() . '" name="entryPercentageField_' . $child->getId() . '" class="option_width" style="float: left; width: 100px;">' . $child->getPercentage() . '</div>';
+                            $html .= '    <div id="entryMaxValueField_' . $child->getId() . '" name="entryMaxValueField_' . $child->getId() . '" class="option_width" style="float: left; width: 100px;">' . $child->getMaxValue() . '</div>';
+                            $html .= '    <div id="entryOrderField_' . $child->getId() . '" name="entryOrderField_' . $child->getId() . '" class="option_width" style="float: left; width: 100px;">' . $child->getSortOrder() . '</div>';
+                            $html .= '    <div id="entryParentField_' . $child->getId() . '" name="entryParentField_' . $child->getId() . '" class="option_width" style="float: left; width: 150px;">' . $child->getParent() . '</div>';
+
+                            $html .= '    <div class="right imageButton editButton editEntry" title="Editar" rel="' . $child->getId() . '" entryParent="1"></div>';
+                            $html .= '    <div class="clear"></div>';
+                            $html .= '</div>';
+                        }
+
+                        /*if($size == 0){//No child
+                            $studentRow .= '<input type="text" class="textField itemNota" tipo="1" rel="total_' . $temp->getId() . '_stdId" perc="' . $temp->getPercentage() . '" std="stdId" >';
+                            $htmlCodes .= '<div class="itemHeaderCode itemNota"></div>';
+                            $html .= '<div class="itemHeader itemNota" style="margin-left: ' . $marginLeft . 'px;">' . $temp->getName() . '</div>';
+                            $marginLeft += $jumpRight; $marginLeftCode += 25;
+
+                            $studentRow .= '<div id="total_' . $temp->getId() . '_stdId" class="itemHeaderCode itemPorcentage nota_stdId">-</div>';
+                            $htmlCodes .= '<div class="itemHeaderCode itemPorcentage">' . $temp->getCode() . '</div>';
+                            $html .= '<div class="itemHeader itemPorcentage" style="margin-left: ' . $marginLeft . 'px;">' . $temp->getPercentage() . '% ' . $temp->getName() . '</div>';
+                            $marginLeft += $jumpRight; $marginLeftCode += 25;
+
+                            $html3 .= '<div class="itemHeader2 itemNota" style="width: ' . (($width * 2) + 2) . 'px">' . $temp->getName() . '</div>';
+                        } else {
+                            if($size == 1){//one child
+                                foreach ( $childrens as $child){
+                                    $htmlCodes .= '<div class="itemHeaderCode itemNota"></div>';
+                                    $html .= '<div class="itemHeader itemNota" style="margin-left: ' . $marginLeft . 'px;">' . $child->getName() . '</div>';
+                                    $marginLeft += $jumpRight; $marginLeftCode += 25;
+                                }
+                                $htmlCodes .= '<div class="itemHeaderCode itemPorcentage"></div>';
+                                $html .= '<div class="itemHeader itemPorcentage" style="margin-left: ' . $marginLeft . 'px;">' . $temp->getPercentage() . '% ' . $temp->getName() . '</div>';
+                                $marginLeft += $jumpRight; $marginLeftCode += 25;
+                            } else {//two or more
+                                foreach ( $childrens as $child){
+                                    //$studentRow .= '<input type="text" class="textField itemNota">';
+                                    $studentRow .= '<input type="text" class="textField itemNota item_' . $temp->getId() . '_stdId" tipo="2" child="' . $size . '" parent="' . $temp->getId() . '" rel="total_' . $temp->getId() . '_stdId" perc="' . $temp->getPercentage() . '" std="stdId" >';
+                                    $htmlCodes .= '<div class="itemHeaderCode itemNota">' . $child->getCode() . '</div>';
+                                    $html .= '<div class="itemHeader itemNota" style="margin-left: ' . $marginLeft . 'px;">' . $child->getName() . '</div>';
+                                    $marginLeft += $jumpRight; $marginLeftCode += 25;
+                                }
+                                $studentRow .= '<div class="itemHeaderCode itemPromedio" id="prom_' . $temp->getId() . '_stdId" perc="' . $temp->getPercentage() . '">-</div>';
+                                $htmlCodes .= '<div class="itemHeaderCode itemPromedio"></div>';
+                                $html .= '<div class="itemHeader itemPromedio" style="margin-left:' . $marginLeft . 'px;">Promedio ' . $temp->getName() . ' </div>';
+                                $marginLeft += $jumpRight; $marginLeftCode += 25;
+
+                                //$studentRow .= '<div class="itemHeaderCode itemPorcentage">-</div>';
+                                $studentRow .= '<div id="total_' . $temp->getId() . '_stdId" class="itemHeaderCode itemPorcentage nota_stdId">-</div>';
+                                $htmlCodes .= '<div class="itemHeaderCode itemPorcentage">' . $temp->getCode() . '</div>';
+                                $html .= '<div class="itemHeader itemPorcentage" style="margin-left: ' . $marginLeft . 'px;">' . $temp->getPercentage() . '% ' . $temp->getName() . '</div>';
+                                $marginLeft += $jumpRight; $marginLeftCode += 25;
+
+                                $html3 .= '<div class="itemHeader2 itemNota" style="width: ' . (($width * ($size + 2)) + (($size + 1) * 2)) . 'px">' . $temp->getName() . '</div>';
+                            }
+                        }*/
+                    }
+
+                    return new Response(json_encode(array('error' => false, 'entries' => $entriesOptions, 'entriesHtml' => $html)));
+                } else {
+                    return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
+                }
+            }
+            catch (Exception $e) {
+                $info = toString($e);
+                $logger->err('SuperAdmin::loadEntriesByCourseAction [' . $info . "]");
+                return new Response(json_encode(array('error' => true, 'message' => $info)));
+            }
+        }// endif this is an ajax request
+        else
+        {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+    }
+
+    public function createEntryAction(){
+        $logger = $this->get('logger');
+        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
+        {
+            try {
+                $request = $this->get('request')->request;
+                $parentId = $request->get('parentId');
+                $name = $request->get('name');
+                $code = $request->get('code');
+                $maxValue = $request->get('maxValue');
+                $percentage = $request->get('percentage');
+                $sortOrder = $request->get('sortOrder');
+                $courseClassId = $request->get('courseClassId');
+
+                $translator = $this->get("translator");
+
+                if( isset($parentId) && isset($name) && isset($code) && isset($maxValue) && isset($percentage)
+                    && isset($sortOrder) && isset($courseClassId)) {
+                    $em = $this->getDoctrine()->getEntityManager();
+
+                    $courseEntry = new CourseEntry();
+                    $courseEntry->setName($name);
+                    $courseEntry->setCode($code);
+                    $courseEntry->setMaxValue($maxValue);
+                    $courseEntry->setPercentage($percentage);
+                    $courseEntry->setCourseClass($em->getRepository("TecnotekExpedienteBundle:CourseClass")->find($courseClassId));
+                    $courseEntry->setSortOrder($sortOrder);
+                    $courseEntry->setParent($em->getRepository("TecnotekExpedienteBundle:CourseEntry")->find($parentId));
+
+                    $em->persist($courseEntry);
+                    $em->flush();
+
+                    return new Response(json_encode(array('error' => false)));
+                } else {
+                    return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
+                }
+            }
+            catch (Exception $e) {
+                $info = toString($e);
+                $logger->err('SuperAdmin::createEntryAction [' . $info . "]");
+                return new Response(json_encode(array('error' => true, 'message' => $info)));
+            }
+        }// endif this is an ajax request
+        else
+        {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
     }
 }

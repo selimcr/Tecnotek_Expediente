@@ -59,6 +59,12 @@ class CourseEntry
     private $sortOrder;
 
     /**
+     * @ManyToOne(targetEntity="CourseClass")
+     * @JoinColumn(name="course_class_id", referencedColumnName="id")
+     */
+    private $courseClass;
+
+    /**
      * @ManyToOne(targetEntity="CourseEntry")
      * @JoinColumn(name="parent_id", referencedColumnName="id")
      */
@@ -193,6 +199,25 @@ class CourseEntry
         return $this->sortOrder;
     }
 
+    /**
+     * Set courseClass
+     *
+     * @param \Tecnotek\ExpedienteBundle\Entity\CourseClass $courseClass
+     */
+    public function setCourseClass(\Tecnotek\ExpedienteBundle\Entity\Course $courseClass)
+    {
+        $this->courseClass = $courseClass;
+    }
+
+    /**
+     * Get courseClass
+     *
+     * @return \Tecnotek\ExpedienteBundle\Entity\CourseClass
+     */
+    public function getCourseClass()
+    {
+        return $this->courseClass;
+    }
 
     /**
      * Set parent

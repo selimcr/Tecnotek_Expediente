@@ -54,6 +54,13 @@ class CourseClass
      */
     private $assignedTeachers;
 
+    /**
+     * @var courseEntries
+     *
+     * @ORM\OneToMany(targetEntity="CourseEntry", mappedBy="id")
+     */
+    private $courseEntries;
+
     public function __construct()
     {
 

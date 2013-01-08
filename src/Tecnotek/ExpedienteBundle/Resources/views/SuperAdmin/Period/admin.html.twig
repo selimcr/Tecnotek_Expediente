@@ -16,11 +16,13 @@
     Tecnotek.UI.urls["deleteURL"] = "{{ path("_delete_period", {id: entity.id}) }}";
     Tecnotek.UI.translates["confirmDelete"] = "{% trans %}messages.confirmation.period.delete{% endtrans %}";
 
+    Tecnotek.UI.urls["createEntryURL"] = "{{ path("_expediente_sysadmin_create_entry") }}";
     Tecnotek.UI.urls["associateCourseURL"] = "{{ path("_expediente_sysadmin_associate_course") }}";
     Tecnotek.UI.urls["loadAvailableCoursesForGradeURL"] = "{{ path("_expediente_sysadmin_load_courses_by_grade") }}";
     Tecnotek.UI.urls["deleteGroupURL"] = "{{ path("_expediente_sysadmin_group_remove") }}";
     Tecnotek.UI.urls["deleteCourseAssociationURL"] = "{{ path("_expediente_sysadmin_course_association_remove") }}";
     Tecnotek.UI.urls["loadPeriodInfoByGradeURL"] = "{{ path("_expediente_sysadmin_load_period_info") }}";
+    Tecnotek.UI.urls["loadEntriesByCourseURL"] = "{{ path("_expediente_sysadmin_load_entries_by_course") }}";
     Tecnotek.UI.urls["saveGroupURL"] = "{{ path("_expediente_sysadmin_group_save") }}";
     Tecnotek.module = "adminPeriod";
     Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
@@ -41,6 +43,11 @@
             }
         });
 
+        $("#openEntryForm").fancybox({
+            'beforeLoad' : function(){
+
+            }
+        });
     });
 </script>
 {% endblock %}
@@ -66,6 +73,15 @@
                                 {% endfor %}
                             </select>
                         </div>
+
+                        <div id="coursesContainer" class="right" style="margin-left: 50px; display: none;">
+                            <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.courses{%endtrans%}</div>
+                            <div class="left">
+                                <select id="periodCourses" name="periodCourses">
+                                </select>
+                            </div>
+                        </div>
+
                         <div class="clear"></div>
                     </div>
                     <!-- Tabs -->
@@ -157,6 +173,68 @@
 
                                 <div class="clear"></div>
                             </section>
+
+                            <!-- Tab Course Entries Start -->
+                            <div class="tab-header" id="entriesTab">{%trans%}label.entries.by.course{%endtrans%}</div>
+                            <section class="tabs-content" style="display: none;" id="entriesSection">
+
+                                <div class="left" style="width: 100%">
+                                    <div class="row tableHeader">
+                                        <div class="option_width" style="float: left; width: 150px;">{% trans %}label.name{% endtrans %}</div>
+                                        <div class="option_width" style="float: left; width: 100px;">{% trans %}label.code{% endtrans %}</div>
+                                        <div class="option_width" style="float: left; width: 100px;">{% trans %}label.percentage{% endtrans %}</div>
+                                        <div class="option_width" style="float: left; width: 100px;">{% trans %}label.max_value{% endtrans %}</div>
+                                        <div class="option_width" style="float: left; width: 100px;">{% trans %}label.order{% endtrans %}</div>
+                                        <div class="option_width" style="float: left; width: 150px;">{% trans %}label.parent{% endtrans %}</div>
+                                        <button style="margin-left: 15px; margin-top: -5px;" type="button" class="right btn new" name="buttonNewEntry" id="buttonNewEntry" href="#inline"><a id="openEntryForm" class="modalbox" href="#entryFormContainer">{% trans %}label.include{% endtrans %}</a></button>
+                                    </div>
+                                    <div id="entriesRows" name="entriesRows">
+                                    </div>
+                                </div>
+                                <div class="clear"></div>
+                                <br/>
+
+                                <!-- hidden courseFormContainer form -->
+                                <div id="entryFormContainer" style="display: none;">
+                                    <h2 style="margin-bottom: 0px;">Incluir rubro</h2>
+
+                                    <form class="customForm" id="entryForm" name="entryForm">
+                                        <div id="formEntryError" class="formErrors"></div>
+
+                                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.name{% endtrans %}</span>
+                                            <input id="entryFormName" name="entryFormName">
+                                        </label>
+
+                                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.code{% endtrans %}</span>
+                                            <input id="entryFormCode" name="entryFormCode">
+                                        </label>
+
+                                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.percentage{% endtrans %}</span>
+                                            <input id="entryFormPercentage" name="entryFormPercentage">
+                                        </label>
+
+                                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.max_value{% endtrans %}</span>
+                                            <input id="entryFormMaxValue" name="entryFormMaxValue">
+                                        </label>
+
+                                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.order{% endtrans %}</span>
+                                            <input id="entryFormOrder" name="entryFormOrder">
+                                        </label>
+
+                                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.parent{% endtrans %}</span>
+                                            <select id="entryFormParent" name="entryFormParent">
+                                            </select>
+                                        </label>
+
+                                        <div class="left"><input class="btn" style="margin-top: 0px;" type="button" name="entryFormCancel" id="entryFormCancel" value="{% trans %}label.cancelar{% endtrans %}"/></div>
+                                        <div class="left"><input class="btn" style="margin-top: 0px; margin-left: 25px;" type="submit" name="save" value="{% trans %}label.include{% endtrans %}"/></div>
+                                        <div class="clear"></div>
+                                    </form>
+                                </div>
+
+                                <div class="clear"></div>
+                            </section>
+                            <!-- End Tab Course Entries-->
                         </nav>
                     </div>
                     <!-- End Tabs -->

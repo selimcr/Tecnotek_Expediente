@@ -554,6 +554,14 @@ _expediente_sysadmin_load_period_info:
   pattern:  /period/load/
   defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:loadPeriodInfo }
 
+_expediente_sysadmin_create_entry:
+  pattern:  /entry/create/
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:createEntry }
+
+_expediente_sysadmin_load_entries_by_course:
+  pattern:  /period/entries/load/
+  defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:loadEntriesByCourse }
+
 _expediente_sysadmin_group_remove:
     pattern:  /group/remove/
     defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:removeGroup }
