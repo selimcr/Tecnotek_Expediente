@@ -32,6 +32,7 @@ var Tecnotek = {
 			console.debug("Module: " + module)
 			if (module) {
 				switch (module) {
+                case "absences":
 				case "administratorList":
                 case "coordinadorList":
                 case "profesorList":
