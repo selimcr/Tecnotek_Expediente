@@ -427,9 +427,7 @@ var Tecnotek = {
                                 $('#entriesRows').append(data.entriesHtml);
                                 $('#entryFormParent').append('<option value="0"></option>');
                                 $('#entryFormParent').append(data.entries);
-                                /*for(i=0; i<data.entries.length; i++) {
-                                    $('#entryFormParent').append('<option value="' + data.entries[i].id + '">' + data.entries[i].name + '</option>');
-                                }*/
+                                $('#entryFormCourseClassId').val(data.courseClassId);
                             }
                         },
                         function(jqXHR, textStatus){
@@ -660,37 +658,20 @@ var Tecnotek = {
             },
             createEntry: function() {
                 Tecnotek.ajaxCall(Tecnotek.UI.urls["createEntryURL"],
-                    {   courseId: $('#courseToAsociate').val(),
-                        periodId: Tecnotek.UI.vars["periodId"],
-                        teacherId: $('#courseFormTeacher').val(),
-                        gradeId: $('#grade').val()},
+                    {   parentId: $('#entryFormParent').val(),
+                        name: $('#entryFormName').val(),
+                        code: $('#entryFormCode').val(),
+                        maxValue: $('#entryFormMaxValue').val(),
+                        percentage: $('#entryFormPercentage').val(),
+                        sortOrder: $('#entryFormSortOrder').val(),
+                        courseClassId: $('#entryFormCourseClassId').val()
+                    },
                     function(data){
                         if(data.error === true) {
                             Tecnotek.showErrorMessage(data.message,true, "", false);
                         } else {
-
-                            //if($groupId == 0){
-                            $html = '<div id="courseRow_' + data.courseClass  + '" class="row userRow tableRowOdd">';
-                            $html += '    <div id="courseNameField_' + data.courseClass + '" name="courseNameField_' + data.courseClass + '" class="option_width" style="float: left; width: 250px;">' + $('#courseToAsociate :selected').text() + '</div>';
-                            $html += '    <div id="courseTeacherField_' + data.courseClass + '" name="courseTeacherField_' + data.courseClass + '" class="option_width" style="float: left; width: 250px;">' + $('#courseFormTeacher :selected').text() + '</div>';
-                            $html += '    <div class="right imageButton deleteButton deleteCourse" style="height: 16px;" title="Eliminar"  rel="' + data.courseClass + '"></div>';
-                            //$html += '    <div class="right imageButton editButton editCourse"  title="Editar"  rel="' + data.courseId + '" teacher="' + $('#courseFormTeacher').val() + '"></div>';
-                            $html += '    <div class="clear"></div>';
-                            $html += '</div>';
-
-                            $('#courseRows').append($html);
-                            Tecnotek.AdminPeriod.initializeGroupsButtons();
-                            Tecnotek.showInfoMessage("Materia asociada correctamente.", true);
-                            /*} else {
-                             $("#groupNameField_" + $groupId).html($name);
-                             $("#groupTeacherField_" + $groupId).html($('#groupFormTeacher :selected').text());
-                             Tecnotek.editingGroup.attr("teacher", $('#groupFormTeacher').val())
-
-                             Tecnotek.showInfoMessage("Grupo actualizado correctamente.", true);
-                             }*/
-
                             $.fancybox.close();
-                            Tecnotek.AdminPeriod.initializeCourseButtons();
+                            Tecnotek.AdminPeriod.loadEntriesByCourse($("#periodCourses").val());
                         }
                     },
                     function(jqXHR, textStatus){

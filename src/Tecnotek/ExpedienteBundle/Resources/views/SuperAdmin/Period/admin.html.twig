@@ -62,7 +62,7 @@
         </div>
 
         <div class="centeredDiv">
-            <div class="formContainer" style="width: 920px;">
+            <div class="formContainer" style="width: 920px; height: 650px;">
                 <div id="showContainer">
                     <div>
                         <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.grade{%endtrans%}</div>
@@ -85,7 +85,7 @@
                         <div class="clear"></div>
                     </div>
                     <!-- Tabs -->
-                    <div id="tabs">
+                    <div id="tabs" style="height: 643px">
                         <nav class="tabs">
                             <div class="tab-header tab-current" id="groupTab">{%trans%}label.groups{%endtrans%}</div>
                             <section class="tabs-content" id="groupSection">
@@ -199,6 +199,8 @@
                                     <h2 style="margin-bottom: 0px;">Incluir rubro</h2>
 
                                     <form class="customForm" id="entryForm" name="entryForm">
+
+                                        <input type="hidden" id="entryFormCourseClassId" name="entryFormCourseClassId" value="0">
                                         <div id="formEntryError" class="formErrors"></div>
 
                                         <label><span class="text-form" style="min-width: 150px;">{% trans %}label.name{% endtrans %}</span>
@@ -218,7 +220,7 @@
                                         </label>
 
                                         <label><span class="text-form" style="min-width: 150px;">{% trans %}label.order{% endtrans %}</span>
-                                            <input id="entryFormOrder" name="entryFormOrder">
+                                            <input id="entryFormSortOrder" name="entryFormSortOrder">
                                         </label>
 
                                         <label><span class="text-form" style="min-width: 150px;">{% trans %}label.parent{% endtrans %}</span>

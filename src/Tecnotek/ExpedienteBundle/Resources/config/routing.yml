@@ -556,7 +556,7 @@ _expediente_sysadmin_load_period_info:
 
 _expediente_sysadmin_create_entry:
   pattern:  /entry/create/
-    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:createEntry }
+  defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:createEntry }
 
 _expediente_sysadmin_load_entries_by_course:
   pattern:  /period/entries/load/

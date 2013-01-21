@@ -1335,8 +1335,10 @@ class SuperAdminController extends Controller
                     $html = "";
                     $entriesOptions = "";
                     $temp = new \Tecnotek\ExpedienteBundle\Entity\CourseEntry();
+                    $courseClassId = 0;
                     foreach( $entries as $entry ){
                         $temp = $entry;
+                        $courseClassId = $temp->getCourseClass()->getId();
                         $childrens = $temp->getChildrens();
                         $size = sizeof($childrens);
 
@@ -1413,7 +1415,7 @@ class SuperAdminController extends Controller
                         }*/
                     }
 
-                    return new Response(json_encode(array('error' => false, 'entries' => $entriesOptions, 'entriesHtml' => $html)));
+                    return new Response(json_encode(array('error' => false, 'entries' => $entriesOptions, 'entriesHtml' => $html, 'courseClassId' => $courseClassId)));
                 } else {
                     return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
                 }
@@ -1457,7 +1459,8 @@ class SuperAdminController extends Controller
                     $courseEntry->setPercentage($percentage);
                     $courseEntry->setCourseClass($em->getRepository("TecnotekExpedienteBundle:CourseClass")->find($courseClassId));
                     $courseEntry->setSortOrder($sortOrder);
-                    $courseEntry->setParent($em->getRepository("TecnotekExpedienteBundle:CourseEntry")->find($parentId));
+                    $parent = $em->getRepository("TecnotekExpedienteBundle:CourseEntry")->find($parentId);
+                    if(isset($parent)) $courseEntry->setParent($parent);
 
                     $em->persist($courseEntry);
                     $em->flush();

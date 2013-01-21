@@ -204,7 +204,7 @@ class CourseEntry
      *
      * @param \Tecnotek\ExpedienteBundle\Entity\CourseClass $courseClass
      */
-    public function setCourseClass(\Tecnotek\ExpedienteBundle\Entity\Course $courseClass)
+    public function setCourseClass(\Tecnotek\ExpedienteBundle\Entity\CourseClass $courseClass)
     {
         $this->courseClass = $courseClass;
     }
