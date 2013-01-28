@@ -1,0 +1,100 @@
+{% extends 'TecnotekExpedienteBundle::logged_layout.html.twig' %}
+
+{% block htmlTitle %}
+    Tecnotek :: Expediente :: Teacher :: Calificaciones
+{% endblock %}
+
+{% block extracss %}
+<link rel="stylesheet" href="{{ asset('fancybox/jquery.fancybox.css') }}" type="text/css" media="all" />
+{% endblock %}
+
+{% block extrajs %}
+<script type="text/javascript" src="{{ asset('fancybox/jquery.fancybox.js?v=2.0.6') }}"></script>
+
+<script type="text/javascript">
+    Tecnotek.UI.translates["confirmDelete"] = "{% trans %}messages.confirmation.period.delete{% endtrans %}";
+    Tecnotek.module = "courseEntries";
+    Tecnotek.UI.urls["loadGroupsOfPeriodURL"] = "{{ path("_expediente_teacher_load_groups_of_period") }}";
+    Tecnotek.UI.urls["loadCoursesOfGroupByTeacherURL"] = "{{ path("_expediente_teacher_load_courses_of_group_by_teacher") }}";
+    Tecnotek.UI.urls["loadEntriesByCourseURL"] = "{{ path("_expediente_teacher_load_entries_by_course") }}";
+    Tecnotek.UI.urls["createEntryURL"] = "{{ path("_expediente_teacher_create_subentry") }}";
+
+
+    Tecnotek.UI.urls["associateCourseURL"] = "{{ path("_expediente_sysadmin_associate_course") }}";
+    Tecnotek.UI.urls["deleteGroupURL"] = "{{ path("_expediente_sysadmin_group_remove") }}";
+    Tecnotek.UI.urls["deleteCourseAssociationURL"] = "{{ path("_expediente_sysadmin_course_association_remove") }}";
+    Tecnotek.UI.urls["loadPeriodInfoByGradeURL"] = "{{ path("_expediente_sysadmin_load_period_info") }}";
+
+    Tecnotek.UI.urls["saveGroupURL"] = "{{ path("_expediente_sysadmin_group_save") }}";
+
+    Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
+    Tecnotek.UI.vars["periodId"] = 0;
+    Tecnotek.UI.vars["groupId"] = 0;
+
+    $(function() {
+        $("#openEntryForm").fancybox({
+            'beforeLoad' : function(){
+
+            }
+        });
+    });
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="container_24">
+    <div class="grid_24">
+        <div>
+            <div class="left"><h1>{% trans %}title.qualifications.by.group{% endtrans %}:</h1></div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="centeredDiv">
+            <div class="formContainer" style="width: 920px; height: 650px;">
+                <div id="showContainer">
+                    <div style="margin-bottom: 15px;">
+                        <div class="left" style="width: 50px; font-weight: bold;">{%trans%}label.period{%endtrans%}</div>
+                        <div id="labelPeriod" class="left">
+                            <select id="period" name="period">
+                                {% for period in periods %}
+                                <option value="{{ period.id }}">{{period}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div id="groupsContainer" class="left" style="margin-left: 50px;">
+                            <div class="left" style="width: 50px; font-weight: bold;">{%trans%}label.groups{%endtrans%}</div>
+                            <div class="left">
+                                <select id="groups" name="groups">
+                                </select>
+                            </div>
+                        </div>
+
+                        <div id="coursesContainer" class="left" style="margin-left: 50px;">
+                            <div class="left" style="width: 50px; font-weight: bold;">{%trans%}label.courses{%endtrans%}</div>
+                            <div class="left">
+                                <select id="courses" name="courses">
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="clear"></div>
+                    </div>
+                    <!-- Tabs -->
+                    <div id="tabs" style="height: 600px">
+
+                    </div>
+                    <!-- End Tabs -->
+                </div>
+            </div>    
+        </div>        
+        <div class="clear"></div>
+    </div>
+    <div class="clear"></div>
+    <div class="wrapper">
+            <div class="grid_24 padline">
+                    <div class="lineH"></div>
+            </div>
+    </div>
+</div>
+{% endblock %}

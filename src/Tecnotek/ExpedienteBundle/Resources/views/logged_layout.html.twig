@@ -16,8 +16,15 @@
     {% block extracss %}
     {% endblock %}
 
-
+    {% if is_granted('ROLE_SUPERADMIN') %}
     <script type="text/javascript" src="{{ asset('expediente/js/superadmin_application.js') }}"></script>
+    {% else %}
+        {% if is_granted('ROLE_PROFESOR') %}
+            <script type="text/javascript" src="{{ asset('expediente/js/teacher_application.js') }}"></script>
+        {% else %}
+
+        {% endif %}
+    {% endif %}
 
     {% block extrajs %}{% endblock %}
     <script type="text/javascript" src="{{ asset('expediente/js/script.js') }}"></script>
@@ -126,6 +133,15 @@
 
                     </ul>
                 </li>
+            {% else %}
+                {% if is_granted('ROLE_PROFESOR') %}
+                    <li {% if menuIndex is defined and menuIndex == 1%}class="current"{% endif %}><a href="{{ path('_expediente_teacher_qualifications') }}"><em>{% trans %}label.qualifications{% endtrans %}</em><strong></strong></a>
+                    </li>
+                    <li {% if menuIndex is defined and menuIndex == 2%}class="current"{% endif %}><a href="{{ path('_expediente_teacher_course_entries') }}"><em>{% trans %}label.usuarios.courseEntry{% endtrans %}</em><strong></strong></a>
+                    </li>
+                {% else %}
+
+                {% endif %}
             {% endif %}
 			</ul>
 			<div class="clear"></div>

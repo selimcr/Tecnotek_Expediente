@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
+use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
@@ -202,7 +203,11 @@ class User implements AdvancedUserInterface
      */
     public function setPassword($value)
     {
-        return $this->password = $value;
+        $this->salt = md5(time());
+        $encoder = new MessageDigestPasswordEncoder('sha1', false, 1);
+        $password = $encoder->encodePassword($value, $this->salt);
+        $this->password = $password;
+        return $this->password ;
     }
     
     /**

@@ -1180,6 +1180,7 @@ class SuperAdminController extends Controller
                     } else {
                         $user->setPassword($newPassword);
                         $em->persist($user);
+                        $em->flush();
                         return new Response(json_encode(array('error' => false, 'message' =>$translator->trans("messages.confirmation.password.change"))));
                     }
                 } else {

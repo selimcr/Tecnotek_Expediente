@@ -52,7 +52,7 @@ security:
 
     access_control:
         - { path: /expediente/secured/login.*, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/expediente.*, role: ROLE_SUPERADMIN }
+        - { path: ^/expediente.*, role: IS_AUTHENTICATED_FULLY  }
         
         #- { path: ^/expediente/sysadmin.*, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
         #- { path: ^/_internal, roles: IS_AUTHENTICATED_ANONYMOUSLY, ip: 127.0.0.1 }

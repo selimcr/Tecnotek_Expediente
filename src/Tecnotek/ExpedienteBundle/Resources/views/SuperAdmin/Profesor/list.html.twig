@@ -12,7 +12,6 @@
     Tecnotek.imagesURL = "/images";
     Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
     Tecnotek.UI.urls["show"] = "{{ path('_expediente_sysadmin_profesor_show_simple')}}";
-
 </script>
 {% endblock %}
 
@@ -29,7 +28,7 @@
             <div class="option_width" style="float: left; width: 200px;">{% trans %}label.name{% endtrans %}</div>
             <div class="option_width" style="float: left; width: 200px;">{% trans %}label.username{% endtrans %}</div>
             <div class="option_width" style="float: left; width: 250px;">{% trans %}label.email{% endtrans %}</div>
-            <div class="option_width" style="float: left; width: 200px;">{% trans %}label.status{% endtrans %}</div>
+            <div class="option_width" style="float: left; width: 150px;">{% trans %}label.status{% endtrans %}</div>
         </div>
             
         {% set counter = 0 %}   
@@ -39,7 +38,8 @@
                 <div class="option_width" style="float: left; width: 200px;">{{ entity.firstname }} {{ entity.lastname }}</div>
                 <div class="option_width" style="float: left; width: 200px;">{{ entity.username }}</div>
                 <div class="option_width" style="float: left; width: 250px;">{{ entity.email }}</div>
-                <div class="option_width" style="float: left; width: 200px;">{% if entity.active %}{% trans %}usuarios.estado.1{% endtrans %}{% else %} {% trans %}usuarios.estado.2{% endtrans %} {% endif %}</div>
+                <div class="option_width" style="float: left; width: 150px;">{% if entity.active %}{% trans %}usuarios.estado.1{% endtrans %}{% else %} {% trans %}usuarios.estado.2{% endtrans %} {% endif %}</div>
+                <div class="right imageButton viewButton"  title="{% trans %}label.view{% endtrans %}"  rel="{{ entity.id }}"></div>
             </div>
             {% set counter = counter + 1 %}
         {% endfor %}

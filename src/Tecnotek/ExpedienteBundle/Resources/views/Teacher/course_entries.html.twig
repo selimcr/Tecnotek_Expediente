@@ -1,0 +1,187 @@
+{% extends 'TecnotekExpedienteBundle::logged_layout.html.twig' %}
+
+{% block htmlTitle %}
+    Tecnotek :: Expediente :: Teacher :: Rubros
+{% endblock %}
+
+{% block extracss %}
+<link rel="stylesheet" href="{{ asset('fancybox/jquery.fancybox.css') }}" type="text/css" media="all" />
+{% endblock %}
+
+{% block extrajs %}
+<script type="text/javascript" src="{{ asset('fancybox/jquery.fancybox.js?v=2.0.6') }}"></script>
+
+<script type="text/javascript">
+    Tecnotek.UI.translates["confirmDelete"] = "{% trans %}messages.confirmation.period.delete{% endtrans %}";
+    Tecnotek.module = "courseEntries";
+    Tecnotek.UI.urls["loadGroupsOfPeriodURL"] = "{{ path("_expediente_teacher_load_groups_of_period") }}";
+    Tecnotek.UI.urls["loadCoursesOfGroupByTeacherURL"] = "{{ path("_expediente_teacher_load_courses_of_group_by_teacher") }}";
+    Tecnotek.UI.urls["loadEntriesByCourseURL"] = "{{ path("_expediente_teacher_load_entries_by_course") }}";
+    Tecnotek.UI.urls["createEntryURL"] = "{{ path("_expediente_teacher_create_subentry") }}";
+
+
+    Tecnotek.UI.urls["associateCourseURL"] = "{{ path("_expediente_sysadmin_associate_course") }}";
+    Tecnotek.UI.urls["deleteGroupURL"] = "{{ path("_expediente_sysadmin_group_remove") }}";
+    Tecnotek.UI.urls["deleteCourseAssociationURL"] = "{{ path("_expediente_sysadmin_course_association_remove") }}";
+    Tecnotek.UI.urls["loadPeriodInfoByGradeURL"] = "{{ path("_expediente_sysadmin_load_period_info") }}";
+
+    Tecnotek.UI.urls["saveGroupURL"] = "{{ path("_expediente_sysadmin_group_save") }}";
+
+    Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
+    Tecnotek.UI.vars["periodId"] = 0;
+    Tecnotek.UI.vars["groupId"] = 0;
+
+    $(function() {
+        $("#openEntryForm").fancybox({
+            'beforeLoad' : function(){
+
+            }
+        });
+    });
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="container_24">
+    <div class="grid_24">
+        <div>
+            <div class="left"><h1>{% trans %}title.course.entries.by.group{% endtrans %}:</h1></div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="centeredDiv">
+            <div class="formContainer" style="width: 920px; height: 650px;">
+                <div id="showContainer">
+                    <div style="margin-bottom: 15px;">
+                        <div class="left" style="width: 50px; font-weight: bold;">{%trans%}label.period{%endtrans%}</div>
+                        <div id="labelPeriod" class="left">
+                            <select id="period" name="period">
+                                {% for period in periods %}
+                                <option value="{{ period.id }}">{{period}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div id="groupsContainer" class="left" style="margin-left: 50px;">
+                            <div class="left" style="width: 50px; font-weight: bold;">{%trans%}label.groups{%endtrans%}</div>
+                            <div class="left">
+                                <select id="groups" name="groups">
+                                </select>
+                            </div>
+                        </div>
+
+                        <div id="coursesContainer" class="left" style="margin-left: 50px;">
+                            <div class="left" style="width: 50px; font-weight: bold;">{%trans%}label.courses{%endtrans%}</div>
+                            <div class="left">
+                                <select id="courses" name="courses">
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="clear"></div>
+                    </div>
+                    <!-- Tabs -->
+                    <div id="tabs" style="height: 600px">
+                        <nav class="tabs">
+
+                            <!-- Tab Course Entries Start -->
+                            <div class="tab-header tab-current" id="entriesTab">{%trans%}label.entries.by.course{%endtrans%}</div>
+                            <section class="tabs-content" id="entriesSection">
+
+                                <div class="left" style="width: 100%">
+                                    <div class="row tableHeader">
+                                        <div class="option_width" style="float: left; width: 150px;">{% trans %}label.name{% endtrans %}</div>
+                                        <div class="option_width" style="float: left; width: 100px;">{% trans %}label.code{% endtrans %}</div>
+                                        <div class="option_width" style="float: left; width: 100px;">{% trans %}label.percentage{% endtrans %}</div>
+                                        <div class="option_width" style="float: left; width: 100px;">{% trans %}label.max_value{% endtrans %}</div>
+                                        <div class="option_width" style="float: left; width: 100px;">{% trans %}label.order{% endtrans %}</div>
+                                        <div class="option_width" style="float: left; width: 150px;">{% trans %}label.parent{% endtrans %}</div>
+                                    </div>
+                                    <div id="entriesRows" name="entriesRows">
+                                    </div>
+                                </div>
+                                <div class="clear"></div>
+                                <br/>
+                                <div class="clear"></div>
+                            </section>
+                            <!-- End Tab Course Entries-->
+
+                            <!-- Tab Course Entries Start -->
+                            <div class="tab-header" id="subentriesTab">{%trans%}label.subentries.by.course{%endtrans%}</div>
+                            <section class="tabs-content" style="display: none;" id="subentriesSection">
+
+                                <div class="left" style="width: 100%">
+                                    <div class="row tableHeader">
+                                        <div class="option_width" style="float: left; width: 150px;">{% trans %}label.name{% endtrans %}</div>
+                                        <div class="option_width" style="float: left; width: 100px;">{% trans %}label.code{% endtrans %}</div>
+                                        <div class="option_width" style="float: left; width: 100px;">{% trans %}label.percentage{% endtrans %}</div>
+                                        <div class="option_width" style="float: left; width: 100px;">{% trans %}label.max_value{% endtrans %}</div>
+                                        <div class="option_width" style="float: left; width: 100px;">{% trans %}label.order{% endtrans %}</div>
+                                        <div class="option_width" style="float: left; width: 150px;">{% trans %}label.parent{% endtrans %}</div>
+                                        <button style="margin-left: 15px; margin-top: -5px;" type="button" class="right btn new" name="subbuttonNewEntry" id="subbuttonNewEntry" href="#inline"><a id="openEntryForm" class="modalbox" href="#subentryFormContainer">{% trans %}label.include{% endtrans %}</a></button>
+                                    </div>
+                                    <div id="subentriesRows" name="subentriesRows">
+                                    </div>
+                                </div>
+                                <div class="clear"></div>
+                                <br/>
+
+                                <!-- hidden courseFormContainer form -->
+                                <div id="subentryFormContainer" style="display: none;">
+                                    <h2 style="margin-bottom: 0px;">Incluir subrubro</h2>
+
+                                    <form class="customForm" id="subentryForm" name="subentryForm">
+
+                                        <input type="hidden" id="subentryFormCourseClassId" name="subentryFormCourseClassId" value="0">
+                                        <div id="subformEntryError" class="formErrors"></div>
+
+                                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.name{% endtrans %}</span>
+                                            <input id="subentryFormName" name="subentryFormName">
+                                        </label>
+
+                                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.code{% endtrans %}</span>
+                                            <input id="subentryFormCode" name="subentryFormCode">
+                                        </label>
+
+                                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.percentage{% endtrans %}</span>
+                                            <input id="subentryFormPercentage" name="subentryFormPercentage">
+                                        </label>
+
+                                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.max_value{% endtrans %}</span>
+                                            <input id="subentryFormMaxValue" name="subentryFormMaxValue">
+                                        </label>
+
+                                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.order{% endtrans %}</span>
+                                            <input id="subentryFormSortOrder" name="subentryFormSortOrder">
+                                        </label>
+
+                                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.parent{% endtrans %}</span>
+                                            <select id="subentryFormParent" name="subentryFormParent">
+                                            </select>
+                                        </label>
+
+                                        <div class="left"><input class="btn" style="margin-top: 0px;" type="button" name="entryFormCancel" id="entryFormCancel" value="{% trans %}label.cancelar{% endtrans %}"/></div>
+                                        <div class="left"><input class="btn" style="margin-top: 0px; margin-left: 25px;" type="submit" name="save" value="{% trans %}label.include{% endtrans %}"/></div>
+                                        <div class="clear"></div>
+                                    </form>
+                                </div>
+
+                                <div class="clear"></div>
+                            </section>
+                            <!-- End Tab Course Entries-->
+                        </nav>
+                    </div>
+                    <!-- End Tabs -->
+                </div>
+            </div>    
+        </div>        
+        <div class="clear"></div>
+    </div>
+    <div class="clear"></div>
+    <div class="wrapper">
+            <div class="grid_24 padline">
+                    <div class="lineH"></div>
+            </div>
+    </div>
+</div>
+{% endblock %}

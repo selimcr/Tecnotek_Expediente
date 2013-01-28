@@ -581,3 +581,28 @@ _expediente_sysadmin_course_association_remove:
 _expediente_sysadmin_qualifications:
   pattern:  /qualifications/
   defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:enterQualifications }
+
+######################    TEACHER    ######################
+_expediente_teacher_qualifications:
+  pattern:  /t/qualifications
+  defaults: { _controller: TecnotekExpedienteBundle:Teacher:qualifications }
+
+_expediente_teacher_course_entries:
+  pattern:  /t/courseEntries
+  defaults: { _controller: TecnotekExpedienteBundle:Teacher:courseEntries }
+
+_expediente_teacher_load_groups_of_period:
+  pattern: /t/loadGroupsOfPeriod/
+  defaults: { _controller: TecnotekExpedienteBundle:Teacher:loadGroupsOfPeriod }
+
+_expediente_teacher_load_courses_of_group_by_teacher:
+  pattern: /t/loadCourseOfGroupByTeacher/
+  defaults: { _controller: TecnotekExpedienteBundle:Teacher:loadCourseOfGroupByTeacher }
+
+_expediente_teacher_load_entries_by_course:
+  pattern:  /t/loadEntriesByCourse
+  defaults: { _controller: TecnotekExpedienteBundle:Teacher:loadEntriesByCourse }
+
+_expediente_teacher_create_subentry:
+  pattern:  /t/createSubentry/
+  defaults: { _controller: TecnotekExpedienteBundle:Teacher:createSubEntry }

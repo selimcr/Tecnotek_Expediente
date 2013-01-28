@@ -241,6 +241,12 @@ friday: Viernes
 saturday: Sabado
 sunday: Domingo
 
+#################     TEACHER     #################
+label.usuarios.courseEntry: Rubros
+title.course.entries.by.group: Definicion de Rubros por Grupo
+title.qualifications.by.group: Ingreso de calificaciones por grupo
+label.subentries.by.course: Subrubros
+
 #Validation
 not.blank.name: Probando proband.
 not:
