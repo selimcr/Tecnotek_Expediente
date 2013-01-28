@@ -1336,7 +1336,16 @@ class SuperAdminController extends Controller
                     $html = "";
                     $entriesOptions = "";
                     $temp = new \Tecnotek\ExpedienteBundle\Entity\CourseEntry();
+
+                    $dql = "SELECT cc FROM TecnotekExpedienteBundle:CourseClass cc WHERE cc.period = $periodId AND cc.grade = $gradeId And cc.course = $courseId";
+                    $query = $em->createQuery($dql);
+                    $results = $query->getResult();
                     $courseClassId = 0;
+                    foreach( $results as $result ){
+                        $courseClassId = $result->getId();
+                    }
+
+
                     foreach( $entries as $entry ){
                         $temp = $entry;
                         $courseClassId = $temp->getCourseClass()->getId();
