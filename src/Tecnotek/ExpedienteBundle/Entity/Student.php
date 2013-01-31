@@ -93,6 +93,12 @@ class Student
     private $route;
 
     /**
+     * @ManyToOne(targetEntity="Group")
+     * @JoinColumn(name="group_id", referencedColumnName="id")
+     */
+    private $group;
+
+    /**
      * @ORM\ManyToMany(targetEntity="Club", mappedBy="clubs")
      */
     private $clubs;
@@ -357,5 +363,25 @@ class Student
     public function getRoute()
     {
         return $this->route;
+    }
+
+    /**
+     * Set group
+     *
+     * @param \Tecnotek\ExpedienteBundle\Entity\Group $group
+     */
+    public function setGroup(\Tecnotek\ExpedienteBundle\Entity\Group $group)
+    {
+        $this->group = $group;
+    }
+
+    /**
+     * Get group
+     *
+     * @return \Tecnotek\ExpedienteBundle\Entity\Group
+     */
+    public function getGroup()
+    {
+        return $this->group;
     }
 }

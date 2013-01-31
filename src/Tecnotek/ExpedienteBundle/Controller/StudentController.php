@@ -865,4 +865,42 @@ class StudentController extends Controller
 
     }
     /* Final de los metodos para CRUD de Absences*/
+
+
+    public function getListStudentsOfGroupAction(){
+        $logger = $this->get('logger');
+        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
+        {
+            try {
+                $request = $this->get('request')->request;
+                $groupId = $request->get('groupId');
+                $text = $request->get('text');
+
+                $em = $this->getDoctrine()->getEntityManager();
+                $sql = "SELECT std.id, std.firstname, std.lastname "
+                    . " FROM tek_students std"
+                    . " WHERE (std.firstname like '%" . $text . "%' OR std.lastname like '%" . $text . "%')"
+                    . " AND (std.group_id <> " . $groupId . "  or std.group_id is null)"
+                    . " ORDER BY std.firstname, std.lastname";
+                $stmt = $em->getConnection()->prepare($sql);
+                $stmt->execute();
+                $students = $stmt->fetchAll();
+
+                if ( isset($students) ) {
+                    return new Response(json_encode(array('error' => false, 'students' => $students)));
+                } else {
+                    return new Response(json_encode(array('error' => true, 'message' => "Data not found.")));
+                }
+            }
+            catch (Exception $e) {
+                $info = toString($e);
+                $logger->err('Student::getListAction [' . $info . "]");
+                return new Response(json_encode(array('error' => true, 'message' => $info)));
+            }
+        }// endif this is an ajax request
+        else
+        {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+    }
 }

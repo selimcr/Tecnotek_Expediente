@@ -367,6 +367,84 @@ var Tecnotek = {
                     event.preventDefault();
                     Tecnotek.AdminPeriod.loadEntriesByCourse($(this).val());
                 });
+                $('#searchBox').keyup(function(event){
+                    event.preventDefault();
+                    if($(this).val().length == 0) {
+                        $('#suggestions').fadeOut(); // Hide the suggestions box
+                    } else {
+                        Tecnotek.ajaxCall(Tecnotek.UI.urls["getStudentsURL"],
+                            {text: $(this).val(), groupId: Tecnotek.UI.vars["groupId"]},
+                            function(data){
+                                if(data.error === true) {
+                                    Tecnotek.showErrorMessage(data.message,true, "", false);
+                                } else {
+                                    $data = "";
+                                    $data += '<p id="searchresults">';
+                                    $data += '    <span class="category">Estudiantes</span>';
+                                    for(i=0; i<data.students.length; i++) {
+                                        $data += '    <a class="searchResult" rel="' + data.students[i].id + '" name="' +
+                                            data.students[i].firstname + ' ' + data.students[i].lastname + '">';
+                                        $data += '      <span class="searchheading">' + data.students[i].firstname
+                                            + ' ' + data.students[i].lastname +  '</span>';
+                                        $data += '      <span>Incluir este estudiante.</span>';
+                                        $data += '    </a>';
+                                    }
+                                    $data += '</p>';
+
+                                    $('#suggestions').fadeIn(); // Show the suggestions box
+                                    $('#suggestions').html($data); // Fill the suggestions box
+                                    $('.searchResult').unbind();
+                                    $('.searchResult').click(function(event){
+                                        event.preventDefault();
+                                        Tecnotek.UI.vars["studentId"] = $(this).attr("rel");
+                                        Tecnotek.UI.vars["studentName"] = $(this).attr("name");
+
+                                        $html = '<div id="student_row_' + Tecnotek.UI.vars["studentId"] + '" class="row userRow" rel="' + Tecnotek.UI.vars["studentId"] + '">';
+                                        $html += '<div class="option_width" style="float: left; width: 300px;">' + Tecnotek.UI.vars["studentName"] + '</div>';
+                                        $html += '<div class="right imageButton deleteButton" style="height: 16px;"  title="delete???"  rel="' + Tecnotek.UI.vars["studentId"] + '"></div>';
+                                        $html += '<div class="clear"></div>';
+                                        $html += '</div>';
+                                        $("#studentsList").append($html);
+
+                                        /*Tecnotek.ajaxCall(Tecnotek.UI.urls["associateStudentsURL"],
+                                            {studentId: $(this).attr("rel"), clubId: Tecnotek.UI.vars["clubId"]},
+                                            function(data){
+                                                if(data.error === true) {
+                                                    Tecnotek.showErrorMessage(data.message,true, "", false);
+                                                } else {
+                                                    console.debug("Add Student with Id: " + Tecnotek.UI.vars["studentId"]);
+                                                    $html = '<div id="student_row_' + Tecnotek.UI.vars["studentId"] + '" class="row userRow" rel="' + Tecnotek.UI.vars["studentId"] + '">';
+                                                    $html += '<div class="option_width" style="float: left; width: 300px;">' + Tecnotek.UI.vars["studentName"] + '</div>';
+                                                    $html += '<div class="right imageButton deleteButton" style="height: 16px;"  title="delete???"  rel="' + Tecnotek.UI.vars["studentId"] + '"></div>';
+                                                    $html += '<div class="clear"></div>';
+                                                    $html += '</div>';
+                                                    $("#studentsList").append($html);
+                                                    Tecnotek.ClubShow.initDeleteButtons();
+                                                }
+                                            },
+                                            function(jqXHR, textStatus){
+                                                Tecnotek.showErrorMessage("Error setting data: " + textStatus + ".",
+                                                    true, "", false);
+                                                $(this).val("");
+                                                $('#suggestions').fadeOut(); // Hide the suggestions box
+                                            }, true);*/
+                                    });
+                                }
+                            },
+                            function(jqXHR, textStatus){
+                                Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".",
+                                    true, "", false);
+                                $(this).val("");
+                                $('#suggestions').fadeOut(); // Hide the suggestions box
+                            }, true);
+                    }
+                });
+
+                $('#searchBox').blur(function(event){
+                    event.preventDefault();
+                    $(this).val("");
+                    $('#suggestions').fadeOut(); // Hide the suggestions box
+                });
                 Tecnotek.AdminPeriod.initButtons();
                 Tecnotek.AdminPeriod.loadPeriodInfoByGrade();
             },
@@ -464,6 +542,7 @@ var Tecnotek = {
                                 $html += '    <div id="groupTeacherField_' + data.groups[i].id + '" name="groupTeacherField_' + data.groups[i].id + '" class="option_width" style="float: left; width: 250px;">' + data.groups[i].teacherName + '</div>';
                                 $html += '    <div class="right imageButton deleteButton deleteGroup" style="height: 16px;" title="Eliminar"  rel="' + data.groups[i].id + '"></div>';
                                 $html += '    <div class="right imageButton editButton editGroup"  title="Editar"  rel="' + data.groups[i].id + '" groupName="' + data.groups[i].name + '" teacher="' + data.groups[i].teacherId + '"></div>';
+                                $html += '    <div class="right imageButton editButton studentsToGroup"  title="Asociar estudiantes"  rel="' + data.groups[i].id + '" groupName="' + data.groups[i].name + '"></div>';
                                 $html += '    <div class="clear"></div>';
                                 $html += '</div>';
                                 $('#groupRows').append($html);
@@ -535,6 +614,11 @@ var Tecnotek = {
                 $("#groupFormTeacher").val(teacherId);
                 Tecnotek.UI.vars["groupId"] = groupId;
             },
+            openStudentsToGroup: function(groupId, groupName){
+                $('#openStudentsToGroup').trigger('click');
+                //$("#groupFormName").val(groupName);
+                //Tecnotek.UI.vars["groupId"] = groupId;
+            },
             initializeGroupsButtons: function(){
                 $('.editGroup').unbind();
                 $('.editGroup').click(function(event){
@@ -552,6 +636,16 @@ var Tecnotek = {
                     event.preventDefault();
                     Tecnotek.AdminPeriod.deleteGroup($(this).attr("rel"));
                 });
+
+                $('.studentsToGroup').unbind();
+                $('.studentsToGroup').click(function(event){
+                    event.preventDefault();
+                    Tecnotek.UI.vars["groupId"] = $(this).attr("rel");
+                    Tecnotek.editingGroup = $(this);
+                    Tecnotek.AdminPeriod.openStudentsToGroup(Tecnotek.UI.vars["groupId"], $(this).attr("groupName"));
+
+                });
+
             },
             initializeCourseButtons: function(){
                 $('.editCourse').unbind();

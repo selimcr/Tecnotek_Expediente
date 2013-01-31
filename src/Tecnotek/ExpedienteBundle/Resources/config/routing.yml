@@ -582,6 +582,10 @@ _expediente_sysadmin_qualifications:
   pattern:  /qualifications/
   defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:enterQualifications }
 
+_expediente_get_students_list_of_group:
+    pattern:  /group/students/list
+    defaults: { _controller: TecnotekExpedienteBundle:Student:getListStudentsOfGroup }
+
 ######################    TEACHER    ######################
 _expediente_teacher_qualifications:
   pattern:  /t/qualifications
