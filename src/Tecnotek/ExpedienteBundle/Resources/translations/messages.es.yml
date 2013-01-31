@@ -133,6 +133,8 @@ label.students.in.club: Estudiantes Asociados
 club.include.students: Incluir estudiantes a este club
 club.include.help: Ingrese el nombre y seleccione el estudiante de la lista de sugeridos.
 
+group.include.students: Incluir estudiantes a este grupo
+
 label.relatives.in.student: Personas Autorizadas
 student.include.contact: Incluir contacto autorizado
 student.include.help: Ingrese el nombre y seleccione el contacto de la lista de sugeridos.

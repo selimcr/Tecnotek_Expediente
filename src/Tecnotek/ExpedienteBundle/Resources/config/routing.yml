@@ -583,8 +583,20 @@ _expediente_sysadmin_qualifications:
   defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:enterQualifications }
 
 _expediente_get_students_list_of_group:
+  pattern:  /group/getStudents
+  defaults: { _controller: TecnotekExpedienteBundle:Student:getListStudentsOfGroup }
+
+_expediente_get_students_list_for_group:
     pattern:  /group/students/list
-    defaults: { _controller: TecnotekExpedienteBundle:Student:getListStudentsOfGroup }
+    defaults: { _controller: TecnotekExpedienteBundle:Student:getListStudentsForGroup }
+
+_expediente_set_student_to_group:
+    pattern:  /group/addStudent
+    defaults: { _controller: TecnotekExpedienteBundle:Student:addStudentToGroup }
+
+_expediente_remove_student_from_group:
+    pattern:  /group/removeStudent
+    defaults: { _controller: TecnotekExpedienteBundle:Student:removeStudentFromGroup }
 
 ######################    TEACHER    ######################
 _expediente_teacher_qualifications:

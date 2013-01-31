@@ -29,7 +29,10 @@
     Tecnotek.UI.vars["periodId"] = {{ entity.id }};
     Tecnotek.UI.vars["groupId"] = 0;
 
-    Tecnotek.UI.urls["getStudentsURL"] = "{{ path("_expediente_get_students_list_of_group") }}";
+    Tecnotek.UI.urls["getStudentsURL"] = "{{ path("_expediente_get_students_list_for_group") }}";
+    Tecnotek.UI.urls["setStudentToGroup"] = "{{ path("_expediente_set_student_to_group") }}";
+    Tecnotek.UI.urls["getGroupStudentsURL"] = "{{ path("_expediente_get_students_list_of_group") }}";
+    Tecnotek.UI.urls["removeStudentFromGroupURL"] = "{{ path("_expediente_remove_student_from_group") }}";
 
     $(function() {
         $("#openGroupForm").fancybox({
@@ -139,19 +142,27 @@
 
                                 <!-- hidden studentsToGroup form -->
                                 <div id="studentsToGroupContainer" style="display: none; width: 800px;">
-                                    <h2 style="margin-bottom: 0px;">Estudiantes en el grupo</h2>
-                                    <a id="openStudentsToGroup" class="modalbox" href="#studentsToGroupContainer">&nbsp;</a>
+                                    <div>
+                                        <h2 style="margin-bottom: 0px;" class="left">Estudiantes en el grupo: &nbsp;<span id="groupNameOfList" name="groupNameOfList"></span></h2>
+                                        <a id="openStudentsToGroup" class="modalbox left" href="#studentsToGroupContainer">&nbsp;</a>
+                                        <div class="right"><input class="btn" style="margin-top: 0px;" type="button" name="studentsToGroupCancel" id="studentsToGroupCancel" value="{% trans %}label.cancelar{% endtrans %}"/></div>
+                                        <div class="clear"></div>
+                                    </div>
 
-                                    <div class="left" id="studentsList">
+
+                                    <div class="left">
                                         <div class="row tableHeader">
                                             <div class="option_width" style="float: left; width: 300px;">{% trans %}label.name{% endtrans %}</div>
+                                        </div>
+                                        <div class="left" id="studentsList">
+
                                         </div>
                                     </div>
 
                                     <div class="left" style="margin-left: 50px;">
                                         <form id="searchform">
                                             <div>
-                                                <div>{% trans %}club.include.students{%endtrans%}</div>
+                                                <div>{% trans %}group.include.students{%endtrans%}</div>
                                                 <div style="font-size: 10px;">{% trans %}club.include.help{%endtrans%}</div>
 
                                                 <input type="text" size="30" value="" id="searchBox"/>

@@ -376,6 +376,15 @@ class Student
     }
 
     /**
+     * Remove from group
+     *
+     */
+    public function removeFromGroup()
+    {
+        $this->group = null;
+    }
+
+    /**
      * Get group
      *
      * @return \Tecnotek\ExpedienteBundle\Entity\Group
