@@ -263,46 +263,50 @@ var Tecnotek = {
                     }, true);
             },
             loadGroupsOfPeriod: function($periodId) {
-                $('#groups').children().remove();
-                $('#courses').children().remove();
-                $('#subentryFormParent').empty();
-                Tecnotek.ajaxCall(Tecnotek.UI.urls["loadGroupsOfPeriodURL"],
-                    {   periodId: $periodId },
-                    function(data){
-                        if(data.error === true) {
-                            Tecnotek.showErrorMessage(data.message,true, "", false);
-                        } else {
-                            for(i=0; i<data.groups.length; i++) {
-                                $('#groups').append('<option value="' + data.groups[i].id + '">' + data.groups[i].name + '</option>');
+                if(($periodId!==null)){
+                    $('#groups').children().remove();
+                    $('#courses').children().remove();
+                    $('#subentryFormParent').empty();
+                    Tecnotek.ajaxCall(Tecnotek.UI.urls["loadGroupsOfPeriodURL"],
+                        {   periodId: $periodId },
+                        function(data){
+                            if(data.error === true) {
+                                Tecnotek.showErrorMessage(data.message,true, "", false);
+                            } else {
+                                for(i=0; i<data.groups.length; i++) {
+                                    $('#groups').append('<option value="' + data.groups[i].id + '">' + data.groups[i].name + '</option>');
+                                }
+                                Tecnotek.CourseEntries.loadCoursesOfGroupByTeacher($('#groups').val());
                             }
-                            Tecnotek.CourseEntries.loadCoursesOfGroupByTeacher($('#groups').val());
-                        }
-                    },
-                    function(jqXHR, textStatus){
-                        Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
-                        $(this).val("");
-                    }, true);
+                        },
+                        function(jqXHR, textStatus){
+                            Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
+                            $(this).val("");
+                        }, true);
+                }
             },
             loadCoursesOfGroupByTeacher: function($groupId) {
-                $('#courses').children().remove();
-                $('#subentryFormParent').empty();
-                Tecnotek.CourseEntries.loadEntriesByCourse(0);
-                Tecnotek.ajaxCall(Tecnotek.UI.urls["loadCoursesOfGroupByTeacherURL"],
-                    {   groupId: $groupId },
-                    function(data){
-                        if(data.error === true) {
-                            Tecnotek.showErrorMessage(data.message,true, "", false);
-                        } else {
-                            for(i=0; i<data.courses.length; i++) {
-                                $('#courses').append('<option value="' + data.courses[i].id + '">' + data.courses[i].name + '</option>');
+                if(($groupId!==null)){
+                    $('#courses').children().remove();
+                    $('#subentryFormParent').empty();
+                    Tecnotek.CourseEntries.loadEntriesByCourse(0);
+                    Tecnotek.ajaxCall(Tecnotek.UI.urls["loadCoursesOfGroupByTeacherURL"],
+                        {   groupId: $groupId },
+                        function(data){
+                            if(data.error === true) {
+                                Tecnotek.showErrorMessage(data.message,true, "", false);
+                            } else {
+                                for(i=0; i<data.courses.length; i++) {
+                                    $('#courses').append('<option value="' + data.courses[i].id + '">' + data.courses[i].name + '</option>');
+                                }
+                                Tecnotek.CourseEntries.loadEntriesByCourse($('#courses').val());
                             }
-                            Tecnotek.CourseEntries.loadEntriesByCourse($('#courses').val());
-                        }
-                    },
-                    function(jqXHR, textStatus){
-                        Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
-                        $(this).val("");
-                    }, true);
+                        },
+                        function(jqXHR, textStatus){
+                            Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
+                            $(this).val("");
+                        }, true);
+                }
             },
             loadEntriesByCourse: function(courseId) {
                 $('.editEntry').unbind();

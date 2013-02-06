@@ -875,9 +875,10 @@ class StudentController extends Controller
                 $groupId = $request->get('groupId');
 
                 $em = $this->getDoctrine()->getEntityManager();
-                $sql = "SELECT std.id, std.firstname, std.lastname "
-                    . " FROM tek_students std"
-                    . " WHERE std.group_id = " . $groupId
+                $sql = "SELECT stdY.id, std.id as 'studentId', std.firstname, std.lastname "
+                    . " FROM tek_students_year stdY"
+                    . " JOIN tek_students std ON std.id = stdY.student_id"
+                    . " WHERE stdY.group_id = " . $groupId
                     . " ORDER BY std.firstname, std.lastname";
                 $stmt = $em->getConnection()->prepare($sql);
                 $stmt->execute();
@@ -908,13 +909,16 @@ class StudentController extends Controller
             try {
                 $request = $this->get('request')->request;
                 $groupId = $request->get('groupId');
+                $periodId = $request->get('periodId');
                 $text = $request->get('text');
 
                 $em = $this->getDoctrine()->getEntityManager();
                 $sql = "SELECT std.id, std.firstname, std.lastname "
                     . " FROM tek_students std"
+                    . " LEFT JOIN tek_students_year stdy ON stdy.period_id = 1 AND stdy.student_id = std.id"
                     . " WHERE (std.firstname like '%" . $text . "%' OR std.lastname like '%" . $text . "%')"
-                    . " AND (std.group_id <> " . $groupId . "  or std.group_id is null)"
+                    . " AND (stdy.id is null or (stdy.period_id = " . $periodId . " AND stdy.group_id <> " . $groupId . " OR stdy.group_id is null))"
+                    . " GROUP BY std.id"
                     . " ORDER BY std.firstname, std.lastname";
                 $stmt = $em->getConnection()->prepare($sql);
                 $stmt->execute();
@@ -928,7 +932,7 @@ class StudentController extends Controller
             }
             catch (Exception $e) {
                 $info = toString($e);
-                $logger->err('Student::getListAction [' . $info . "]");
+                $logger->err('Student::getListStudentsForGroupAction [' . $info . "]");
                 return new Response(json_encode(array('error' => true, 'message' => $info)));
             }
         }// endif this is an ajax request
@@ -946,15 +950,36 @@ class StudentController extends Controller
                 $request = $this->get('request')->request;
                 $groupId = $request->get('groupId');
                 $studentId = $request->get('studentId');
+                $periodId = $request->get('periodId');
 
                 $translator = $this->get("translator");
 
-                if( isset($groupId) && isset($studentId)) {
+                if( isset($groupId) && isset($studentId) && isset($periodId)) {
                     $em = $this->getDoctrine()->getEntityManager();
-                    $student = $em->getRepository("TecnotekExpedienteBundle:Student")->find($studentId);
-                    $student->setGroup($em->getRepository("TecnotekExpedienteBundle:Group")->find($groupId));
+                    $group = $em->getRepository("TecnotekExpedienteBundle:Group")->find($groupId);
 
-                    $em->persist($student);
+                    $dql = "SELECT studentYears FROM TecnotekExpedienteBundle:StudentYear studentYears WHERE studentYears.period = :period AND studentYears.student = :student";
+
+                    $query = $em->createQuery($dql)
+                        ->setParameter('period', $periodId)
+                        ->setParameter('student', $studentId);
+                    $results = $query->getResult();
+                    $studentYear = null;
+                    foreach ($results as $result) {
+                        $studentYear = $result;
+                    }
+                    if( isset($studentYear) ){
+                        $studentYear->setGroup($group);
+                    } else {
+                        $student = $em->getRepository("TecnotekExpedienteBundle:Student")->find($studentId);
+                        $period = $em->getRepository("TecnotekExpedienteBundle:Period")->find($periodId);
+                        $studentYear = new \Tecnotek\ExpedienteBundle\Entity\StudentYear();
+                        $studentYear->setGroup($group);
+                        $studentYear->setStudent($student);
+                        $studentYear->setPeriod($period);
+                    }
+
+                    $em->persist($studentYear);
                     $em->flush();
 
                     return new Response(json_encode(array('error' => false)));
@@ -981,15 +1006,27 @@ class StudentController extends Controller
             try {
                 $request = $this->get('request')->request;
                 $studentId = $request->get('studentId');
+                $periodId = $request->get('periodId');
 
                 $translator = $this->get("translator");
 
-                if( isset($studentId)) {
+                if( isset($studentId) && isset($periodId)) {
                     $em = $this->getDoctrine()->getEntityManager();
-                    $student = $em->getRepository("TecnotekExpedienteBundle:Student")->find($studentId);
-                    $student->removeFromGroup();
 
-                    $em->persist($student);
+                    $dql = "SELECT studentYears FROM TecnotekExpedienteBundle:StudentYear studentYears WHERE studentYears.period = :period AND studentYears.student = :student";
+
+                    $query = $em->createQuery($dql)
+                        ->setParameter('period', $periodId)
+                        ->setParameter('student', $studentId);
+                    $results = $query->getResult();
+                    $studentYear = null;
+                    foreach ($results as $result) {
+                        $studentYear = $result;
+                    }
+
+                    $studentYear->removeFromGroup();
+
+                    $em->persist($studentYear);
                     $em->flush();
 
                     return new Response(json_encode(array('error' => false)));

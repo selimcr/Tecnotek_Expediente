@@ -373,7 +373,7 @@ var Tecnotek = {
                         $('#suggestions').fadeOut(); // Hide the suggestions box
                     } else {
                         Tecnotek.ajaxCall(Tecnotek.UI.urls["getStudentsURL"],
-                            {text: $(this).val(), groupId: Tecnotek.UI.vars["groupId"]},
+                            {text: $(this).val(), groupId: Tecnotek.UI.vars["groupId"], periodId: Tecnotek.UI.vars["periodId"]},
                             function(data){
                                 if(data.error === true) {
                                     Tecnotek.showErrorMessage(data.message,true, "", false);
@@ -400,7 +400,7 @@ var Tecnotek = {
                                         Tecnotek.UI.vars["studentName"] = $(this).attr("name");
 
                                         Tecnotek.ajaxCall(Tecnotek.UI.urls["setStudentToGroup"],
-                                            {studentId: $(this).attr("rel"), groupId: Tecnotek.UI.vars["groupId"]},
+                                            {studentId: $(this).attr("rel"), groupId: Tecnotek.UI.vars["groupId"], periodId: Tecnotek.UI.vars["periodId"]},
                                             function(data){
                                                 if(data.error === true) {
                                                     Tecnotek.showErrorMessage(data.message,true, "", false);
@@ -447,7 +447,7 @@ var Tecnotek = {
                     event.preventDefault();
                     $studentId = $(this).attr("rel");
                     Tecnotek.ajaxCall(Tecnotek.UI.urls["removeStudentFromGroupURL"],
-                        {studentId: $studentId},
+                        {studentId: $studentId, periodId: Tecnotek.UI.vars["periodId"]},
                         function(data){
                             if(data.error === true) {
                                 Tecnotek.showErrorMessage(data.message,true, "", false);
