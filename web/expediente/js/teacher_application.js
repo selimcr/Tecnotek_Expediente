@@ -61,6 +61,9 @@ var Tecnotek = {
                 case "courseEntries":
                     Tecnotek.CourseEntries.init();
                     break;
+                case "qualifications":
+                    Tecnotek.Qualifications.init();
+                    break;
                 default:
 					break;
 				}
@@ -328,6 +331,125 @@ var Tecnotek = {
                                 //$('#subentryFormParent').append('<option value="0"></option>');
                                 $('#subentryFormParent').append(data.entries);
                                 $('#subentryFormCourseClassId').val(data.courseClassId);
+                            }
+                        },
+                        function(jqXHR, textStatus){
+                            Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
+                        }, true);
+                }
+            }
+        },
+        Qualifications : {
+            translates : {},
+            init : function() {
+                $('#entriesTab').click(function(event){
+                    $("#subentriesSection").hide();
+                    $('#entriesSection').show();
+                    $('#subentriesTab').removeClass("tab-current");
+                    $('#entriesTab').addClass("tab-current");
+                });
+
+                $('#subentriesTab').click(function(event){
+                    $('#subentriesSection').show();
+                    $("#entriesSection").hide();
+                    $('#subentriesTab').addClass("tab-current");
+                    $('#entriesTab').removeClass("tab-current");
+                });
+
+                $('#subentryForm').submit(function(event){
+                    event.preventDefault();
+                    Tecnotek.Qualifications.createEntry();
+                });
+
+                $("#period").change(function(event){
+                    event.preventDefault();
+                    Tecnotek.Qualifications.loadGroupsOfPeriod($(this).val());
+                });
+
+                $("#groups").change(function(event){
+                    event.preventDefault();
+                    Tecnotek.Qualifications.loadCoursesOfGroupByTeacher($(this).val());
+                });
+
+                $("#courses").change(function(event){
+                    event.preventDefault();
+                    Tecnotek.Qualifications.loadQualificationsOfGroup($(this).val());
+                });
+
+                Tecnotek.Qualifications.loadGroupsOfPeriod($('#period').val());
+                Tecnotek.Qualifications.initButtons();
+            },
+            initButtons : function() {
+                $("#entryFormCancel").click(function(event){
+                    event.preventDefault();
+                    $.fancybox.close();
+                });
+            },
+            loadGroupsOfPeriod: function($periodId) {
+                if(($periodId!==null)){
+                    $('#groups').children().remove();
+                    $('#courses').children().remove();
+                    $('#subentryFormParent').empty();
+                    Tecnotek.ajaxCall(Tecnotek.UI.urls["loadGroupsOfPeriodURL"],
+                        {   periodId: $periodId },
+                        function(data){
+                            if(data.error === true) {
+                                Tecnotek.showErrorMessage(data.message,true, "", false);
+                            } else {
+                                for(i=0; i<data.groups.length; i++) {
+                                    $('#groups').append('<option value="' + data.groups[i].id + '">' + data.groups[i].name + '</option>');
+                                }
+                                Tecnotek.Qualifications.loadCoursesOfGroupByTeacher($('#groups').val());
+                            }
+                        },
+                        function(jqXHR, textStatus){
+                            Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
+                            $(this).val("");
+                        }, true);
+                }
+            },
+            loadCoursesOfGroupByTeacher: function($groupId) {
+                if(($groupId!==null)){
+                    $('#courses').children().remove();
+                    $('#subentryFormParent').empty();
+                    Tecnotek.Qualifications.loadQualificationsOfGroup(0);
+                    Tecnotek.ajaxCall(Tecnotek.UI.urls["loadCoursesOfGroupByTeacherURL"],
+                        {   groupId: $groupId },
+                        function(data){
+                            if(data.error === true) {
+                                Tecnotek.showErrorMessage(data.message,true, "", false);
+                            } else {
+                                for(i=0; i<data.courses.length; i++) {
+                                    $('#courses').append('<option value="' + data.courses[i].id + '">' + data.courses[i].name + '</option>');
+                                }
+                                Tecnotek.Qualifications.loadQualificationsOfGroup($('#courses').val());
+                            }
+                        },
+                        function(jqXHR, textStatus){
+                            Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
+                            $(this).val("");
+                        }, true);
+                }
+            },
+            loadQualificationsOfGroup: function(courseId) {
+                console.debug("si entra: loadEntriesByCourse");
+                $('.editEntry').unbind();
+                $('#entriesRows').empty();
+                $('#subentriesRows').empty();
+                $('#subentryFormParent').empty();
+                if(courseId == 0){//Clean page
+                } else {
+                    Tecnotek.ajaxCall(Tecnotek.UI.urls["loadQualificationsOfGroupURL"],
+                        {   periodId: $("#period").val(),
+                            courseId: courseId,
+                            groupId: $("#groups").val()},
+                        function(data){
+                            if(data.error === true) {
+                                Tecnotek.showErrorMessage(data.message,true, "", false);
+                            } else {
+                                $('#contentBody').html(data.html);
+                                $('#studentsHeader').html(data.studentsHeader);
+                                $('#tableContainer').show();
                             }
                         },
                         function(jqXHR, textStatus){

@@ -622,3 +622,7 @@ _expediente_teacher_load_entries_by_course:
 _expediente_teacher_create_subentry:
   pattern:  /t/createSubentry/
   defaults: { _controller: TecnotekExpedienteBundle:Teacher:createSubEntry }
+
+_expediente_teacher_load_group_qualifications:
+  pattern:  /t/loadGroupQualifications
+  defaults: { _controller: TecnotekExpedienteBundle:Teacher:loadGroupQualifications }

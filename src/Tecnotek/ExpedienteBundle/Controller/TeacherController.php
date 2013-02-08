@@ -268,4 +268,150 @@ class TeacherController extends Controller
             return new Response("<b>Not an ajax call!!!" . "</b>");
         }
     }
+
+    public function loadGroupQualificationsAction(){
+        $logger = $this->get('logger');
+        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
+        {
+            try {
+                $request = $this->get('request')->request;
+                $periodId = $request->get('periodId');
+                $groupId = $request->get('groupId');
+
+                $keywords = preg_split("/[\s-]+/", $groupId);
+                $groupId = $keywords[0];
+                $gradeId = $keywords[1];
+                $courseId = $request->get('courseId');
+
+                $translator = $this->get("translator");
+
+                if( isset($courseId) && isset($groupId) && isset($periodId)) {
+                    $em = $this->getDoctrine()->getEntityManager();
+
+                    $dql = "SELECT ce FROM TecnotekExpedienteBundle:CourseEntry ce "
+                        . " JOIN ce.courseClass cc"
+                        . " WHERE ce.parent IS NULL AND cc.period = " . $periodId . " AND cc.grade = " . $gradeId
+                        . " AND cc.course = " . $courseId
+                        . " ORDER BY ce.sortOrder";
+                    $query = $em->createQuery($dql);
+                    $logger->err("-----> SQL: " . $query->getSQL());
+                    $entries = $query->getResult();
+                    $logger->err("-----> ENTRIES: " . sizeof($entries));
+                    $temp = new \Tecnotek\ExpedienteBundle\Entity\CourseEntry();
+                    $html = '<div class="itemPromedioPeriodo itemHeader" style="margin-left: 0px; color: #fff;">Promedio Trimestral</div>';
+                    /*
+                        <div class="itemHeader itemNota" style="margin-left: 125px;">Tarea 2</div>
+                        <div class="itemHeader itemPromedio" style="margin-left:150px;">Promedio Tareas </div>
+                        <div class="itemHeader itemPorcentage" style="margin-left: 175px;">10 % Tarea</div>
+
+                    <div class="itemHeaderCode itemNota" style="margin-left: 0px;"></div>
+                    */
+                    $marginLeft = 34;
+                    $marginLeftCode = 62;
+                    $htmlCodes = '<div class="itemPromedioPeriodo itemHeaderCode" style="color: #fff;">SCIE</div>';
+                    $jumpRight = 34;
+                    $width = 32;
+                    $html3 = '<div class="itemHeader2 itemPromedioPeriodo" style="width: 32px; color: #fff;">TRIM</div>';
+                    $studentRow = "";
+                    $studentsHeader = '';
+                    $colors = array(
+                        "one" => "#38255c",
+                        "two" => "#04D0E6"
+                    );
+                    foreach( $entries as $entry )
+                    {
+                        $temp = $entry;
+                        $childrens = $temp->getChildrens();
+                        $size = sizeof($childrens);
+                        $logger->err("-----> Childrens of " . $temp->getName() . ": " . sizeof($childrens));
+
+                        if($size == 0){//No child
+                            //Find SubEntries
+                            $dql = "SELECT ce FROM TecnotekExpedienteBundle:SubCourseEntry ce "
+                                . " WHERE ce.parent = " . $temp->getId()  . " AND ce.group = " . $groupId
+                                . " ORDER BY ce.sortOrder";
+                            $query = $em->createQuery($dql);
+                            $subentries = $query->getResult();
+
+
+                            foreach( $subentries as $subentry )
+                            {
+                                $studentRow .= '<input type="text" class="textField itemNota" tipo="1" rel="total_' . $subentry->getId() . '_stdId" perc="' . $subentry->getPercentage() . '" std="stdId" >';
+                                $htmlCodes .= '<div class="itemHeaderCode itemNota"></div>';
+                                $html .= '<div class="itemHeader itemNota" style="margin-left: ' . $marginLeft . 'px;">' . $subentry->getName() . '</div>';
+                                $marginLeft += $jumpRight; $marginLeftCode += 25;
+                            }
+
+                            if(sizeof($subentries) > 0){
+                                $studentRow .= '<div id="total_' . $temp->getId() . '_stdId" class="itemHeaderCode itemPorcentage nota_stdId">-</div>';
+                                $htmlCodes .= '<div class="itemHeaderCode itemPorcentage">' . $temp->getCode() . '</div>';
+                                $html .= '<div class="itemHeader itemPorcentage" style="margin-left: ' . $marginLeft . 'px;">' . $temp->getPercentage() . '% ' . $temp->getName() . '</div>';
+                                $marginLeft += $jumpRight; $marginLeftCode += 25;
+
+                                $html3 .= '<div class="itemHeader2 itemNota" style="width: ' . (($width * (sizeof($subentries)+1)) + ((sizeof($subentries)) * 2) ) . 'px">' . $temp->getName() . '</div>';
+                            }
+
+
+
+                        } else {
+                            /*if($size == 1){//one child
+                                foreach ( $childrens as $child){
+                                    $htmlCodes .= '<div class="itemHeaderCode itemNota"></div>';
+                                    $html .= '<div class="itemHeader itemNota" style="margin-left: ' . $marginLeft . 'px;">' . $child->getName() . '</div>';
+                                    $marginLeft += $jumpRight; $marginLeftCode += 25;
+                                }
+                                $htmlCodes .= '<div class="itemHeaderCode itemPorcentage"></div>';
+                                $html .= '<div class="itemHeader itemPorcentage" style="margin-left: ' . $marginLeft . 'px;">' . $temp->getPercentage() . '% ' . $temp->getName() . '</div>';
+                                $marginLeft += $jumpRight; $marginLeftCode += 25;
+                            } else {//two or more
+                                foreach ( $childrens as $child){
+                                    //$studentRow .= '<input type="text" class="textField itemNota">';
+                                    $studentRow .= '<input type="text" class="textField itemNota item_' . $temp->getId() . '_stdId" tipo="2" child="' . $size . '" parent="' . $temp->getId() . '" rel="total_' . $temp->getId() . '_stdId" perc="' . $temp->getPercentage() . '" std="stdId" >';
+                                    $htmlCodes .= '<div class="itemHeaderCode itemNota">' . $child->getCode() . '</div>';
+                                    $html .= '<div class="itemHeader itemNota" style="margin-left: ' . $marginLeft . 'px;">' . $child->getName() . '</div>';
+                                    $marginLeft += $jumpRight; $marginLeftCode += 25;
+                                }
+                                $studentRow .= '<div class="itemHeaderCode itemPromedio" id="prom_' . $temp->getId() . '_stdId" perc="' . $temp->getPercentage() . '">-</div>';
+                                $htmlCodes .= '<div class="itemHeaderCode itemPromedio"></div>';
+                                $html .= '<div class="itemHeader itemPromedio" style="margin-left:' . $marginLeft . 'px;">Promedio ' . $temp->getName() . ' </div>';
+                                $marginLeft += $jumpRight; $marginLeftCode += 25;
+
+                                //$studentRow .= '<div class="itemHeaderCode itemPorcentage">-</div>';
+                                $studentRow .= '<div id="total_' . $temp->getId() . '_stdId" class="itemHeaderCode itemPorcentage nota_stdId">-</div>';
+                                $htmlCodes .= '<div class="itemHeaderCode itemPorcentage">' . $temp->getCode() . '</div>';
+                                $html .= '<div class="itemHeader itemPorcentage" style="margin-left: ' . $marginLeft . 'px;">' . $temp->getPercentage() . '% ' . $temp->getName() . '</div>';
+                                $marginLeft += $jumpRight; $marginLeftCode += 25;
+
+                                $html3 .= '<div class="itemHeader2 itemNota" style="width: ' . (($width * ($size + 2)) + (($size + 1) * 2)) . 'px">' . $temp->getName() . '</div>';
+                            }*/
+                        }
+                    }
+
+                    $html = $htmlCodes . '<div class="clear"></div>' .
+                        '<div style="position: relative; height: 152px; margin-left: -59px;">' . $html . '</div>' . '<div class="clear"></div>' .
+                        $html3;
+
+                    $students = $em->getRepository("TecnotekExpedienteBundle:Student")->findAll();
+                    foreach($students as $student){
+                        $studentsHeader .= '<div class="itemCarne">' . $student->getCarne() . '</div><div class="itemEstudiante">' . $student . '</div><div class="clear"></div>';
+                        $row = str_replace("stdId", $student->getId(), $studentRow);
+                        $html .=  '<div class="clear"></div><div id="total_trim_' . $student->getId() . '" class="itemHeaderCode itemPromedioPeriodo"style="color: #fff;">-</div>' . $row;
+                    }
+
+                    return new Response(json_encode(array('error' => false, 'html' => $html, 'studentsHeader' => $studentsHeader)));
+                } else {
+                    return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
+                }
+            }
+            catch (Exception $e) {
+                $info = toString($e);
+                $logger->err('Teacher::loadEntriesByCourseAction [' . $info . "]");
+                return new Response(json_encode(array('error' => true, 'message' => $info)));
+            }
+        }// endif this is an ajax request
+        else
+        {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+    }
 }
