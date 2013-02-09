@@ -349,6 +349,11 @@ class Student
         $this->route = $route;
     }
 
+    public function removeRoute()
+    {
+        $this->route = null;
+    }
+
     /**
      * Get route
      *

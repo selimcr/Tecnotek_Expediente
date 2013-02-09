@@ -1,4 +1,4 @@
-* { margin: 0; padding: 0; outline: none; }
+/** { margin: 0; padding: 0; outline: none; }
 html { font-size: 62.5%; height: 101%; }
 
 body { background: #fff; font-family: "Calibri", Arial, sans-serif; }
@@ -10,7 +10,7 @@ a:hover { text-decoration: underline; }
 h2 { font-size: 1.8em; line-height: 1.9em; margin-bottom: 15px;  }
 
 p { color: #656565; font-size: 1.2em; margin-bottom: 10px; }
-
+*/
 #wrapper { width: 640px; margin: 0 auto; padding: 30px 45px; }
 
 #inline { display: none; width: 600px; }

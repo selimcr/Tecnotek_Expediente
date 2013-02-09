@@ -13,10 +13,10 @@
     Tecnotek.UI.translates["confirmDelete"] = "{% trans %}messages.confirmation.route.delete{% endtrans %}";
     Tecnotek.module = "showRoute";
     Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
+    Tecnotek.UI.urls["getStudentsURL"] = "{{ path("_expediente_get_students_list_for_route") }}";
+    Tecnotek.UI.urls["associateStudentsURL"] = "{{ path("_expediente_associate_student_to_route") }}";
 
-    Tecnotek.UI.urls["getStudentsURL"] = "{{ path("_expediente_get_students_list") }}";
-    Tecnotek.UI.urls["associateStudentsURL"] = "{{ path("_expediente_associate_student") }}";
-    Tecnotek.UI.urls["removeStudentsFromClubURL"] = "{{ path("_expediente_remove_student_from_club") }}";
+    Tecnotek.UI.urls["removeStudentsFromRouteURL"] = "{{ path("_expediente_remove_student_from_route") }}";
     Tecnotek.UI.translates["confirmRemoveStudent"] = "{% trans %}messages.confirmation.club.remove.student{% endtrans %}";
     Tecnotek.UI.vars["routeId"] = {{ entity.id }};
 </script>

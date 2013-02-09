@@ -293,6 +293,43 @@ class StudentController extends Controller
         }
     }
 
+    public function getListRouteAction(){
+        $logger = $this->get('logger');
+        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
+        {
+            try {
+                $request = $this->get('request')->request;
+                $text = $request->get('text');
+                $routeId = $request->get('routeId');
+
+                $em = $this->getDoctrine()->getEntityManager();
+                $sql = "SELECT std.id, std.firstname, std.lastname "
+                    . " FROM tek_students std"
+                    . " WHERE (std.firstname like '%" . $text . "%' OR std.lastname like '%" . $text . "%')"
+                    . " AND (std.route_id is null Or std.route_id <> $routeId)"
+                    . " ORDER BY std.firstname, std.lastname";
+                $stmt = $em->getConnection()->prepare($sql);
+                $stmt->execute();
+                $students = $stmt->fetchAll();
+
+                if ( isset($students) ) {
+                    return new Response(json_encode(array('error' => false, 'students' => $students)));
+                } else {
+                    return new Response(json_encode(array('error' => true, 'message' => "Data not found.")));
+                }
+            }
+            catch (Exception $e) {
+                $info = toString($e);
+                $logger->err('Student::getListAction [' . $info . "]");
+                return new Response(json_encode(array('error' => true, 'message' => $info)));
+            }
+        }// endif this is an ajax request
+        else
+        {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+    }
+
     function associateStudentToClubAction(){
         $logger = $this->get('logger');
         if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
@@ -323,6 +360,35 @@ class StudentController extends Controller
         }
     }
 
+    function associateStudentToRouteAction(){
+        $logger = $this->get('logger');
+        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
+        {
+            try {
+                $request = $this->get('request')->request;
+                $studentId = $request->get('studentId');
+                $routeId = $request->get('routeId');
+
+                $em = $this->getDoctrine()->getEntityManager();
+                $student = $em->getRepository("TecnotekExpedienteBundle:Student")->find($studentId);
+                $student->setRoute($em->getRepository("TecnotekExpedienteBundle:Route")->find($routeId));
+                $em->persist($student);
+                $em->flush();
+
+                return new Response(json_encode(array('error' => false)));
+            }
+            catch (Exception $e) {
+                $info = toString($e);
+                $logger->err('Student::getListAction [' . $info . "]");
+                return new Response(json_encode(array('error' => true, 'message' => $info)));
+            }
+        }// endif this is an ajax request
+        else
+        {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+    }
+
     public function removeStudentFromClubAction(){
         $logger = $this->get('logger');
         if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
@@ -337,6 +403,34 @@ class StudentController extends Controller
                 $logger->err($sql);
                 $stmt = $em->getConnection()->prepare($sql);
                 $stmt->execute();
+
+                return new Response(json_encode(array('error' => false)));
+            }
+            catch (Exception $e) {
+                $info = toString($e);
+                $logger->err('Student::removeStudentFromClub [' . $info . "]");
+                return new Response(json_encode(array('error' => true, 'message' => $info)));
+            }
+        }// endif this is an ajax request
+        else
+        {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+    }
+
+    public function removeStudentFromRouteAction(){
+        $logger = $this->get('logger');
+        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
+        {
+            try {
+                $request = $this->get('request')->request;
+                $studentId = $request->get('studentId');
+                $em = $this->getDoctrine()->getEntityManager();
+
+                $student = $em->getRepository("TecnotekExpedienteBundle:Student")->find($studentId);
+                $student->removeRoute();
+                $em->persist($student);
+                $em->flush();
 
                 return new Response(json_encode(array('error' => false)));
             }

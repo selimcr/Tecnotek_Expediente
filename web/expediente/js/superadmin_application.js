@@ -33,6 +33,9 @@ var Tecnotek = {
 			if (module) {
 				switch (module) {
                 case "absences":
+                    Tecnotek.AdministratorList.init();
+                    Tecnotek.Absences.init();
+                    break;
 				case "administratorList":
                 case "coordinadorList":
                 case "profesorList":
@@ -324,6 +327,92 @@ var Tecnotek = {
                         location.href = Tecnotek.UI.urls["deleteURL"];
                     }
                 });
+            }
+        },
+        Absences : {
+            init : function() {
+                $('.cancelButton').click(function(event){
+                    $.fancybox.close();
+                });
+                $('#searchBox').focus(function(event){
+                    $("#tecnotek_expediente_absenceformtype_student").val(0);
+                    $('#searchBox').val("");
+                });
+                $('#searchBox').keyup(function(event){
+                    event.preventDefault();
+                    if($(this).val().length == 0) {
+                        $('#suggestions').fadeOut(); // Hide the suggestions box
+                    } else {
+                        Tecnotek.ajaxCall(Tecnotek.UI.urls["getStudentsURL"],
+                            {text: $(this).val()},
+                            function(data){
+                                if(data.error === true) {
+                                    Tecnotek.showErrorMessage(data.message,true, "", false);
+                                } else {
+                                    $data = "";
+                                    $data += '<p id="searchresults">';
+                                    $data += '    <span class="category">Estudiantes</span>';
+                                    for(i=0; i<data.students.length; i++) {
+                                        $data += '    <a class="searchResult" rel="' + data.students[i].id + '" name="' +
+                                            data.students[i].firstname + ' ' + data.students[i].lastname + '">';
+                                        $data += '      <span class="searchheading">' + data.students[i].firstname
+                                            + ' ' + data.students[i].lastname +  '</span>';
+                                        $data += '      <span>Incluir este estudiante.</span>';
+                                        $data += '    </a>';
+                                    }
+                                    $data += '</p>';
+
+                                    $('#suggestions').fadeIn(); // Show the suggestions box
+                                    $('#suggestions').html($data); // Fill the suggestions box
+                                    $('.searchResult').unbind();
+                                    $('.searchResult').click(function(event){
+                                        event.preventDefault();
+                                        $("#tecnotek_expediente_absenceformtype_student").val($(this).attr("rel"));
+                                        //$("#searchStudentWindow").close();
+                                        //$.fancybox.close("searchStudentWindow");
+                                        $('#searchBox').val("");
+                                        $('#newAbsence').trigger('click');
+
+                                        /*Tecnotek.ajaxCall(Tecnotek.UI.urls["setStudentToGroup"],
+                                            {studentId: $(this).attr("rel"), groupId: Tecnotek.UI.vars["groupId"], periodId: Tecnotek.UI.vars["periodId"]},
+                                            function(data){
+                                                if(data.error === true) {
+                                                    Tecnotek.showErrorMessage(data.message,true, "", false);
+                                                } else {
+                                                    console.debug("Add Student with Id: " + Tecnotek.UI.vars["studentId"]);
+                                                    $html = '<div id="student_row_' + Tecnotek.UI.vars["studentId"] + '" class="row userRow" rel="' + Tecnotek.UI.vars["studentId"] + '">';
+                                                    $html += '<div class="option_width" style="float: left; width: 300px;">' + Tecnotek.UI.vars["studentName"] + '</div>';
+                                                    $html += '<div class="right imageButton deleteButton deleteStudentOfGroup" style="height: 16px;"  title="delete???"  rel="' + Tecnotek.UI.vars["studentId"] + '"></div>';
+                                                    $html += '<div class="clear"></div>';
+                                                    $html += '</div>';
+                                                    $("#studentsList").append($html);
+                                                    Tecnotek.AdminPeriod.initDeleteButtonsOfStudents();
+                                                }
+                                            },
+                                            function(jqXHR, textStatus){
+                                                Tecnotek.showErrorMessage("Error setting data: " + textStatus + ".",
+                                                    true, "", false);
+                                                $(this).val("");
+                                                $('#suggestions').fadeOut(); // Hide the suggestions box
+                                            }, true);*/
+                                    });
+                                }
+                            },
+                            function(jqXHR, textStatus){
+                                Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".",
+                                    true, "", false);
+                                $(this).val("");
+                                $('#suggestions').fadeOut(); // Hide the suggestions box
+                            }, true);
+                    }
+                });
+
+                $('#searchBox').blur(function(event){
+                    event.preventDefault();
+                    $(this).val("");
+                    $('#suggestions').fadeOut(); // Hide the suggestions box
+                });
+                //TODO Ausencias
             }
         },
         AdminPeriod : {
@@ -939,7 +1028,7 @@ var Tecnotek = {
                         $('#suggestions').fadeOut(); // Hide the suggestions box
                     } else {
                         Tecnotek.ajaxCall(Tecnotek.UI.urls["getStudentsURL"],
-                            {text: $(this).val(), clubId: Tecnotek.UI.vars["clubId"]},
+                            {text: $(this).val(), routeId: Tecnotek.UI.vars["routeId"]},
                             function(data){
                                 if(data.error === true) {
                                     Tecnotek.showErrorMessage(data.message,true, "", false);
@@ -948,7 +1037,6 @@ var Tecnotek = {
                                     $data += '<p id="searchresults">';
                                     $data += '    <span class="category">Estudiantes</span>';
                                     for(i=0; i<data.students.length; i++) {
-                                        console.debug();
                                         $data += '    <a class="searchResult" rel="' + data.students[i].id + '" name="' +
                                             data.students[i].firstname + ' ' + data.students[i].lastname + '">';
                                         $data += '      <span class="searchheading">' + data.students[i].firstname
@@ -966,7 +1054,7 @@ var Tecnotek = {
                                         Tecnotek.UI.vars["studentId"] = $(this).attr("rel");
                                         Tecnotek.UI.vars["studentName"] = $(this).attr("name");
                                         Tecnotek.ajaxCall(Tecnotek.UI.urls["associateStudentsURL"],
-                                            {studentId: $(this).attr("rel"), clubId: Tecnotek.UI.vars["clubId"]},
+                                            {studentId: $(this).attr("rel"), routeId: Tecnotek.UI.vars["routeId"]},
                                             function(data){
                                                 if(data.error === true) {
                                                     Tecnotek.showErrorMessage(data.message,true, "", false);
@@ -978,7 +1066,7 @@ var Tecnotek = {
                                                     $html += '<div class="clear"></div>';
                                                     $html += '</div>';
                                                     $("#studentsList").append($html);
-                                                    Tecnotek.ClubShow.initDeleteButtons();
+                                                    Tecnotek.RouteShow.initDeleteButtons();
                                                 }
                                             },
                                             function(jqXHR, textStatus){
@@ -1005,18 +1093,18 @@ var Tecnotek = {
                     $('#suggestions').fadeOut(); // Hide the suggestions box
                 });
 
-                Tecnotek.ClubShow.initDeleteButtons();
+                Tecnotek.RouteShow.initDeleteButtons();
             },
             initDeleteButtons : function() {
-                console.debug("entro a initDeleteButtons!!!");
+                console.debug("entro a initDeleteButtons en 2!!!");
                 $('.deleteButton').unbind();
                 $('.deleteButton').click(function(event){
                     event.preventDefault();
                     if (Tecnotek.showConfirmationQuestion(Tecnotek.UI.translates["confirmRemoveStudent"])){
                         Tecnotek.UI.vars["studentId"] = $(this).attr("rel");
-                        console.debug("Delete student: " + Tecnotek.UI.vars["studentId"] + " :: " + Tecnotek.UI.vars["clubId"]);
-                        Tecnotek.ajaxCall(Tecnotek.UI.urls["removeStudentsFromClubURL"],
-                            {studentId: Tecnotek.UI.vars["studentId"], clubId: Tecnotek.UI.vars["clubId"]},
+                        console.debug("Delete student: " + Tecnotek.UI.vars["studentId"] + " :: " + Tecnotek.UI.urls["removeStudentsFromRouteURL"]);
+                        Tecnotek.ajaxCall(Tecnotek.UI.urls["removeStudentsFromRouteURL"],
+                            {studentId: Tecnotek.UI.vars["studentId"]},
                             function(data){
                                 if(data.error === true) {
                                     Tecnotek.showErrorMessage(data.message,true, "", false);

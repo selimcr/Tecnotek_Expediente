@@ -434,13 +434,26 @@ _expediente_get_students_list:
     pattern:  /students/list
     defaults: { _controller: TecnotekExpedienteBundle:Student:getList }
 
+#Obtener lista de estudiantes para ruta
+_expediente_get_students_list_for_route:
+    pattern:  /students/listRoute
+    defaults: { _controller: TecnotekExpedienteBundle:Student:getListRoute }
+
 _expediente_associate_student:
     pattern:  /students/associateToClub
     defaults: { _controller: TecnotekExpedienteBundle:Student:associateStudentToClub }
 
+_expediente_associate_student_to_route:
+    pattern:  /students/associateToRoute
+    defaults: { _controller: TecnotekExpedienteBundle:Student:associateStudentToRoute }
+
 _expediente_remove_student_from_club:
     pattern:  /students/removeStudentFromClub
     defaults: { _controller: TecnotekExpedienteBundle:Student:removeStudentFromClub }
+
+_expediente_remove_student_from_route:
+    pattern:  /students/removeStudentFromRoute
+    defaults: { _controller: TecnotekExpedienteBundle:Student:removeStudentFromRoute }
 
 _expediente_save_new_contact:
     pattern:  /students/newContact
