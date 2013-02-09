@@ -20,6 +20,7 @@
     Tecnotek.UI.urls["associateCourseURL"] = "{{ path("_expediente_sysadmin_associate_course") }}";
     Tecnotek.UI.urls["loadAvailableCoursesForGradeURL"] = "{{ path("_expediente_sysadmin_load_courses_by_grade") }}";
     Tecnotek.UI.urls["deleteGroupURL"] = "{{ path("_expediente_sysadmin_group_remove") }}";
+    Tecnotek.UI.urls["deleteEntryURL"] = "{{ path("_expediente_sysadmin_entry_remove") }}";
     Tecnotek.UI.urls["deleteCourseAssociationURL"] = "{{ path("_expediente_sysadmin_course_association_remove") }}";
     Tecnotek.UI.urls["loadPeriodInfoByGradeURL"] = "{{ path("_expediente_sysadmin_load_period_info") }}";
     Tecnotek.UI.urls["loadEntriesByCourseURL"] = "{{ path("_expediente_sysadmin_load_entries_by_course") }}";
@@ -33,35 +34,6 @@
     Tecnotek.UI.urls["setStudentToGroup"] = "{{ path("_expediente_set_student_to_group") }}";
     Tecnotek.UI.urls["getGroupStudentsURL"] = "{{ path("_expediente_get_students_list_of_group") }}";
     Tecnotek.UI.urls["removeStudentFromGroupURL"] = "{{ path("_expediente_remove_student_from_group") }}";
-
-    $(function() {
-        $("#openGroupForm").fancybox({
-            'afterLoad' : function(){
-                Tecnotek.UI.vars["groupId"] = 0;
-                $("#groupFormName").val("");
-            }
-        });
-
-        $("#openCourseForm").fancybox({
-            'beforeLoad' : function(){
-                Tecnotek.AdminPeriod.loadAvailableCoursesForGrade();
-            }
-        });
-
-        $("#openEntryForm").fancybox({
-            'beforeLoad' : function(){
-
-            }
-        });
-
-        $("#openStudentsToGroup").fancybox({
-            'beforeLoad' : function(){
-
-            },
-            'modal': true,
-            'width': 650
-        });
-    });
 </script>
 {% endblock %}
 
@@ -106,6 +78,7 @@
                                     <div class="row tableHeader">
                                         <div class="option_width" style="float: left; width: 250px;">{% trans %}label.name{% endtrans %}</div>
                                         <div class="option_width" style="float: left; width: 250px;">{% trans %}label.teacher.guide{% endtrans %}</div>
+                                        <div class="option_width" style="float: left; width: 250px;">{% trans %}label.institution{% endtrans %}</div>
                                         <button style="margin-left: 15px; margin-top: -5px;" type="button" class="right btn new" name="buttonNew" id="buttonNewGroup" href="#inline"><a id="openGroupForm" class="modalbox" href="#groupFormContainer">{% trans %}label.new{% endtrans %}</a></button>
                                     </div>
                                     <div id="groupRows" name="groupRows">
@@ -130,6 +103,14 @@
                                             <select id="groupFormTeacher" name="groupFormTeacher">
                                                 {% for teacher in teachers %}
                                                     <option value="{{ teacher.id }}">{{ teacher.firstname ~ " " ~ teacher.lastname }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </label>
+
+                                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.institution{% endtrans %}</span>
+                                            <select id="groupFormInstitution" name="groupFormInstitution">
+                                                {% for institution in institutions %}
+                                                <option value="{{ institution.id }}">{{ institution.name }}</option>
                                                 {% endfor %}
                                             </select>
                                         </label>
@@ -243,7 +224,7 @@
 
                                 <!-- hidden courseFormContainer form -->
                                 <div id="entryFormContainer" style="display: none;">
-                                    <h2 style="margin-bottom: 0px;">Incluir rubro</h2>
+                                    <h2 style="margin-bottom: 0px;"><div class="left" id="entryTitleOption" name="entryTitleOption"></div> &nbsp; rubro</h2>
 
                                     <form class="customForm" id="entryForm" name="entryForm">
 
@@ -276,7 +257,7 @@
                                         </label>
 
                                         <div class="left"><input class="btn" style="margin-top: 0px;" type="button" name="entryFormCancel" id="entryFormCancel" value="{% trans %}label.cancelar{% endtrans %}"/></div>
-                                        <div class="left"><input class="btn" style="margin-top: 0px; margin-left: 25px;" type="submit" name="save" value="{% trans %}label.include{% endtrans %}"/></div>
+                                        <div class="left"><input class="btn" style="margin-top: 0px; margin-left: 25px;" type="submit" name="save" value="{% trans %}label.save{% endtrans %}"/></div>
                                         <div class="clear"></div>
                                     </form>
                                 </div>

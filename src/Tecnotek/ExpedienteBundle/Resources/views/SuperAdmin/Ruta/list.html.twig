@@ -26,6 +26,7 @@
             <div class="option_width" style="float: left; width: 100px;">{% trans %}label.code{% endtrans %}</div>
             <div class="option_width" style="float: left; width: 400px;">{% trans %}label.description{% endtrans %}</div>
             <div class="option_width" style="float: left; width: 200px;">{% trans %}label.students.quantity{% endtrans %}</div>
+            <div class="option_width" style="float: left; width: 200px;">{% trans %}label.institution{% endtrans %}</div>
         </div>
             
         {% set counter = 0 %}   
@@ -35,6 +36,7 @@
                 <div class="option_width" style="float: left; width: 100px;">{{ entity.code }}</div>
                 <div class="option_width" style="float: left; width: 400px;">{{ entity.description }}</div>
                 <div class="option_width" style="float: left; width: 200px;">{{ entity.students|length }}</div>
+                <div class="option_width" style="float: left; width: 138px;">{{ entity.institution }}</div>
                 <div class="right imageButton editButton"  title="{% trans %}label.edit{% endtrans %}"  rel="{{ entity.id }}"></div>
                 <div class="right imageButton viewButton"  title="{% trans %}label.view{% endtrans %}"  rel="{{ entity.id }}"></div>
                 <div class="clear"></div>

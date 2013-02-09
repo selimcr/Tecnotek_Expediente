@@ -11,8 +11,14 @@
 <script type="text/javascript">
     Tecnotek.UI.urls["deleteURL"] = "{{ path("_delete_route", {id: entity.id}) }}";
     Tecnotek.UI.translates["confirmDelete"] = "{% trans %}messages.confirmation.route.delete{% endtrans %}";
-    Tecnotek.module = "showEntity";
+    Tecnotek.module = "showRoute";
     Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
+
+    Tecnotek.UI.urls["getStudentsURL"] = "{{ path("_expediente_get_students_list") }}";
+    Tecnotek.UI.urls["associateStudentsURL"] = "{{ path("_expediente_associate_student") }}";
+    Tecnotek.UI.urls["removeStudentsFromClubURL"] = "{{ path("_expediente_remove_student_from_club") }}";
+    Tecnotek.UI.translates["confirmRemoveStudent"] = "{% trans %}messages.confirmation.club.remove.student{% endtrans %}";
+    Tecnotek.UI.vars["routeId"] = {{ entity.id }};
 </script>
 {% endblock %}
 
@@ -26,53 +32,105 @@
         </div>
 
         <div class="centeredDiv">
-            <div class="formContainer" style="width: 920px;">
-                <div id="showContainer">
+            <!-- Tabs -->
+            <div id="tabs">
+                <nav class="tabs">
+                    <div class="tab-header tab-current" id="generalTab">{%trans%}label.general{%endtrans%}</div>
+                    <section class="tabs-content" id="generalSection">
+
+
+                        <div class="centeredDiv">
+                            <div class="formContainer" style="width: 920px;">
+                                <div id="showContainer">
+                                    <div>
+                                        <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.code{%endtrans%}</div>
+                                        <div id="labelCode" class="left">{{ entity.code }}</div>
+                                        <div class="clear"></div>
+                                    </div>
+                                    <div>
+                                        <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.name{%endtrans%}</div>
+                                        <div id="labelName" class="left">{{ entity.name }}</div>
+                                        <div class="clear"></div>
+                                    </div>
+                                    <div>
+                                        <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.description{%endtrans%}</div>
+                                        <div id="labelDescription" class="left">{{ entity.description }}</div>
+                                        <div class="clear"></div>
+                                    </div>
+                                    <div>
+                                        <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.route{%endtrans%}</div>
+                                        <div id="labelMapUrl" class="left"><div id="viewMap" url="{{ entity.mapUrl }}">View Route</div></div>
+                                        <div class="clear"></div>
+                                    </div>
+                                    <div>
+                                        <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.zone{%endtrans%}</div>
+                                        <div id="labelZone" class="left">{{ entity.zone }}</div>
+                                        <div class="clear"></div>
+                                    </div>
+                                    <div>
+                                        <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.bus{%endtrans%}</div>
+                                        <div id="labelBus" class="left">{{ entity.bus }}</div>
+                                        <div class="clear"></div>
+                                    </div>
+                                    <div>
+                                        <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.institution{%endtrans%}</div>
+                                        <div id="labelInstitution" class="left">{{ entity.institution }}</div>
+                                        <div class="clear"></div>
+                                    </div>
+                                    <div id="buttonsContainer" style="margin-top: 25px;">
+                                        <a href="{{ path('_expediente_sysadmin_route_edit', {'id': entity.id}) }}" class="left btn edit"><span></span>{% trans %}label.edit{% endtrans %}</a>
+                                        <div class="left btn delete" id="btnEliminar" style="margin-left: 25px;"><span></span>{% trans %}label.eliminar{% endtrans %}</div>
+                                        <div class="clear"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clear"></div>
+                    </section>
+
+                    <div class="tab-header" id="studentsTab">{%trans%}label.students.in.club{%endtrans%}</div>
+                    <section class="tabs-content" style="display: none;" id="studentsSection">
+
+                        <div class="left" id="studentsList">
+                            <div class="row tableHeader">
+                                <div class="option_width" style="float: left; width: 300px;">{% trans %}label.name{% endtrans %}</div>
+                            </div>
+                            {% set counter = 0 %}
+
+                            {% for student in entity.students %}
+                            <div id="student_row_{{ student.id }}" class="row userRow rel="{{ student.id }}">
+                            <div class="option_width" style="float: left; width: 300px;">{{ student }}</div>
+                            <div class="right imageButton deleteButton" style="height: 16px;"  title="{% trans %}label.delete{% endtrans %}"  rel="{{ student.id }}"></div>
+                            <div class="clear"></div>
+                        </div>
+                        {% set counter = counter + 1 %}
+                        {% endfor %}
+            </div>
+
+            <div class="left" style="margin-left: 50px;">
+                <form id="searchform">
                     <div>
-                        <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.code{%endtrans%}</div>
-                        <div id="labelCode" class="left">{{ entity.code }}</div>
-                        <div class="clear"></div>
+                        <div>{% trans %}route.include.students{%endtrans%}</div>
+                        <div style="font-size: 10px;">{% trans %}club.include.help{%endtrans%}</div>
+
+                        <input type="text" size="30" value="" id="searchBox"/>
                     </div>
-                    <div>
-                        <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.name{%endtrans%}</div>
-                        <div id="labelName" class="left">{{ entity.name }}</div>
-                        <div class="clear"></div>
-                    </div>
-                    <div>
-                        <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.description{%endtrans%}</div>
-                        <div id="labelDescription" class="left">{{ entity.description }}</div>
-                        <div class="clear"></div>
-                    </div>
-                    <div>
-                        <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.route{%endtrans%}</div>
-                        <div id="labelMapUrl" class="left"><div id="viewMap" url="{{ entity.mapUrl }}">View Route</div></div>
-                        <div class="clear"></div>
-                    </div>
-                    <div>
-                        <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.zone{%endtrans%}</div>
-                        <div id="labelZone" class="left">{{ entity.zone }}</div>
-                        <div class="clear"></div>
-                    </div>
-                    <div>
-                        <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.bus{%endtrans%}</div>
-                        <div id="labelBus" class="left">{{ entity.bus }}</div>
-                        <div class="clear"></div>
-                    </div>
-                    <div id="buttonsContainer" style="margin-top: 25px;">
-                        <a href="{{ path('_expediente_sysadmin_route_edit', {'id': entity.id}) }}" class="left btn edit"><span></span>{% trans %}label.edit{% endtrans %}</a>
-                        <div class="left btn delete" id="btnEliminar" style="margin-left: 25px;"><span></span>{% trans %}label.eliminar{% endtrans %}</div>
-                        <div class="clear"></div>
-                    </div>
-                </div>
-            </div>    
-        </div>        
-        <div class="clear"></div>
+                    <div id="suggestions"></div>
+                </form>
+            </div>
+            <div class="clear"></div>
+            </section>
+            </nav>
+        </div>
+        <!-- End Tabs -->
     </div>
     <div class="clear"></div>
-    <div class="wrapper">
-            <div class="grid_24 padline">
-                    <div class="lineH"></div>
-            </div>
+</div>
+<div class="clear"></div>
+<div class="wrapper">
+    <div class="grid_24 padline">
+        <div class="lineH"></div>
     </div>
+</div>
 </div>
 {% endblock %}

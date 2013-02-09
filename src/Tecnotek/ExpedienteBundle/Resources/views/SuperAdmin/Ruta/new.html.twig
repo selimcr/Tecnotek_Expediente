@@ -42,6 +42,9 @@
                     <div class="formErrors">{{ form_errors(form.bus) }}</div>
                     <label><span class="text-form" style="min-width: 150px;">{% trans %}label.bus{% endtrans %}</span>{{ form_widget(form.bus) }}</label>
 
+                    <div class="formErrors">{{ form_errors(form.institution) }}</div>
+                    <label><span class="text-form" style="min-width: 150px;">{% trans %}label.institution{% endtrans %}</span>{{ form_widget(form.institution) }}</label>
+
                     <div class="left"><a href="{{ path('_expediente_sysadmin_route') }}" class="btn delete"><span></span>{% trans %}label.cancelar{% endtrans %}</a></div>
                     <button style="margin-left: 15px; margin-top: 0px;" type="submit" class="left btn save" name="save"><span></span>{% trans %}label.save{% endtrans %}</button>
                     <div class="clear"></div>                    

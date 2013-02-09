@@ -18,7 +18,7 @@
     Tecnotek.UI.urls["loadCoursesOfGroupByTeacherURL"] = "{{ path("_expediente_teacher_load_courses_of_group_by_teacher") }}";
     Tecnotek.UI.urls["loadEntriesByCourseURL"] = "{{ path("_expediente_teacher_load_entries_by_course") }}";
     Tecnotek.UI.urls["createEntryURL"] = "{{ path("_expediente_teacher_create_subentry") }}";
-
+    Tecnotek.UI.urls["deleteSubEntryURL"] = "{{ path("_expediente_teacher_subentry_remove") }}";
 
     Tecnotek.UI.urls["associateCourseURL"] = "{{ path("_expediente_sysadmin_associate_course") }}";
     Tecnotek.UI.urls["deleteGroupURL"] = "{{ path("_expediente_sysadmin_group_remove") }}";
@@ -31,13 +31,6 @@
     Tecnotek.UI.vars["periodId"] = 0;
     Tecnotek.UI.vars["groupId"] = 0;
 
-    $(function() {
-        $("#openEntryForm").fancybox({
-            'beforeLoad' : function(){
-
-            }
-        });
-    });
 </script>
 {% endblock %}
 
@@ -128,7 +121,7 @@
 
                                 <!-- hidden courseFormContainer form -->
                                 <div id="subentryFormContainer" style="display: none;">
-                                    <h2 style="margin-bottom: 0px;">Incluir subrubro</h2>
+                                    <h2 style="margin-bottom: 0px;"><div class="left" id="entryTitleOption" name="entryTitleOption"></div> &nbsp;subrubro</h2>
 
                                     <form class="customForm" id="subentryForm" name="subentryForm">
 
@@ -161,7 +154,7 @@
                                         </label>
 
                                         <div class="left"><input class="btn" style="margin-top: 0px;" type="button" name="entryFormCancel" id="entryFormCancel" value="{% trans %}label.cancelar{% endtrans %}"/></div>
-                                        <div class="left"><input class="btn" style="margin-top: 0px; margin-left: 25px;" type="submit" name="save" value="{% trans %}label.include{% endtrans %}"/></div>
+                                        <div class="left"><input class="btn" style="margin-top: 0px; margin-left: 25px;" type="submit" name="save" value="{% trans %}label.save{% endtrans %}"/></div>
                                         <div class="clear"></div>
                                     </form>
                                 </div>

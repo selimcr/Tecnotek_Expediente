@@ -197,7 +197,8 @@ class TeacherController extends Controller
                         $html2 .= '    <div id="subentryOrderField_' . $entry->getId() . '" name="subentryOrderField_' . $entry->getId() . '" class="option_width" style="float: left; width: 100px;">' . $entry->getSortOrder() . '</div>';
                         $html2 .= '    <div id="subentryParentField_' . $entry->getId() . '" name="subentryParentField_' . $entry->getId() . '" class="option_width" style="float: left; width: 150px;">' . $entry->getParent() . '</div>';
 
-                        $html2 .= '    <div class="right imageButton editButton editEntry" title="Editar" rel="' . $entry->getId() . '" entryParent="1"></div>';
+                        $html2 .= '    <div class="right deleteButton imageButton deleteSubEntry" style="height: 16px;" title="Eliminar" rel="' . $entry->getId() . '"></div>';
+                        $html2 .= '    <div class="right imageButton editButton editSubEntry" title="Editar" rel="' . $entry->getId() . '" entryParent="' . $entry->getParent()->getId() . '"></div>';
                         $html2 .= '    <div class="clear"></div>';
                         $html2 .= '</div>';
                     }
@@ -260,6 +261,40 @@ class TeacherController extends Controller
             catch (Exception $e) {
                 $info = toString($e);
                 $logger->err('Teacher::createEntryAction [' . $info . "]");
+                return new Response(json_encode(array('error' => true, 'message' => $info)));
+            }
+        }// endif this is an ajax request
+        else
+        {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+    }
+
+    public function removeSubEntryAction(){
+
+        $logger = $this->get('logger');
+        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
+        {
+            try {
+                $request = $this->get('request')->request;
+                $subentryId = $request->get('subentryId');
+                $translator = $this->get("translator");
+
+                if( isset($subentryId) ) {
+                    $em = $this->getDoctrine()->getEntityManager();
+                    $entity = $em->getRepository("TecnotekExpedienteBundle:SubCourseEntry")->find( $subentryId );
+                    if ( isset($entity) ) {
+                        $em->remove($entity);
+                        $em->flush();
+                    }
+                    return new Response(json_encode(array('error' => false)));
+                } else {
+                    return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
+                }
+            }
+            catch (Exception $e) {
+                $info = toString($e);
+                $logger->err('SuperAdmin::removeSubEntryAction [' . $info . "]");
                 return new Response(json_encode(array('error' => true, 'message' => $info)));
             }
         }// endif this is an ajax request

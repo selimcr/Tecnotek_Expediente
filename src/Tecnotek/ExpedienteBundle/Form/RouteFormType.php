@@ -14,7 +14,7 @@ class RouteFormType extends AbstractType
             add('name', 'text', array('trim' => true))->
             add('description', 'text', array('trim' => true, 'required' => false))->
             add('mapUrl', 'text', array('trim' => true, 'required' => false))->
-            add('zone')->add('bus')
+            add('zone')->add('bus')->add('institution')
         ;
     }
 

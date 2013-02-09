@@ -66,6 +66,12 @@ class Route
     private $bus;
 
     /**
+     * @ManyToOne(targetEntity="Institution")
+     * @JoinColumn(name="institution_id", referencedColumnName="id")
+     */
+    private $institution;
+
+    /**
      * @var Students
      *
      * @ORM\OneToMany(targetEntity="Student", mappedBy="route")
@@ -210,6 +216,26 @@ class Route
     public function getBus()
     {
         return $this->bus;
+    }
+
+    /**
+     * Set institution
+     *
+     * @param \Tecnotek\ExpedienteBundle\Entity\Institution $institution
+     */
+    public function setInstitution(\Tecnotek\ExpedienteBundle\Entity\Institution $institution)
+    {
+        $this->institution = $institution;
+    }
+
+    /**
+     * Get institution
+     *
+     * @return \Tecnotek\ExpedienteBundle\Entity\Institution
+     */
+    public function getInstitution()
+    {
+        return $this->institution;
     }
 
     public function getStudents(){

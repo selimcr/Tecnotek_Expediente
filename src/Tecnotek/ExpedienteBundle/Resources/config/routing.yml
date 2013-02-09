@@ -566,6 +566,10 @@ _expediente_sysadmin_group_remove:
     pattern:  /group/remove/
     defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:removeGroup }
 
+_expediente_sysadmin_entry_remove:
+    pattern:  /entry/remove/
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:removeEntry }
+
 _expediente_sysadmin_load_courses_by_grade:
   pattern: /period/loadCoursesByGrade/
   defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:loadAvailableCourses }
@@ -626,3 +630,7 @@ _expediente_teacher_create_subentry:
 _expediente_teacher_load_group_qualifications:
   pattern:  /t/loadGroupQualifications
   defaults: { _controller: TecnotekExpedienteBundle:Teacher:loadGroupQualifications }
+
+_expediente_teacher_subentry_remove:
+    pattern:  /t/subentry/remove/
+    defaults: { _controller: TecnotekExpedienteBundle:Teacher:removeSubEntry }

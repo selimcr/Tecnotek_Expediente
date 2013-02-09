@@ -200,6 +200,8 @@ var Tecnotek = {
         CourseEntries : {
             translates : {},
             init : function() {
+                Tecnotek.UI.vars["fromEdit"] = false;
+
                 $('#entriesTab').click(function(event){
                     $("#subentriesSection").hide();
                     $('#entriesSection').show();
@@ -234,6 +236,21 @@ var Tecnotek = {
                     Tecnotek.CourseEntries.loadEntriesByCourse($(this).val());
                 });
 
+                $("#openEntryForm").fancybox({
+                    'beforeLoad' : function(){
+                        if(Tecnotek.UI.vars["fromEdit"] === false){
+                            Tecnotek.UI.vars["subentryId"]  = 0;
+                            $("#subentryFormName").val("");
+                            $("#subentryFormCode").val("");
+                            $("#subentryFormPercentage").val("");
+                            $("#subentryFormMaxValue").val("");
+                            $("#subentryFormSortOrder").val("");
+                        }
+                        Tecnotek.UI.vars["fromEdit"] = false;
+                        Tecnotek.CourseEntries.preloadEntryForm();
+                    }
+                });
+
                 Tecnotek.CourseEntries.loadGroupsOfPeriod($('#period').val());
                 Tecnotek.CourseEntries.initButtons();
             },
@@ -241,6 +258,43 @@ var Tecnotek = {
                 $("#entryFormCancel").click(function(event){
                     event.preventDefault();
                     $.fancybox.close();
+                });
+            },
+            preloadEntryForm: function(){
+                if($("#courses").val() === undefined || $("#courses").val() === "0"){
+                    Tecnotek.showErrorMessage("Por favor seleccione una materia.",true, "", false);
+                    $.fancybox.close();
+                } else {
+                    if($("#subentryFormParent :selected").length <= 0){
+                        Tecnotek.showErrorMessage("No es posible ingresar un subrubro sin un padre. \nNotifique al administrador para la creacion de los rubros previa.",true, "", false);
+                        $.fancybox.close();
+                    } else {
+                        $("#entryTitleOption").text((Tecnotek.UI.vars["subentryId"] === 0)? "Incluir":"Editar");
+                    }
+                    //TODO Must load the list of courses again???
+                }
+            },
+            initializeSubEntriesButtons: function(){
+                $('.editSubEntry').unbind();
+                $('.editSubEntry').click(function(event){
+                    event.preventDefault();
+                    var subentryId = $(this).attr("rel");
+                    Tecnotek.UI.vars["subentryId"]  = subentryId;
+                    $("#subentryFormName").val($("#subentryNameField_" + subentryId).text());
+                    $("#subentryFormCode").val($("#subentryCodeField_" + subentryId).text());
+                    $("#subentryFormPercentage").val($("#subentryPercentageField_" + subentryId).text());
+                    $("#subentryFormMaxValue").val($("#subentryMaxValueField_" + subentryId).text());
+                    $("#subentryFormSortOrder").val($("#subentryOrderField_" + subentryId).text());
+                    $("#subentryFormParent").val($(this).attr("entryparent"));
+                    Tecnotek.UI.vars["fromEdit"] = true;
+                    $('#openEntryForm').trigger('click');
+
+                });
+
+                $('.deleteSubEntry').unbind();
+                $('.deleteSubEntry').click(function(event){
+                    event.preventDefault();
+                    Tecnotek.CourseEntries.deleteSubEntry($(this).attr("rel"));
                 });
             },
             createEntry: function() {
@@ -264,6 +318,23 @@ var Tecnotek = {
                     function(jqXHR, textStatus){
                         Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
                     }, true);
+            },
+            deleteSubEntry: function(subentryId){
+                if(Tecnotek.showConfirmationQuestion("Esta seguro que desea eliminar el subrubro?")) {
+                    Tecnotek.ajaxCall(Tecnotek.UI.urls["deleteSubEntryURL"],
+                        {   subentryId: subentryId },
+                        function(data){
+                            if(data.error === true) {
+                                Tecnotek.showErrorMessage(data.message,true, "", false);
+                            } else {
+                                $("#subentryRow_" + subentryId).fadeOut('slow', function(){});
+                            }
+                        },
+                        function(jqXHR, textStatus){
+                            Tecnotek.showErrorMessage("Error deleting subentry: " + textStatus + ".", true, "", false);
+                        }, true);
+                }
+
             },
             loadGroupsOfPeriod: function($periodId) {
                 if(($periodId!==null)){
@@ -328,9 +399,9 @@ var Tecnotek = {
                             } else {
                                 $('#entriesRows').append(data.entriesHtml);
                                 $('#subentriesRows').append(data.subentriesHtml);
-                                //$('#subentryFormParent').append('<option value="0"></option>');
                                 $('#subentryFormParent').append(data.entries);
                                 $('#subentryFormCourseClassId').val(data.courseClassId);
+                                Tecnotek.CourseEntries.initializeSubEntriesButtons();
                             }
                         },
                         function(jqXHR, textStatus){

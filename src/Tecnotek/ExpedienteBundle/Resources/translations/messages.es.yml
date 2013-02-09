@@ -134,6 +134,7 @@ club.include.students: Incluir estudiantes a este club
 club.include.help: Ingrese el nombre y seleccione el estudiante de la lista de sugeridos.
 
 group.include.students: Incluir estudiantes a este grupo
+route.include.students: Incluir estudiantes a esta ruta
 
 label.relatives.in.student: Personas Autorizadas
 student.include.contact: Incluir contacto autorizado
@@ -174,6 +175,7 @@ label.pickUp: Recogen
 label.leaveTime: Dejan
 label.schedule: Horario
 label.zone: Zona
+label.institution: Institucion
 label.telephone: Telefono
 label.motherPhone: Telefono de la madre
 label.fatherPhone: Telefono del padre

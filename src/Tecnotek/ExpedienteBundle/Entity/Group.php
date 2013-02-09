@@ -50,6 +50,12 @@ class Group
     private $grade;
 
     /**
+     * @ManyToOne(targetEntity="Institution")
+     * @JoinColumn(name="institution_id", referencedColumnName="id")
+     */
+    private $institution;
+
+    /**
      * @var AssignedTeachers
      *
      * @ORM\OneToMany(targetEntity="AssignedTeacher", mappedBy="group", cascade={"persist", "remove"})
@@ -154,5 +160,25 @@ class Group
     public function getTeacher()
     {
         return $this->teacher;
+    }
+
+    /**
+     * Set institution
+     *
+     * @param \Tecnotek\ExpedienteBundle\Entity\Institution $institution
+     */
+    public function setInstitution(\Tecnotek\ExpedienteBundle\Entity\Institution $institution)
+    {
+        $this->institution = $institution;
+    }
+
+    /**
+     * Get institution
+     *
+     * @return \Tecnotek\ExpedienteBundle\Entity\Institution
+     */
+    public function getInstitution()
+    {
+        return $this->institution;
     }
 }

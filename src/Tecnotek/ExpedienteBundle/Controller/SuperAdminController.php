@@ -845,13 +845,14 @@ class SuperAdminController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $entity = $em->getRepository("TecnotekExpedienteBundle:Period")->find($id);
         $grades = $em->getRepository("TecnotekExpedienteBundle:Grade")->findAll();
+        $institutions = $em->getRepository("TecnotekExpedienteBundle:Institution")->findAll();
 
         $dql = "SELECT users FROM TecnotekExpedienteBundle:User users JOIN users.roles r WHERE r.role = 'ROLE_PROFESOR' ORDER BY users.firstname";
         $query = $em->createQuery($dql);
         $teachers = $query->getResult();
 
         return $this->render('TecnotekExpedienteBundle:SuperAdmin:Period/admin.html.twig', array('entity' => $entity,
-            'grades' => $grades, 'teachers' => $teachers,
+            'grades' => $grades, 'teachers' => $teachers, 'institutions' => $institutions,
             'menuIndex' => 5));
     }
 
@@ -866,6 +867,7 @@ class SuperAdminController extends Controller
                 $groupId = $request->get('groupId');
                 $periodId = $request->get('periodId');
                 $gradeId = $request->get('gradeId');
+                $institutionId = $request->get('institutionId');
                 $translator = $this->get("translator");
 
                 if( isset($name) && isset($teacherId) && isset($groupId)
@@ -885,6 +887,8 @@ class SuperAdminController extends Controller
                         $group->setName($name);
                         $teacher = $em->getRepository("TecnotekExpedienteBundle:User")->find($teacherId);
                         $group->setTeacher($teacher);
+                        $institution = $em->getRepository("TecnotekExpedienteBundle:Institution")->find($institutionId);
+                        $group->setInstitution($institution);
                         $em->persist($group);
 
                         if($groupId == 0) {//New Group
@@ -937,9 +941,10 @@ class SuperAdminController extends Controller
                 if( isset($gradeId) && isset($periodId)) {
                     $em = $this->getDoctrine()->getEntityManager();
                     //Get Groups
-                    $sql = "SELECT g.id, g.name, g.user_id as 'teacherId', CONCAT(u.firstname,' ',u.lastname) as 'teacherName'"
+                    $sql = "SELECT g.id, g.name, g.user_id as 'teacherId', CONCAT(u.firstname,' ',u.lastname) as 'teacherName', institution.name as 'institutionName', institution.id as 'institutionId'"
                         . " FROM tek_groups g"
                         . " JOIN tek_users u ON u.id = g.user_id"
+                        . " LEFT JOIN tek_institutions institution ON institution.id = g.institution_id"
                         . " WHERE g.period_id = " . $periodId . " AND g.grade_id = " . $gradeId
                         . " ORDER BY g.name";
                     $stmt = $em->getConnection()->prepare($sql);
@@ -997,6 +1002,40 @@ class SuperAdminController extends Controller
             catch (Exception $e) {
                 $info = toString($e);
                 $logger->err('SuperAdmin::removeGroupAction [' . $info . "]");
+                return new Response(json_encode(array('error' => true, 'message' => $info)));
+            }
+        }// endif this is an ajax request
+        else
+        {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+    }
+
+    public function removeEntryAction(){
+
+        $logger = $this->get('logger');
+        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
+        {
+            try {
+                $request = $this->get('request')->request;
+                $entryId = $request->get('entryId');
+                $translator = $this->get("translator");
+
+                if( isset($entryId) ) {
+                    $em = $this->getDoctrine()->getEntityManager();
+                    $entity = $em->getRepository("TecnotekExpedienteBundle:CourseEntry")->find( $entryId );
+                    if ( isset($entity) ) {
+                        $em->remove($entity);
+                        $em->flush();
+                    }
+                    return new Response(json_encode(array('error' => false)));
+                } else {
+                    return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
+                }
+            }
+            catch (Exception $e) {
+                $info = toString($e);
+                $logger->err('SuperAdmin::removeEntryAction [' . $info . "]");
                 return new Response(json_encode(array('error' => true, 'message' => $info)));
             }
         }// endif this is an ajax request
@@ -1361,7 +1400,8 @@ class SuperAdminController extends Controller
                         $html .= '    <div id="entryOrderField_' . $entry->getId() . '" name="entryOrderField_' . $entry->getId() . '" class="option_width" style="float: left; width: 100px;">' . $entry->getSortOrder() . '</div>';
                         $html .= '    <div id="entryParentField_' . $entry->getId() . '" name="entryParentField_' . $entry->getId() . '" class="option_width" style="float: left; width: 150px;">' . $entry->getParent() . '</div>';
 
-                        $html .= '    <div class="right imageButton editButton editEntry" title="Editar" rel="' . $entry->getId() . '" entryParent="1"></div>';
+                        $html .= '    <div class="right imageButton deleteButton deleteEntry" style="height: 16px;" title="Eliminar"  rel="' . $entry->getId() . '"></div>';
+                        $html .= '    <div class="right imageButton editButton editEntry" title="Editar" rel="' . $entry->getId() . '" entryParent="0"></div>';
                         $html .= '    <div class="clear"></div>';
                         $html .= '</div>';
 
@@ -1374,7 +1414,8 @@ class SuperAdminController extends Controller
                             $html .= '    <div id="entryOrderField_' . $child->getId() . '" name="entryOrderField_' . $child->getId() . '" class="option_width" style="float: left; width: 100px;">' . $child->getSortOrder() . '</div>';
                             $html .= '    <div id="entryParentField_' . $child->getId() . '" name="entryParentField_' . $child->getId() . '" class="option_width" style="float: left; width: 150px;">' . $child->getParent() . '</div>';
 
-                            $html .= '    <div class="right imageButton editButton editEntry" title="Editar" rel="' . $child->getId() . '" entryParent="1"></div>';
+                            $html .= '    <div class="right imageButton deleteButton deleteEntry" style="height: 16px;" title="Eliminar"  rel="' . $child->getId() . '"></div>';
+                            $html .= '    <div class="right imageButton editButton editEntry" title="Editar" rel="' . $child->getId() . '" entryParent="' . $entry->getId() . '"></div>';
                             $html .= '    <div class="clear"></div>';
                             $html .= '</div>';
                         }
@@ -1455,22 +1496,33 @@ class SuperAdminController extends Controller
                 $percentage = $request->get('percentage');
                 $sortOrder = $request->get('sortOrder');
                 $courseClassId = $request->get('courseClassId');
+                $entryId = $request->get('entryId');
 
                 $translator = $this->get("translator");
 
                 if( isset($parentId) && isset($name) && isset($code) && isset($maxValue) && isset($percentage)
-                    && isset($sortOrder) && isset($courseClassId)) {
+                    && isset($sortOrder) && isset($courseClassId) && isset($entryId)) {
                     $em = $this->getDoctrine()->getEntityManager();
 
-                    $courseEntry = new CourseEntry();
+                    if($entryId == 0){//Is new
+                        $courseEntry = new CourseEntry();
+                        $courseEntry->setCourseClass($em->getRepository("TecnotekExpedienteBundle:CourseClass")->find($courseClassId));
+                    } else {//Is editing
+                        $courseEntry = $em->getRepository("TecnotekExpedienteBundle:CourseEntry")->find($entryId);
+                    }
+
                     $courseEntry->setName($name);
                     $courseEntry->setCode($code);
                     $courseEntry->setMaxValue($maxValue);
                     $courseEntry->setPercentage($percentage);
-                    $courseEntry->setCourseClass($em->getRepository("TecnotekExpedienteBundle:CourseClass")->find($courseClassId));
                     $courseEntry->setSortOrder($sortOrder);
-                    $parent = $em->getRepository("TecnotekExpedienteBundle:CourseEntry")->find($parentId);
-                    if(isset($parent)) $courseEntry->setParent($parent);
+
+                    if($parentId == 0){
+                        $courseEntry->removeParent();
+                    }else {
+                        $parent = $em->getRepository("TecnotekExpedienteBundle:CourseEntry")->find($parentId);
+                        if(isset($parent)) $courseEntry->setParent($parent);
+                    }
 
                     $em->persist($courseEntry);
                     $em->flush();

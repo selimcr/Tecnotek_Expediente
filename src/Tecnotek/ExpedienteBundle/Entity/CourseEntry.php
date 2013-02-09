@@ -47,7 +47,7 @@ class CourseEntry
     private $maxValue;
 
     /**
-     * @ORM\Column(type="decimal", precision=2)
+     * @ORM\Column(type="decimal", precision=4)
      * @Assert\NotBlank()
      */
     private $percentage;
@@ -227,6 +227,11 @@ class CourseEntry
     public function setParent(\Tecnotek\ExpedienteBundle\Entity\CourseEntry $parent)
     {
         $this->parent = $parent;
+    }
+
+    public function removeParent()
+    {
+        $this->parent = null;
     }
 
     /**
