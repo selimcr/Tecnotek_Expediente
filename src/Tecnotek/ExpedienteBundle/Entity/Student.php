@@ -88,7 +88,7 @@ class Student
 
     /**
      * @ManyToOne(targetEntity="Route")
-     * @JoinColumn(name="route_id", referencedColumnName="id")
+     * @JoinColumn(name="route_id", referencedColumnName="id", nullable=true)
      */
     private $route;
 

@@ -7,6 +7,7 @@ use Tecnotek\ExpedienteBundle\Entity\Club as Club;
 use Tecnotek\ExpedienteBundle\Entity\CourseEntry;
 use Tecnotek\ExpedienteBundle\Entity\Relative as Relative;
 use Tecnotek\ExpedienteBundle\Entity\Student;
+use Tecnotek\ExpedienteBundle\Entity\StudentQualification;
 use Tecnotek\ExpedienteBundle\Entity\SubCourseEntry;
 use Tecnotek\ExpedienteBundle\Entity\Ticket;
 use Tecnotek\ExpedienteBundle\Form\ContactFormType;
@@ -329,9 +330,7 @@ class TeacherController extends Controller
                         . " AND cc.course = " . $courseId
                         . " ORDER BY ce.sortOrder";
                     $query = $em->createQuery($dql);
-                    $logger->err("-----> SQL: " . $query->getSQL());
                     $entries = $query->getResult();
-                    $logger->err("-----> ENTRIES: " . sizeof($entries));
                     $temp = new \Tecnotek\ExpedienteBundle\Entity\CourseEntry();
                     $html = '<div class="itemPromedioPeriodo itemHeader" style="margin-left: 0px; color: #fff;">Promedio Trimestral</div>';
                     /*
@@ -358,8 +357,6 @@ class TeacherController extends Controller
                         $temp = $entry;
                         $childrens = $temp->getChildrens();
                         $size = sizeof($childrens);
-                        $logger->err("-----> Childrens of " . $temp->getName() . ": " . sizeof($childrens));
-
                         if($size == 0){//No child
                             //Find SubEntries
                             $dql = "SELECT ce FROM TecnotekExpedienteBundle:SubCourseEntry ce "
@@ -368,24 +365,49 @@ class TeacherController extends Controller
                             $query = $em->createQuery($dql);
                             $subentries = $query->getResult();
 
+                            $size = sizeof($subentries);
 
-                            foreach( $subentries as $subentry )
-                            {
-                                $studentRow .= '<input type="text" class="textField itemNota" tipo="1" rel="total_' . $subentry->getId() . '_stdId" perc="' . $subentry->getPercentage() . '" std="stdId" >';
-                                $htmlCodes .= '<div class="itemHeaderCode itemNota"></div>';
-                                $html .= '<div class="itemHeader itemNota" style="margin-left: ' . $marginLeft . 'px;">' . $subentry->getName() . '</div>';
+                            if($size > 1){
+                                foreach( $subentries as $subentry )
+                                {
+                                    //$studentRow .= '<input type="text" class="textField itemNota" tipo="2" rel="total_' . $subentry->getId() . '_stdId" perc="' . $subentry->getPercentage() . '" std="stdId" entry="' . $subentry->getId() . '"  stdyId="stdyIdd">';
+                                    $studentRow .= '<input type="text" class="textField itemNota item_' . $temp->getId() . '_stdId" val="val_stdId_' . $subentry->getId() .  '_" tipo="2" child="' . $size . '" parent="' . $temp->getId() . '" rel="total_' . $temp->getId() . '_stdId" perc="' . $temp->getPercentage() . '" std="stdId"  entry="' . $subentry->getId() . '"  stdyId="stdyIdd">';
+
+                                    $htmlCodes .= '<div class="itemHeaderCode itemNota"></div>';
+                                    $html .= '<div class="itemHeader itemNota" style="margin-left: ' . $marginLeft . 'px;">' . $subentry->getName() . '</div>';
+                                    $marginLeft += $jumpRight; $marginLeftCode += 25;
+                                }
+
+                                $studentRow .= '<div class="itemHeaderCode itemPromedio" id="prom_' . $temp->getId() . '_stdId" perc="' . $temp->getPercentage() . '">-</div>';
+                                $htmlCodes .= '<div class="itemHeaderCode itemPromedio"></div>';
+                                $html .= '<div class="itemHeader itemPromedio" style="margin-left:' . $marginLeft . 'px;">Promedio ' . $temp->getName() . ' </div>';
                                 $marginLeft += $jumpRight; $marginLeftCode += 25;
-                            }
 
-                            if(sizeof($subentries) > 0){
                                 $studentRow .= '<div id="total_' . $temp->getId() . '_stdId" class="itemHeaderCode itemPorcentage nota_stdId">-</div>';
                                 $htmlCodes .= '<div class="itemHeaderCode itemPorcentage">' . $temp->getCode() . '</div>';
                                 $html .= '<div class="itemHeader itemPorcentage" style="margin-left: ' . $marginLeft . 'px;">' . $temp->getPercentage() . '% ' . $temp->getName() . '</div>';
                                 $marginLeft += $jumpRight; $marginLeftCode += 25;
 
-                                $html3 .= '<div class="itemHeader2 itemNota" style="width: ' . (($width * (sizeof($subentries)+1)) + ((sizeof($subentries)) * 2) ) . 'px">' . $temp->getName() . '</div>';
-                            }
+                                // $html3 .= '<div class="itemHeader2 itemNota" style="width: ' . (($width * (sizeof($subentries)+1)) + ((sizeof($subentries)) * 2) ) . 'px">' . $temp->getName() . '</div>';
+                                $html3 .= '<div class="itemHeader2 itemNota" style="width: ' . (($width * (sizeof($subentries) + 2)) + ((sizeof($subentries) + 1) * 2)) . 'px">' . $temp->getName() . '</div>';
+                            } else {
+                                if($size == 1){
+                                    foreach( $subentries as $subentry )
+                                    {
+                                        $studentRow .= '<input type="text" class="textField itemNota item_' . $temp->getId() . '_stdId" val="val_stdId_' . $subentry->getId() .  '_" tipo="1" child="' . $size . '" parent="' . $temp->getId() . '" rel="total_' . $temp->getId() . '_stdId" perc="' . $temp->getPercentage() . '" std="stdId"  entry="' . $subentry->getId() . '"  stdyId="stdyIdd">';
+                                        $htmlCodes .= '<div class="itemHeaderCode itemNota"></div>';
+                                        $html .= '<div class="itemHeader itemNota" style="margin-left: ' . $marginLeft . 'px;">' . $subentry->getName() . '</div>';
+                                        $marginLeft += $jumpRight; $marginLeftCode += 25;
+                                    }
 
+                                    $studentRow .= '<div id="total_' . $temp->getId() . '_stdId" class="itemHeaderCode itemPorcentage nota_stdId">-</div>';
+                                    $htmlCodes .= '<div class="itemHeaderCode itemPorcentage">' . $temp->getCode() . '</div>';
+                                    $html .= '<div class="itemHeader itemPorcentage" style="margin-left: ' . $marginLeft . 'px;">' . $temp->getPercentage() . '% ' . $temp->getName() . '</div>';
+                                    $marginLeft += $jumpRight; $marginLeftCode += 25;
+
+                                    $html3 .= '<div class="itemHeader2 itemNota" style="width: ' . (($width * 2) + ((sizeof($subentries)) * 2)) . 'px">' . $temp->getName() . '</div>';
+                                }
+                            }
 
 
                         } else {
@@ -426,11 +448,26 @@ class TeacherController extends Controller
                         '<div style="position: relative; height: 152px; margin-left: -59px;">' . $html . '</div>' . '<div class="clear"></div>' .
                         $html3;
 
-                    $students = $em->getRepository("TecnotekExpedienteBundle:Student")->findAll();
-                    foreach($students as $student){
-                        $studentsHeader .= '<div class="itemCarne">' . $student->getCarne() . '</div><div class="itemEstudiante">' . $student . '</div><div class="clear"></div>';
-                        $row = str_replace("stdId", $student->getId(), $studentRow);
-                        $html .=  '<div class="clear"></div><div id="total_trim_' . $student->getId() . '" class="itemHeaderCode itemPromedioPeriodo"style="color: #fff;">-</div>' . $row;
+                    $dql = "SELECT stdy FROM TecnotekExpedienteBundle:Student std, TecnotekExpedienteBundle:StudentYear stdy "
+                        . " WHERE stdy.student = std AND stdy.group = " . $groupId . " AND stdy.period = " . $periodId
+                        . " ORDER BY std.firstname, std.lastname";
+                    $query = $em->createQuery($dql);
+                    $students = $query->getResult();
+
+                    //$students = $em->getRepository("TecnotekExpedienteBundle:Student")->findAll();
+                    foreach($students as $stdy){
+                        $studentsHeader .= '<div class="itemCarne">' . $stdy->getStudent()->getCarne() . '</div><div class="itemEstudiante">' . $stdy->getStudent() . '</div><div class="clear"></div>';
+                        $row = str_replace("stdId", $stdy->getStudent()->getId(), $studentRow);
+                        $row = str_replace("stdyIdd", $stdy->getId(), $row);
+
+                        $dql = "SELECT qua FROM TecnotekExpedienteBundle:StudentQualification qua"
+                            . " WHERE qua.studentYear = " . $stdy->getId();
+                        $query = $em->createQuery($dql);
+                        $qualifications = $query->getResult();
+                        foreach($qualifications as $qualification){
+                            $row = str_replace("val_" . $stdy->getStudent()->getId() . "_" . $qualification->getSubCourseEntry()->getId() . "_", "" . $qualification->getQualification(), $row);
+                        }
+                        $html .=  '<div class="clear"></div><div id="total_trim_' . $stdy->getStudent()->getId() . '" class="itemHeaderCode itemPromedioPeriodo"style="color: #fff;">-</div>' . $row;
                     }
 
                     return new Response(json_encode(array('error' => false, 'html' => $html, 'studentsHeader' => $studentsHeader)));
@@ -441,6 +478,53 @@ class TeacherController extends Controller
             catch (Exception $e) {
                 $info = toString($e);
                 $logger->err('Teacher::loadEntriesByCourseAction [' . $info . "]");
+                return new Response(json_encode(array('error' => true, 'message' => $info)));
+            }
+        }// endif this is an ajax request
+        else
+        {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+    }
+
+    public function saveStudentQualificationAction(){
+
+        $logger = $this->get('logger');
+        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
+        {
+            try {
+                $request = $this->get('request')->request;
+                $subentryId = $request->get('subentryId');
+                $studentYearId = $request->get('studentYearId');
+                $qualification = $request->get('qualification');
+                $translator = $this->get("translator");
+                 $logger->err('--> ' . $subentryId . " :: " . $studentYearId . " :: " . $qualification);
+                if( !isset($qualification) || $qualification == ""){
+                    $qualification = -1;
+                }
+                if( isset($subentryId) || isset($studentYearId) ) {
+                    $em = $this->getDoctrine()->getEntityManager();
+
+                    $studentQ = $em->getRepository("TecnotekExpedienteBundle:StudentQualification")->findOneBy(array('subCourseEntry' => $subentryId, 'studentYear' => $studentYearId));
+
+                    if ( isset($studentQ) ) {
+                        $studentQ->setQualification($qualification);
+                    } else {
+                        $studentQ = new StudentQualification();
+                        $studentQ->setSubCourseEntry($em->getRepository("TecnotekExpedienteBundle:SubCourseEntry")->find( $subentryId ));
+                        $studentQ->setStudentYear($em->getRepository("TecnotekExpedienteBundle:StudentYear")->find( $studentYearId ));
+                        $studentQ->setQualification($qualification);
+                    }
+                    $em->persist($studentQ);
+                    $em->flush();
+                    return new Response(json_encode(array('error' => false)));
+                } else {
+                    return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
+                }
+            }
+            catch (Exception $e) {
+                $info = toString($e);
+                $logger->err('SuperAdmin::saveStudentQualificationAction [' . $info . "]");
                 return new Response(json_encode(array('error' => true, 'message' => $info)));
             }
         }// endif this is an ajax request

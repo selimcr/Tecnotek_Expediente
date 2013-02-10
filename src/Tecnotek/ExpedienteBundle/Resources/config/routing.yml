@@ -647,3 +647,7 @@ _expediente_teacher_load_group_qualifications:
 _expediente_teacher_subentry_remove:
     pattern:  /t/subentry/remove/
     defaults: { _controller: TecnotekExpedienteBundle:Teacher:removeSubEntry }
+
+_expediente_teacher_save_student_qualification:
+    pattern:  /t/student/qualification/save
+    defaults: { _controller: TecnotekExpedienteBundle:Teacher:saveStudentQualification }

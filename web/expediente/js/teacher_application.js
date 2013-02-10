@@ -503,7 +503,6 @@ var Tecnotek = {
                 }
             },
             loadQualificationsOfGroup: function(courseId) {
-                console.debug("si entra: loadEntriesByCourse");
                 $('.editEntry').unbind();
                 $('#entriesRows').empty();
                 $('#subentriesRows').empty();
@@ -521,12 +520,184 @@ var Tecnotek = {
                                 $('#contentBody').html(data.html);
                                 $('#studentsHeader').html(data.studentsHeader);
                                 $('#tableContainer').show();
+
+
+                                $(".textField").each(function(){
+                                    if($(this).attr("val") !== "-1" && $(this).attr("val").indexOf("val") !== 0){
+                                        $(this).val($(this).attr("val"));
+                                    }
+                                    $(this).trigger("blur");
+                                });
+
+                                Tecnotek.Qualifications.initializeTable();
+                                Tecnotek.UI.vars["forzeBlur"] = true;
+                                $(".textField").each(function(){
+                                    $(this).trigger("focus");
+                                    $(this).trigger("blur");
+                                });
+                                Tecnotek.UI.vars["forzeBlur"] = false;
                             }
                         },
                         function(jqXHR, textStatus){
                             Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
                         }, true);
                 }
+            },
+            initializeTable: function() {
+                $('.editEntry').unbind();
+                $('#entriesRows').empty();
+                $('#subentriesRows').empty();
+                $('#subentryFormParent').empty();
+
+                $(".textField").focus(function(e){
+                    Tecnotek.UI.vars["textFieldValue"] = $(this).val();
+                });
+                $(".textField").blur(function(e){
+                    e.preventDefault();
+                    $this = $(this);
+                    $type = $this.attr('tipo');
+                    $nota = $this.val();
+                    $stdId = $this.attr('std');
+
+                    if(Tecnotek.UI.vars["forzeBlur"] == true){
+                        if($type == 1){
+                            $percentage = $this.attr('perc');
+                            $totalField = $("#" + $this.attr('rel'));
+                            //console.debug("Type = " + $type + ", Nota: " + $nota + ", Perc = " + $percentage + " :: " + $totalField);
+                            if($nota == "") {
+                                $totalField.html("-");
+                            } else {
+                                //console.debug("Calcular total para " + $(this).attr('rel') + ", total = " + ($percentage * $nota / 100));
+                                $totalField.html("" + ($percentage * $nota / 100) + "%");
+                            }
+                        } else {
+                            $childs = $this.attr('child');
+                            $parent = $this.attr('parent');
+
+                            //console.debug("Type = " + $type + ", Nota: " + $nota + " :: childs = " + $childs + " :: $stdId = " + $stdId);
+                            $sum = 0;
+                            $counter = 0;
+                            $('.item_' + $parent + "_" + $stdId).each(function() {
+                                $temp = $(this).val();
+                                if($temp != ""){
+                                    $sum += parseFloat( $temp );
+                                    $counter++;
+                                }
+                                console.debug("$sum = " + $sum);
+                                if($counter == 0){
+                                    $("#prom_" + $parent + "_" + $stdId).html("-");
+                                    $totalField = $("#" + $this.attr('rel'));
+                                    $("#total_" + $parent + "_" + $stdId).html("-");
+                                } else {
+                                    $percentage =  $("#prom_" + $parent + "_" + $stdId).attr('perc');
+                                    $("#prom_" + $parent + "_" + $stdId).html("" + ($sum/$childs));
+                                    $("#total_" + $parent + "_" + $stdId).html("" + ($percentage * ($sum/$childs) / 100) + "%");
+                                }
+                            });
+                        }
+
+                        $sum = 0;
+                        $counter = 0;
+                        $('.nota_' + $stdId).each(function() {
+                            $temp = $(this).html();
+                            if($temp != "-"){
+                                $temp = $temp.slice(0, -1);
+                                $sum += parseFloat( $temp );
+                                $counter++;
+                            }
+                        });
+                        if($counter == 0){
+                            $("#total_trim_" + $stdId).html("-");
+                        } else {
+                            $("#total_trim_" + $stdId).html("" + $sum);
+                        }
+                    } else {
+                        if(Tecnotek.UI.vars["textFieldValue"] === $nota) return;
+                        Tecnotek.ajaxCall(Tecnotek.UI.urls["saveStudentQualificationURL"],
+                            {   subentryId: $this.attr('entry'),
+                                studentYearId: $this.attr('stdyid'),
+                                qualification: $nota},
+                            function(data){
+                                if(data.error === true) {
+                                    Tecnotek.showErrorMessage(data.message,true, "", false);
+                                    $this.val("");
+                                } else {
+                                    if($type == 1){
+                                        $percentage = $this.attr('perc');
+                                        $totalField = $("#" + $this.attr('rel'));
+                                        //console.debug("Type = " + $type + ", Nota: " + $nota + ", Perc = " + $percentage + " :: " + $totalField);
+                                        if($nota == "") {
+                                            $totalField.html("-");
+                                        } else {
+                                            //console.debug("Calcular total para " + $(this).attr('rel') + ", total = " + ($percentage * $nota / 100));
+                                            $totalField.html("" + ($percentage * $nota / 100) + "%");
+                                        }
+                                        /*$sum = 0;
+                                         $counter = 0;
+                                         $('.nota_' + $stdId).each(function() {
+                                         $temp = $(this).html();
+                                         if($temp != "-"){
+                                         $temp = $temp.slice(0, -1);
+                                         $sum += parseFloat( $temp );
+                                         $counter++;
+                                         }
+                                         });
+                                         if($counter == 0){
+                                         $("#total_trim_" + $stdId).html("-");
+                                         } else {
+                                         $("#total_trim_" + $stdId).html("" + $sum);
+                                         }*/
+                                        //p / 100 = x / nota
+                                        //p * nota / 100;
+                                    } else {
+                                        $childs = $this.attr('child');
+                                        $parent = $this.attr('parent');
+
+                                        //console.debug("Type = " + $type + ", Nota: " + $nota + " :: childs = " + $childs + " :: $stdId = " + $stdId);
+                                        $sum = 0;
+                                        $counter = 0;
+                                        $('.item_' + $parent + "_" + $stdId).each(function() {
+                                            $temp = $(this).val();
+                                            if($temp != ""){
+                                                $sum += parseFloat( $temp );
+                                                $counter++;
+                                            }
+                                            console.debug("$sum = " + $sum);
+                                            if($counter == 0){
+                                                $("#prom_" + $parent + "_" + $stdId).html("-");
+                                                $totalField = $("#" + $this.attr('rel'));
+                                                $("#total_" + $parent + "_" + $stdId).html("-");
+                                            } else {
+                                                $percentage =  $("#prom_" + $parent + "_" + $stdId).attr('perc');
+                                                $("#prom_" + $parent + "_" + $stdId).html("" + ($sum/$childs));
+                                                $("#total_" + $parent + "_" + $stdId).html("" + ($percentage * ($sum/$childs) / 100) + "%");
+                                            }
+                                        });
+                                    }
+
+                                    $sum = 0;
+                                    $counter = 0;
+                                    $('.nota_' + $stdId).each(function() {
+                                        $temp = $(this).html();
+                                        if($temp != "-"){
+                                            $temp = $temp.slice(0, -1);
+                                            $sum += parseFloat( $temp );
+                                            $counter++;
+                                        }
+                                    });
+                                    if($counter == 0){
+                                        $("#total_trim_" + $stdId).html("-");
+                                    } else {
+                                        $("#total_trim_" + $stdId).html("" + $sum);
+                                    }
+                                }
+                            },
+                            function(jqXHR, textStatus){
+                                Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
+                            }, true);
+                    }
+
+                });
             }
         }
 	};
