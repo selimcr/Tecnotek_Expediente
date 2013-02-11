@@ -11,7 +11,11 @@ class PeriodFormType extends AbstractType
     {
         $builder->
             add('name', 'text', array('trim' => true, 'required' => true))->
-            add('year', 'integer', array('required' => true));
+            add('year', 'integer', array('required' => true))->
+            add('actual', 'checkbox', array(
+                'label'     => 'Periodo Actual',
+                'required'  => false,
+            ));
     }
 
     public function getName()

@@ -26,12 +26,14 @@
         <div class="row tableHeader">
             <div class="option_width" style="float: left; width: 150px;">{% trans %}label.name{% endtrans %}</div>
             <div class="option_width" style="float: left; width: 75px;">{% trans %}label.year{% endtrans %}</div>
+            <div class="option_width" style="float: left; width: 150px;">{% trans %}label.current.period{% endtrans %}</div>
         </div>
 
         {% for entity in pagination %}            
             <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
                 <div class="option_width" style="float: left; width: 150px;">{{ entity.name }}</div>
                 <div class="option_width" style="float: left; width: 75px;">{{ entity.year }}</div>
+                <div class="option_width" style="float: left; width: 150px;">{% if entity.actual %}{% trans %}label.yes{% endtrans %}{% else %} {% trans %}label.no{% endtrans %} {% endif %}</div>
                 <div class="right imageButton adminButton"  title="{% trans %}label.admin{% endtrans %}"  rel="{{ entity.id }}"></div>
                 <div class="right imageButton editButton"  title="{% trans %}label.edit{% endtrans %}"  rel="{{ entity.id }}"></div>
                 <div class="right imageButton viewButton"  title="{% trans %}label.view{% endtrans %}"  rel="{{ entity.id }}"></div>

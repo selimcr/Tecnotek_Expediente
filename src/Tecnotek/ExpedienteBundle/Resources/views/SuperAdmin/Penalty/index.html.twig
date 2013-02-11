@@ -14,7 +14,7 @@
 <script type="text/javascript" src="{{ asset('fancybox/jquery.fancybox.js?v=2.0.6') }}"></script>
 
 <script type="text/javascript">
-    Tecnotek.module = "absences";
+    Tecnotek.module = "penalties";
     Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
 
     Tecnotek.UI.urls["getStudentsURL"] = "{{ path('_expediente_sysadmin_student_ajax_list')}}";
@@ -69,7 +69,7 @@ $(function() {
     <div class="grid_24">
         <div>
             <div class="left">
-                <h1>{% trans %}label.absences.title{% endtrans %}</h1>
+                <h1>{% trans %}label.penalties.title{% endtrans %}</h1>
             </div>
             <div class="left" style="line-height: 48px; margin-left: 25px;">
                 <span>{% trans %}label.absences.message{% endtrans %}</span>
@@ -85,11 +85,10 @@ $(function() {
                             <label>{%trans%}label.student{%endtrans%}</label><input type="text" id="student" name="student" style="margin-right: 5px;" disabled="disabled"><input type="checkbox" class="check" rel="student">
                         </div>
                         <div class="field">
-                            <label style="padding-left: 60px;">{%trans%}label.status{%endtrans%}</label>
-                            <select id="status" name="status" style="width: 290px;">
-                                <option value="-1" {% if status == '-1' %}selected="selected"{% endif %}>{%trans%}label.all{%endtrans%}</option>
-                                <option value="1" {% if status == '1' %}selected="selected"{% endif %}>{%trans%}label.justify{%endtrans%}</option>
-                                <option value="0" {% if status == '0' %}selected="selected"{% endif %}>{%trans%}label.injustify{%endtrans%}</option>
+                            <label style="padding-left: 60px;">{%trans%}label.period{%endtrans%}</label>
+                            <select id="period" name="period" style="width: 290px;">
+                                <option value="-1" {% if period == '-1' %}selected="selected"{% endif %}>{%trans%}label.all{%endtrans%}</option>
+
                             </select>
                         </div>
                     </div>
@@ -147,27 +146,37 @@ $(function() {
 </div>
 <!-- hidden inline form -->
 <div id="inline">
-    <h2>Registrar nueva ausencia</h2>
+    <h2>Registrar nueva sanci&oacute;n</h2>
 
-    <form class="customForm" id="createAdminForm" action="{{ path('_expediente_absences_save') }}" method="post" {{ form_enctype(form) }}>
-        {{ form_errors(form) }}
+    <form class="customForm" id="createAdminForm" action="#" method="post">
 
-        {{ form_widget(form._token) }}
-
-        <div class="formErrors">{{ form_errors(form.student) }}</div>
         <div class="left">
-        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.student{% endtrans %}</span>{{ form_widget(form.student) }}</label>
+        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.student{% endtrans %}</span>
+            <select id="studentId" name="studentId">
+                {% for student in students %}
+                    <option value="{{ student.id }}">{{ student }}</option>
+                {% endfor %}
+            </select>
+        </label>
         </div>
         <div class="left">
             <button style="margin-left: 15px; margin-top: 0px;" type="button" class="right btn new" name="buttonSearchStudent" id="buttonSearchStudent" href="#inline"><a class="modalbox" href="#searchStudentWindow">{% trans %}label.search{% endtrans %}</a></button>
         </div>
         <div class="clear"></div>
 
-        <div class="formErrors">{{ form_errors(form.date) }}</div>
-        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.date{% endtrans %}</span>{{ form_widget(form.date) }}</label>
+        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.penalty.type{% endtrans %}</span>
+            <select id="penaltyType" name="penaltyType">
+                {% for penalty in penalties %}
+                <option value="{{ penalty.id }}">{{ penalty }}</option>
+                {% endfor %}
+            </select>
+        </label>
 
-        <div class="formErrors">{{ form_errors(form.justify) }}</div>
-        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.justify{% endtrans %}</span>{{ form_widget(form.justify) }}</label>
+        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.date{% endtrans %}</span>
+            <input id="penaltyDate" name="penaltyDate">
+        </label>
+
+
 
         <div class="formErrors">{{ form_errors(form.comments) }}</div>
         <label><span class="text-form" style="min-width: 150px;">{% trans %}label.comments{% endtrans %}</span>{{ form_widget(form.comments) }}</label>

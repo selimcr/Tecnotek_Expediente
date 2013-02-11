@@ -4,15 +4,19 @@ namespace Tecnotek\ExpedienteBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
+use Doctrine\ORM\Mapping\ManyToOne as ManyToOne;
+use Doctrine\ORM\Mapping\JoinColumn as JoinColumn;
+
 use Symfony\Component\Validator\Constraints as Assert;
 
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
 /**
  *
- * @ORM\Table(name="tek_periods")
+ * @ORM\Table(name="tek_penalties")
  * @ORM\Entity()
  */
-class Period
+class Penalty
 {
     /**
      * @ORM\Column(type="integer")
@@ -22,32 +26,35 @@ class Period
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=150)
+     * @ORM\Column(type="string", length=60)
      * @Assert\NotBlank()
      * @Assert\MinLength(limit = 3)
-     * @Assert\MaxLength(limit = 150)
+     * @Assert\MaxLength(limit = 60)
      */
     private $name;
 
     /**
-     * @ORM\Column(type="integer")
-     * @Assert\NotBlank()
+     * @ORM\Column(type="string", length=255)
+     * @Assert\MaxLength(limit = 255)
      */
-    private $year;
+    private $description;
 
     /**
-     * @ORM\Column(name="is_actual", type="boolean")
+     * @ORM\Column(type="string", length=5)
+     * @Assert\NotBlank()
+     * @Assert\MinLength(limit = 3)
+     * @Assert\MaxLength(limit = 5)
      */
-    private $isActual;
+    private $code;
 
     public function __construct()
     {
-        $this->isActual = false;
+
     }
 
     public function __toString()
     {
-        return $this->name . " - " . $this->year;
+        return $this->name;
     }
 
     /**
@@ -81,38 +88,42 @@ class Period
     }
 
     /**
-     * Set year
+     * Set description
      *
-     * @param integer $year
+     * @param string $description
      */
-    public function setYear($year)
+    public function setDescription($description)
     {
-        $this->year = $year;
+        $this->description = $description;
     }
 
     /**
-     * Get year
+     * Get description
      *
-     * @return integer 
+     * @return string
      */
-    public function getYear()
+    public function getDescription()
     {
-        return $this->year;
+        return $this->description;
     }
 
     /**
-     * @inheritDoc
+     * Set code
+     *
+     * @param string $code
      */
-    public function isActual()
+    public function setCode($code)
     {
-        return $this->isActual;
+        $this->code = $code;
     }
 
     /**
-     * @inheritDoc
+     * Get code
+     *
+     * @return string
      */
-    public function setActual($value)
+    public function getCode()
     {
-        return $this->isActual = $value;
+        return $this->code;
     }
 }

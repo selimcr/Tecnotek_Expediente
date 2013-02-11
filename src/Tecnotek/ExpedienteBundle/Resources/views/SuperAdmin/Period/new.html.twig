@@ -30,6 +30,9 @@
                     <div class="formErrors">{{ form_errors(form.year) }}</div>
                     <label><span class="text-form" style="min-width: 150px;">{% trans %}label.year{% endtrans %}</span>{{ form_widget(form.year) }}</label>
 
+                    <div class="formErrors">{{ form_errors(form.actual) }}</div>
+                    <label><span class="text-form" style="min-width: 150px;">{% trans %}label.current.period{% endtrans %}</span>{{ form_widget(form.actual) }}</label>
+
                     <div class="left"><a href="{{ path('_expediente_sysadmin_period') }}" class="btn delete"><span></span>{% trans %}label.cancelar{% endtrans %}</a></div>
                     <button style="margin-left: 15px; margin-top: 0px;" type="submit" class="left btn save" name="save"><span></span>{% trans %}label.save{% endtrans %}</button>
                     <div class="clear"></div>                    

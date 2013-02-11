@@ -960,6 +960,160 @@ class StudentController extends Controller
     }
     /* Final de los metodos para CRUD de Absences*/
 
+    /* Metodos para CRUD de Penalties*/
+    public function penaltiesIndexAction(){
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $today = new \DateTime();
+        $start = $today->format('Y-m-d');
+        $end = $today->format('Y-m-d');
+
+        $qb = $em->createQueryBuilder();
+        $qb->add('select', 'penalties')
+            ->add('from', 'TecnotekExpedienteBundle:StudentPenalty penalties')
+            ->leftJoin("penalties.studentYear", "stdy")
+            ->leftJoin("stdy.student", "std")
+            ->add('where', "penalties.date between :start and :end")
+            ->add('orderBy', 'std.firstname ASC')
+            ->setParameter('start', $start . " 00:00:00")
+            ->setParameter('end', $end . " 23:59:59");
+        $query = $qb->getQuery();
+
+        $entities = $query->getResult();
+
+        $entity = new Absence();
+        $form   = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\AbsenceFormType(), $entity);
+
+        $dql = "SELECT students FROM TecnotekExpedienteBundle:Student students ORDER BY students.firstname, students.lastname";
+
+        $query = $em->createQuery($dql);
+        $students = $query->getResult();
+
+        $penalties = $em->getRepository("TecnotekExpedienteBundle:Penalty")->findAll();
+
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Penalty/index.html.twig', array('menuIndex' => 3,
+            'entities' => $entities, 'entity' => $entity, 'form'   => $form->createView(),
+            'dateFrom' => $start, "dateTo" => $end, 'period' => "-1", 'students' => $students, "penalties" => $penalties
+        ));
+    }
+
+    /*public function absencesSearchAction(){
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $request = $this->getRequest();
+        $start = $request->get('from') ;
+        $end = $request->get('to');
+
+        $status = $request->get('status');
+        $statusQuery = "";
+        if($status != "-1")
+            $statusQuery = " AND absences.justify = " . $status;
+
+        $qb = $em->createQueryBuilder();
+        $qb->add('select', 'absences')
+            ->add('from', 'TecnotekExpedienteBundle:Absence absences')
+            ->leftJoin("absences.student", "std")
+            ->add('where', "absences.date between :start and :end " . $statusQuery)
+            ->add('orderBy', 'std.firstname ASC')
+            ->setParameter('start', $start . " 00:00:00")
+            ->setParameter('end', $end . " 23:59:59");
+
+        $query = $qb->getQuery();
+        $entities = $query->getResult();
+
+        $entity = new Absence();
+        $form   = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\AbsenceFormType(), $entity);
+
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Absence/index.html.twig', array('menuIndex' => 3,
+            'entities' => $entities, 'entity' => $entity, 'form'   => $form->createView(),
+            'dateFrom' => $start, "dateTo" => $end, 'status' => $status
+        ));
+    }
+
+    public function absenceSaveAction(){
+        $entity  = new Absence();
+        $request = $this->getRequest();
+        $form    = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\AbsenceFormType(), $entity);
+        $form->bindRequest($request);
+
+        $em = $this->getDoctrine()->getEntityManager();
+        $entities = $em->getRepository("TecnotekExpedienteBundle:Absence")->findAll();
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getEntityManager();
+            $em->persist($entity);
+            $em->flush();
+            return $this->redirect($this->generateUrl('_expediente_absences',
+                array('id' => $entity->getId())));
+        } else {
+            return $this->render('TecnotekExpedienteBundle:SuperAdmin:Absence/index.html.twig', array('menuIndex' => 3,
+                'entities' => $entities, 'entity' => $entity, 'form'   => $form->createView()
+            ));
+        }
+    }
+
+    public function absenceCreateAction()
+    {
+        $entity = new Absence();
+        $form   = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\AbsenceFormType(), $entity);
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Absence/new.html.twig', array('entity' => $entity,
+            'form'   => $form->createView(), 'menuIndex' => 3));
+    }
+
+    public function absenceShowAction($id)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $entity = $em->getRepository("TecnotekExpedienteBundle:Absence")->find($id);
+        $form   = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\AbsenceFormType(), $entity);
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Absence/show.html.twig', array('entity' => $entity,
+            'form'   => $form->createView(), 'menuIndex' => 3));
+    }
+
+    public function absenceDeleteAction($id){
+        $em = $this->getDoctrine()->getEntityManager();
+        $entity = $em->getRepository("TecnotekExpedienteBundle:Absence")->find( $id );
+        if ( isset($entity) ) {
+            $em->remove($entity);
+            $em->flush();
+        }
+        return $this->redirect($this->generateUrl('_expediente_absences'));
+    }
+
+    public function absenceEditAction($id)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $entity = $em->getRepository("TecnotekExpedienteBundle:Absence")->find($id);
+        $form   = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\AbsenceFormType(), $entity);
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Absence/edit.html.twig', array('entity' => $entity,
+            'form'   => $form->createView(), 'menuIndex' => 3));
+    }
+
+    public function absenceUpdateAction(){
+        $em = $this->getDoctrine()->getEntityManager();
+        $request = $this->get('request')->request;
+        $entity = $em->getRepository("TecnotekExpedienteBundle:Absence")->find( $request->get('id'));
+
+        if ( isset($entity) ) {
+            $request = $this->getRequest();
+            $form    = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\AbsenceFormType(), $entity);
+            $form->bindRequest($request);
+
+            if ($form->isValid()) {
+                $em->persist($entity);
+                $em->flush();
+                return $this->redirect($this->generateUrl('_expediente_sysadmin_absence_show_simple') . "/" . $entity->getId());
+            } else {
+                return $this->render('TecnotekExpedienteBundle:SuperAdmin:Absence/edit.html.twig', array(
+                    'entity' => $entity, 'form'   => $form->createView(), 'menuIndex' => 3
+                ));
+            }
+        } else {
+            return $this->redirect($this->generateUrl('_expediente_sysadmin_absence'));
+        }
+
+    }
+    /* Final de los metodos para CRUD de Penalties*/
+
     public function getListStudentsOfGroupAction(){
         $logger = $this->get('logger');
         if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?

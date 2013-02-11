@@ -38,7 +38,11 @@
                         <div id="labelYear" class="left">{{ entity.year }}</div>
                         <div class="clear"></div>
                     </div>
-
+                    <div>
+                        <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.current.period{%endtrans%}</div>
+                        <div id="labelActual" class="left">{% if entity.actual %}{% trans %}label.yes{% endtrans %}{% else %} {% trans %}label.no{% endtrans %} {% endif %}</div>
+                        <div class="clear"></div>
+                    </div>
                     <div id="buttonsContainer" style="margin-top: 25px;">
                         <a href="{{ path('_expediente_sysadmin_period_edit', {'id': entity.id}) }}" class="left btn edit"><span></span>{% trans %}label.edit{% endtrans %}</a>
                         <div class="left btn delete" id="btnEliminar" style="margin-left: 25px;"><span></span>{% trans %}label.eliminar{% endtrans %}</div>

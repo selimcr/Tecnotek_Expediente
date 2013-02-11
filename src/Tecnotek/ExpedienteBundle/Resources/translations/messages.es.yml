@@ -189,6 +189,10 @@ label.students.daily.by.route: Reporte Diario por Ruta
 label.students.absences: Estudiantes Ausentes
 label.students.precenses: Estudiantes Presentes
 
+label.penalties: Sanciones
+label.penalties.title: Administracion de Sanciones
+label.penalties.message: Puede filtrar la informacion y consultar las sanciones deseadas.
+label.penalty.type: Tipo de falta:
 
 label.reports.routes.by.zone: Reporte de Rutas por Zona
 label.reports.students.by.route: Reporte de Estudiantes por Ruta
@@ -212,10 +216,15 @@ label.max_value: Valor Maximo
 label.order: Order
 label.parent: Padre
 
+label.current.period: Periodo Actual
+
 results.not.found: No se han encontrado resultados.
 
 usuarios.estado.1: Activo
 usuarios.estado.2: Inactivo
+
+label.yes: Si
+label.no: No
 
 messages.confirmation.password.change: El password ha sido actualizado correctamente.
 messages.confirmation.user.delete: ¿Está seguro que desea eliminar el usuario?

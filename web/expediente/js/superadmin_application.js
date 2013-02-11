@@ -32,6 +32,10 @@ var Tecnotek = {
 			console.debug("Module: " + module)
 			if (module) {
 				switch (module) {
+                case "penalties":
+                    Tecnotek.AdministratorList.init();
+                    Tecnotek.Penalties.init();
+                    break;
                 case "absences":
                     Tecnotek.AdministratorList.init();
                     Tecnotek.Absences.init();
@@ -395,6 +399,67 @@ var Tecnotek = {
                                                 $(this).val("");
                                                 $('#suggestions').fadeOut(); // Hide the suggestions box
                                             }, true);*/
+                                    });
+                                }
+                            },
+                            function(jqXHR, textStatus){
+                                Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".",
+                                    true, "", false);
+                                $(this).val("");
+                                $('#suggestions').fadeOut(); // Hide the suggestions box
+                            }, true);
+                    }
+                });
+
+                $('#searchBox').blur(function(event){
+                    event.preventDefault();
+                    $(this).val("");
+                    $('#suggestions').fadeOut(); // Hide the suggestions box
+                });
+                //TODO Ausencias
+            }
+        },
+        Penalties : {
+            init : function() {
+                $('.cancelButton').click(function(event){
+                    $.fancybox.close();
+                });
+                $('#searchBox').focus(function(event){
+                    $("#studentId").val(0);
+                    $('#searchBox').val("");
+                });
+                $('#searchBox').keyup(function(event){
+                    event.preventDefault();
+                    if($(this).val().length == 0) {
+                        $('#suggestions').fadeOut(); // Hide the suggestions box
+                    } else {
+                        Tecnotek.ajaxCall(Tecnotek.UI.urls["getStudentsURL"],
+                            {text: $(this).val()},
+                            function(data){
+                                if(data.error === true) {
+                                    Tecnotek.showErrorMessage(data.message,true, "", false);
+                                } else {
+                                    $data = "";
+                                    $data += '<p id="searchresults">';
+                                    $data += '    <span class="category">Estudiantes</span>';
+                                    for(i=0; i<data.students.length; i++) {
+                                        $data += '    <a class="searchResult" rel="' + data.students[i].id + '" name="' +
+                                            data.students[i].firstname + ' ' + data.students[i].lastname + '">';
+                                        $data += '      <span class="searchheading">' + data.students[i].firstname
+                                            + ' ' + data.students[i].lastname +  '</span>';
+                                        $data += '      <span>Incluir este estudiante.</span>';
+                                        $data += '    </a>';
+                                    }
+                                    $data += '</p>';
+
+                                    $('#suggestions').fadeIn(); // Show the suggestions box
+                                    $('#suggestions').html($data); // Fill the suggestions box
+                                    $('.searchResult').unbind();
+                                    $('.searchResult').click(function(event){
+                                        event.preventDefault();
+                                        $("#studentId").val($(this).attr("rel"));
+                                        $('#searchBox').val("");
+                                        $('#newAbsence').trigger('click');
                                     });
                                 }
                             },
