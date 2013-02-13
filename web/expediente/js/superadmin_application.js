@@ -335,6 +335,47 @@ var Tecnotek = {
         },
         Absences : {
             init : function() {
+
+                $( "#from" ).datepicker({
+                    defaultDate: "0d",
+                    changeMonth: true,
+                    dateFormat: "yy-mm-dd",
+                    showButtonPanel: true,
+                    currentText: "Hoy",
+                    numberOfMonths: 1,
+                    onClose: function( selectedDate ) {
+                        $( "#to" ).datepicker( "option", "minDate", selectedDate );
+                    }
+                });
+                $( "#to" ).datepicker({
+                    defaultDate: "0d",
+                    changeMonth: true,
+                    dateFormat: "yy-mm-dd",
+                    showButtonPanel: true,
+                    currentText: "Hoy",
+                    numberOfMonths: 1,
+                    onClose: function( selectedDate ) {
+                        $( "#from" ).datepicker( "option", "maxDate", selectedDate );
+                    }
+                });
+                $( "#date" ).datepicker({
+                    defaultDate: "0d",
+                    changeMonth: true,
+                    dateFormat: "yy-mm-dd",
+                    showButtonPanel: true,
+                    currentText: "Hoy",
+                    numberOfMonths: 1
+                });
+
+                $("#date").keypress(function(event){event.preventDefault();});
+                $("#from").keypress(function(event){event.preventDefault();});
+                $("#to").keypress(function(event){event.preventDefault();});
+
+                $('#createAbsenceForm').submit(function(event){
+                    event.preventDefault();
+                    Tecnotek.Absences.save();
+                });
+
                 $('.cancelButton').click(function(event){
                     $.fancybox.close();
                 });
@@ -371,34 +412,10 @@ var Tecnotek = {
                                     $('.searchResult').unbind();
                                     $('.searchResult').click(function(event){
                                         event.preventDefault();
-                                        $("#tecnotek_expediente_absenceformtype_student").val($(this).attr("rel"));
-                                        //$("#searchStudentWindow").close();
-                                        //$.fancybox.close("searchStudentWindow");
+                                        $("#studentId").val($(this).attr("rel"));
                                         $('#searchBox').val("");
                                         $('#newAbsence').trigger('click');
 
-                                        /*Tecnotek.ajaxCall(Tecnotek.UI.urls["setStudentToGroup"],
-                                            {studentId: $(this).attr("rel"), groupId: Tecnotek.UI.vars["groupId"], periodId: Tecnotek.UI.vars["periodId"]},
-                                            function(data){
-                                                if(data.error === true) {
-                                                    Tecnotek.showErrorMessage(data.message,true, "", false);
-                                                } else {
-                                                    console.debug("Add Student with Id: " + Tecnotek.UI.vars["studentId"]);
-                                                    $html = '<div id="student_row_' + Tecnotek.UI.vars["studentId"] + '" class="row userRow" rel="' + Tecnotek.UI.vars["studentId"] + '">';
-                                                    $html += '<div class="option_width" style="float: left; width: 300px;">' + Tecnotek.UI.vars["studentName"] + '</div>';
-                                                    $html += '<div class="right imageButton deleteButton deleteStudentOfGroup" style="height: 16px;"  title="delete???"  rel="' + Tecnotek.UI.vars["studentId"] + '"></div>';
-                                                    $html += '<div class="clear"></div>';
-                                                    $html += '</div>';
-                                                    $("#studentsList").append($html);
-                                                    Tecnotek.AdminPeriod.initDeleteButtonsOfStudents();
-                                                }
-                                            },
-                                            function(jqXHR, textStatus){
-                                                Tecnotek.showErrorMessage("Error setting data: " + textStatus + ".",
-                                                    true, "", false);
-                                                $(this).val("");
-                                                $('#suggestions').fadeOut(); // Hide the suggestions box
-                                            }, true);*/
                                     });
                                 }
                             },
@@ -416,7 +433,45 @@ var Tecnotek = {
                     $(this).val("");
                     $('#suggestions').fadeOut(); // Hide the suggestions box
                 });
-                //TODO Ausencias
+                
+            },
+            save : function(){
+                if(Tecnotek.UI.vars["currentPeriod"] == 0){
+                    Tecnotek.showErrorMessage("Es necesario definir un periodo como actual antes de guardar.",true, "", false);
+                    return;
+                }
+                var $studentId = $("#studentId").val();
+                var $date = $("#date").val();
+                var $type = $("#typeId").val();
+                var $justify = $("#justify").is(':checked');
+                var $comments = $("#comments").val();
+
+                if($comments === ""){
+                    Tecnotek.showErrorMessage("Debe incluir un comentario.",
+                        true, "", false);
+                } else {
+                    Tecnotek.ajaxCall(Tecnotek.UI.urls["saveAbsenceURL"],
+                        {studentId: $studentId,
+                            date: $date,
+                            type: $type,
+                            justify: $justify,
+                            comments: $comments,
+                            periodId: Tecnotek.UI.vars["currentPeriod"]
+                        },
+                        function(data){
+                            if(data.error === true) {
+                                Tecnotek.showErrorMessage(data.message,true, "", false);
+                            } else {
+                                $.fancybox.close();
+                                Tecnotek.showInfoMessage("La ausencia se ha ingresado correctamente.", true, "", false)
+                            }
+                        },
+                        function(jqXHR, textStatus){
+                            Tecnotek.showErrorMessage("Error saving absence: " + textStatus + ".",
+                                true, "", false);
+                        }, true);
+                }
+
             }
         },
         Penalties : {
@@ -477,7 +532,7 @@ var Tecnotek = {
                     $(this).val("");
                     $('#suggestions').fadeOut(); // Hide the suggestions box
                 });
-                //TODO Ausencias
+                //TODO Penalties
             }
         },
         AdminPeriod : {

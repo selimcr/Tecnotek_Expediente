@@ -825,7 +825,8 @@ class StudentController extends Controller
         $qb = $em->createQueryBuilder();
         $qb->add('select', 'absences')
             ->add('from', 'TecnotekExpedienteBundle:Absence absences')
-            ->leftJoin("absences.student", "std")
+            ->leftJoin("absences.studentYear", "stdY")
+            ->leftJoin("stdY.student", "std")
             ->add('where', "absences.date between :start and :end")
             ->add('orderBy', 'std.firstname ASC')
             ->setParameter('start', $start . " 00:00:00")
@@ -834,12 +835,19 @@ class StudentController extends Controller
 
         $entities = $query->getResult();
 
-        $entity = new Absence();
-        $form   = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\AbsenceFormType(), $entity);
+        $dql = "SELECT students FROM TecnotekExpedienteBundle:Student students ORDER BY students.firstname, students.lastname";
+        $query = $em->createQuery($dql);
+        $students = $query->getResult();
 
-        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Absence/index.html.twig', array('menuIndex' => 3,
-            'entities' => $entities, 'entity' => $entity, 'form'   => $form->createView(),
-            'dateFrom' => $start, "dateTo" => $end, 'status' => "-1"
+        $absenceTypes = $em->getRepository("TecnotekExpedienteBundle:AbsenceType")->findAll();
+
+        $currentPeriod = $em->getRepository("TecnotekExpedienteBundle:Period")->findOneBy(array('isActual' => 'true'));
+        $currentPeriodId = 0;
+        if( isset($currentPeriod) ){
+            $currentPeriodId = $currentPeriod->getId();
+        }
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Absence/index.html.twig', array('menuIndex' => 3, 'currentPeriod' => $currentPeriodId,
+            'entities' => $entities, 'dateFrom' => $start, "dateTo" => $end, 'status' => "-1", "students" => $students, "absenceTypes" => $absenceTypes
         ));
     }
 
@@ -858,43 +866,81 @@ class StudentController extends Controller
         $qb = $em->createQueryBuilder();
         $qb->add('select', 'absences')
             ->add('from', 'TecnotekExpedienteBundle:Absence absences')
-            ->leftJoin("absences.student", "std")
+            ->leftJoin("absences.studentYear", "stdY")
+            ->leftJoin("stdY.student", "std")
             ->add('where', "absences.date between :start and :end " . $statusQuery)
             ->add('orderBy', 'std.firstname ASC')
             ->setParameter('start', $start . " 00:00:00")
             ->setParameter('end', $end . " 23:59:59");
 
         $query = $qb->getQuery();
+        $logger = $this->get('logger');
+        $logger->err(":::::::::::::: " . $query->getSQL());
+
         $entities = $query->getResult();
 
-        $entity = new Absence();
-        $form   = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\AbsenceFormType(), $entity);
+        $dql = "SELECT students FROM TecnotekExpedienteBundle:Student students ORDER BY students.firstname, students.lastname";
+        $query = $em->createQuery($dql);
+        $students = $query->getResult();
+
+        $absenceTypes = $em->getRepository("TecnotekExpedienteBundle:AbsenceType")->findAll();
+
+        $currentPeriod = $em->getRepository("TecnotekExpedienteBundle:Period")->findOneBy(array('isActual' => 'true'));
+        $currentPeriodId = 0;
+        if( isset($currentPeriod) ){
+            $currentPeriodId = $currentPeriod->getId();
+        }
 
         return $this->render('TecnotekExpedienteBundle:SuperAdmin:Absence/index.html.twig', array('menuIndex' => 3,
-            'entities' => $entities, 'entity' => $entity, 'form'   => $form->createView(),
-            'dateFrom' => $start, "dateTo" => $end, 'status' => $status
+            'entities' => $entities, "students" => $students, "absenceTypes" => $absenceTypes,
+            'dateFrom' => $start, "dateTo" => $end, 'status' => $status, 'currentPeriod' => $currentPeriodId
         ));
     }
 
     public function absenceSaveAction(){
-        $entity  = new Absence();
-        $request = $this->getRequest();
-        $form    = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\AbsenceFormType(), $entity);
-        $form->bindRequest($request);
+        $logger = $this->get('logger');
+        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
+        {
+            try {
+                $request = $this->get('request')->request;
+                $studentId = $request->get('studentId');
+                $date = $request->get('date');
+                $type = $request->get('type');
+                $justify = $request->get('justify');
+                $comments = $request->get('comments');
+                $periodId = $request->get('periodId');
 
-        $em = $this->getDoctrine()->getEntityManager();
-        $entities = $em->getRepository("TecnotekExpedienteBundle:Absence")->findAll();
+                //TODO saveAbsenceAjax
 
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getEntityManager();
-            $em->persist($entity);
-            $em->flush();
-            return $this->redirect($this->generateUrl('_expediente_absences',
-                array('id' => $entity->getId())));
-        } else {
-            return $this->render('TecnotekExpedienteBundle:SuperAdmin:Absence/index.html.twig', array('menuIndex' => 3,
-                'entities' => $entities, 'entity' => $entity, 'form'   => $form->createView()
-            ));
+                $em = $this->getDoctrine()->getEntityManager();
+
+                $studentYear = $em->getRepository("TecnotekExpedienteBundle:StudentYear")->findOneBy(array('period' => $periodId, 'student' => $studentId));
+
+                if( isset($studentYear) && $studentYear->getGroup()!= null ){
+                    $entity  = new Absence();
+                    $entity->setComments($comments);
+                    $entity->setDate(new \DateTime($date));
+                    $entity->setJustify(($justify == "true"));
+                    $entity->setStudentYear($studentYear);
+                    $entity->setType($em->getRepository("TecnotekExpedienteBundle:AbsenceType")->find($type));
+
+                    $em->persist($entity);
+                    $em->flush();
+
+                    return new Response(json_encode(array('error' => false)));
+                } else {
+                    return new Response(json_encode(array('error' => true, 'message' => "El estudiante debe ingresar a un grupo antes de guardar.")));
+                }
+            }
+            catch (Exception $e) {
+                $info = toString($e);
+                $logger->err('Student::absenceSaveAction [' . $info . "]");
+                return new Response(json_encode(array('error' => true, 'message' => $info)));
+            }
+        }// endif this is an ajax request
+        else
+        {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
         }
     }
 
@@ -1261,7 +1307,7 @@ class StudentController extends Controller
                 if( isset($studentId) && isset($periodId)) {
                     $em = $this->getDoctrine()->getEntityManager();
 
-                    $dql = "SELECT studentYears FROM TecnotekExpedienteBundle:StudentYear studentYears WHERE studentYears.period = :period AND studentYears.student = :student";
+                    /*$dql = "SELECT studentYears FROM TecnotekExpedienteBundle:StudentYear studentYears WHERE studentYears.period = :period AND studentYears.student = :student";
 
                     $query = $em->createQuery($dql)
                         ->setParameter('period', $periodId)
@@ -1270,7 +1316,9 @@ class StudentController extends Controller
                     $studentYear = null;
                     foreach ($results as $result) {
                         $studentYear = $result;
-                    }
+                    }*/
+
+                    $studentYear = $em->getRepository("TecnotekExpedienteBundle:StudentYear")->find($studentId);
 
                     $studentYear->removeFromGroup();
 

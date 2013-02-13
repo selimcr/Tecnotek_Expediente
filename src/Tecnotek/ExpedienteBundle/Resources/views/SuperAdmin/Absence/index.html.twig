@@ -16,10 +16,11 @@
 <script type="text/javascript">
     Tecnotek.module = "absences";
     Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
+    Tecnotek.UI.urls["saveAbsenceURL"] = "{{ path('_expediente_absences_save')}}";
 
     Tecnotek.UI.urls["getStudentsURL"] = "{{ path('_expediente_sysadmin_student_ajax_list')}}";
     Tecnotek.UI.urls["loadStudentRelativesURL"] = "{{ path('_expediente_sysadmin_relatives_list')}}";
-    Tecnotek.UI.urls["saveTicketURL"] = "{{ path('_expediente_sysadmin_ticket_save')}}";
+
     Tecnotek.UI.urls["show"] = "{{ path('_expediente_sysadmin_absence_show_simple')}}";
     Tecnotek.UI.urls["edit"] = "{{ path('_expediente_sysadmin_absence_edit_simple')}}";
 
@@ -27,34 +28,10 @@
     Tecnotek.StudentShow.translates["student.not.selected"] = "{% trans %}message.student.not.selected{% endtrans %}";
     Tecnotek.StudentShow.translates["relative.not.exists"] = "{% trans %}message.relative.not.exists{% endtrans %}";
 
+    Tecnotek.UI.vars["currentPeriod"] = {{ currentPeriod }};
+
 </script>
 <!-- basic fancybox setup -->
-<script>
-    $(function() {
-        $( "#from" ).datepicker({
-            defaultDate: "0d",
-            changeMonth: true,
-            dateFormat: "yy-mm-dd",
-            showButtonPanel: true,
-            currentText: "Hoy",
-            numberOfMonths: 1,
-            onClose: function( selectedDate ) {
-                $( "#to" ).datepicker( "option", "minDate", selectedDate );
-            }
-        });
-        $( "#to" ).datepicker({
-            defaultDate: "0d",
-            changeMonth: true,
-            dateFormat: "yy-mm-dd",
-            showButtonPanel: true,
-            currentText: "Hoy",
-            numberOfMonths: 1,
-            onClose: function( selectedDate ) {
-                $( "#from" ).datepicker( "option", "maxDate", selectedDate );
-            }
-        });
-    });
-</script>
 <script type="text/javascript">
 
 $(function() {
@@ -114,15 +91,17 @@ $(function() {
         </div>
         <div class="search-results" style="margin-top: 25px;">
             <div class="row tableHeader" style="height: 32px; line-height: 32px;">
-                <div class="option_width" style="float: left; width: 450px;">{% trans %}label.student{% endtrans %}</div>
+                <div class="option_width" style="float: left; width: 350px;">{% trans %}label.student{% endtrans %}</div>
                 <div class="option_width" style="float: left; width: 150px;">{% trans %}label.date{% endtrans %}</div>
+                <div class="option_width" style="float: left; width: 150px;">{% trans %}label.type{% endtrans %}</div>
                 <div class="option_width" style="float: left; width: 100px;">{% trans %}label.status{% endtrans %}</div>
             </div>
 
             {% for entity in entities %}
             <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
-                <div class="option_width" style="float: left; width: 450px;">{{ entity.student }}</div>
+                <div class="option_width" style="float: left; width: 350px;">{{ entity.studentYear.student }}</div>
                 <div class="option_width" style="float: left; width: 150px;">{% if entity.date != null %} {{ entity.date|date("d/M/y") }} {% else %} &nbsp; {% endif %}</div>
+                <div class="option_width" style="float: left; width: 150px;">{{ entity.type }}</div>
                 <div class="option_width" style="float: left; width: 100px;" title="{{ entity.comments }}">{% if entity.justify %}{% trans %}label.justify{% endtrans %}{% else %} {% trans %}label.injustify{% endtrans %} {% endif %}</div>
 
                 <div class="right imageButton editButton"  title="{% trans %}label.edit{% endtrans %}"  rel="{{ entity.id }}"></div>
@@ -146,31 +125,44 @@ $(function() {
     </div>
 </div>
 <!-- hidden inline form -->
-<div id="inline">
+<div id="inline" style="width: 470px;">
     <h2>Registrar nueva ausencia</h2>
 
-    <form class="customForm" id="createAdminForm" action="{{ path('_expediente_absences_save') }}" method="post" {{ form_enctype(form) }}>
-        {{ form_errors(form) }}
+    <form class="customForm" id="createAbsenceForm" name="createAbsenceForm" action="#" method="post" }}>
 
-        {{ form_widget(form._token) }}
-
-        <div class="formErrors">{{ form_errors(form.student) }}</div>
         <div class="left">
-        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.student{% endtrans %}</span>{{ form_widget(form.student) }}</label>
+        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.student{% endtrans %}</span>
+        <select id="studentId" name="studentId">
+            {% for student in students %}
+                <option value="{{ student.id }}">{{ student }}</option>
+            {% endfor %}
+        </select>
+        </label>
         </div>
         <div class="left">
             <button style="margin-left: 15px; margin-top: 0px;" type="button" class="right btn new" name="buttonSearchStudent" id="buttonSearchStudent" href="#inline"><a class="modalbox" href="#searchStudentWindow">{% trans %}label.search{% endtrans %}</a></button>
         </div>
         <div class="clear"></div>
 
-        <div class="formErrors">{{ form_errors(form.date) }}</div>
-        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.date{% endtrans %}</span>{{ form_widget(form.date) }}</label>
+        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.type{% endtrans %}</span>
+            <select id="typeId" name="typeId">
+                {% for type in absenceTypes %}
+                <option value="{{ type.id }}">{{ type }}</option>
+                {% endfor %}
+            </select>
+        </label>
 
-        <div class="formErrors">{{ form_errors(form.justify) }}</div>
-        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.justify{% endtrans %}</span>{{ form_widget(form.justify) }}</label>
+        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.date{% endtrans %}</span>
+            <input type="text" id="date" name="date">
+        </label>
 
-        <div class="formErrors">{{ form_errors(form.comments) }}</div>
-        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.comments{% endtrans %}</span>{{ form_widget(form.comments) }}</label>
+        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.justify{% endtrans %}</span>
+            <input type="checkbox" id="justify" name="justify" value="1">
+        </label>
+
+        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.comments{% endtrans %}</span>
+            <textarea rows="3" cols="15" id="comments" name="comments"></textarea>
+        </label>
 
         <div class="left"><input class="btn cancelButton" style="margin-top: 0px;" type="button" value="{% trans %}label.cancelar{% endtrans %}"/></div>
         <div class="left" style="margin-left: 25px;"><input class="btn" style="margin-top: 0px;" type="submit" name="save" value="{% trans %}label.save{% endtrans %}"/></div>

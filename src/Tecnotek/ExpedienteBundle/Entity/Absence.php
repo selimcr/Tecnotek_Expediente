@@ -42,10 +42,16 @@ class Absence
     private $date;
 
     /**
-     * @ManyToOne(targetEntity="Student")
-     * @JoinColumn(name="student_id", referencedColumnName="id")
+     * @ManyToOne(targetEntity="StudentYear")
+     * @JoinColumn(name="studentYear_id", referencedColumnName="id")
      */
-    private $student;
+    private $studentYear;
+
+    /**
+     * @ManyToOne(targetEntity="AbsenceType")
+     * @JoinColumn(name="type_id", referencedColumnName="id")
+     */
+    private $type;
 
     public function __construct()
     {
@@ -129,23 +135,42 @@ class Absence
     }
 
     /**
-     * Set student
+     * Set studentYear
      *
-     * @param \Tecnotek\ExpedienteBundle\Entity\Student $student
+     * @param \Tecnotek\ExpedienteBundle\Entity\StudentYear $studentYear
      */
-    public function setStudent(\Tecnotek\ExpedienteBundle\Entity\Student $student)
+    public function setStudentYear(\Tecnotek\ExpedienteBundle\Entity\StudentYear $studentYear)
     {
-        $this->student = $student;
+        $this->studentYear = $studentYear;
     }
 
     /**
-     * Get student
+     * Get studentYear
      *
-     * @return \Tecnotek\ExpedienteBundle\Entity\Student
+     * @return \Tecnotek\ExpedienteBundle\Entity\StudentYear
      */
-    public function getStudent()
+    public function getStudentYear()
     {
-        return $this->student;
+        return $this->studentYear;
     }
 
+    /**
+     * Set type
+     *
+     * @param \Tecnotek\ExpedienteBundle\Entity\AbsenceType $type
+     */
+    public function setType(\Tecnotek\ExpedienteBundle\Entity\AbsenceType $type)
+    {
+        $this->type = $type;
+    }
+
+    /**
+     * Get type
+     *
+     * @return \Tecnotek\ExpedienteBundle\Entity\AbsenceType
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
 }

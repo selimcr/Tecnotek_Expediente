@@ -10,7 +10,7 @@ class AbsenceFormType extends AbstractType
     public function buildForm(FormBuilder $builder, array $options)
     {
         $builder->
-            add('student')->
+            add('studentYear')->
             add('date', 'date', array('widget' => 'single_text', 'format' => 'dd/MM/yyyy', 'required' => false))->
             add('justify', 'checkbox', array(
             'label'     => 'Justificada?',
