@@ -47,11 +47,10 @@ $(function() {
         <div>
             <div class="left">
                 <h1>{% trans %}label.absences.title{% endtrans %}</h1>
-            </div>
-            <div class="left" style="line-height: 48px; margin-left: 25px;">
                 <span>{% trans %}label.absences.message{% endtrans %}</span>
             </div>
             <button style="margin-left: 15px; margin-top: 0px;" type="button" class="right btn new" name="buttonNew" id="buttonNew" href="#inline"><a id="newAbsence"  class="modalbox" href="#inline">{% trans %}label.new{% endtrans %}</a></button>
+            <button style="margin-left: 15px; margin-top: 0px;" type="button" class="right btn new" name="buttonNewByGroup" id="buttonNewByGroup"><a href="{{ path('_expediente_sysadmin_absence_enter_by_group')}}">{% trans %}label.enter.by.group{% endtrans %}</a></button>
             <div class="clear"></div>
         </div>
         <div class="filter-search">

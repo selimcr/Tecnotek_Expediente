@@ -1,0 +1,68 @@
+{% extends 'TecnotekExpedienteBundle::logged_layout.html.twig' %}
+
+{% block htmlTitle %}
+    Tecnotek :: Expediente :: Super Administrador
+{% endblock %}
+
+{% block extracss %}
+<link rel="stylesheet" href="{{ asset('fancybox/jquery.fancybox.css') }}" type="text/css" media="all" />
+<link rel="stylesheet" href="{{ asset('expediente/css/fancybox_style.css') }}" type="text/css" media="all" />
+<link rel="stylesheet" href="{{ asset('expediente/css/jquery-ui-timepicker-addon.css') }}" type="text/css" media="all" />
+{% endblock %}
+
+{% block extrajs %}
+<script type="text/javascript" src="{{ asset('fancybox/jquery.fancybox.js?v=2.0.6') }}"></script>
+
+<script type="text/javascript">
+    Tecnotek.module = "absences";
+    Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
+    Tecnotek.UI.urls["saveAbsenceURL"] = "{{ path('_expediente_absences_save')}}";
+
+    Tecnotek.UI.urls["getStudentsURL"] = "{{ path('_expediente_sysadmin_student_ajax_list')}}";
+    Tecnotek.UI.urls["loadStudentRelativesURL"] = "{{ path('_expediente_sysadmin_relatives_list')}}";
+
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="container_24">
+    <div class="grid_24">
+        <div>
+            <div class="left">
+                <h1>{% trans %}label.absences.title{% endtrans %}</h1>
+                <span>{% trans %}label.absences.message{% endtrans %}</span>
+            </div>
+            <button style="margin-left: 15px; margin-top: 0px;" type="button" class="right btn new" name="buttonNew" id="buttonNew" href="#inline"><a id="newAbsence"  class="modalbox" href="#inline">{% trans %}label.new{% endtrans %}</a></button>
+            <button style="margin-left: 15px; margin-top: 0px;" type="button" class="right btn new" name="buttonNewByGroup" id="buttonNewByGroup"><a href="{{ path('_expediente_sysadmin_absence_enter_by_group')}}">{% trans %}label.enter.by.group{% endtrans %}</a></button>
+            <div class="clear"></div>
+        </div>
+
+        <div class="search-results" style="margin-top: 25px;">
+            <div class="row tableHeader" style="height: 32px; line-height: 32px;">
+                <div class="option_width" style="float: left; width: 350px;">{% trans %}label.student{% endtrans %}</div>
+                <div class="option_width" style="float: left; width: 150px;">{% trans %}label.date{% endtrans %}</div>
+                <div class="option_width" style="float: left; width: 150px;">{% trans %}label.type{% endtrans %}</div>
+                <div class="option_width" style="float: left; width: 100px;">{% trans %}label.status{% endtrans %}</div>
+            </div>
+
+            <div class="row userRow tableRowOdd tableRow">
+                <div class="option_width" style="float: left; width: 350px;"></div>
+                <div class="option_width" style="float: left; width: 150px;"></div>
+                <div class="option_width" style="float: left; width: 150px;"></div>
+                <div class="option_width" style="float: left; width: 100px;" title=""></div>
+
+                <div class="right imageButton editButton"  title="{% trans %}label.edit{% endtrans %}"  rel=""></div>
+                <div class="right imageButton deleteButton" style="height: 16px;"  title="{% trans %}label.view{% endtrans %}"  rel=""></div>
+
+                <div class="clear"></div>
+            </div>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div class="wrapper">
+            <div class="grid_24 padline">
+                    <div class="lineH"></div>
+            </div>
+    </div>
+</div>
+{% endblock %}

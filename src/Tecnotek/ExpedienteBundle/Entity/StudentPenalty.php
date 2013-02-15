@@ -105,7 +105,7 @@ class StudentPenalty
      */
     public function getPenalty()
     {
-        return $this->Penalty;
+        return $this->penalty;
     }
 
     /**

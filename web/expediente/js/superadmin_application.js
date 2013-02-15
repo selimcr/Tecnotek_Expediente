@@ -476,6 +476,46 @@ var Tecnotek = {
         },
         Penalties : {
             init : function() {
+                $( "#from" ).datepicker({
+                    defaultDate: "0d",
+                    changeMonth: true,
+                    dateFormat: "yy-mm-dd",
+                    showButtonPanel: true,
+                    currentText: "Hoy",
+                    numberOfMonths: 1,
+                    onClose: function( selectedDate ) {
+                        $( "#to" ).datepicker( "option", "minDate", selectedDate );
+                    }
+                });
+                $( "#to" ).datepicker({
+                    defaultDate: "0d",
+                    changeMonth: true,
+                    dateFormat: "yy-mm-dd",
+                    showButtonPanel: true,
+                    currentText: "Hoy",
+                    numberOfMonths: 1,
+                    onClose: function( selectedDate ) {
+                        $( "#from" ).datepicker( "option", "maxDate", selectedDate );
+                    }
+                });
+                $( "#date" ).datepicker({
+                    defaultDate: "0d",
+                    changeMonth: true,
+                    dateFormat: "yy-mm-dd",
+                    showButtonPanel: true,
+                    currentText: "Hoy",
+                    numberOfMonths: 1
+                });
+
+                $("#date").keypress(function(event){event.preventDefault();});
+                $("#from").keypress(function(event){event.preventDefault();});
+                $("#to").keypress(function(event){event.preventDefault();});
+
+                $('#createPenaltyForm').submit(function(event){
+                    event.preventDefault();
+                    Tecnotek.Penalties.save();
+                });
+
                 $('.cancelButton').click(function(event){
                     $.fancybox.close();
                 });
@@ -533,6 +573,42 @@ var Tecnotek = {
                     $('#suggestions').fadeOut(); // Hide the suggestions box
                 });
                 //TODO Penalties
+            },
+            save : function(){
+                if(Tecnotek.UI.vars["currentPeriod"] == 0){
+                    Tecnotek.showErrorMessage("Es necesario definir un periodo como actual antes de guardar.",true, "", false);
+                    return;
+                }
+                var $studentId = $("#studentId").val();
+                var $date = $("#date").val();
+                var $type = $("#penaltyType").val();
+                var $comments = $("#comments").val();
+
+                if($comments === ""){
+                    Tecnotek.showErrorMessage("Debe incluir un comentario.",
+                        true, "", false);
+                } else {
+                    Tecnotek.ajaxCall(Tecnotek.UI.urls["savePenaltyURL"],
+                        {studentId: $studentId,
+                            date: $date,
+                            type: $type,
+                            comments: $comments,
+                            periodId: Tecnotek.UI.vars["currentPeriod"]
+                        },
+                        function(data){
+                            if(data.error === true) {
+                                Tecnotek.showErrorMessage(data.message,true, "", false);
+                            } else {
+                                $.fancybox.close();
+                                Tecnotek.showInfoMessage("La sancion se ha ingresado correctamente.", true, "", false)
+                            }
+                        },
+                        function(jqXHR, textStatus){
+                            Tecnotek.showErrorMessage("Error saving absence: " + textStatus + ".",
+                                true, "", false);
+                        }, true);
+                }
+
             }
         },
         AdminPeriod : {

@@ -514,41 +514,41 @@ _expediente_penalties:
     pattern:  /ap/penalties/
     defaults: { _controller: TecnotekExpedienteBundle:Student:penaltiesIndex }
 
-_expediente_absences_search:
-    pattern:  /absences/search/
-    defaults: { _controller: TecnotekExpedienteBundle:Student:absencesSearch }
+_expediente_penalties_search:
+    pattern:  /ap/penalties/search/
+    defaults: { _controller: TecnotekExpedienteBundle:Student:penaltiesSearch }
 
-_expediente_absences_save:
-    pattern:  /absences/save
-    defaults: { _controller: TecnotekExpedienteBundle:Student:absenceSave }
+_expediente_penalties_save:
+    pattern:  /ap/penalties/save
+    defaults: { _controller: TecnotekExpedienteBundle:Student:penaltiesSave }
 
-_delete_absence:
-    pattern:  /absence/delete/{id}
-    defaults: { _controller: TecnotekExpedienteBundle:Student:absenceDelete }
+_delete_penalties:
+    pattern:  /ap/penalties/delete/{id}
+    defaults: { _controller: TecnotekExpedienteBundle:Student:penaltiesDelete }
 
-_expediente_sysadmin_absence_create:
-    pattern:  /absence/create
-    defaults: { _controller: TecnotekExpedienteBundle:Student:absenceCreate }
+_expediente_sysadmin_penalties_create:
+    pattern:  /ap/penalties/create
+    defaults: { _controller: TecnotekExpedienteBundle:Student:penaltiesCreate }
 
-_expediente_sysadmin_absence_update:
-    pattern:  /absence/update
-    defaults: { _controller: TecnotekExpedienteBundle:Student:absenceUpdate }
+_expediente_sysadmin_penalties_update:
+    pattern:  /ap/penalties/update
+    defaults: { _controller: TecnotekExpedienteBundle:Student:penaltiesUpdate }
 
-_expediente_sysadmin_absence_show:
-    pattern:  /absence/show/{id}
-    defaults: { _controller: TecnotekExpedienteBundle:Student:absenceShow }
+_expediente_sysadmin_penalties_show:
+    pattern:  /ap/penalties/show/{id}
+    defaults: { _controller: TecnotekExpedienteBundle:Student:penaltiesShow }
 
-_expediente_sysadmin_absence_edit:
-    pattern:  /absence/edit/{id}
-    defaults: { _controller: TecnotekExpedienteBundle:Student:absenceEdit }
+_expediente_sysadmin_penalties_edit:
+    pattern:  /ap/penalties/edit/{id}
+    defaults: { _controller: TecnotekExpedienteBundle:Student:penaltiesEdit }
 
-_expediente_sysadmin_absence_show_simple:
-    pattern:  /absence/show
-    defaults: { _controller: TecnotekExpedienteBundle:Student:absenceShow }
+_expediente_sysadmin_penalties_show_simple:
+    pattern:  /ap/penalties/show
+    defaults: { _controller: TecnotekExpedienteBundle:Student:penaltiesShow }
 
-_expediente_sysadmin_absence_edit_simple:
-    pattern:  /absence/edit
-    defaults: { _controller: TecnotekExpedienteBundle:Student:absenceEdit }
+_expediente_sysadmin_penalties_edit_simple:
+    pattern:  /ap/penalties/edit
+    defaults: { _controller: TecnotekExpedienteBundle:Student:penaltiesEdit }
 
 ###########      REPORTS      ###########
 _expediente_absences:
@@ -590,6 +590,10 @@ _expediente_sysadmin_absence_show_simple:
 _expediente_sysadmin_absence_edit_simple:
     pattern:  /absence/edit
     defaults: { _controller: TecnotekExpedienteBundle:Student:absenceEdit }
+
+_expediente_sysadmin_absence_enter_by_group:
+    pattern:  /absence/enterByGroup
+    defaults: { _controller: TecnotekExpedienteBundle:Student:enterAbsenceByGroup }
 #########################################
 
 _expediente_sysadmin_period_admin_simple:

@@ -209,7 +209,7 @@ label.reports.routes_zones.message:
 label.qualifications: Calificaciones
 
 label.absence.show: Informacion de Ausencia
-
+label.enter.by.group: Ingresar por grupo
 label.entries.by.course: Rubros por Materia
 label.percentage: Porcentaje
 label.max_value: Valor Maximo
