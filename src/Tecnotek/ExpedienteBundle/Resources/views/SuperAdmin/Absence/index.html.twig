@@ -29,7 +29,8 @@
     Tecnotek.StudentShow.translates["relative.not.exists"] = "{% trans %}message.relative.not.exists{% endtrans %}";
 
     Tecnotek.UI.vars["currentPeriod"] = {{ currentPeriod }};
-
+    Tecnotek.UI.urls["deleteURL"] = "{{ path("_delete_absence_simple") }}";
+    Tecnotek.UI.translates["confirmDelete"] = "{% trans %}messages.confirmation.absence.delete{% endtrans %}";
 </script>
 <!-- basic fancybox setup -->
 <script type="text/javascript">
@@ -103,8 +104,8 @@ $(function() {
                 <div class="option_width" style="float: left; width: 150px;">{{ entity.type }}</div>
                 <div class="option_width" style="float: left; width: 100px;" title="{{ entity.comments }}">{% if entity.justify %}{% trans %}label.justify{% endtrans %}{% else %} {% trans %}label.injustify{% endtrans %} {% endif %}</div>
 
+                <div class="right imageButton deleteButton" style="height: 16px;"  title="{% trans %}label.eliminar{% endtrans %}"  rel="{{ entity.id }}"></div>
                 <div class="right imageButton editButton"  title="{% trans %}label.edit{% endtrans %}"  rel="{{ entity.id }}"></div>
-                <div class="right imageButton deleteButton" style="height: 16px;"  title="{% trans %}label.view{% endtrans %}"  rel="{{ entity.id }}"></div>
 
                 <div class="clear"></div>
             </div>

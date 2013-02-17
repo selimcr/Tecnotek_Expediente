@@ -32,8 +32,11 @@
 
                         {{ form_widget(form._token) }}
 
-                        <div class="formErrors">{{ form_errors(form.student) }}</div>
-                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.student{% endtrans %}</span>{{ form_widget(form.student) }}</label>
+                        <div class="formErrors">{{ form_errors(form.studentYear) }}</div>
+                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.student{% endtrans %}</span>
+                            <input type="hidden" id="tecnotek_expediente_absenceformtype_studentYear" name="tecnotek_expediente_absenceformtype[studentYear]" value="{{ entity.studentYear.id }}">
+                            {{ entity.studentYear }}
+                        </label>
 
                         <div class="formErrors">{{ form_errors(form.date) }}</div>
                         <label><span class="text-form" style="min-width: 150px;">{% trans %}label.date{% endtrans %}</span>{{ form_widget(form.date) }}</label>

@@ -294,6 +294,42 @@ class StudentController extends Controller
         }
     }
 
+    public function loadGroupsOfPeriodAction(){
+        $logger = $this->get('logger');
+        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
+        {
+            try {
+                $request = $this->get('request')->request;
+                $periodId = $request->get('periodId');
+
+                $em = $this->getDoctrine()->getEntityManager();
+
+                $sql = "SELECT g.id, g.name "
+                    . " FROM tek_groups g"
+                    . " WHERE g.period_id = " . $periodId
+                    . " ORDER BY g.name";
+                $stmt = $em->getConnection()->prepare($sql);
+                $stmt->execute();
+                $groups = $stmt->fetchAll();
+
+                if ( isset($groups) ) {
+                    return new Response(json_encode(array('error' => false, 'groups' => $groups)));
+                } else {
+                    return new Response(json_encode(array('error' => true, 'message' => "Data not found.")));
+                }
+            }
+            catch (Exception $e) {
+                $info = toString($e);
+                $logger->err('Student::getListAction [' . $info . "]");
+                return new Response(json_encode(array('error' => true, 'message' => $info)));
+            }
+        }// endif this is an ajax request
+        else
+        {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+    }
+
     public function getListRouteAction(){
         $logger = $this->get('logger');
         if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
@@ -747,12 +783,23 @@ class StudentController extends Controller
             try {
                 $request = $this->get('request')->request;
                 $text = $request->get('text');
+                $groupId = $request->get('groupId');
+                $searchType = $request->get('searchType');
 
                 $em = $this->getDoctrine()->getEntityManager();
-                $sql = "SELECT e.id, e.firstname, e.lastname "
-                    . " FROM tek_students e"
-                    . " WHERE (e.firstname like '%" . $text . "%' OR e.lastname like '%" . $text . "%')"
-                    . " ORDER BY e.firstname, e.lastname";
+                if( isset($searchType) && isset($groupId) && $searchType == 1 ){
+                    $sql = "SELECT stdy.id, CONCAT(e.firstname, ' ', e.lastname) as 'name'  "
+                        . " FROM tek_students e, tek_students_year stdy"
+                        . " WHERE stdy.group_id = $groupId AND stdy.student_id = e.id"
+                        . " ORDER BY e.firstname, e.lastname";
+
+                } else {
+                    $sql = "SELECT e.id, e.firstname, e.lastname "
+                        . " FROM tek_students e"
+                        . " WHERE (e.firstname like '%" . $text . "%' OR e.lastname like '%" . $text . "%')"
+                        . " ORDER BY e.firstname, e.lastname";
+                }
+
                 $stmt = $em->getConnection()->prepare($sql);
                 $stmt->execute();
                 $students = $stmt->fetchAll();
@@ -983,7 +1030,6 @@ class StudentController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $request = $this->get('request')->request;
         $entity = $em->getRepository("TecnotekExpedienteBundle:Absence")->find( $request->get('id'));
-
         if ( isset($entity) ) {
             $request = $this->getRequest();
             $form    = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\AbsenceFormType(), $entity);
@@ -999,7 +1045,7 @@ class StudentController extends Controller
                 ));
             }
         } else {
-            return $this->redirect($this->generateUrl('_expediente_sysadmin_absence'));
+            return $this->redirect($this->generateUrl('_expediente_absences'));
         }
 
     }
@@ -1007,9 +1053,40 @@ class StudentController extends Controller
     public function enterAbsenceByGroupAction(){
         $em = $this->getDoctrine()->getEntityManager();
         $periods = $em->getRepository("TecnotekExpedienteBundle:Period")->findAll();
-
+        $absencesTypes = $em->getRepository("TecnotekExpedienteBundle:AbsenceType")->findAll();
         return $this->render('TecnotekExpedienteBundle:SuperAdmin:Absence/enterByGroup.html.twig', array(
-            'menuIndex' => 3, 'periods' => $periods
+            'menuIndex' => 3, 'periods' => $periods, 'absencesTypes' => $absencesTypes
+        ));
+    }
+
+    public function saveGroupAbsencesAction(){
+        $logger = $this->get("logger");
+        $request = $this->get('request')->request;
+        $em = $this->getDoctrine()->getEntityManager();
+        $studentsYearIds = explode(" ", trim($request->get('studentsIds')));
+        foreach( $studentsYearIds as $studentYearId  ){
+            //studentYear, comments, justify, date, typeId
+            if( trim($studentYearId) != ""){
+                $comments = $request->get('comments_' . $studentYearId);
+                $typeId = $request->get('type_' . $studentYearId);
+                $justify = $request->get('justify_' . $studentYearId);
+                //$logger->err("Save absence with stdId:  " . $studentYearId . ", type: " . $typeId . ", justify: " . $justify . ":" . ($justify == "on") . ", comments: " . $comments);
+                $absence = new Absence();
+                $absence->setComments($comments);
+                $absence->setJustify(($justify == "on"));
+                $absence->setStudentYear($em->getRepository("TecnotekExpedienteBundle:StudentYear")->find($studentYearId));
+                $absence->setType($em->getRepository("TecnotekExpedienteBundle:AbsenceType")->find($typeId));
+
+                $em->persist($absence);
+            }
+        }
+
+        $em->flush();
+
+        $periods = $em->getRepository("TecnotekExpedienteBundle:Period")->findAll();
+        $absencesTypes = $em->getRepository("TecnotekExpedienteBundle:AbsenceType")->findAll();
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Absence/enterByGroup.html.twig', array(
+            'menuIndex' => 3, 'periods' => $periods, 'absencesTypes' => $absencesTypes
         ));
     }
     /* Final de los metodos para CRUD de Absences*/

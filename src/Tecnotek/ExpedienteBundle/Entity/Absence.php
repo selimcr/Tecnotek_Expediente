@@ -57,6 +57,7 @@ class Absence
     {
         $this->justify = false;
         $this->comments = "";
+        $this->date = new \DateTime();
     }
 
     public function __toString()

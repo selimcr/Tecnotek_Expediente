@@ -30,7 +30,7 @@
                 <div id="showContainer">
                     <div>
                         <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.student{%endtrans%}</div>
-                        <div id="labelCode" class="left">{{ entity.student }}</div>
+                        <div id="labelCode" class="left">{{ entity.studentYear.student }}</div>
                         <div class="clear"></div>
                     </div>
                     <div>
@@ -40,7 +40,7 @@
                     </div>
                     <div>
                         <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.justify{%endtrans%}</div>
-                        <div id="labelDescription" class="left">{{ entity.justify }}</div>
+                        <div id="labelDescription" class="left">{% if entity.justify %}{% trans %} label.yes {% endtrans %} {% else %} {% trans %} label.no {% endtrans %} {% endif %}</div>
                         <div class="clear"></div>
                     </div>
                     <div>

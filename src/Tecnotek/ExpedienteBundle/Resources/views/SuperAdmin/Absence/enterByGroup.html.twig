@@ -14,11 +14,12 @@
 <script type="text/javascript" src="{{ asset('fancybox/jquery.fancybox.js?v=2.0.6') }}"></script>
 
 <script type="text/javascript">
-    Tecnotek.module = "absences";
+    Tecnotek.module = "absencesByGroup";
     Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
-    Tecnotek.UI.urls["saveAbsenceURL"] = "{{ path('_expediente_absences_save')}}";
-
+    Tecnotek.UI.urls["loadGroupsOfPeriodURL"] = "{{ path('_expediente_sysadmin_load_groups_of_period')}}";
     Tecnotek.UI.urls["getStudentsURL"] = "{{ path('_expediente_sysadmin_student_ajax_list')}}";
+
+    Tecnotek.UI.urls["saveAbsenceURL"] = "{{ path('_expediente_absences_save')}}";
     Tecnotek.UI.urls["loadStudentRelativesURL"] = "{{ path('_expediente_sysadmin_relatives_list')}}";
 
 </script>
@@ -29,31 +30,68 @@
     <div class="grid_24">
         <div>
             <div class="left">
-                <h1>{% trans %}label.absences.title{% endtrans %}</h1>
-                <span>{% trans %}label.absences.message{% endtrans %}</span>
+                <h1>{% trans %}label.absences.by.group.title{% endtrans %}</h1>
+                <span>Marque las ausencias que desea ingresar y defina los datos para cada una de ellas.</span>
             </div>
-            <button style="margin-left: 15px; margin-top: 0px;" type="button" class="right btn new" name="buttonNew" id="buttonNew" href="#inline"><a id="newAbsence"  class="modalbox" href="#inline">{% trans %}label.new{% endtrans %}</a></button>
-            <button style="margin-left: 15px; margin-top: 0px;" type="button" class="right btn new" name="buttonNewByGroup" id="buttonNewByGroup"><a href="{{ path('_expediente_sysadmin_absence_enter_by_group')}}">{% trans %}label.enter.by.group{% endtrans %}</a></button>
+           <div class="clear"></div>
+        </div>
+
+        <div style="margin-bottom: 15px; margin-top: 15px;">
+            <div class="left" style="width: 50px; font-weight: bold;">{%trans%}label.period{%endtrans%}</div>
+            <div id="labelPeriod" class="left">
+                <select id="period" name="period">
+                    {% for period in periods %}
+                    <option value="{{ period.id }}">{{period}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div id="groupsContainer" class="left" style="margin-left: 50px;">
+                <div class="left" style="width: 50px; font-weight: bold;">{%trans%}label.groups{%endtrans%}</div>
+                <div class="left">
+                    <select id="groups" name="groups">
+                    </select>
+                </div>
+            </div>
+
             <div class="clear"></div>
         </div>
 
         <div class="search-results" style="margin-top: 25px;">
             <div class="row tableHeader" style="height: 32px; line-height: 32px;">
-                <div class="option_width" style="float: left; width: 350px;">{% trans %}label.student{% endtrans %}</div>
-                <div class="option_width" style="float: left; width: 150px;">{% trans %}label.date{% endtrans %}</div>
-                <div class="option_width" style="float: left; width: 150px;">{% trans %}label.type{% endtrans %}</div>
-                <div class="option_width" style="float: left; width: 100px;">{% trans %}label.status{% endtrans %}</div>
+                <div class="option_width" style="float: left; width: 25px;"></div>
+                <div class="option_width" style="float: left; width: 225px;">{% trans %}label.student{% endtrans %}</div>
+                <div class="option_width" style="float: left; width: 200px;">{% trans %}label.type{% endtrans %}</div>
+                <div class="option_width" style="float: left; width: 125px;">{% trans %}label.justify{% endtrans %}</div>
+                <div class="option_width" style="float: left; width: 150px;">{% trans %}label.comments{% endtrans %}</div>
             </div>
+            <form action="{{ path("_expediente_sysadmin_save_group_absences") }}" method="post" id="absencesForm">
+                <input type="hidden" id="studentsIds" name="studentsIds" value=" ">
+                <div id="studentsRows" name="studentsRows">
 
-            <div class="row userRow tableRowOdd tableRow">
-                <div class="option_width" style="float: left; width: 350px;"></div>
-                <div class="option_width" style="float: left; width: 150px;"></div>
-                <div class="option_width" style="float: left; width: 150px;"></div>
-                <div class="option_width" style="float: left; width: 100px;" title=""></div>
+                </div>
+                <button style="margin-left: 15px; margin-top: 15px;" type="submit" class="right btn save" name="save"><span></span>{% trans %}label.save{% endtrans %}</button>
+                <div class="clear"></div>
+            </form>
 
-                <div class="right imageButton editButton"  title="{% trans %}label.edit{% endtrans %}"  rel=""></div>
-                <div class="right imageButton deleteButton" style="height: 16px;"  title="{% trans %}label.view{% endtrans %}"  rel=""></div>
-
+            <div class="row userRow tableRowOdd tableRow" id="stdRow_STDYID" name="stdRow_STDYID" style="height: 30px; line-height: 30px; display: none;">
+                <div class="option_width" style="float: left; width: 25px;">
+                    <input type="checkbox" class="cbRow" rel="STDYID">
+                </div>
+                <div class="option_width" style="float: left; width: 225px;">STDNAME</div>
+                <div class="option_width" style="float: left; width: 200px;">
+                    <select id="type_STDYID" name="type_STDYID" disabled="disabled">
+                        {% for absenceType in absencesTypes %}
+                            <option value="{{ absenceType.id }}">{{ absenceType }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="option_width" style="float: left; width: 125px;">
+                    <input type="checkbox" id="justify_STDYID" name="justify_STDYID" disabled="disabled">
+                </div>
+                <div class="option_width" style="float: left; width: 150px;">
+                    <textarea class="commentsArea" id="comments_STDYID" name="comments_STDYID" rows="1" cols="15" style="height: 18px" rel="STDYID" disabled="disabled"></textarea>
+                </div>
                 <div class="clear"></div>
             </div>
         </div>

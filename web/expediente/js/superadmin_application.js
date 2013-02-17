@@ -36,6 +36,9 @@ var Tecnotek = {
                     Tecnotek.AdministratorList.init();
                     Tecnotek.Penalties.init();
                     break;
+                case "absencesByGroup":
+                    Tecnotek.AbsencesByGroup.init();
+                    break;
                 case "absences":
                     Tecnotek.AdministratorList.init();
                     Tecnotek.Absences.init();
@@ -333,6 +336,102 @@ var Tecnotek = {
                 });
             }
         },
+        AbsencesByGroup : {
+            init : function() {
+                $('#period').change(function(event){
+                    event.preventDefault();
+                    Tecnotek.AbsencesByGroup.loadGroupsOfPeriod();
+                });
+                $('#groups').change(function(event){
+                    event.preventDefault();
+                    Tecnotek.AbsencesByGroup.loadStudentsOfGroup();
+                });
+
+                Tecnotek.AbsencesByGroup.loadGroupsOfPeriod();
+
+            },
+            setRowsComponentsAction: function(){
+                $(".cbRow").unbind().change(function(event){
+                    event.preventDefault();
+                    var $id = $(this).attr("rel");
+                    var $str = $("#studentsIds").val();
+                    if($(this).is(":checked") ) {
+                        $("#justify_" + $id).removeAttr("disabled");
+                        $("#comments_" + $id).removeAttr("disabled");
+                        $("#type_" + $id).focus().removeAttr("disabled");
+                        $str += " " + $id; //Add the id
+                    } else {
+                        $("#type_" + $id).attr("disabled", true);
+                        $("#justify_" + $id).attr("disabled", true);
+                        $("#comments_" + $id).attr("disabled", true);
+                        //studentsIds //Remove the id
+                        var Re = new RegExp(" " + $id,"g");
+                        $str = $str.replace(Re, "");
+                    }
+                    $("#studentsIds").val($str);
+                });
+
+                $(".commentsArea").unbind().focus(function(event){
+                    $("#stdRow_" + $(this).attr("rel")).css("line-height", "60px").css("height", "60px");
+                    $("#comments_" + $(this).attr("rel")).attr("rows", 3).animate({'height': '50px'}, 'slow' );
+                }).blur(function(event){
+                    $("#comments_" + $(this).attr("rel")).attr("rows", 1).animate({'height': '18px'}, 'slow', function() {
+                        $("#stdRow_" + $(this).attr("rel")).css("line-height", "30px").css("height", "30px");
+                    });
+
+                });
+            },
+            loadGroupsOfPeriod : function(){
+                $period = $("#period").val();
+                if($period !== undefined && $period !== "undefined" && $period !== null) {
+                    $('#groups').children().remove();
+                    $('#studentsRows').empty();
+                    Tecnotek.ajaxCall(Tecnotek.UI.urls["loadGroupsOfPeriodURL"],
+                        {   periodId: $period },
+                        function(data){
+                            if(data.error === true) {
+                                Tecnotek.showErrorMessage(data.message,true, "", false);
+                            } else {
+                                for(i=0; i<data.groups.length; i++) {
+                                    $('#groups').append('<option value="' + data.groups[i].id + '">' + data.groups[i].name + '</option>');
+                                }
+                                Tecnotek.AbsencesByGroup.loadStudentsOfGroup();
+                            }
+                        },
+                        function(jqXHR, textStatus){
+                            Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
+                            $(this).val("");
+                        }, true);
+                }
+            },
+            loadStudentsOfGroup : function(){
+                $group = $("#groups").val();
+                if($group !== undefined && $group !== "undefined" && $group !== null) {
+                    $('#studentsRows').empty();
+                    Tecnotek.ajaxCall(Tecnotek.UI.urls["getStudentsURL"],
+                        {   groupId: $group,
+                            searchType: 1},
+                        function(data){
+                            if(data.error === true) {
+                                Tecnotek.showErrorMessage(data.message,true, "", false);
+                            } else {
+                                var html = "";
+                                var Re = new RegExp("STDYID","g");
+                                for(i=0; i<data.students.length; i++) {
+                                    html = $("#stdRow_STDYID").clone().attr("id","stdRow_" + data.students[i].id).attr("name","stdRow_" + data.students[i].id).css("display", "block").wrap('<p>').parent().html();
+                                    html = html.replace(Re, data.students[i].id).replace("STDNAME", data.students[i].name);
+                                    $('#studentsRows').append(html);
+                                }
+                                Tecnotek.AbsencesByGroup.setRowsComponentsAction();
+                            }
+                        },
+                        function(jqXHR, textStatus){
+                            Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
+                            $(this).val("");
+                        }, true);
+                }
+            }
+        },
         Absences : {
             init : function() {
 
@@ -433,7 +532,17 @@ var Tecnotek = {
                     $(this).val("");
                     $('#suggestions').fadeOut(); // Hide the suggestions box
                 });
-                
+
+                $(".deleteButton").click(function(event){
+                    event.preventDefault();
+                    Tecnotek.Absences.delete($(this).attr("rel"));
+                });
+            },
+            delete : function(absenceId){
+              //TODO delete Absence
+                if (Tecnotek.showConfirmationQuestion(Tecnotek.UI.translates["confirmDelete"])){
+                    location.href = Tecnotek.UI.urls["deleteURL"] + "/" + absenceId;
+                }
             },
             save : function(){
                 if(Tecnotek.UI.vars["currentPeriod"] == 0){

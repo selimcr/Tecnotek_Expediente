@@ -69,6 +69,8 @@ label.course.new: Nueva Materia
 messages.confirmation.course.delete: Esta seguro que desea eliminar la materia?
 label.course.show: Detalle de la materia
 
+messages.confirmation.absence.delete: Esta seguro que desea eliminar esta ausencia?
+
 label.period.admin: Administraci&oacute;n de Periodo
 label.admin: Administrar
 label.groups: Grupos
@@ -142,6 +144,8 @@ student.include.help: Ingrese el nombre y seleccione el contacto de la lista de 
 
 label.absences.title: Administracion de Ausencias
 label.absences.message: Puede filtrar la informacion y consultar las ausencias deseadas.
+label.absences.by.group.title: Ingreso de Ausencias por Grupo
+label.absences.by.group: Ausencias por Grupo
 
 label.new.password: Nuevo Password
 label.confirm.password: Confirmar password
