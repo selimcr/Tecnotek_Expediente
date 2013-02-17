@@ -54,6 +54,14 @@ class Route
     private $mapUrl;
 
     /**
+     * @ORM\Column(type="integer")
+     * @Assert\NotBlank()
+     * @Assert\Min(limit = 1)
+     * 1: Normal, 2: Club
+     */
+    private $routeType;
+
+    /**
      * @ManyToOne(targetEntity="Zone")
      * @JoinColumn(name="zone_id", referencedColumnName="id")
      */
@@ -78,9 +86,17 @@ class Route
      */
     private $students;
 
+    /**
+     * @var StudentsToRoute
+     *
+     * @ORM\OneToMany(targetEntity="StudentToRoute", mappedBy="route")
+     */
+    private $studentsToRoute;
+
     public function __construct()
     {
         $this->mapUrl = "";
+        $this->routeType = 1;
     }
 
     public function __toString()
@@ -96,6 +112,26 @@ class Route
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set routeType
+     *
+     * @param integer $routeType
+     */
+    public function setRouteType($routeType)
+    {
+        $this->routeType = $routeType;
+    }
+
+    /**
+     * Get routeType
+     *
+     * @return integer
+     */
+    public function getRouteType()
+    {
+        return $this->routeType;
     }
 
     /**
@@ -240,5 +276,9 @@ class Route
 
     public function getStudents(){
         return $this->students;
+    }
+
+    public function getStudentsToRoute(){
+        return $this->studentsToRoute;
     }
 }

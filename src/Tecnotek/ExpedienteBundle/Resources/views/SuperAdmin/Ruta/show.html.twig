@@ -19,6 +19,7 @@
     Tecnotek.UI.urls["removeStudentsFromRouteURL"] = "{{ path("_expediente_remove_student_from_route") }}";
     Tecnotek.UI.translates["confirmRemoveStudent"] = "{% trans %}messages.confirmation.club.remove.student{% endtrans %}";
     Tecnotek.UI.vars["routeId"] = {{ entity.id }};
+    Tecnotek.UI.vars["routeType"] = {{ entity.routeType }};
 </script>
 {% endblock %}
 
@@ -77,6 +78,11 @@
                                         <div id="labelInstitution" class="left">{{ entity.institution }}</div>
                                         <div class="clear"></div>
                                     </div>
+                                    <div>
+                                        <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.type{%endtrans%}</div>
+                                        <div id="labelType" class="left">{% if entity.routeType == 1 %}{%trans%} label.route.type.1 {% endtrans %} {% else %} {%trans%} label.route.type.2 {% endtrans %} {% endif %}</div>
+                                        <div class="clear"></div>
+                                    </div>
                                     <div id="buttonsContainer" style="margin-top: 25px;">
                                         <a href="{{ path('_expediente_sysadmin_route_edit', {'id': entity.id}) }}" class="left btn edit"><span></span>{% trans %}label.edit{% endtrans %}</a>
                                         <div class="left btn delete" id="btnEliminar" style="margin-left: 25px;"><span></span>{% trans %}label.eliminar{% endtrans %}</div>
@@ -97,29 +103,41 @@
                             </div>
                             {% set counter = 0 %}
 
-                            {% for student in entity.students %}
-                            <div id="student_row_{{ student.id }}" class="row userRow rel="{{ student.id }}">
-                            <div class="option_width" style="float: left; width: 300px;">{{ student }}</div>
-                            <div class="right imageButton deleteButton" style="height: 16px;"  title="{% trans %}label.delete{% endtrans %}"  rel="{{ student.id }}"></div>
-                            <div class="clear"></div>
+                            {% if entity.routeType == 1 %}
+                                {% for student in students %}
+                                <div id="student_row_{{ student.id }}" class="row userRow rel="{{ student.id }}">
+                                    <div class="option_width" style="float: left; width: 300px;">{{ student }}</div>
+                                    <div class="right imageButton deleteButton" style="height: 16px;"  title="{% trans %}label.delete{% endtrans %}"  rel="{{ student.id }}"></div>
+                                    <div class="clear"></div>
+                                </div>
+                                {% set counter = counter + 1 %}
+                                {% endfor %}
+                            {% else %}
+                                {% for studentToRoute in students %}
+                                <div id="student_row_{{ studentToRoute.student.id }}" class="row userRow rel="{{ studentToRoute.student.id }}">
+                                    <div class="option_width" style="float: left; width: 300px;">{{ studentToRoute.student }}</div>
+                                    <div class="right imageButton deleteButton" style="height: 16px;"  title="{% trans %}label.delete{% endtrans %}"  rel="{{ studentToRoute.student.id }}"></div>
+                                    <div class="clear"></div>
+                                </div>
+                                {% set counter = counter + 1 %}
+                                {% endfor %}
+                            {% endif %}
+
                         </div>
-                        {% set counter = counter + 1 %}
-                        {% endfor %}
-            </div>
 
-            <div class="left" style="margin-left: 50px;">
-                <form id="searchform">
-                    <div>
-                        <div>{% trans %}route.include.students{%endtrans%}</div>
-                        <div style="font-size: 10px;">{% trans %}club.include.help{%endtrans%}</div>
+                        <div class="left" style="margin-left: 50px;">
+                            <form id="searchform">
+                                <div>
+                                    <div>{% trans %}route.include.students{%endtrans%}</div>
+                                    <div style="font-size: 10px;">{% trans %}club.include.help{%endtrans%}</div>
 
-                        <input type="text" size="30" value="" id="searchBox"/>
-                    </div>
-                    <div id="suggestions"></div>
-                </form>
-            </div>
-            <div class="clear"></div>
-            </section>
+                                    <input type="text" size="30" value="" id="searchBox"/>
+                                </div>
+                                <div id="suggestions"></div>
+                            </form>
+                        </div>
+                        <div class="clear"></div>
+                    </section>
             </nav>
         </div>
         <!-- End Tabs -->

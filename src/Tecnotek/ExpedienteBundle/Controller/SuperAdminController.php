@@ -353,8 +353,14 @@ class SuperAdminController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $entity = $em->getRepository("TecnotekExpedienteBundle:Route")->find($id);
         $form   = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\RouteFormType(), $entity);
+        if($entity->getRouteType() == 1) {
+            $students = $entity->getStudents();
+        } else {
+            //Get Students From Other Table
+            $students = $em->getRepository("TecnotekExpedienteBundle:StudentToRoute")->findByRoute($id);
+        }
         return $this->render('TecnotekExpedienteBundle:SuperAdmin:Ruta/show.html.twig', array('entity' => $entity,
-            'form'   => $form->createView(), 'menuIndex' => 2));
+            'form'   => $form->createView(), 'menuIndex' => 2, 'students' => $students));
     }
 
     public function routeSaveAction(){

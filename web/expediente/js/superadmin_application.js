@@ -1401,15 +1401,16 @@ var Tecnotek = {
                 Tecnotek.RouteShow.initDeleteButtons();
             },
             initDeleteButtons : function() {
-                console.debug("entro a initDeleteButtons en 2!!!");
                 $('.deleteButton').unbind();
                 $('.deleteButton').click(function(event){
                     event.preventDefault();
                     if (Tecnotek.showConfirmationQuestion(Tecnotek.UI.translates["confirmRemoveStudent"])){
                         Tecnotek.UI.vars["studentId"] = $(this).attr("rel");
-                        console.debug("Delete student: " + Tecnotek.UI.vars["studentId"] + " :: " + Tecnotek.UI.urls["removeStudentsFromRouteURL"]);
                         Tecnotek.ajaxCall(Tecnotek.UI.urls["removeStudentsFromRouteURL"],
-                            {studentId: Tecnotek.UI.vars["studentId"]},
+                            {studentId: Tecnotek.UI.vars["studentId"],
+                             routeId: Tecnotek.UI.vars["routeId"],
+                             routeType: Tecnotek.UI.vars["routeType"]
+                            },
                             function(data){
                                 if(data.error === true) {
                                     Tecnotek.showErrorMessage(data.message,true, "", false);

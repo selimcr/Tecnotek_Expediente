@@ -14,7 +14,8 @@ class RouteFormType extends AbstractType
             add('name', 'text', array('trim' => true))->
             add('description', 'text', array('trim' => true, 'required' => false))->
             add('mapUrl', 'text', array('trim' => true, 'required' => false))->
-            add('zone')->add('bus')->add('institution')
+            add('zone')->add('bus')->add('institution')->
+            add('routeType', 'choice', array('choices' => array(  '1' => 'Normal', '2' => 'Club'),'required'  => true))
         ;
     }
 

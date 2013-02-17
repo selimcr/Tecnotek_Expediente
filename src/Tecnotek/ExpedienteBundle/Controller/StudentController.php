@@ -8,6 +8,7 @@ use Tecnotek\ExpedienteBundle\Entity\Club as Club;
 use Tecnotek\ExpedienteBundle\Entity\Relative as Relative;
 use Tecnotek\ExpedienteBundle\Entity\Student;
 use Tecnotek\ExpedienteBundle\Entity\StudentPenalty;
+use Tecnotek\ExpedienteBundle\Entity\StudentToRoute;
 use Tecnotek\ExpedienteBundle\Entity\Ticket;
 use Tecnotek\ExpedienteBundle\Form\ContactFormType;
 
@@ -340,11 +341,22 @@ class StudentController extends Controller
                 $routeId = $request->get('routeId');
 
                 $em = $this->getDoctrine()->getEntityManager();
-                $sql = "SELECT std.id, std.firstname, std.lastname "
-                    . " FROM tek_students std"
-                    . " WHERE (std.firstname like '%" . $text . "%' OR std.lastname like '%" . $text . "%')"
-                    . " AND (std.route_id is null Or std.route_id <> $routeId)"
-                    . " ORDER BY std.firstname, std.lastname";
+                $route = $em->getRepository("TecnotekExpedienteBundle:Route")->find($routeId);
+
+                if($route->getRouteType() == 1){
+                    $sql = "SELECT std.id, std.firstname, std.lastname "
+                        . " FROM tek_students std"
+                        . " WHERE (std.firstname like '%" . $text . "%' OR std.lastname like '%" . $text . "%')"
+                        . " AND (std.route_id is null Or std.route_id <> $routeId)"
+                        . " ORDER BY std.firstname, std.lastname";
+                } else {
+                    $sql = "SELECT std.id, std.firstname, std.lastname "
+                        . " FROM tek_students std"
+                        . " LEFT JOIN tek_students_to_routes stdToRoute ON stdToRoute.student_id = std.id"
+                        . " WHERE (std.firstname like '%" . $text . "%' OR std.lastname like '%" . $text . "%')"
+                        . " AND (stdToRoute.id is null Or stdToRoute.route_id <> $routeId)"
+                        . " ORDER BY std.firstname, std.lastname";
+                }
                 $stmt = $em->getConnection()->prepare($sql);
                 $stmt->execute();
                 $students = $stmt->fetchAll();
@@ -408,10 +420,17 @@ class StudentController extends Controller
 
                 $em = $this->getDoctrine()->getEntityManager();
                 $student = $em->getRepository("TecnotekExpedienteBundle:Student")->find($studentId);
-                $student->setRoute($em->getRepository("TecnotekExpedienteBundle:Route")->find($routeId));
-                $em->persist($student);
+                $route = $em->getRepository("TecnotekExpedienteBundle:Route")->find($routeId);
+                if($route->getRouteType() == 1){//Is a normal route
+                    $student->setRoute($route);
+                    $em->persist($student);
+                } else {//Is a club route
+                    $studentToRoute = new StudentToRoute();
+                    $studentToRoute->setStudent($student);
+                    $studentToRoute->setRoute($route);
+                    $em->persist($studentToRoute);
+                }
                 $em->flush();
-
                 return new Response(json_encode(array('error' => false)));
             }
             catch (Exception $e) {
@@ -462,13 +481,20 @@ class StudentController extends Controller
             try {
                 $request = $this->get('request')->request;
                 $studentId = $request->get('studentId');
+                $routeType = $request->get('routeType');
+                $routeId = $request->get('routeId');
                 $em = $this->getDoctrine()->getEntityManager();
 
-                $student = $em->getRepository("TecnotekExpedienteBundle:Student")->find($studentId);
-                $student->removeRoute();
-                $em->persist($student);
+                $logger->err("---> " . $studentId . " :: " . $routeId . " :: " . $routeType);
+                if($routeType == 1){
+                    $student = $em->getRepository("TecnotekExpedienteBundle:Student")->find($studentId);
+                    $student->removeRoute();
+                    $em->persist($student);
+                } else {//Club route
+                    $studentToRoute = $em->getRepository("TecnotekExpedienteBundle:StudentToRoute")->findOneBy(array('student' => $studentId, 'route' => $routeId));
+                    $em->remove($studentToRoute);
+                }
                 $em->flush();
-
                 return new Response(json_encode(array('error' => false)));
             }
             catch (Exception $e) {

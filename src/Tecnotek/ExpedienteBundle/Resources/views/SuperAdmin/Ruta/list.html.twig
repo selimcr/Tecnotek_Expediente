@@ -24,9 +24,10 @@
         
         <div class="row tableHeader">
             <div class="option_width" style="float: left; width: 100px;">{% trans %}label.code{% endtrans %}</div>
-            <div class="option_width" style="float: left; width: 400px;">{% trans %}label.description{% endtrans %}</div>
-            <div class="option_width" style="float: left; width: 200px;">{% trans %}label.students.quantity{% endtrans %}</div>
-            <div class="option_width" style="float: left; width: 200px;">{% trans %}label.institution{% endtrans %}</div>
+            <div class="option_width" style="float: left; width: 300px;">{% trans %}label.description{% endtrans %}</div>
+            <div class="option_width" style="float: left; width: 175px;">{% trans %}label.students.quantity{% endtrans %}</div>
+            <div class="option_width" style="float: left; width: 150px;">{% trans %}label.institution{% endtrans %}</div>
+            <div class="option_width" style="float: left; width: 100px;">{% trans %}label.type{% endtrans %}</div>
         </div>
             
         {% set counter = 0 %}   
@@ -34,9 +35,10 @@
         {% for entity in pagination %}            
             <div class="row userRow {% if counter%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}" rel="{{ entity.id }}">
                 <div class="option_width" style="float: left; width: 100px;">{{ entity.code }}</div>
-                <div class="option_width" style="float: left; width: 400px;">{{ entity.description }}</div>
-                <div class="option_width" style="float: left; width: 200px;">{{ entity.students|length }}</div>
-                <div class="option_width" style="float: left; width: 138px;">{{ entity.institution }}</div>
+                <div class="option_width" style="float: left; width: 300px;">{{ entity.description }}</div>
+                <div class="option_width" style="float: left; width: 175px;">{% if entity.routeType == 1 %} {{ entity.students|length }} {% else %} {{ entity.studentsToRoute|length }} {% endif %}</div>
+                <div class="option_width" style="float: left; width: 150px;">{{ entity.institution }}</div>
+                <div class="option_width" style="float: left; width: 100px;">{% if entity.routeType == 1 %}{%trans%} label.route.type.1 {% endtrans %} {% else %} {%trans%} label.route.type.2 {% endtrans %} {% endif %}</div>
                 <div class="right imageButton editButton"  title="{% trans %}label.edit{% endtrans %}"  rel="{{ entity.id }}"></div>
                 <div class="right imageButton viewButton"  title="{% trans %}label.view{% endtrans %}"  rel="{{ entity.id }}"></div>
                 <div class="clear"></div>

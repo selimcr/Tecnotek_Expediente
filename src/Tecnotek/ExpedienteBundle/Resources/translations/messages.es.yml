@@ -220,6 +220,9 @@ label.max_value: Valor Maximo
 label.order: Order
 label.parent: Padre
 
+label.route.type.1: Normal
+label.route.type.2: Club
+
 label.current.period: Periodo Actual
 
 results.not.found: No se han encontrado resultados.
