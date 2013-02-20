@@ -521,6 +521,10 @@ var Tecnotek = {
                                 $('#studentsHeader').html(data.studentsHeader);
                                 $('#tableContainer').show();
 
+                                var height = data.studentsCounter * 26.66 + 300;
+                                $("#studentsTableContainer").css("height", height + "px");
+
+
 
                                 $(".textField").each(function(){
                                     if($(this).attr("val") !== "-1" && $(this).attr("val").indexOf("val") !== 0){
@@ -556,9 +560,15 @@ var Tecnotek = {
                     e.preventDefault();
                     $this = $(this);
                     $type = $this.attr('tipo');
+                    $max = $this.attr('max');
                     $nota = $this.val();
                     $stdId = $this.attr('std');
 
+                    if(($nota * 1) > ($max * 1)){
+                        Tecnotek.showInfoMessage("El valor maximo permitido es " + $max,true, "", false);
+                        $this.val("");
+                        $nota = "";
+                    }
                     if(Tecnotek.UI.vars["forzeBlur"] == true){
                         if($type == 1){
                             $percentage = $this.attr('perc');
@@ -568,7 +578,7 @@ var Tecnotek = {
                                 $totalField.html("-");
                             } else {
                                 //console.debug("Calcular total para " + $(this).attr('rel') + ", total = " + ($percentage * $nota / 100));
-                                $totalField.html("" + ($percentage * $nota / 100) + "%");
+                                $totalField.html("" + ($percentage * $nota / 100));
                             }
                         } else {
                             $childs = $this.attr('child');
@@ -591,7 +601,7 @@ var Tecnotek = {
                                 } else {
                                     $percentage =  $("#prom_" + $parent + "_" + $stdId).attr('perc');
                                     $("#prom_" + $parent + "_" + $stdId).html("" + ($sum/$childs));
-                                    $("#total_" + $parent + "_" + $stdId).html("" + ($percentage * ($sum/$childs) / 100) + "%");
+                                    $("#total_" + $parent + "_" + $stdId).html("" + ($percentage * ($sum/$childs) / 100));
                                 }
                             });
                         }

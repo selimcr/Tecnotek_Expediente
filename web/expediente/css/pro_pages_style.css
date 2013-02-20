@@ -2036,11 +2036,11 @@ background: linear-gradient(#575757, #141414);
 
 /**/
 /*.btn.edit span{ display:inline-block; background: url(../images/icons/token_dark_full.png) -900px -36px;margin:0 7px 0 0}*/
-.editButton {background: url(../images/icons/token_dark_full.png) no-repeat left 0px; background-position-x: -78px; background-position-y: -42px;}
-.studentsButton {background: url(../images/icons/token_dark_full.png) no-repeat left 0px; background-position-x: -38px; background-position-y: -258px;}
+.editButton {background: url(../images/icons/token_dark_full.png) no-repeat left 0px; background-position: -78px -42px;}
+.studentsButton {background: url(../images/icons/token_dark_full.png) no-repeat left 0px; background-position: -38px -258px;}
 /*.btn.delete span{ display:inline-block; background: url(../images/icons/icons-dark.png) -1728px -36px;margin:0 7px 0 0}*/
 .deleteButton {background: url(../images/icons/icons-dark.png) -1728px -36px; height: 16px;}
 .adminButton {background: url(../images/icons/setup.png) no-repeat left 0px;}
-.viewButton {background: url(../images/icons/token_dark_full.png) no-repeat left 0px; background-position-x: -144px; background-position-y: -438px;}
+.viewButton {background: url(../images/icons/token_dark_full.png) no-repeat left 0px; background-position: -144px -438px;}
 .imageButton { width: 26px; height: 24px; margin-right: 5px;}
 .imageButton:hover {cursor: pointer;}
