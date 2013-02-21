@@ -352,6 +352,16 @@ class TeacherController extends Controller
                         "one" => "#38255c",
                         "two" => "#04D0E6"
                     );
+
+                    $dql = "SELECT stdy FROM TecnotekExpedienteBundle:Student std, TecnotekExpedienteBundle:StudentYear stdy "
+                        . " WHERE stdy.student = std AND stdy.group = " . $groupId . " AND stdy.period = " . $periodId
+                        . " ORDER BY std.lastname, std.firstname";
+                    $query = $em->createQuery($dql);
+                    $students = $query->getResult();
+
+                    $studentsCount = sizeof($students);
+                    $rowIndex = 1;
+                    $colsCounter = 1;
                     foreach( $entries as $entry )
                     {
                         $temp = $entry;
@@ -371,8 +381,8 @@ class TeacherController extends Controller
                                 foreach( $subentries as $subentry )
                                 {
                                     //$studentRow .= '<input type="text" class="textField itemNota" tipo="2" rel="total_' . $subentry->getId() . '_stdId" perc="' . $subentry->getPercentage() . '" std="stdId" entry="' . $subentry->getId() . '"  stdyId="stdyIdd">';
-                                    $studentRow .= '<input type="text" class="textField itemNota item_' . $temp->getId() . '_stdId" val="val_stdId_' . $subentry->getId() .  '_" tipo="2" child="' . $size . '" parent="' . $temp->getId() . '" rel="total_' . $temp->getId() . '_stdId" max="' . $subentry->getMaxValue() . '" perc="' . $temp->getPercentage() . '" std="stdId"  entry="' . $subentry->getId() . '"  stdyId="stdyIdd">';
-
+                                    $studentRow .= '<input tabIndex=tabIndexCol'. $colsCounter . 'x type="text" class="textField itemNota item_' . $temp->getId() . '_stdId" val="val_stdId_' . $subentry->getId() .  '_" tipo="2" child="' . $size . '" parent="' . $temp->getId() . '" rel="total_' . $temp->getId() . '_stdId" max="' . $subentry->getMaxValue() . '" perc="' . $temp->getPercentage() . '" std="stdId"  entry="' . $subentry->getId() . '"  stdyId="stdyIdd">';
+                                    $colsCounter++;
                                     $htmlCodes .= '<div class="itemHeaderCode itemNota"></div>';
                                     $html .= '<div class="itemHeader itemNota" style="margin-left: ' . $marginLeft . 'px;">' . $subentry->getName() . '</div>';
                                     $marginLeft += $jumpRight; $marginLeftCode += 25;
@@ -394,7 +404,8 @@ class TeacherController extends Controller
                                 if($size == 1){
                                     foreach( $subentries as $subentry )
                                     {
-                                        $studentRow .= '<input type="text" class="textField itemNota item_' . $temp->getId() . '_stdId" val="val_stdId_' . $subentry->getId() .  '_" tipo="1"  max="' . $subentry->getMaxValue() . '" child="' . $size . '" parent="' . $temp->getId() . '" rel="total_' . $temp->getId() . '_stdId" perc="' . $temp->getPercentage() . '" std="stdId"  entry="' . $subentry->getId() . '"  stdyId="stdyIdd">';
+                                        $studentRow .= '<input tabIndex=tabIndexCol'. $colsCounter . 'x type="text" class="textField itemNota item_' . $temp->getId() . '_stdId" val="val_stdId_' . $subentry->getId() .  '_" tipo="1"  max="' . $subentry->getMaxValue() . '" child="' . $size . '" parent="' . $temp->getId() . '" rel="total_' . $temp->getId() . '_stdId" perc="' . $temp->getPercentage() . '" std="stdId"  entry="' . $subentry->getId() . '"  stdyId="stdyIdd">';
+                                        $colsCounter++;
                                         $htmlCodes .= '<div class="itemHeaderCode itemNota"></div>';
                                         $html .= '<div class="itemHeader itemNota" style="margin-left: ' . $marginLeft . 'px;">' . $subentry->getName() . '</div>';
                                         $marginLeft += $jumpRight; $marginLeftCode += 25;
@@ -448,17 +459,20 @@ class TeacherController extends Controller
                         '<div style="position: relative; height: 152px; margin-left: -59px;">' . $html . '</div>' . '<div class="clear"></div>' .
                         $html3;
 
-                    $dql = "SELECT stdy FROM TecnotekExpedienteBundle:Student std, TecnotekExpedienteBundle:StudentYear stdy "
-                        . " WHERE stdy.student = std AND stdy.group = " . $groupId . " AND stdy.period = " . $periodId
-                        . " ORDER BY std.firstname, std.lastname";
-                    $query = $em->createQuery($dql);
-                    $students = $query->getResult();
 
                     //$students = $em->getRepository("TecnotekExpedienteBundle:Student")->findAll();
+                    $studentRowIndex = 0;
                     foreach($students as $stdy){
-                        $studentsHeader .= '<div class="itemCarne">' . $stdy->getStudent()->getCarne() . '</div><div class="itemEstudiante">' . $stdy->getStudent() . '</div><div class="clear"></div>';
+                        $studentRowIndex++;
+                        $studentsHeader .= '<div class="itemCarne">' . $stdy->getStudent()->getCarne() . '</div><div class="itemEstudiante">' . $stdy->getStudent()->getLastname() . ", " . $stdy->getStudent()->getFirstname() . '</div><div class="clear"></div>';
                         $row = str_replace("stdId", $stdy->getStudent()->getId(), $studentRow);
                         $row = str_replace("stdyIdd", $stdy->getId(), $row);
+
+                        //tabIndexColXx
+                        for ($i = 1; $i <= $colsCounter; $i++) {
+                            $indexVar = "tabIndexCol" . $i . "x";
+                            $row = str_replace($indexVar, "" . ($studentRowIndex + (($i - 1) * $studentsCount)), $row);
+                        }
 
                         $dql = "SELECT qua FROM TecnotekExpedienteBundle:StudentQualification qua"
                             . " WHERE qua.studentYear = " . $stdy->getId();
@@ -470,7 +484,7 @@ class TeacherController extends Controller
                         $html .=  '<div class="clear"></div><div id="total_trim_' . $stdy->getStudent()->getId() . '" class="itemHeaderCode itemPromedioPeriodo"style="color: #fff;">-</div>' . $row;
                     }
 
-                    return new Response(json_encode(array('error' => false, 'html' => $html, 'studentsHeader' => $studentsHeader, "studentsCounter" => sizeof($students))));
+                    return new Response(json_encode(array('error' => false, 'html' => $html, 'studentsHeader' => $studentsHeader, "studentsCounter" => $studentsCount)));
                 } else {
                     return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
                 }

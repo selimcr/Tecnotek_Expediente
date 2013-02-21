@@ -12,7 +12,8 @@
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css" />
     <script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
     <script src="http://code.jquery.com/ui/1.9.1/jquery-ui.js"></script>
-
+    <script type="text/javascript" src="{{ asset('expediente/js/spin.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('expediente/js/jquery.spin.js') }}"></script>
     {% block extracss %}
     {% endblock %}
 
@@ -165,6 +166,10 @@
 		</div>
 	</div>
 </footer>
+    <div id="spinner-modal" style="width: 150px">
+        <div style="width: 100%; margin-top: 10px; margin-bottom: 10px; text-align: center;">Por favor espere...</div>
+        <div id="spin" name="spin" style="height: 30px; line-height: 30px; padding-top: 35px; padding-left: 67px;"></div>
+    </div>
 </div>
 </body>
 </html>
