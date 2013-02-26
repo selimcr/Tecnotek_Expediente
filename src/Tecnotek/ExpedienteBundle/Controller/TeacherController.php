@@ -227,6 +227,7 @@ class TeacherController extends Controller
         {
             try {
                 $request = $this->get('request')->request;
+                $subentryId = $request->get('subentryId');
                 $parentId = $request->get('parentId');
                 $name = $request->get('name');
                 $code = $request->get('code');
@@ -242,7 +243,11 @@ class TeacherController extends Controller
                     && isset($sortOrder) && isset($groupId)) {
                     $em = $this->getDoctrine()->getEntityManager();
 
-                    $courseEntry = new SubCourseEntry();
+                    if($subentryId == "0"){
+                        $courseEntry = new SubCourseEntry();
+                    } else {
+                        $courseEntry = $em->getRepository("TecnotekExpedienteBundle:SubCourseEntry")->find($subentryId);
+                    }
                     $courseEntry->setName($name);
                     $courseEntry->setCode($code);
                     $courseEntry->setMaxValue($maxValue);
