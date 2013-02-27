@@ -438,7 +438,7 @@ var Tecnotek = {
                                 Tecnotek.showErrorMessage(data.message,true, "", false);
                             } else {
                                 for(i=0; i<data.groups.length; i++) {
-                                    $('#groups').append('<option value="' + data.groups[i].id + '">' + data.groups[i].name + '</option>');
+                                    $('#groups').append('<option value="' + data.groups[i].id + '">' + data.groups[i].name + ' - ' + data.groups[i].name_group +  '</option>');
                                 }
                                 Tecnotek.AbsencesByGroup.loadStudentsOfGroup();
                             }
