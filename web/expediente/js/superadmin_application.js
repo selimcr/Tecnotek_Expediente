@@ -24,10 +24,38 @@ var Tecnotek = {
 		ftpCounter: 0,
         updateFail: false,
 		session : {},
+        spinTarget: document.getElementById('spin'),
+        spinner: new Spinner({
+            lines: 11, // The number of lines to draw
+            length: 20, // The length of each line
+            width: 4, // The line thickness
+            radius: 10, // The radius of the inner circle
+            corners: 1, // Corner roundness (0..1)
+            rotate: 0, // The rotation offset
+            color: '#000', // #rgb or #rrggbb
+            speed: 1, // Rounds per second
+            trail: 60, // Afterglow percentage
+            shadow: false, // Whether to render a shadow
+            hwaccel: false, // Whether to use hardware acceleration
+            className: 'spinner', // The CSS class to assign to the spinner
+            zIndex: 2e9, // The z-index (defaults to 2000000000)
+            //top: 'auto', // Top position relative to parent in px
+            //left: 'auto' // Left position relative to parent in px
+        }).spin(document.getElementById('spin')),
 		logout:function(url){
 			location.href= url;
 		},
 		init : function() {
+            $( "#spinner-modal" ).dialog({
+                height: 140,
+                modal: true,
+                width: 160,
+                resizable: false,
+                draggable: false,
+                autoOpen: false
+            });
+            $("#spinner-modal").siblings('div.ui-dialog-titlebar').remove();
+            Tecnotek.spinner.spin(document.getElementById('spin'));
 			var module = Tecnotek.module;
 			console.debug("Module: " + module)
 			if (module) {
@@ -254,6 +282,23 @@ var Tecnotek = {
                 $('.adminButton').click(function(event){
                     event.preventDefault();
                     location.href = Tecnotek.UI.urls["admin"] + "/" + $(this).attr("rel");
+                });
+                $('#btnSearch').click(function(event){
+                    event.preventDefault();
+                    var url = location.href;
+                    var text = $("#searchText").val();
+                    if( url.indexOf("?") > -1 ){
+                        if( url.indexOf("text=") > -1 ){
+                            url += "&q=1";
+                            url = url.replace(/(text=).*?(&)/,'$1' + text + '$2');
+                            url = url.replace("&q=1","");
+                        } else {
+                            url += "&text=" + text;
+                        }
+                    } else {
+                        url += "?text=" + text;
+                    }
+                    window.location.href= url;
                 });
 			},
 			submit : function() {

@@ -18,17 +18,27 @@ use Symfony\Component\HttpFoundation\Response;
 class StudentController extends Controller
 {
     /* Metodos para CRUD de Students */
-    public function studentListAction($rowsPerPage = 10)
+    public function studentListAction($rowsPerPage = 30)
     {
         $em = $this->getDoctrine()->getEntityManager();
-        $dql = "SELECT students FROM TecnotekExpedienteBundle:Student students";
+
+        $text = $this->get('request')->query->get('text');
+        $sqlText = "";
+        if(isset($text) && $text != "") {
+            $sqlText = " WHERE s.firstname like '%$text%' or s.lastname like '%$text%' or s.carne like '%$text%'";
+        }
+
+        $dql = "SELECT s FROM TecnotekExpedienteBundle:Student s" . $sqlText;
         $query = $em->createQuery($dql);
 
         $param = $this->get('request')->query->get('rowsPerPage');
+
+
+
         if(isset($param) && $param != "")
             $rowsPerPage = $param;
 
-        $dql2 = "SELECT count(students) FROM TecnotekExpedienteBundle:Student students";
+        $dql2 = "SELECT count(s) FROM TecnotekExpedienteBundle:Student s" . $sqlText;
         $page = $this->getPaginationPage($dql2, $this->get('request')->query->get('page', 1), $rowsPerPage);
 
         $paginator = $this->get('knp_paginator');
@@ -39,7 +49,7 @@ class StudentController extends Controller
         );
 
         return $this->render('TecnotekExpedienteBundle:SuperAdmin:Student/list.html.twig', array(
-            'pagination' => $pagination, 'rowsPerPage' => $rowsPerPage, 'menuIndex' => 3
+            'pagination' => $pagination, 'rowsPerPage' => $rowsPerPage, 'menuIndex' => 3, 'text' => $text
         ));
     }
 

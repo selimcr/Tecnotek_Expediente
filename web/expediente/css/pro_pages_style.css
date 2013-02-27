@@ -363,6 +363,8 @@ blockquote em{ display:inline-block; margin-top:10px;}
 .btn.dwload span{ display:inline-block; background: url(../images/icons/icons-color.png) -1476px -36px;margin:0 7px 0 0} 
 .btn.bookmark span{ display:inline-block; background: url(../images/icons/icons-color.png) -324px 0;margin:0 7px 0 0}   
 .btn.add span{ display:inline-block; background: url(../images/icons/icons-dark.png) -900px -36px;margin:0 7px 0 0}
+.btn.search span{ display:inline-block; background: url(../images/icons/icons-dark.png) -1008px -36px;margin:0 7px 0 0}
+.btnSearch { display:inline-block; background: url(../images/icons/icons-dark.png) -1008px -36px;margin:0 7px 0 0}
 .btn.edit span{ display:inline-block; background: url(../images/icons/icons-dark.png) -1692px -36px;margin:0 7px 0 0}
 .btn.delete span{ display:inline-block; background: url(../images/icons/icons-dark.png) -1728px -36px;margin:0 7px 0 0}
 .btn.save span, .btn.save input span{ display:inline-block; background: url(../images/icons/icons-dark.png) -900px -36px;margin:0 7px 0 0}
@@ -2044,3 +2046,31 @@ background: linear-gradient(#575757, #141414);
 .viewButton {background: url(../images/icons/token_dark_full.png) no-repeat left 0px; background-position: -144px -438px;}
 .imageButton { width: 26px; height: 24px; margin-right: 5px;}
 .imageButton:hover {cursor: pointer;}
+
+a.sortable {
+    line-height: 18px;
+    font-size: 15px;
+    float: left;
+    text-align: right;
+    color: #949494;
+    padding-left: 20px;
+    background: url(../images/icons/sort_none.gif) center left no-repeat;
+}
+a.asc {
+    line-height: 18px;
+    font-size: 15px;
+    float: left;
+    text-align: right;
+    padding-left: 20px;
+    color: #949494;
+    background: url(../images/icons/sort_asc.gif) center left no-repeat;
+}
+a.desc {
+    line-height: 18px;
+    font-size: 15px;
+    float: left;
+    text-align: right;
+    color: #949494;
+    padding-left: 20px;
+    background: url(../images/icons/sort_desc.gif) center left no-repeat;
+}

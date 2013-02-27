@@ -23,14 +23,28 @@
         </div>
         
         <div class="row tableHeader">
-            <div class="option_width" style="float: left; width: 200px;">{% trans %}label.firstname{% endtrans %}</div>
-            <div class="option_width" style="float: left; width: 200px;">{% trans %}label.lastname{% endtrans %}</div>
+            <div class="option_width" style="float: left; width: 100px; margin-left: -6px;">
+                {{ pagination.sortable('Carne', 's.carne')|raw }}
+            </div>
+            <div class="option_width" style="float: left; width: 200px; margin-left: -6px;">
+                {{ pagination.sortable('Nombre', 's.firstname')|raw }}
+            </div>
+            <div class="option_width" style="float: left; width: 200px; margin-left: -6px;">
+                {{ pagination.sortable('Apellidos', 's.lastname')|raw }}
+            </div>
+
+            <div class="right"><a style="margin-top: -6px;" href="#" class="btn search" id="btnSearch" name="btnSearch"><span></span>{% trans %}label.search{% endtrans %}</a></div>
+            <div class="option_width right" style="margin-top: -4px;">
+                <input id="searchText" name="searchText" value="{{ text }}">
+            </div>
+
         </div>
             
         {% set counter = 0 %}   
 
         {% for entity in pagination %}            
             <div class="row userRow {% if counter%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}" rel="{{ entity.id }}">
+                <div class="option_width" style="float: left; width: 100px;">{{ entity.carne }}</div>
                 <div class="option_width" style="float: left; width: 200px;">{{ entity.firstname }}</div>
                 <div class="option_width" style="float: left; width: 200px;">{{ entity.lastname }}</div>
                 <div class="right imageButton editButton"  title="{% trans %}label.edit{% endtrans %}"  rel="{{ entity.id }}"></div>
