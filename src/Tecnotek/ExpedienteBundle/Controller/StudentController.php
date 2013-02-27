@@ -269,9 +269,10 @@ class StudentController extends Controller
 
                 $em = $this->getDoctrine()->getEntityManager();
                 $sql = "SELECT std.id, std.firstname, std.lastname "
-                    . " FROM tek_students std"
+                    . " FROM tek_students std, tek_students_year stdy"
                     . " WHERE (std.firstname like '%" . $text . "%' OR std.lastname like '%" . $text . "%')"
                     . " AND std.id NOT IN (SELECT cs.student_id FROM club_student cs WHERE cs.club_id = " . $clubId . ")"
+                    . " AND std.id = stdy.student_id"
                     . " ORDER BY std.firstname, std.lastname";
                 $stmt = $em->getConnection()->prepare($sql);
                 $stmt->execute();
@@ -305,10 +306,11 @@ class StudentController extends Controller
 
                 $em = $this->getDoctrine()->getEntityManager();
 
-                $sql = "SELECT g.id, g.name "
-                    . " FROM tek_groups g"
+                $sql = "SELECT g.id, gr.name , CONCAT(g.name) as name_group"
+                    . " FROM tek_groups g, tek_grades gr"
                     . " WHERE g.period_id = " . $periodId
-                    . " ORDER BY g.name";
+                    . " AND g.grade_id = gr.id"
+                    . " ORDER BY gr.id";
                 $stmt = $em->getConnection()->prepare($sql);
                 $stmt->execute();
                 $groups = $stmt->fetchAll();
@@ -345,16 +347,18 @@ class StudentController extends Controller
 
                 if($route->getRouteType() == 1){
                     $sql = "SELECT std.id, std.firstname, std.lastname "
-                        . " FROM tek_students std"
+                        . " FROM tek_students std, tek_students_year stdy"
                         . " WHERE (std.firstname like '%" . $text . "%' OR std.lastname like '%" . $text . "%')"
                         . " AND (std.route_id is null Or std.route_id <> $routeId)"
+                        . " AND std.id = stdy.student_id"
                         . " ORDER BY std.firstname, std.lastname";
                 } else {
                     $sql = "SELECT std.id, std.firstname, std.lastname "
-                        . " FROM tek_students std"
+                        . " FROM tek_students std, tek_students_year stdy"
                         . " LEFT JOIN tek_students_to_routes stdToRoute ON stdToRoute.student_id = std.id"
                         . " WHERE (std.firstname like '%" . $text . "%' OR std.lastname like '%" . $text . "%')"
                         . " AND (stdToRoute.id is null Or stdToRoute.route_id <> $routeId)"
+                        . " AND std.id = stdy.student_id"
                         . " ORDER BY std.firstname, std.lastname";
                 }
                 $stmt = $em->getConnection()->prepare($sql);
@@ -821,8 +825,9 @@ class StudentController extends Controller
 
                 } else {
                     $sql = "SELECT e.id, e.firstname, e.lastname "
-                        . " FROM tek_students e"
+                        . " FROM tek_students e, tek_students_year stdy"
                         . " WHERE (e.firstname like '%" . $text . "%' OR e.lastname like '%" . $text . "%')"
+                        . " AND e.id = stdy.student_id"
                         . " ORDER BY e.firstname, e.lastname";
                 }
 
