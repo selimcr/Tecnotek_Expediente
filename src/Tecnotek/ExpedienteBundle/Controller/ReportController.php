@@ -102,5 +102,37 @@ class ReportController extends Controller
         ));
     }
 
+    public function reportStudentsAction(){
+        $logger = $this->get("logger");
+        $em = $this->getDoctrine()->getEntityManager();
+        $currentPeriod = $em->getRepository("TecnotekExpedienteBundle:Period")->findOneBy(array('isActual' => true));
 
+        $logger->err("--> CurrentPeriod: " . $currentPeriod);
+        $request = $this->get('request')->request;
+        $tipo = $request->get('tipo');
+        if( !isset($tipo)){
+            $tipo = 0;
+            $groups = null;
+        } else {
+            $dql = "SELECT g FROM TecnotekExpedienteBundle:Group g JOIN g.grade grade WHERE g.period = " . $currentPeriod->getId() . " ORDER BY grade.number";
+            $query = $em->createQuery($dql);
+            $groups = $query->getResult();
+            $groupRepo = $em->getRepository("TecnotekExpedienteBundle:Group");
+            foreach($groups as $group){
+                $group->setStudents($groupRepo->findAllStudentsByLastname($group->getId()));
+            }
+            //$groups = $em->getRepository("TecnotekExpedienteBundle:Group")->findBy(array('period' => $currentPeriod));
+        }
+        $logger->err("--> groups: " . sizeof($groups) );
+        $typeLabel = "";
+        switch($tipo){
+            case 1: $typeLabel = "Grupo"; break;
+            case 2: $typeLabel = "Nivel"; break;
+            case 3: $typeLabel = "Institucion"; break;
+        }
+
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Reports/students.html.twig', array('menuIndex' => 4,
+            'tipo' => $tipo, 'typeLabel' => $typeLabel, 'groups' => $groups
+        ));
+    }
 }

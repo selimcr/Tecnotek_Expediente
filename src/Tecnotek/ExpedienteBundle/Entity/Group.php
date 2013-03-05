@@ -13,6 +13,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *
  * @ORM\Table(name="tek_groups")
  * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="Tecnotek\ExpedienteBundle\Repository\GroupRepository")
  */
 class Group
 {
@@ -61,6 +62,8 @@ class Group
      * @ORM\OneToMany(targetEntity="AssignedTeacher", mappedBy="group", cascade={"persist", "remove"})
      */
     private $assignedTeachers;
+
+    private $students;
 
     public function __construct()
     {
@@ -180,5 +183,13 @@ class Group
     public function getInstitution()
     {
         return $this->institution;
+    }
+
+    public function setStudents($list){
+        $this->students = $list;
+    }
+
+    public function getStudents(){
+        return $this->students;
     }
 }

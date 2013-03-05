@@ -506,6 +506,9 @@ _expediente_report_daily_by_route:
    pattern:  /reports/dailyByRoute/
    defaults: { _controller: TecnotekExpedienteBundle:Report:reportStudentDailyByRoute }
 
+_expediente_report_students:
+   pattern:  /reports/students/
+   defaults: { _controller: TecnotekExpedienteBundle:Report:reportStudents }
 
 #########################################
 

@@ -263,3 +263,5 @@ footer h4{ color:#fff;}
 #report .student_row{font-size: 11px; height: 14px; line-height: 16px; color: #000;}
 #report .student_footer{font-size: 10px; color: #000; font-weight: bold;}
 #report .area_title{font-weight: bold; margin-top: 25px; text-decoration: underline; color: #000;}
+
+.pageBreak { page-break-after: always; }
