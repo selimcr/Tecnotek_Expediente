@@ -87,6 +87,18 @@ class Student
     private $dailyDescription;
 
     /**
+     * @ORM\Column(type="integer")
+     * @Assert\NotBlank()
+     */
+    private $gender;
+
+    /**
+     * @ORM\Column(type="integer")
+     * @Assert\NotBlank()
+     */
+    private $age;
+
+    /**
      * @ManyToOne(targetEntity="Route")
      * @JoinColumn(name="route_id", referencedColumnName="id", nullable=true)
      */
@@ -362,6 +374,46 @@ class Student
     public function getRoute()
     {
         return $this->route;
+    }
+
+    /**
+     * Set age
+     *
+     * @param integer $age
+     */
+    public function setAge($age)
+    {
+        $this->age = $age;
+    }
+
+    /**
+     * Get age
+     *
+     * @return integer
+     */
+    public function getAge()
+    {
+        return $this->age;
+    }
+
+    /**
+     * Set gender
+     *
+     * @param integer $gender
+     */
+    public function setGender($gender)
+    {
+        $this->gender = $gender;
+    }
+
+    /**
+     * Get gender
+     *
+     * @return integer
+     */
+    public function getGender()
+    {
+        return $this->gender;
     }
 
 }

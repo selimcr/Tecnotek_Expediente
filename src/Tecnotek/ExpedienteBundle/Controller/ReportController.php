@@ -110,20 +110,48 @@ class ReportController extends Controller
         $logger->err("--> CurrentPeriod: " . $currentPeriod);
         $request = $this->get('request')->request;
         $tipo = $request->get('tipo');
+
+        $gender = $request->get('gender');
+        $age = $request->get('age');
+
+        $groups = null;
+        $grades = null;
+        $institutions = null;
         if( !isset($tipo)){
             $tipo = 0;
-            $groups = null;
         } else {
-            $dql = "SELECT g FROM TecnotekExpedienteBundle:Group g JOIN g.grade grade WHERE g.period = " . $currentPeriod->getId() . " ORDER BY grade.number";
-            $query = $em->createQuery($dql);
-            $groups = $query->getResult();
-            $groupRepo = $em->getRepository("TecnotekExpedienteBundle:Group");
-            foreach($groups as $group){
-                $group->setStudents($groupRepo->findAllStudentsByLastname($group->getId()));
+            if($tipo == 1){
+                $dql = "SELECT g FROM TecnotekExpedienteBundle:Group g JOIN g.grade grade WHERE g.period = " . $currentPeriod->getId() . " ORDER BY grade.number";
+                $query = $em->createQuery($dql);
+                $groups = $query->getResult();
+                $groupRepo = $em->getRepository("TecnotekExpedienteBundle:Group");
+                foreach($groups as $group){
+                    $group->setStudents($groupRepo->findAllStudentsByLastname($group->getId()));
+                }
+            } else {
+                if($tipo == 2){
+                    $dql = "SELECT grade FROM TecnotekExpedienteBundle:Grade grade ORDER BY grade.number";
+                    $query = $em->createQuery($dql);
+                    $grades = $query->getResult();
+                    $gradeRepo = $em->getRepository("TecnotekExpedienteBundle:Grade");
+                    foreach($grades as $grade){
+                        $grade->setStudents($gradeRepo->findAllStudentsByLastname($grade->getId(), $currentPeriod->getId()));
+                    }
+                } else {
+                    $dql = "SELECT institution FROM TecnotekExpedienteBundle:Institution institution ORDER BY institution.id";
+                    $query = $em->createQuery($dql);
+                    $institutions = $query->getResult();
+                    $repo = $em->getRepository("TecnotekExpedienteBundle:Institution");
+                    foreach($institutions as $institution){
+                        $institution->setStudents($repo->findAllStudentsByLastname($institution->getId(), $currentPeriod->getId()));
+                    }
+                }
             }
+
             //$groups = $em->getRepository("TecnotekExpedienteBundle:Group")->findBy(array('period' => $currentPeriod));
         }
         $logger->err("--> groups: " . sizeof($groups) );
+        $logger->err("--> groups: " . sizeof($grades) );
         $typeLabel = "";
         switch($tipo){
             case 1: $typeLabel = "Grupo"; break;
@@ -132,7 +160,9 @@ class ReportController extends Controller
         }
 
         return $this->render('TecnotekExpedienteBundle:SuperAdmin:Reports/students.html.twig', array('menuIndex' => 4,
-            'tipo' => $tipo, 'typeLabel' => $typeLabel, 'groups' => $groups
+            'tipo' => $tipo, 'typeLabel' => $typeLabel, 'groups' => $groups,
+            'grades' => $grades, 'institutions' => $institutions,
+            'age' => $age, 'gender' => $gender
         ));
     }
 }

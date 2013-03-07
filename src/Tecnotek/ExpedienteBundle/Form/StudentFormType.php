@@ -13,6 +13,8 @@ class StudentFormType extends AbstractType
             add('firstname', 'text', array('trim' => true))->
             add('lastname', 'text', array('trim' => true))->
             add('carne', 'text', array('trim' => true))->
+            add('gender', 'choice', array('choices' => array(  '1' => 'Hombre', '2' => 'Mujer'),'required'  => true))->
+            add('age', 'integer', array('required' => true))->
             add('address', 'text', array('trim' => true))->
             add('fatherPhone', 'text', array('trim' => true))->
             add('motherPhone', 'text', array('trim' => true))->

@@ -60,6 +60,16 @@
                                 <div class="clear"></div>
                             </div>
                             <div>
+                                <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.age{%endtrans%}</div>
+                                <div id="age" class="left">{{ entity.age }}</div>
+                                <div class="clear"></div>
+                            </div>
+                            <div>
+                                <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.gender{%endtrans%}</div>
+                                <div id="gender" class="left">{% if entity.gender == 1%}{% trans %}label.male{% endtrans %}{% else %}{% trans %}label.female{% endtrans %}{% endif %}</div>
+                                <div class="clear"></div>
+                            </div>
+                            <div>
                                 <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.address{%endtrans%}</div>
                                 <div id="address" class="left">{{ entity.address }}</div>
                                 <div class="clear"></div>

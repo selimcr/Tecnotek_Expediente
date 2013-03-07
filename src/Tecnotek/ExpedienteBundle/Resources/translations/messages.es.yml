@@ -193,6 +193,8 @@ label.motherPhone: Telefono de la madre
 label.fatherPhone: Telefono del padre
 label.fatherPhoneShort: Tel. Padre
 label.motherPhoneShort: Tel. Madre
+label.female: Mujer
+label.male: Hombre
 
 label.routes.by.zone: Rutas por Zona
 label.students.by.route: Estudiantes por Ruta
@@ -214,7 +216,7 @@ label.reports.bus: Reporte de Busetas
 label.reports.bus.message: Ingrese las opciones de filtrado deseadas y presione el boton de filtrar.
 
 label.reports.routes: Reporte de rutas
-
+label.include.in.report: Incluir en el reporte
 label.reports.routes_zones: Reporte de rutas
 label.reports.routes_zones.message:
 

@@ -15,6 +15,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *
  * @ORM\Table(name="tek_institutions")
  * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="Tecnotek\ExpedienteBundle\Repository\InstitutionRepository")
  */
 class Institution
 {
@@ -33,6 +34,7 @@ class Institution
      */
     private $name;
 
+    private $students;
 
     public function __construct()
     {
@@ -74,4 +76,11 @@ class Institution
         return $this->name;
     }
 
+    public function setStudents($list){
+        $this->students = $list;
+    }
+
+    public function getStudents(){
+        return $this->students;
+    }
 }

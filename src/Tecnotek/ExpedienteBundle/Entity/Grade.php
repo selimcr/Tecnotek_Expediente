@@ -12,6 +12,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Table(name="tek_grades")
  * @ORM\Entity()
  * @UniqueEntity("number")
+ * @ORM\Entity(repositoryClass="Tecnotek\ExpedienteBundle\Repository\GradeRepository")
  */
 class Grade
 {
@@ -35,6 +36,8 @@ class Grade
      * @Assert\NotBlank()
      */
     private $number;
+
+    private $students;
 
     public function __construct()
     {
@@ -93,5 +96,13 @@ class Grade
     public function getNumber()
     {
         return $this->number;
+    }
+
+    public function setStudents($list){
+        $this->students = $list;
+    }
+
+    public function getStudents(){
+        return $this->students;
     }
 }
