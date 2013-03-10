@@ -1,0 +1,173 @@
+{% extends 'TecnotekExpedienteBundle::logged_layout.html.twig' %}
+
+{% block htmlTitle %}
+    Tecnotek :: Expediente :: Reporte Estudiantes
+{% endblock %}
+
+{% block extracss %}
+<link rel="stylesheet" href="{{ asset('expediente/css/jquery-ui-timepicker-addon.css') }}" type="text/css" media="all" />
+{% endblock %}
+
+{% block extrajs %}
+<script type="text/javascript" src="{{ asset('expediente/js/jquery.printElement.min.js') }}"></script>
+<script type="text/javascript">
+    Tecnotek.module = "reportClubs";
+    Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="container_24">
+    <div class="grid_24">
+        <div>
+            <div class="left">
+                <h1>{% trans %}label.report.clubs.title{% endtrans %}</h1>
+                <span>{% trans %}label.report.clubs.subtitle{% endtrans %}</span>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="filter-search">
+            <div class="internal">
+                <form id="searchForm" action="{{ path('_expediente_report_clubs') }}" method="post">
+                    <input type="hidden" name="tipo" id="tipo" value="0">
+                    <div class="filter-row">
+                        <div class="field" style="width: 100%">
+                            <div class="left">
+                                <label style="width: 160px;">{%trans%}label.report.clubs.include.students{%endtrans%}:</label>
+                                <input type="checkbox" class="check" id="withStudents" name="withStudents" {% if withStudents != null %}checked="checked"{% endif %}>
+                            </div>
+                            <button style="margin-left: 15px; margin-top: 0px;" type="submit" class="right btn save" name="search"><span></span>{% trans %}label.generate{% endtrans %}</button>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                    <div id="details" name="details" class="filter-row" {% if withStudents == null %}style="display: none;"{% endif %}>
+                        <label>{%trans%}label.include.in.report{%endtrans%}:</label>
+                        <input type="checkbox" class="check" id="gender" name="gender" {% if gender != null %}checked="checked"{% endif %}>{%trans%}label.gender{%endtrans%}
+                        <input type="checkbox" class="check" id="age" name="age" {% if age != null %}checked="checked"{% endif %}>{%trans%}label.age{%endtrans%}
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {% if tipo != null %}
+        <div style="margin-top: 15px;">
+            <button style="margin-left: 15px; margin-top: 0px;" type="button" class="right btn print" id="btnPrint" name="btnPrint" rel="Listado de Estudiantes"><span></span>{% trans %}label.print{% endtrans %}</button>
+            <div class="clear"></div>
+        </div>
+        <div id="report" style="margin-top: 25px;">
+            {% if withStudents == null %}
+                <div class="titles" style="font-size: 10px;">
+                    <div class="left">Corporación Educativa Saint Michael S.A.</div>
+                    <div class="right">Reporte de estudiantes.</div>
+                    <div class="clear"></div>
+
+                    <div class="left">{{ "now"|date("d/M/Y H:i:s") }}</div>
+                    <div class="clear"></div>
+
+                    <p style="text-align: center;padding-bottom: 0px;">Reporte de Clubes</p>
+                    <p style="text-align: center; padding-bottom: 0px;"></p>
+                </div>
+                <div class="fields_row student_title">
+                    <div class="option_width" style="float: left; width: 200px;">{% trans %}label.name{% endtrans %}</div>
+                    <div class="option_width" style="float: left; width: 200px;">{% trans %}label.coordinator{% endtrans %}</div>
+                    <div class="option_width" style="float: left; width: 100px;">{% trans %}label.day{% endtrans %}</div>
+                    <div class="option_width" style="float: left; width: 150px;">{% trans %}label.schedule{% endtrans %}</div>
+                    <div class="option_width" style="float: left; width: 100px;">{% trans %}label.students{% endtrans %}</div>
+                    <div style="float: left; width: 60px;"></div>
+                    <div class="clear"></div>
+                </div>
+                {% for entity in clubs %}
+                    <div class="student_row">
+                        <div class="option_width" style="float: left; width: 200px;">{{ entity.name }}</div>
+                        <div class="option_width" style="float: left; width: 200px;">{{ entity.coordinator }}</div>
+                        <div class="option_width" style="float: left; width: 100px;">
+                            {% transchoice entity.day %}
+                            {1} Lunes|{2} Martes|{3} Miercoles|{4} Jueves|{5} Viernes|{6} Sabado|{7} Domingo
+                            {% endtranschoice %}
+                        </div>
+                        <div class="option_width" style="float: left; width: 150px;">{{ entity.timeI ~ " / " ~ entity.timeO }}</div>
+                        <div class="option_width" style="float: left; width: 100px;">{{ entity.getStudents()|length }}</div>
+                    </div>
+                    <div class="clear"></div>
+
+
+                <div class="pageBreak"> </div>
+                {% else %}
+                <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
+                    <div class="option_width" style="float: left; width: 375px;">{% trans %}results.not.found{% endtrans %}</div>
+                    <div class="clear"></div>
+                </div>
+                {% endfor %}
+                <div class="student_footer">
+                    Total de clubes: {{ clubs|length }}
+                </div>
+            {% else %}
+                    {% for club in clubs %}
+                    <div class="titles" style="font-size: 10px;">
+                        <div class="left">Corporación Educativa Saint Michael S.A.</div>
+                        <div class="right">Reporte de estudiantes.</div>
+                        <div class="clear"></div>
+
+                        <div class="left">{{ "now"|date("d/M/Y H:i:s") }}</div>
+                        <div class="clear"></div>
+
+                        <p style="text-align: center;padding-bottom: 0px;">Reporte de Clubes</p>
+                        <p style="text-align: center; padding-bottom: 0px;">Detalle de Estudiantes</p>
+                    </div>
+                    <div class="fields_row route">
+                        <p style="text-decoration: underline; padding-bottom: 0px;">Club: {{ club }}</p>
+                        <p>{% trans %}label.coordinator{% endtrans %}: {{ club.coordinator }}
+                            &nbsp;&nbsp;&nbsp; {% trans %}label.schedule{% endtrans %}: {% transchoice club.day %}
+                            {1} Lunes|{2} Martes|{3} Miercoles|{4} Jueves|{5} Viernes|{6} Sabado|{7} Domingo
+                            {% endtranschoice %} de {{ club.timeI ~ " a " ~ club.timeO }} </p>
+                    </div>
+                    <div class="fields_row student_title">
+                        <div style="float: left; width: 50px;">{%trans%}label.carne{%endtrans%}</div>
+                        <div style="float: left; width: 350px;">{%trans%}label.student.name{%endtrans%}</div>
+                        {% if age != null %}
+                        <div style="float: left; width: 100px;">{%trans%}label.age{%endtrans%}</div>
+                        {% endif %}
+                        {% if gender != null %}
+                        <div style="float: left; width: 150px;">{%trans%}label.gender{%endtrans%}</div>
+                        {% endif %}
+                        <div style="float: left; width: 60px;"></div>
+                        <div class="clear"></div>
+                    </div>
+                    {% for student in club.students %}
+                    <div class="student_row">
+                        <div style="float: left; width: 50px;">{{ student.carne }}</div>
+                        <div style="float: left; width: 350px;">{{ student.lastname ~ ", " ~ student.firstname }}</div>
+                        {% if age != null %}
+                        <div style="float: left; width: 100px;">{{ student.age }}</div>
+                        {% endif %}
+                        {% if gender != null %}
+                        <div style="float: left; width: 150px;">{% if student.gender == 1%}{% trans %}label.male{% endtrans %}{% else %}{% trans %}label.female{% endtrans %}{% endif %}</div>
+                        {% endif %}
+                        <div style="float: left; width: 60px;">&nbsp;</div>
+                    </div>
+                    <div class="clear"></div>
+                    {% endfor %}
+                    <div class="student_footer" style="margin-bottom: 15px;">
+                        Total de estudiantes en el club: {{ club.students|length }}
+                    </div>
+                    <div class="pageBreak"> </div>
+                    {% else %}
+                    <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
+                        <div class="option_width" style="float: left; width: 375px;">{% trans %}results.not.found{% endtrans %}</div>
+                        <div class="clear"></div>
+                    </div>
+                    {% endfor %}
+            {% endif %}
+        </div>
+
+        {% endif %}
+
+    </div>
+    <div class="clear"></div>
+    <div class="wrapper">
+            <div class="grid_24 padline">
+                    <div class="lineH"></div>
+            </div>
+    </div>
+</div>
+{% endblock %}

@@ -103,6 +103,10 @@ var Tecnotek = {
                 case "reports":
                     Tecnotek.Reports.init();
                     break;
+                case "reportClubs":
+                    Tecnotek.Reports.init();
+                    Tecnotek.ReportClubs.init();
+                    break;
                 default:
 					break;
 				}
@@ -263,6 +267,23 @@ var Tecnotek = {
 
             }
         },
+        ReportClubs : {
+            init : function() {
+                Tecnotek.ReportClubs.initComponents();
+                Tecnotek.ReportClubs.initButtons();
+            },
+            initComponents : function() {
+                $('#withStudents').change(function(event){
+                    if($(this).is(':checked')){
+                        $("#details").show();
+                    } else {
+                        $("#details").hide();
+                    }
+                });
+            },
+            initButtons : function() {
+            }
+        },
 		AdministratorList : {
 			init : function() {
 				Tecnotek.AdministratorList.initComponents();
@@ -383,6 +404,19 @@ var Tecnotek = {
         },
         AbsencesByGroup : {
             init : function() {
+                $( "#date" ).datepicker({
+                    defaultDate: "0d",
+                    changeMonth: true,
+                    dateFormat: "yy-mm-dd",
+                    showButtonPanel: true,
+                    currentText: "Hoy",
+                    numberOfMonths: 1,
+                    onClose: function( selectedDate ) {
+                        $("#absencesDate").val($("#date").val());
+                    }
+                });
+                $("#date").datepicker('setDate', new Date()).keypress(function(event){event.preventDefault();});
+                $("#absencesDate").val($("#date").val());
                 $('#period').change(function(event){
                     event.preventDefault();
                     Tecnotek.AbsencesByGroup.loadGroupsOfPeriod();

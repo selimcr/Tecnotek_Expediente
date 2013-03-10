@@ -33,6 +33,8 @@ security:
                 use_forward:    false
                 check_path:     /expediente/secured/login_check
                 failure_path:   null
+                default_target_path:  /expediente/
+                always_use_default_target_path: true
             logout:       
                 path:   /expediente/secured/logout
                 target: /expediente/
@@ -43,6 +45,8 @@ security:
             form_login:
                 check_path: /expediente/secured/login_check
                 login_path: /expediente/secured/login
+                default_target_path:  /expediente/
+                always_use_default_target_path: true
             logout:
                 path:   /expediente/secured/logout
                 target: /expediente/

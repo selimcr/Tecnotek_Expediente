@@ -510,6 +510,10 @@ _expediente_report_students:
    pattern:  /reports/students/
    defaults: { _controller: TecnotekExpedienteBundle:Report:reportStudents }
 
+_expediente_report_clubs:
+   pattern:  /reports/clubs/
+   defaults: { _controller: TecnotekExpedienteBundle:Report:reportClubs }
+
 #########################################
 
 ###########      PENALTIES      ###########

@@ -54,6 +54,11 @@
                 </div>
             </div>
 
+            <div class="left" style="margin-left: 50px;">
+                <div class="left" style="width: 50px; font-weight: bold;">{%trans%}label.date{%endtrans%}</div>
+                <input type="text" id="date" name="date" style="width: 100px; padding: 2px;" value="" />
+            </div>
+
             <div class="clear"></div>
         </div>
 
@@ -67,6 +72,7 @@
             </div>
             <form action="{{ path("_expediente_sysadmin_save_group_absences") }}" method="post" id="absencesForm">
                 <input type="hidden" id="studentsIds" name="studentsIds" value=" ">
+                <input type="hidden" id="absencesDate" name="absencesDate" value=" ">
                 <div id="studentsRows" name="studentsRows">
 
                 </div>

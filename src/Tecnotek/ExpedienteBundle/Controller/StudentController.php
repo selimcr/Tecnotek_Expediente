@@ -1105,6 +1105,8 @@ class StudentController extends Controller
         $request = $this->get('request')->request;
         $em = $this->getDoctrine()->getEntityManager();
         $studentsYearIds = explode(" ", trim($request->get('studentsIds')));
+        $date = $request->get('absencesDate');
+
         foreach( $studentsYearIds as $studentYearId  ){
             //studentYear, comments, justify, date, typeId
             if( trim($studentYearId) != ""){
@@ -1113,6 +1115,7 @@ class StudentController extends Controller
                 $justify = $request->get('justify_' . $studentYearId);
                 //$logger->err("Save absence with stdId:  " . $studentYearId . ", type: " . $typeId . ", justify: " . $justify . ":" . ($justify == "on") . ", comments: " . $comments);
                 $absence = new Absence();
+                $absence->setDate(new \DateTime($date));
                 $absence->setComments($comments);
                 $absence->setJustify(($justify == "on"));
                 $absence->setStudentYear($em->getRepository("TecnotekExpedienteBundle:StudentYear")->find($studentYearId));

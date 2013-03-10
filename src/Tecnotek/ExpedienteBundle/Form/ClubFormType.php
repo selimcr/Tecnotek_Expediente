@@ -20,8 +20,8 @@ class ClubFormType extends AbstractType
                         '5' => 'Viernes',
                         '6' => 'Sábado',
                         '7' => 'Domingo',),'required'  => false))->
-            add('timeI', 'date', array('widget' => 'single_text', 'format' => 'dd/MM/yyyy', 'required' => false))->
-            add('timeO', 'date', array('widget' => 'single_text', 'format' => 'dd/MM/yyyy', 'required' => false));
+            add('timeI', 'time', array('widget' => 'single_text', 'input' => 'string', 'required' => true))->
+            add('timeO', 'time', array('widget' => 'single_text', 'input' => 'string', 'required' => true));
     }
 
     public function getName()

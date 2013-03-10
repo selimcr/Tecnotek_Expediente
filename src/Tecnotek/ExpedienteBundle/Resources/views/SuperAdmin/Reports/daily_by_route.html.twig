@@ -58,7 +58,7 @@
                     {%  if (student.dailyStatus == 1) %}
                         <div class="student_row">
                             <div style="float: left; width: 50px;">{{ student.carne }}</div>
-                            <div style="float: left; width: 200px;">{{ student }}</div>
+                            <div style="float: left; width: 300px;">{{ student }}</div>
                             <div style="float: left; width: 60px;">&nbsp;</div>
                             <div style="float: left; width: 300px;">{{ student.dailyDescription }}</div>
                         </div>
@@ -75,7 +75,7 @@
                     {%  if (student.dailyStatus == 0) %}
                     <div class="student_row">
                         <div style="float: left; width: 50px;">{{ student.carne }}</div>
-                        <div style="float: left; width: 200px;">{{ student }}</div>
+                        <div style="float: left; width: 300px;">{{ student }}</div>
                         <div style="float: left; width: 60px;">&nbsp;</div>
                     </div>
                     <div class="clear"></div>
@@ -89,6 +89,7 @@
                 <div class="student_footer">
                     Total de estudiantes por ruta: {{ route.students|length}}
                 </div>
+                <div class="pageBreak"> </div>
             {% else %}
             <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
                 <div class="option_width" style="float: left; width: 375px;">{% trans %}results.not.found{% endtrans %}</div>

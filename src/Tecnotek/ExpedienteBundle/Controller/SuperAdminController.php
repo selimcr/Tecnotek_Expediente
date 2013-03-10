@@ -19,9 +19,9 @@ class SuperAdminController extends Controller
     
     public function indexAction($name = "John Doe")
     {
-        return $this->render('TecnotekExpedienteBundle:SuperAdmin:index.html.twig', array('name' => $name));
+        return $this->render('TecnotekExpedienteBundle::index.html.twig', array('name' => $name));
     }
-    
+
     public function administradorListAction($rowsPerPage = 10)
     {
         $em = $this->getDoctrine()->getEntityManager();

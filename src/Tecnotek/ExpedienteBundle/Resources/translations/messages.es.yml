@@ -147,6 +147,7 @@ label.absences.message: Puede filtrar la informacion y consultar las ausencias d
 label.absences.by.group.title: Ingreso de Ausencias por Grupo
 label.absences.by.group: Ausencias por Grupo
 
+label.schedule: Horario
 label.gender: Genero
 label.age: Edad
 label.group: Grupo
@@ -154,6 +155,9 @@ label.generate: Generar
 label.generate.by: Generar por
 label.report.students.title: Reporte de Estudiantes
 label.report.students.subtitle: Imprimir listado de estudiantes por grupo, nivel o institucion
+label.report.clubs.title: Reporte de Clubes
+label.report.clubs.subtitle: Imprimir listado de clubes con informacion de estudiantes si es deseado.
+label.report.clubs.include.students: Incluir lista de estudiantes
 
 label.new.password: Nuevo Password
 label.confirm.password: Confirmar password

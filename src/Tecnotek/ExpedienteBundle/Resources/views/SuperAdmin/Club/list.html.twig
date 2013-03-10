@@ -46,8 +46,8 @@
                     {1} Lunes|{2} Martes|{3} Miercoles|{4} Jueves|{5} Viernes|{6} Sabado|{7} Domingo
                     {% endtranschoice %}
                 </div>
-                <div class="option_width" style="float: left; width: 100px;">{% if entity.timeI != null %}{{ entity.timeI|date("d/M/y") }}{% endif %}</div>
-                <div class="option_width" style="float: left; width: 100px;">{% if entity.timeO != null %}{{ entity.timeO|date("d/M/y") }}{% endif %}</div>
+                <div class="option_width" style="float: left; width: 100px;">{{ entity.timeI }}</div>
+                <div class="option_width" style="float: left; width: 100px;">{{ entity.timeO }}</div>
                 <div class="option_width" style="float: left; width: 100px;">{{ entity.getStudents()|length }}</div>
                 <div class="right imageButton editButton"  title="{% trans %}label.edit{% endtrans %}"  rel="{{ entity.id }}"></div>
                 <div class="right imageButton viewButton"  title="{% trans %}label.view{% endtrans %}"  rel="{{ entity.id }}"></div>

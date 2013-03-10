@@ -10,7 +10,7 @@ class DefaultController extends Controller
     
     public function indexAction($name = "John Doe")
     {
-        return $this->render('TecnotekExpedienteBundle:Default:index.html.twig', array('name' => $name));
+        return $this->redirect($this->generateUrl('TecnotekExpedienteBundle_homepage'));
     }
 
     public function validateUserPassword($newPassword, $confirmPassword, $translator) {

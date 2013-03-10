@@ -43,12 +43,12 @@ class Club
     private $day;
 
     /**
-     * @ORM\Column(type="date", nullable = true)
+     * @ORM\Column(type="string", length=12, nullable = true)
      */
     private $timeI;
 
     /**
-     * @ORM\Column(type="date", nullable = true)
+     * @ORM\Column(type="string", length=12, nullable = true)
      */
     private $timeO;
 
@@ -141,7 +141,7 @@ class Club
     /**
      * Set timeI
      *
-     * @param date $timeI
+     * @param String $timeI
      */
     public function setTimeI($timeI)
     {
@@ -151,7 +151,7 @@ class Club
     /**
      * Get timeI
      *
-     * @return date 
+     * @return String
      */
     public function getTimeI()
     {
@@ -161,7 +161,7 @@ class Club
     /**
      * Set timeO
      *
-     * @param date $timeO
+     * @param String $timeO
      */
     public function setTimeO($timeO)
     {
@@ -171,7 +171,7 @@ class Club
     /**
      * Get timeO
      *
-     * @return date 
+     * @return String
      */
     public function getTimeO()
     {
