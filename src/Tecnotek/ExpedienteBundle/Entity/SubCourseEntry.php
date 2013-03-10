@@ -70,6 +70,12 @@ class SubCourseEntry
      */
     private $group;
 
+    /**
+     * @var studentsQualifications
+     *
+     * @ORM\OneToMany(targetEntity="StudentQualification", mappedBy="subCourseEntry", cascade={"persist", "remove"})
+     */
+    private $studentsQualifications;
 
     public function __construct()
     {
