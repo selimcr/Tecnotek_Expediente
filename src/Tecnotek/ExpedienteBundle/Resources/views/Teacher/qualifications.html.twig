@@ -1,101 +1,207 @@
-{% extends 'TecnotekExpedienteBundle::logged_layout.html.twig' %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>{% trans %}system.title{% endtrans %}</title>
 
-{% block htmlTitle %}
-    Tecnotek :: Expediente :: Teacher :: Calificaciones
-{% endblock %}
+    <meta name="author" content="Selim Diaz A.">
+    <link rel="stylesheet" href="{{ asset('expediente/css/style.css') }}" type="text/css" media="all" />
 
-{% block extracss %}
-<link rel="stylesheet" href="{{ asset('fancybox/jquery.fancybox.css') }}" type="text/css" media="all" />
-<style>
-    .itemCarne{ background-color: #82c0fd; width: 75px; color: #000; float: left; font-weight: bold; color: #000; /*position: absolute; */text-align: center; float: left; height: 25px; line-height: 25px;
-        vertical-align: middle; border-bottom: solid thin black; border-right: solid thin black; border-left: solid thin black; border-top: solid thin black; }
-    .itemEstudiante{ font-size: 8px; background-color: #A4D2FD; color: #000; font-weight: bold; color: #000; /*position: absolute; */text-align: center; float: left; width: 146px; height: 25px; line-height: 25px;
-        vertical-align: middle; border-bottom: solid thin black; border-right: solid thin black; border-left: solid thin black; border-top: solid thin black;}
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css" />
+    <script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+    <script src="http://code.jquery.com/ui/1.9.1/jquery-ui.js"></script>
+    <script type="text/javascript" src="{{ asset('expediente/js/spin.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('expediente/js/jquery.spin.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('expediente/js/teacher_application.js') }}"></script>
 
-    .qualificationTable{ /*margin-top: 75px;*/ margin-bottom: 50px;  font-size: 10px;}
-    .qualificationTable .itemNota{ background-color: #A4D2FD; font-size: 10px; }
-    .qualificationTable .itemPromedio{ background-color: #5F96E7;  font-size: 10px; }
-    .qualificationTable .itemPorcentage{ background-color: #B698EE;  font-size: 10px; }
-    .qualificationTable .itemPromedioPeriodo{ background-color: #2b34ee; color: #fff; font-weight: bold;}
-    .qualificationTable .itemHeader {font-weight: bold; color: #000;
-        position: absolute;
-        text-align: center; float: left; width: 150px; height: 32px; line-height: 32px; vertical-align: middle;
-        border: solid thin black; top: 60px;
-        -moz-transform: rotate(90deg);  /* FF3.5+ */
-        -o-transform: rotate(90deg);  /* Opera 10.5 */
-        -webkit-transform: rotate(90deg);  /* Saf3.1+, Chrome */
-        filter:  progid:DXImageTransform.Microsoft.BasicImage(rotation=0.90);  /* IE6,IE7 */
-        -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=0.90)"; /* IE8 */
+    <style type="text/css">
+        body{padding:0px; font-size:14px; color:#000000; font-family:Arial, Helvetica, sans-serif; background-color:#b0c4de; margin: 0px;}
+    </style>
+
+    <style>
+        .itemCarne{ background-color: #82c0fd; width: 75px; color: #000; float: left; font-weight: bold; color: #000; /*position: absolute; */text-align: center; float: left; height: 25px; line-height: 25px;
+            vertical-align: middle; border-bottom: solid thin black; border-right: solid thin black; border-left: solid thin black; border-top: solid thin black; }
+        .itemEstudiante{ font-size: 8px; background-color: #A4D2FD; color: #000; font-weight: bold; color: #000; /*position: absolute; */text-align: center; float: left; width: 146px; height: 25px; line-height: 25px;
+            vertical-align: middle; border-bottom: solid thin black; border-right: solid thin black; border-left: solid thin black; border-top: solid thin black;}
+
+        .qualificationTable{ /*margin-top: 75px;*/ margin-bottom: 50px;  font-size: 10px;}
+        .qualificationTable .itemNota{ background-color: #A4D2FD; font-size: 10px; }
+        .qualificationTable .itemPromedio{ background-color: #5F96E7;  font-size: 10px; }
+        .qualificationTable .itemPorcentage{ background-color: #B698EE;  font-size: 10px; }
+        .qualificationTable .itemPromedioPeriodo{ background-color: #2b34ee; color: #fff; font-weight: bold;}
+        .qualificationTable .itemHeader {font-weight: bold; color: #000;
+            position: absolute;
+            text-align: center; float: left; width: 150px; height: 32px; line-height: 32px; vertical-align: middle;
+            border: solid thin black; top: 60px;
+            -moz-transform: rotate(90deg);  /* FF3.5+ */
+            -o-transform: rotate(90deg);  /* Opera 10.5 */
+            -webkit-transform: rotate(90deg);  /* Saf3.1+, Chrome */
+            filter:  progid:DXImageTransform.Microsoft.BasicImage(rotation=0.90);  /* IE6,IE7 */
+            -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=0.90)"; /* IE8 */
+        }
+        .itemHeaderCode {font-weight: bold; color: #000; /*position: absolute; */text-align: center; float: left; width: 32px; height: 25px; line-height: 25px;
+            vertical-align: middle; border-bottom: solid thin black; border-right: solid thin black; border-left: solid thin black; border-top: solid thin black;}
+
+        .qualificationTable .itemHeader2 {font-weight: bold; color: #000; /*position: absolute; */text-align: center; float: left; width: 32px; height: 25px; line-height: 25px;
+            vertical-align: middle; border-bottom: solid thin black; border-right: solid thin black; border-left: solid thin black;}
+
+        .qualificationTable .textField {font-weight: bold; color: #000; /*position: absolute; */text-align: center; float: left; width: 18px; height: 11px; line-height: 11px;
+            vertical-align: middle; border-bottom: solid thin black; border-right: solid thin black; border-left: solid thin black; border-top: solid thin black; font-size: 10px;}
+    </style>
+
+    <script type="text/javascript">
+        Tecnotek.UI.translates["confirmDelete"] = "{% trans %}messages.confirmation.period.delete{% endtrans %}";
+        Tecnotek.module = "qualifications";
+        Tecnotek.UI.urls["loadGroupsOfPeriodURL"] = "{{ path("_expediente_teacher_load_groups_of_period") }}";
+        Tecnotek.UI.urls["loadCoursesOfGroupByTeacherURL"] = "{{ path("_expediente_teacher_load_courses_of_group_by_teacher") }}";
+        Tecnotek.UI.urls["loadQualificationsOfGroupURL"] = "{{ path("_expediente_teacher_load_group_qualifications") }}";
+        Tecnotek.UI.urls["createEntryURL"] = "{{ path("_expediente_teacher_create_subentry") }}";
+
+        Tecnotek.UI.urls["saveStudentQualificationURL"] = "{{ path("_expediente_teacher_save_student_qualification") }}";
+
+
+        Tecnotek.UI.urls["associateCourseURL"] = "{{ path("_expediente_sysadmin_associate_course") }}";
+        Tecnotek.UI.urls["deleteGroupURL"] = "{{ path("_expediente_sysadmin_group_remove") }}";
+        Tecnotek.UI.urls["deleteCourseAssociationURL"] = "{{ path("_expediente_sysadmin_course_association_remove") }}";
+        Tecnotek.UI.urls["loadPeriodInfoByGradeURL"] = "{{ path("_expediente_sysadmin_load_period_info") }}";
+
+        Tecnotek.UI.urls["saveGroupURL"] = "{{ path("_expediente_sysadmin_group_save") }}";
+
+        Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
+        Tecnotek.UI.vars["periodId"] = 0;
+        Tecnotek.UI.vars["groupId"] = 0;
+    </script>
+
+    <script type="text/javascript" src="{{ asset('expediente/js/script.js') }}"></script>
+
+
+    <!--[if lt IE 8]>
+    <div style=' clear: both; text-align:center; position: relative;'>
+        <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+            <img src="http://storage.ie6countdown.com/assets/100/images/banners/warning_bar_0000_us.jpg" border="0" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today." />
+        </a>
+    </div>
+    <![endif]-->
+    <!--[if lt IE 9]>
+	<script src="js/html5.js"></script>
+	<link rel="stylesheet" href="css/ie.css">
+    <![endif]-->
+</head>
+
+<body>
+
+<style type="text/css">
+        /* Let's import the lovely google font, please keep this line at the top of your stylesheet */
+    @import url(http://fonts.googleapis.com/css?family=Capriola);
+        /* Menu CSS */
+    #cssmenu, #cssmenu ul, #cssmenu ul li, #cssmenu ul li a{padding: 0;	margin: 0;line-height: 1; font-family: 'Capriola', sans-serif;}
+    #cssmenu:before, #cssmenu:after, #cssmenu > ul:before, #cssmenu > ul:after { content: ''; display: table;}
+    #cssmenu:after, #cssmenu > ul:after { clear: both; }
+    #cssmenu { zoom:1; height: 38px; background: url({{ asset('expediente/images/bottom-bg.png') }}) repeat-x center bottom; border-radius: 2px;}
+
+    #cssmenu ul{background: url({{ asset('expediente/images/nav-bg.png') }}) repeat-x 0px 4px; height: 38px;}
+
+    #cssmenu ul li{	float: left; list-style: none;}
+
+    #cssmenu ul li a{
+        display: block;
+        height: 15px;
+        padding: 15px 30px 0;
+        border-radius: 2px 2px 0 0;
+        text-decoration: none;
+        font-size: 15px;
+        color: white;
+        text-shadow: 0 1px 1px rgba(0, 0, 0, .75);
+        font-weight: 400;
+        opacity: .9;
     }
-    .itemHeaderCode {font-weight: bold; color: #000; /*position: absolute; */text-align: center; float: left; width: 32px; height: 25px; line-height: 25px;
-        vertical-align: middle; border-bottom: solid thin black; border-right: solid thin black; border-left: solid thin black; border-top: solid thin black;}
 
-    .qualificationTable .itemHeader2 {font-weight: bold; color: #000; /*position: absolute; */text-align: center; float: left; width: 32px; height: 25px; line-height: 25px;
-        vertical-align: middle; border-bottom: solid thin black; border-right: solid thin black; border-left: solid thin black;}
+    #cssmenu ul li:first-child a{
+        margin: 4px 2px 0 0;
+    }
 
-    .qualificationTable .textField {font-weight: bold; color: #000; /*position: absolute; */text-align: center; float: left; width: 18px; height: 11px; line-height: 11px;
-        vertical-align: middle; border-bottom: solid thin black; border-right: solid thin black; border-left: solid thin black; border-top: solid thin black; font-size: 10px;}
+    #cssmenu ul li a:hover, #cssmenu ul li.active a{
+        background: url({{ asset('expediente/images/color.png') }}) center bottom;
+        display: block;
+        height: 22px;
+        margin-top: 0px;
+        /*padding-top: 23px;*/
+        color: #4e6d04;
+        text-shadow: 0 1px 1px rgba(255, 255, 255, .55);
+        opacity: 1;
+    }
+
 </style>
-{% endblock %}
+<!-- PRO Framework Panel Begin -->
+<div id="advanced">
+    <div class="bg_pro">
+        <div class="pro_main">
+            <a href="" class="pro_logo"></a>
+            <div>
+                <div style="float: left;">
+                    <ul class="pro_menu">
+                        <li><a href="index.html"><img src="{{ asset('expediente/images/pro_home.png') }}" alt=""></a></li>
 
-{% block extrajs %}
-<script type="text/javascript" src="{{ asset('fancybox/jquery.fancybox.js?v=2.0.6') }}"></script>
-
-<script type="text/javascript">
-    Tecnotek.UI.translates["confirmDelete"] = "{% trans %}messages.confirmation.period.delete{% endtrans %}";
-    Tecnotek.module = "qualifications";
-    Tecnotek.UI.urls["loadGroupsOfPeriodURL"] = "{{ path("_expediente_teacher_load_groups_of_period") }}";
-    Tecnotek.UI.urls["loadCoursesOfGroupByTeacherURL"] = "{{ path("_expediente_teacher_load_courses_of_group_by_teacher") }}";
-    Tecnotek.UI.urls["loadQualificationsOfGroupURL"] = "{{ path("_expediente_teacher_load_group_qualifications") }}";
-    Tecnotek.UI.urls["createEntryURL"] = "{{ path("_expediente_teacher_create_subentry") }}";
-
-    Tecnotek.UI.urls["saveStudentQualificationURL"] = "{{ path("_expediente_teacher_save_student_qualification") }}";
-
-
-    Tecnotek.UI.urls["associateCourseURL"] = "{{ path("_expediente_sysadmin_associate_course") }}";
-    Tecnotek.UI.urls["deleteGroupURL"] = "{{ path("_expediente_sysadmin_group_remove") }}";
-    Tecnotek.UI.urls["deleteCourseAssociationURL"] = "{{ path("_expediente_sysadmin_course_association_remove") }}";
-    Tecnotek.UI.urls["loadPeriodInfoByGradeURL"] = "{{ path("_expediente_sysadmin_load_period_info") }}";
-
-    Tecnotek.UI.urls["saveGroupURL"] = "{{ path("_expediente_sysadmin_group_save") }}";
-
-    Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
-    Tecnotek.UI.vars["periodId"] = 0;
-    Tecnotek.UI.vars["groupId"] = 0;
-
-    $(function() {
-        $("#openEntryForm").fancybox({
-            'beforeLoad' : function(){
-
-            }
-        });
-    });
-</script>
-
-<script type="text/javascript">
-
-    $(function() {
-        // $(".modalbox").fancybox();
+                    </ul>
+                </div>
+                <div style="float: right;">
+                    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                    <ul class="pro_menu">
+                        <li class="current"><a href="#">{{ app.user.username }}<span></span></a>
+                            <ul>
+                                <li class="current"><a href="{{ path('_expediente_logout') }}">{% trans %}label.logout{% endtrans %}</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    {% endif %}
+                </div>
+            </div>
 
 
+            <div class="clear"></div>
+        </div>
+    </div>
+    <div class="bg_pro2"></div>
+</div>
+<!-- PRO Framework Panel End -->
+<header>
+    <div>
+        <div class="wrapper">
+            <div class="grid_17">
+                <h2><a href="{{ path('TecnotekExpedienteBundle_homepage') }}">{% trans %}label.home{% endtrans %}</a></h2>
+            </div>
+            <div class="grid_7">
+            </div>
+        </div>
+    </div>
+    <nav class="main-menu" style="margin: 0px; width: 100%;">
 
-    });
-</script>
-{% endblock %}
+        <ul class="sf-menu">
+            <li {% if menuIndex is not defined %}class="current"{% endif %}><a href="{{ path('TecnotekExpedienteBundle_homepage') }}"><em>{% trans %}label.home{% endtrans %}</em><strong></strong></a></li>
 
-{% block content %}
-<div class="container_24">
-    <div class="grid_24">
+            <li {% if menuIndex is defined and menuIndex == 1%}class="current"{% endif %}><a href="{{ path('_expediente_teacher_qualifications') }}"><em>{% trans %}label.qualifications{% endtrans %}</em><strong></strong></a>
+            </li>
+            <li {% if menuIndex is defined and menuIndex == 2%}class="current"{% endif %}><a href="{{ path('_expediente_teacher_course_entries') }}"><em>{% trans %}label.usuarios.courseEntry{% endtrans %}</em><strong></strong></a>
+            </li>
+        </ul>
+        <div class="clear"></div>
+    </nav>
+</header>
+
+<div style="clear:both; margin: 0 0 15px 0;">&nbsp;</div>
+
+<div style="margin-left: 15px; ">
+    <div>
         <div>
             <div class="left"><h1>{% trans %}title.qualifications.by.group{% endtrans %}:</h1></div>
             <div class="clear"></div>
         </div>
 
         <div class="centeredDiv">
-            <div id="studentsTableContainer" name="studentsTableContainer" class="formContainer" style="width: 920px; height: 650px;">
+            <div id="studentsTableContainer" name="studentsTableContainer" class="formContainer" style="width: 100%; height: 650px; padding: 0px;">
                 <div id="showContainer">
                     <div style="margin-bottom: 15px;">
-                        <div class="left" style="width: 50px; font-weight: bold;">{%trans%}label.period{%endtrans%}</div>
+                        <div class="left" style="width: 60px; font-weight: bold;">{%trans%}label.period{%endtrans%}</div>
                         <div id="labelPeriod" class="left">
                             <select id="period" name="period">
                                 {% for period in periods %}
@@ -105,7 +211,7 @@
                         </div>
 
                         <div id="groupsContainer" class="left" style="margin-left: 50px;">
-                            <div class="left" style="width: 50px; font-weight: bold;">{%trans%}label.groups{%endtrans%}</div>
+                            <div class="left" style="width: 55px; font-weight: bold;">{%trans%}label.groups{%endtrans%}</div>
                             <div class="left">
                                 <select id="groups" name="groups">
                                 </select>
@@ -113,7 +219,7 @@
                         </div>
 
                         <div id="coursesContainer" class="left" style="margin-left: 50px;">
-                            <div class="left" style="width: 50px; font-weight: bold;">{%trans%}label.courses{%endtrans%}</div>
+                            <div class="left" style="width: 65px; font-weight: bold;">{%trans%}label.courses{%endtrans%}</div>
                             <div class="left">
                                 <select id="courses" name="courses">
                                 </select>
@@ -157,15 +263,17 @@
 
                     <!-- End Qualifications -->
                 </div>
-            </div>    
-        </div>        
+            </div>
+        </div>
         <div class="clear"></div>
     </div>
     <div class="clear"></div>
     <div class="wrapper">
-            <div class="grid_24 padline">
-                    <div class="lineH"></div>
-            </div>
+        <div class="grid_24 padline">
+            <div class="lineH"></div>
+        </div>
     </div>
 </div>
-{% endblock %}
+
+</body>
+</html>

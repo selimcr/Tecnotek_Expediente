@@ -473,6 +473,7 @@ var Tecnotek = {
 
                 $("#period").change(function(event){
                     event.preventDefault();
+                    $('#subentryFormParent').empty();
                     Tecnotek.Qualifications.loadGroupsOfPeriod($(this).val());
                 });
 
@@ -500,6 +501,7 @@ var Tecnotek = {
                     $('#groups').children().remove();
                     $('#courses').children().remove();
                     $('#subentryFormParent').empty();
+                    $('#tableContainer').hide();
                     Tecnotek.ajaxCall(Tecnotek.UI.urls["loadGroupsOfPeriodURL"],
                         {   periodId: $periodId },
                         function(data){
