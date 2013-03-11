@@ -1,0 +1,87 @@
+{% extends 'TecnotekExpedienteBundle::logged_layout.html.twig' %}
+
+{% block htmlTitle %}
+    Tecnotek :: Expediente :: Super Administrador :: Usuarios
+{% endblock %}
+
+{% block extrajs %}
+<script type="text/javascript" src="{{ asset('expediente/js/jquery.jstree.js') }}"></script>
+<script type="text/javascript" src="{{ asset('expediente/js/jquery.hotkeys.js') }}"></script>
+
+<script type="text/javascript">
+    Tecnotek.UI.urls["api"] = "";
+    Tecnotek.UI.translates["btnDone"] = "";
+    Tecnotek.module = "permisosUsuarios";
+    Tecnotek.imagesURL = "/images";
+    Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
+    Tecnotek.UI.urls["show"] = "{{ path('_expediente_sysadmin_coordinador_show_simple')}}";
+
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="container_24">
+    <div class="grid_24">
+        <div>
+            <div><h1>{% trans %}label.accesos.usuarios.title{% endtrans %}</h1></div>
+            <div><span>{% trans %}label.accesos.usuarios.subtitle{% endtrans %}</span></div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="left" style="width: 400px">
+            <div class="row tableHeader">
+                <div class="option_width" style="float: left; width: 400px;">{% trans %}label.users{% endtrans %}</div>
+            </div>
+
+            <select id="users" name="users" size="20" style="width: 400px;">
+                {% for user in users %}
+                <option value="{{ user.id }}">{{ user}}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="right" style="width: 500px">
+            <div class="row tableHeader">
+                <div class="option_width" style="float: left; width: 300px;">{% trans %}label.access{% endtrans %}</div>
+            </div>
+
+            <div id="demo1" class="demo" style="height:100%;">
+                <ul>
+                    {% for permiso in permisos %}
+                    <li id="{{ permiso.id }}">
+                        <a href="#">{{ permiso }}</a>
+
+                        {% if permiso.childrens|length > 0 %}
+                        <ul>
+                            {% for children in permiso.childrens %}
+                            <li id="{{ children.id }}">
+                                <a href="#">{{ children }}</a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div style="margin-top: 10px;">
+                <button style="margin-left: 15px; margin-top: 0px;" type="button" class="right btn save" id="btnSave" name="btnSave"><span></span>Guardar</button>
+            </div>
+
+        </div>
+
+
+        <br/>
+
+        <div class="clear"></div>
+    </div>
+    <div class="clear"></div>
+    <div class="wrapper">
+            <div class="grid_24 padline">
+                    <div class="lineH"></div>
+            </div>
+    </div>
+</div>
+{% endblock %}

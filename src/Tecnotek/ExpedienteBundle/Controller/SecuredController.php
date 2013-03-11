@@ -66,4 +66,19 @@ class SecuredController extends Controller
     {
         return array('name' => $name);
     }
+
+    public function accessPageAction(){
+
+        $em = $this->getDoctrine()->getEntityManager();
+        $dql = "SELECT users FROM TecnotekExpedienteBundle:User users JOIN users.roles r WHERE r.role = 'ROLE_COORDINADOR' order by users.firstname, users.lastname";
+        $query = $em->createQuery($dql);
+        $users = $query->getResult();
+
+        $dql = "SELECT e FROM TecnotekExpedienteBundle:ActionMenu e WHERE e.parent is null order by e.sortOrder";
+        $query = $em->createQuery($dql);
+        $permisos = $query->getResult();
+
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Users/access.html.twig', array('menuIndex' => 1,
+            'users' => $users, 'permisos' => $permisos));
+    }
 }

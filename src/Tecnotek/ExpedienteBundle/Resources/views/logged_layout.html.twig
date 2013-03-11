@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="{{ asset('expediente/css/tabs.css') }}" type="text/css" media="all" />
 
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css" />
-    <script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+    <script src="http://code.jquery.com/jquery-1.8.1.min.js"></script>
     <script src="http://code.jquery.com/ui/1.9.1/jquery-ui.js"></script>
     <script type="text/javascript" src="{{ asset('expediente/js/spin.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('expediente/js/jquery.spin.js') }}"></script>
@@ -101,6 +101,7 @@
                         <li><a style="text-align: left;" href="{{ path('_expediente_sysadmin_administrador') }}">{% trans %}label.usuarios.admin{% endtrans %}</a></li>
                         <li><a style="text-align: left;" href="{{ path('_expediente_sysadmin_coordinador') }}">{% trans %}label.usuarios.coordinador{% endtrans %}</a></li>
                         <li><a style="text-align: left;" href="{{ path('_expediente_sysadmin_profesor') }}">{% trans %}label.usuarios.profesor{% endtrans %}</a></li>
+                        <li><a style="text-align: left;" href="{{ path('_expediente_access') }}">{% trans %}label.access{% endtrans %}</a></li>
                     </ul>
                 </li>
                 <li {% if menuIndex is defined and menuIndex == 2%}class="current"{% endif %}><a href="#"><em>{% trans %}label.transport{% endtrans %}</em><strong></strong></a>

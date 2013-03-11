@@ -107,6 +107,9 @@ var Tecnotek = {
                     Tecnotek.Reports.init();
                     Tecnotek.ReportClubs.init();
                     break;
+                case "permisosUsuarios":
+                    Tecnotek.PermisosUsuarios.init();
+                    break;
                 default:
 					break;
 				}
@@ -1974,6 +1977,37 @@ var Tecnotek = {
                     $(this).val("");
                     $('#suggestions').fadeOut(); // Hide the suggestions box
                 });
+            }
+        },
+        PermisosUsuarios : {
+            init : function() {
+                Tecnotek.PermisosUsuarios.initComponents();
+                Tecnotek.PermisosUsuarios.initButtons();
+            },
+            initComponents : function() {
+                // TO CREATE AN INSTANCE
+                // select the tree container using jQuery
+
+                $("#demo1").jstree({
+                        "plugins" : [ "themes", "html_data", "checkbox", "ui" ],
+                        "core" : {  }
+                    }).bind("loaded.jstree", function (event, data) {
+                        // you get two params - event & data - check the core docs for a detailed description
+                    });
+
+                $("#btnSave").click(function(event){
+                    event.preventDefault();
+
+                    var checked_ids = [];
+                    $('#demo1').jstree("get_checked",null,true).each(function(){
+                        checked_ids.push(this.id);
+                    });
+                    //setting to hidden field
+                    console.debug(checked_ids.join(","));
+                });
+
+            },
+            initButtons : function() {
             }
         }
 	};

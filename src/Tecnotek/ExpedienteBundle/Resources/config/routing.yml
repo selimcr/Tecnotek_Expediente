@@ -679,6 +679,11 @@ _expediente_remove_student_from_group:
     pattern:  /group/removeStudent
     defaults: { _controller: TecnotekExpedienteBundle:Student:removeStudentFromGroup }
 
+##
+_expediente_access:
+    pattern:  /access/
+    defaults: { _controller: TecnotekExpedienteBundle:Secured:accessPage }
+
 ######################    TEACHER    ######################
 _expediente_teacher_qualifications:
   pattern:  /t/qualifications

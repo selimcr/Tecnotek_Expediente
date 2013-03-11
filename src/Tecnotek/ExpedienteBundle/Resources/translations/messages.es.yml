@@ -50,6 +50,8 @@ label.injustify: Injustificada
 label.all: Todos
 label.number: N&uacute;mero
 label.type: Tipo
+label.users: Usuarios
+label.access: Permisos
 
 label.teacher.default: Profesor Asignado
 label.include: Incluir
@@ -162,6 +164,9 @@ label.report.clubs.include.students: Incluir lista de estudiantes
 label.new.password: Nuevo Password
 label.confirm.password: Confirmar password
 button.label.login: LOGIN
+
+label.accesos.usuarios.title: Definicion de Permisos de Usuario
+label.accesos.usuarios.subtitle: Seleccione un usuario de la lista y asigne los permisos que desea otorgar
 
 label.asociate: Asociar
 student.create.new.contact: Ingrese la información de la persona autorizada
