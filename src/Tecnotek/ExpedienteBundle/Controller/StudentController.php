@@ -936,7 +936,7 @@ class StudentController extends Controller
             $currentPeriodId = $currentPeriod->getId();
         }
         return $this->render('TecnotekExpedienteBundle:SuperAdmin:Absence/index.html.twig', array('menuIndex' => 3, 'currentPeriod' => $currentPeriodId,
-            'entities' => $entities, 'dateFrom' => $start, "dateTo" => $end, 'status' => "-1", "students" => $students, "absenceTypes" => $absenceTypes
+            'entities' => $entities, 'dateFrom' => $start, "dateTo" => $end, 'status' => "-1", "students" => $students, "absenceTypes" => $absenceTypes, 'student' => ""
         ));
     }
 
@@ -953,14 +953,25 @@ class StudentController extends Controller
             $statusQuery = " AND absences.justify = " . $status;
 
         $qb = $em->createQueryBuilder();
+
+        $student = $request->get('student');
+        $studentQuery = "";
+        if( isset($student) && trim($student) != ""){
+            $student = trim($student);
+            $studentQuery = " AND (std.firstname like '%" . $student . "%' or std.lastname like '%" . $student . "%')";
+        } else {
+            $student = "";
+        }
+
         $qb->add('select', 'absences')
             ->add('from', 'TecnotekExpedienteBundle:Absence absences')
             ->leftJoin("absences.studentYear", "stdY")
             ->leftJoin("stdY.student", "std")
-            ->add('where', "absences.date between :start and :end " . $statusQuery)
-            ->add('orderBy', 'std.firstname ASC')
+            ->add('where', "absences.date between :start and :end " . $statusQuery . $studentQuery)
+            ->add('orderBy', 'std.firstname ASC, std.lastname ASC')
             ->setParameter('start', $start . " 00:00:00")
             ->setParameter('end', $end . " 23:59:59");
+
 
         $query = $qb->getQuery();
 
@@ -979,7 +990,7 @@ class StudentController extends Controller
         }
 
         return $this->render('TecnotekExpedienteBundle:SuperAdmin:Absence/index.html.twig', array('menuIndex' => 3,
-            'entities' => $entities, "students" => $students, "absenceTypes" => $absenceTypes,
+            'entities' => $entities, "students" => $students, "absenceTypes" => $absenceTypes, 'student' => $student,
             'dateFrom' => $start, "dateTo" => $end, 'status' => $status, 'currentPeriod' => $currentPeriodId
         ));
     }
@@ -1172,7 +1183,7 @@ class StudentController extends Controller
         }
 
         return $this->render('TecnotekExpedienteBundle:SuperAdmin:Penalty/index.html.twig', array('menuIndex' => 3,
-            'entities' => $entities, 'dateFrom' => $start, "dateTo" => $end,
+            'entities' => $entities, 'dateFrom' => $start, "dateTo" => $end, 'student' => "",
             'period' => "-1", 'students' => $students, "penalties" => $penalties, "currentPeriod" => $currentPeriodId
         ));
     }
@@ -1191,12 +1202,21 @@ class StudentController extends Controller
 
         $logger = $this->get('logger');
 
+        $student = $request->get('student');
+        $studentQuery = "";
+        if( isset($student) && trim($student) != ""){
+            $student = trim($student);
+            $studentQuery = " AND (std.firstname like '%" . $student . "%' or std.lastname like '%" . $student . "%')";
+        } else {
+            $student = "";
+        }
+
         $qb = $em->createQueryBuilder();
         $qb->add('select', 'penalties')
             ->add('from', 'TecnotekExpedienteBundle:StudentPenalty penalties')
             ->leftJoin("penalties.studentYear", "stdy")
             ->leftJoin("stdy.student", "std")
-            ->add('where', "penalties.date between :start and :end " . $periodQuery)
+            ->add('where', "penalties.date between :start and :end " . $periodQuery . $studentQuery)
             ->add('orderBy', 'std.firstname ASC')
             ->setParameter('start', $start . " 00:00:00")
             ->setParameter('end', $end . " 23:59:59");
@@ -1218,7 +1238,7 @@ class StudentController extends Controller
         }
 
         return $this->render('TecnotekExpedienteBundle:SuperAdmin:Penalty/index.html.twig', array('menuIndex' => 3,
-            'entities' => $entities, 'dateFrom' => $start, "dateTo" => $end,
+            'entities' => $entities, 'dateFrom' => $start, "dateTo" => $end, 'student' => $student,
             'period' => $period, 'students' => $students, "penalties" => $penalties, "currentPeriod" => $currentPeriodId
         ));
     }
@@ -1286,7 +1306,7 @@ class StudentController extends Controller
                 array('id' => $entity->getId())));
         } else {
             return $this->render('TecnotekExpedienteBundle:SuperAdmin:Absence/index.html.twig', array('menuIndex' => 3,
-                'entities' => $entities, 'entity' => $entity, 'form'   => $form->createView()
+                'entities' => $entities, 'entity' => $entity, 'form'   => $form->createView(), 'student' => ""
             ));
         }
     }

@@ -88,6 +88,13 @@ class User implements AdvancedUserInterface
      */
     private $roles;
 
+    /**
+     * @var privileges
+     *
+     * @ORM\OneToMany(targetEntity="UserPrivilege", mappedBy="user", cascade={"persist", "remove"})
+     */
+    private $privileges;
+
     public function __construct()
     {
         $this->isActive = true;
@@ -264,6 +271,10 @@ class User implements AdvancedUserInterface
     public function __toString()
     {
         return $this->username;
+    }
+
+    public function getPrivileges(){
+        return $this->privileges;
     }
 }
 ?>

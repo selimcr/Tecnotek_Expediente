@@ -129,6 +129,11 @@
                                         <input type="hidden" id="subentryFormCourseClassId" name="subentryFormCourseClassId" value="0">
                                         <div id="subformEntryError" class="formErrors"></div>
 
+                                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.parent{% endtrans %}</span>
+                                            <select id="subentryFormParent" name="subentryFormParent">
+                                            </select>
+                                        </label>
+
                                         <label><span class="text-form" style="min-width: 150px;">{% trans %}label.name{% endtrans %}</span>
                                             <input id="subentryFormName" name="subentryFormName">
                                         </label>
@@ -147,11 +152,6 @@
 
                                         <label><span class="text-form" style="min-width: 150px;">{% trans %}label.order{% endtrans %}</span>
                                             <input id="subentryFormSortOrder" name="subentryFormSortOrder">
-                                        </label>
-
-                                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.parent{% endtrans %}</span>
-                                            <select id="subentryFormParent" name="subentryFormParent">
-                                            </select>
                                         </label>
 
                                         <div class="left"><input class="btn" style="margin-top: 0px;" type="button" name="entryFormCancel" id="entryFormCancel" value="{% trans %}label.cancelar{% endtrans %}"/></div>

@@ -157,7 +157,7 @@ class TeacherController extends Controller
                         $childrens = $temp->getChildrens();
                         $size = sizeof($childrens);
 
-                        $entriesOptions .= '<option value="' . $entry->getId() . '">' . $entry->getName() . '</option>';
+                        $entriesOptions .= '<option value="' . $entry->getId() . '">' . $entry->getSortOrder() . ". " . $entry->getName() . " (" . $entry->getPercentage() . "%)" . '</option>';
                         $html .= '<div id="entryRow_' . $entry->getId() . '" class="row userRow tableRowOdd">';
                         $html .= '    <div id="entryNameField_' . $entry->getId() . '" name="entryNameField_' . $entry->getId() . '" class="option_width" style="float: left; width: 150px;">' . $entry->getName() . '</div>';
                         $html .= '    <div id="entryCodeField_' . $entry->getId() . '" name="entryCodeField_' . $entry->getId() . '" class="option_width" style="float: left; width: 100px;">' . $entry->getCode() . '</div>';
@@ -337,7 +337,7 @@ class TeacherController extends Controller
                     $query = $em->createQuery($dql);
                     $entries = $query->getResult();
                     $temp = new \Tecnotek\ExpedienteBundle\Entity\CourseEntry();
-                    $html = '<div class="itemPromedioPeriodo itemHeader" style="margin-left: 0px; color: #fff;">Promedio Trimestral</div>';
+                    $html = '<div class="itemPromedioPeriodo itemHeader" style="margin-left: 4px; color: #fff;">Promedio Trimestral</div>';
                     /*
                         <div class="itemHeader itemNota" style="margin-left: 125px;">Tarea 2</div>
                         <div class="itemHeader itemPromedio" style="margin-left:150px;">Promedio Tareas </div>
@@ -345,12 +345,12 @@ class TeacherController extends Controller
 
                     <div class="itemHeaderCode itemNota" style="margin-left: 0px;"></div>
                     */
-                    $marginLeft = 34;
+                    $marginLeft = 48;
                     $marginLeftCode = 62;
                     $htmlCodes = '<div class="itemPromedioPeriodo itemHeaderCode" style="color: #fff;">SCIE</div>';
-                    $jumpRight = 34;
-                    $width = 32;
-                    $html3 = '<div class="itemHeader2 itemPromedioPeriodo" style="width: 32px; color: #fff;">TRIM</div>';
+                    $jumpRight = 46;
+                    $width = 44;
+                    $html3 = '<div class="itemHeader2 itemPromedioPeriodo" style="width: 40px; color: #fff;">TRIM</div>';
                     $studentRow = "";
                     $studentsHeader = '';
                     $colors = array(
@@ -388,18 +388,18 @@ class TeacherController extends Controller
                                     //$studentRow .= '<input type="text" class="textField itemNota" tipo="2" rel="total_' . $subentry->getId() . '_stdId" perc="' . $subentry->getPercentage() . '" std="stdId" entry="' . $subentry->getId() . '"  stdyId="stdyIdd">';
                                     $studentRow .= '<input tabIndex=tabIndexCol'. $colsCounter . 'x type="text" class="textField itemNota item_' . $temp->getId() . '_stdId" val="val_stdId_' . $subentry->getId() .  '_" tipo="2" child="' . $size . '" parent="' . $temp->getId() . '" rel="total_' . $temp->getId() . '_stdId" max="' . $subentry->getMaxValue() . '" perc="' . $temp->getPercentage() . '" std="stdId"  entry="' . $subentry->getId() . '"  stdyId="stdyIdd">';
                                     $colsCounter++;
-                                    $htmlCodes .= '<div class="itemHeaderCode itemNota"></div>';
+                                    $htmlCodes .= '<div class="itemHeaderCode itemNota codeNota"></div>';
                                     $html .= '<div class="itemHeader itemNota" style="margin-left: ' . $marginLeft . 'px;">' . $subentry->getName() . '</div>';
                                     $marginLeft += $jumpRight; $marginLeftCode += 25;
                                 }
 
                                 $studentRow .= '<div class="itemHeaderCode itemPromedio" id="prom_' . $temp->getId() . '_stdId" perc="' . $temp->getPercentage() . '">-</div>';
-                                $htmlCodes .= '<div class="itemHeaderCode itemPromedio"></div>';
+                                $htmlCodes .= '<div class="itemHeaderCode itemPromedio codePromedio"></div>';
                                 $html .= '<div class="itemHeader itemPromedio" style="margin-left:' . $marginLeft . 'px;">Promedio ' . $temp->getName() . ' </div>';
                                 $marginLeft += $jumpRight; $marginLeftCode += 25;
 
                                 $studentRow .= '<div id="total_' . $temp->getId() . '_stdId" class="itemHeaderCode itemPorcentage nota_stdId">-</div>';
-                                $htmlCodes .= '<div class="itemHeaderCode itemPorcentage">' . $temp->getCode() . '</div>';
+                                $htmlCodes .= '<div class="itemHeaderCode itemPorcentage codePorcentage">' . $temp->getCode() . '</div>';
                                 $html .= '<div class="itemHeader itemPorcentage" style="margin-left: ' . $marginLeft . 'px;">' . $temp->getPercentage() . '% ' . $temp->getName() . '</div>';
                                 $marginLeft += $jumpRight; $marginLeftCode += 25;
 
@@ -411,13 +411,13 @@ class TeacherController extends Controller
                                     {
                                         $studentRow .= '<input tabIndex=tabIndexCol'. $colsCounter . 'x type="text" class="textField itemNota item_' . $temp->getId() . '_stdId" val="val_stdId_' . $subentry->getId() .  '_" tipo="1"  max="' . $subentry->getMaxValue() . '" child="' . $size . '" parent="' . $temp->getId() . '" rel="total_' . $temp->getId() . '_stdId" perc="' . $temp->getPercentage() . '" std="stdId"  entry="' . $subentry->getId() . '"  stdyId="stdyIdd">';
                                         $colsCounter++;
-                                        $htmlCodes .= '<div class="itemHeaderCode itemNota"></div>';
+                                        $htmlCodes .= '<div class="itemHeaderCode itemNota codeNota"></div>';
                                         $html .= '<div class="itemHeader itemNota" style="margin-left: ' . $marginLeft . 'px;">' . $subentry->getName() . '</div>';
                                         $marginLeft += $jumpRight; $marginLeftCode += 25;
                                     }
 
                                     $studentRow .= '<div id="total_' . $temp->getId() . '_stdId" class="itemHeaderCode itemPorcentage nota_stdId">-</div>';
-                                    $htmlCodes .= '<div class="itemHeaderCode itemPorcentage">' . $temp->getCode() . '</div>';
+                                    $htmlCodes .= '<div class="itemHeaderCode itemPorcentage codePorcentage">' . $temp->getCode() . '</div>';
                                     $html .= '<div class="itemHeader itemPorcentage" style="margin-left: ' . $marginLeft . 'px;">' . $temp->getPercentage() . '% ' . $temp->getName() . '</div>';
                                     $marginLeft += $jumpRight; $marginLeftCode += 25;
 

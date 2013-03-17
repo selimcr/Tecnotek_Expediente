@@ -395,7 +395,7 @@ var Tecnotek = {
                         function(jqXHR, textStatus){
                             Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
                             $(this).val("");
-                        }, true);
+                        }, false);
                 }
             },
             loadCoursesOfGroupByTeacher: function($groupId) {
@@ -418,7 +418,7 @@ var Tecnotek = {
                         function(jqXHR, textStatus){
                             Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
                             $(this).val("");
-                        }, true);
+                        }, false);
                 }
             },
             loadEntriesByCourse: function(courseId) {
@@ -445,13 +445,18 @@ var Tecnotek = {
                         },
                         function(jqXHR, textStatus){
                             Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
-                        }, true);
+                        }, false);
                 }
             }
         },
         Qualifications : {
             translates : {},
             init : function() {
+                $('#btnPrint').click(function(event){
+                    console.debug("print!!!");
+                    $("#tableContainer").printElement({printMode:'iframe', pageTitle:$(this).attr('rel')});
+                });
+
                 $('#entriesTab').click(function(event){
                     $("#subentriesSection").hide();
                     $('#entriesSection').show();
@@ -540,7 +545,7 @@ var Tecnotek = {
                         function(jqXHR, textStatus){
                             Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
                             $(this).val("");
-                        }, true);
+                        }, false);
                 }
             },
             loadQualificationsOfGroup: function(courseId) {
@@ -589,7 +594,7 @@ var Tecnotek = {
                         function(jqXHR, textStatus){
                             $( "#spinner-modal" ).dialog( "close" );
                             Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
-                        }, true);
+                        }, false);
                 }
             },
             initializeTable: function() {

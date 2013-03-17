@@ -17,14 +17,10 @@
     {% block extracss %}
     {% endblock %}
 
-    {% if is_granted('ROLE_SUPERADMIN') %}
-    <script type="text/javascript" src="{{ asset('expediente/js/superadmin_application.js') }}"></script>
+    {% if is_granted('ROLE_PROFESOR') %}
+    <script type="text/javascript" src="{{ asset('expediente/js/teacher_application.js') }}"></script>
     {% else %}
-        {% if is_granted('ROLE_PROFESOR') %}
-            <script type="text/javascript" src="{{ asset('expediente/js/teacher_application.js') }}"></script>
-        {% else %}
-
-        {% endif %}
+    <script type="text/javascript" src="{{ asset('expediente/js/superadmin_application.js') }}"></script>
     {% endif %}
 
     {% block extrajs %}{% endblock %}
@@ -63,6 +59,7 @@
                         <ul class="pro_menu">
                             <li class="current"><a href="#">{{ app.user.username }}<span></span></a>
                                 <ul>
+                                    <li class="current"><a href="{{ path('_expediente_my_account') }}">{% trans %}label.my.account{% endtrans %}</a></li>
                                     <li class="current"><a href="{{ path('_expediente_logout') }}">{% trans %}label.logout{% endtrans %}</a></li>
                                 </ul>
                             </li>
@@ -149,7 +146,7 @@
                     <li {% if menuIndex is defined and menuIndex == 2%}class="current"{% endif %}><a href="{{ path('_expediente_teacher_course_entries') }}"><em>{% trans %}label.usuarios.courseEntry{% endtrans %}</em><strong></strong></a>
                     </li>
                 {% else %}
-
+                    {% render "TecnotekExpedienteBundle:Secured:showMenu" %}
                 {% endif %}
             {% endif %}
 			</ul>

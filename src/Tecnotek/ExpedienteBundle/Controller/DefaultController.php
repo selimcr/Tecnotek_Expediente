@@ -19,4 +19,8 @@ class DefaultController extends Controller
         return null;
     }
 
+    public function myAccountAction(){
+        return $this->render('TecnotekExpedienteBundle:Default:my_account.html.twig', array());
+    }
+
 }

@@ -7,6 +7,11 @@ _expediente_secured:
     resource: "@TecnotekExpedienteBundle/Controller/SecuredController.php"
     type:     annotation
 
+
+_expediente_my_account:
+    pattern: /myAccount
+    defaults: { _controller: TecnotekExpedienteBundle:Default:myAccount }
+
 #_expediente:
 #    resource: "@TecnotekExpedienteBundle/Controller/DefaultController.php"
 #    type:     annotation
@@ -683,6 +688,14 @@ _expediente_remove_student_from_group:
 _expediente_access:
     pattern:  /access/
     defaults: { _controller: TecnotekExpedienteBundle:Secured:accessPage }
+
+_expediente_access_save:
+    pattern:  /access/save
+    defaults: { _controller: TecnotekExpedienteBundle:Secured:saveAccess }
+
+_expediente_load_privileges:
+    pattern:  /privileges/load
+    defaults: { _controller: TecnotekExpedienteBundle:Secured:loadPrivileges }
 
 ######################    TEACHER    ######################
 _expediente_teacher_qualifications:

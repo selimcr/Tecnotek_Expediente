@@ -552,6 +552,16 @@ var Tecnotek = {
                 $("#from").keypress(function(event){event.preventDefault();});
                 $("#to").keypress(function(event){event.preventDefault();});
 
+                $("#searchByStudent").change(function(){
+                    $this = $(this);
+                    if($this.is(':checked')){
+                        $("#" + $this.attr("rel")).removeAttr("disabled");
+                    } else {
+
+                        $("#" + $this.attr("rel")).val("").attr("disabled",true);
+                    }
+                });
+
                 $('#createAbsenceForm').submit(function(event){
                     event.preventDefault();
                     Tecnotek.Absences.save();
@@ -701,6 +711,16 @@ var Tecnotek = {
                 $("#date").keypress(function(event){event.preventDefault();});
                 $("#from").keypress(function(event){event.preventDefault();});
                 $("#to").keypress(function(event){event.preventDefault();});
+
+                $("#searchByStudent").change(function(){
+                    $this = $(this);
+                    if($this.is(':checked')){
+                        $("#" + $this.attr("rel")).removeAttr("disabled");
+                    } else {
+
+                        $("#" + $this.attr("rel")).val("").attr("disabled",true);
+                    }
+                });
 
                 $('#createPenaltyForm').submit(function(event){
                     event.preventDefault();
@@ -1998,12 +2018,62 @@ var Tecnotek = {
                 $("#btnSave").click(function(event){
                     event.preventDefault();
 
-                    var checked_ids = [];
-                    $('#demo1').jstree("get_checked",null,true).each(function(){
-                        checked_ids.push(this.id);
-                    });
-                    //setting to hidden field
-                    console.debug(checked_ids.join(","));
+                    //$("#7").find('.jstree-checkbox').trigger("click");
+
+                    if($("#users").val() == null || $("#users").val() === "null"){
+                        Tecnotek.showErrorMessage("No se ha seleccionado un usuario.", true, "", false);
+                    } else {
+                        var checked_ids = [];
+                        $('#demo1').jstree("get_checked",null,true).each(function(){
+                            checked_ids.push(this.id);
+                        });
+                        //setting to hidden field
+                        console.debug($("#users").val() + " :: " + checked_ids.join(","));
+
+                        Tecnotek.ajaxCall(Tecnotek.UI.urls["savePrivilegesURL"],
+                            {userId: $("#users").val(), access: checked_ids.join(",")},
+                            function(data){
+                                if(data.error === true) {
+                                    Tecnotek.showErrorMessage(data.message,true, "", false);
+                                } else {
+                                }
+                            },
+                            function(jqXHR, textStatus){
+                                Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".",
+                                    true, "", false);
+                            }, true);
+                    }
+
+                });
+
+                $("#users").change(function(event){
+                    event.preventDefault();
+                    $("#demo1").jstree("uncheck_all")
+                    $("#demo1").jstree('close_all');
+                    if($("#users").val() == null || $("#users").val() === "null"){
+                        $("#privilegesContainer").hide();
+                        return;
+                    } else {
+                        Tecnotek.ajaxCall(Tecnotek.UI.urls["getPrivilegesURL"],
+                            {userId: $("#users").val()},
+                            function(data){
+                                if(data.error === true) {
+                                    Tecnotek.showErrorMessage(data.message,true, "", false);
+                                } else {
+
+                                    console.debug("-> " + data.privileges);
+                                    for(i=0; i<data.privileges.length; i++) {
+                                        $("#" + data.privileges[i]).find('.jstree-checkbox').trigger("click");
+                                    }
+                                    $("#privilegesContainer").show();
+                                }
+                            },
+                            function(jqXHR, textStatus){
+                                Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".",
+                                    true, "", false);
+                            }, true);
+                    }
+
                 });
 
             },

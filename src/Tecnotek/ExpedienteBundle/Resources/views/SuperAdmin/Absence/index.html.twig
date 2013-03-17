@@ -59,7 +59,7 @@ $(function() {
                 <form id="searchForm" action="{{ path('_expediente_absences_search') }}" method="post">
                     <div class="filter-row">
                         <div class="field">
-                            <label>{%trans%}label.student{%endtrans%}</label><input type="text" id="student" name="student" style="margin-right: 5px;" disabled="disabled"><input type="checkbox" class="check" rel="student">
+                            <label>{%trans%}label.student{%endtrans%}</label><input type="text" id="student" name="student" value="{{ student }}" style="margin-right: 5px;" {% if student == "" %}disabled="disabled"{% endif %}><input type="checkbox" id="searchByStudent" name="searchByStudent" class="check" rel="student" {% if student != "" %}checked="checked"{% endif %}>
                         </div>
                         <div class="field">
                             <label style="padding-left: 60px;">{%trans%}label.status{%endtrans%}</label>

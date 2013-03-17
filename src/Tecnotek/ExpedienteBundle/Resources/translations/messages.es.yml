@@ -4,6 +4,7 @@ system.description: Sistema_de_Expediente_Electronico_para_Escuelas_y_Colegios
 system.tags: tecnotek, expediente, escuela, colegios, electronico
 
 #Labels
+label.my.account: Mi cuenta
 label.loginTitle: Ingrese su usuario y password
 label.name: Nombre
 label.firstname: Nombre
