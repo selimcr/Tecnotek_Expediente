@@ -104,7 +104,7 @@ var Tecnotek = {
 
 		},
         ajaxCall : function(url, params, succedFunction, errorFunction, showSpinner) {
-            if(showSpinner) $( "#spinner-modal" ).dialog( "open" );
+            //if(showSpinner) $( "#spinner-modal" ).dialog( "open" );
             var request = $.ajax({
                 url: url,
                 type: "POST",
@@ -453,8 +453,8 @@ var Tecnotek = {
             translates : {},
             init : function() {
                 $('#btnPrint').click(function(event){
-                    console.debug("print!!!");
-                    $("#tableContainer").printElement({printMode:'iframe', pageTitle:$(this).attr('rel')});
+                    //console.debug("print!!!");
+                    //$("#tableContainer").printElement({printMode:'iframe', pageTitle:$(this).attr('rel')});
                 });
 
                 $('#entriesTab').click(function(event){
@@ -622,13 +622,14 @@ var Tecnotek = {
                     if(Tecnotek.UI.vars["forzeBlur"] == true){
                         if($type == 1){
                             $percentage = $this.attr('perc');
+                            $max = $this.attr('max');
                             $totalField = $("#" + $this.attr('rel'));
                             //console.debug("Type = " + $type + ", Nota: " + $nota + ", Perc = " + $percentage + " :: " + $totalField);
                             if($nota == "") {
                                 $totalField.html("-");
                             } else {
                                 //console.debug("Calcular total para " + $(this).attr('rel') + ", total = " + ($percentage * $nota / 100));
-                                $totalField.html("" + Tecnotek.roundTo(($percentage * $nota / 100)));
+                                $totalField.html("" + Tecnotek.roundTo(($percentage * $nota / $max)));
                             }
                         } else {
                             $childs = $this.attr('child');
@@ -649,8 +650,9 @@ var Tecnotek = {
                                     $("#total_" + $parent + "_" + $stdId).html("-");
                                 } else {
                                     $percentage =  $("#prom_" + $parent + "_" + $stdId).attr('perc');
+                                    $max = $("#prom_" + $parent + "_" + $stdId).attr('max');
                                     $("#prom_" + $parent + "_" + $stdId).html("" + Tecnotek.roundTo(($sum/$childs)));
-                                    $("#total_" + $parent + "_" + $stdId).html("" + Tecnotek.roundTo(($percentage * ($sum/$childs) / 100)));
+                                    $("#total_" + $parent + "_" + $stdId).html("" + Tecnotek.roundTo(($percentage * ($sum/$childs) / $max)));
                                 }
                             });
                         }
@@ -686,13 +688,14 @@ var Tecnotek = {
                                 } else {
                                     if($type == 1){
                                         $percentage = $this.attr('perc');
+                                        $max = $this.attr('max');
                                         $totalField = $("#" + $this.attr('rel'));
                                         //console.debug("Type = " + $type + ", Nota: " + $nota + ", Perc = " + $percentage + " :: " + $totalField);
                                         if($nota == "") {
                                             $totalField.html("-");
                                         } else {
                                             //console.debug("Calcular total para " + $(this).attr('rel') + ", total = " + ($percentage * $nota / 100));
-                                            $totalField.html("" + Tecnotek.roundTo(($percentage * $nota / 100)));
+                                            $totalField.html("" + Tecnotek.roundTo(($percentage * $nota / $max)));
                                         }
                                         /*$sum = 0;
                                          $counter = 0;
@@ -730,8 +733,9 @@ var Tecnotek = {
                                                 $("#total_" + $parent + "_" + $stdId).html("-");
                                             } else {
                                                 $percentage =  $("#prom_" + $parent + "_" + $stdId).attr('perc');
+                                                $max =  $("#prom_" + $parent + "_" + $stdId).attr('max');
                                                 $("#prom_" + $parent + "_" + $stdId).html("" + Tecnotek.roundTo(($sum/$childs)));
-                                                $("#total_" + $parent + "_" + $stdId).html("" + Tecnotek.roundTo(($percentage * ($sum/$childs) / 100)));
+                                                $("#total_" + $parent + "_" + $stdId).html("" + Tecnotek.roundTo(($percentage * ($sum/$childs) / $max)));
                                             }
                                         });
                                     }
