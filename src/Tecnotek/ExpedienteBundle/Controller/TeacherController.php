@@ -386,7 +386,7 @@ class TeacherController extends Controller
                                 foreach( $subentries as $subentry )
                                 {
                                     //$studentRow .= '<input type="text" class="textField itemNota" tipo="2" rel="total_' . $subentry->getId() . '_stdId" perc="' . $subentry->getPercentage() . '" std="stdId" entry="' . $subentry->getId() . '"  stdyId="stdyIdd">';
-                                    $studentRow .= '<input tabIndex=tabIndexCol'. $colsCounter . 'x type="text" class="textField itemNota item_' . $temp->getId() . '_stdId" val="val_stdId_' . $subentry->getId() .  '_" tipo="2" child="' . $size . '" parent="' . $temp->getId() . '" rel="total_' . $temp->getId() . '_stdId" max="' . $subentry->getMaxValue() . '" perc="' . $temp->getPercentage() . '" std="stdId"  entry="' . $subentry->getId() . '"  stdyId="stdyIdd">';
+                                    $studentRow .= '<input tabIndex=tabIndexCol'. $colsCounter . 'x type="text" class="textField itemNota item_' . $temp->getId() . '_stdId" val="val_stdId_' . $subentry->getId() .  '_" tipo="2" child="' . $size . '" parent="' . $temp->getId() . '" rel="total_' . $temp->getId() . '_stdId" max="' . $subentry->getMaxValue() . '" perc="' . $subentry->getPercentage() . '" std="stdId"  entry="' . $subentry->getId() . '"  stdyId="stdyIdd">';
                                     $colsCounter++;
                                     $htmlCodes .= '<div class="itemHeaderCode itemNota codeNota"></div>';
                                     $html .= '<div class="itemHeader itemNota" style="margin-left: ' . $marginLeft . 'px;">' . $subentry->getName() . '</div>';
@@ -409,7 +409,7 @@ class TeacherController extends Controller
                                 if($size == 1){
                                     foreach( $subentries as $subentry )
                                     {
-                                        $studentRow .= '<input tabIndex=tabIndexCol'. $colsCounter . 'x type="text" class="textField itemNota item_' . $temp->getId() . '_stdId" val="val_stdId_' . $subentry->getId() .  '_" tipo="1"  max="' . $subentry->getMaxValue() . '" child="' . $size . '" parent="' . $temp->getId() . '" rel="total_' . $temp->getId() . '_stdId" perc="' . $temp->getPercentage() . '" std="stdId"  entry="' . $subentry->getId() . '"  stdyId="stdyIdd">';
+                                        $studentRow .= '<input tabIndex=tabIndexCol'. $colsCounter . 'x type="text" class="textField itemNota item_' . $temp->getId() . '_stdId" val="val_stdId_' . $subentry->getId() .  '_" tipo="1"  max="' . $subentry->getMaxValue() . '" child="' . $size . '" parent="' . $temp->getId() . '" rel="total_' . $temp->getId() . '_stdId" perc="' . $subentry->getPercentage() . '" std="stdId"  entry="' . $subentry->getId() . '"  stdyId="stdyIdd">';
                                         $colsCounter++;
                                         $htmlCodes .= '<div class="itemHeaderCode itemNota codeNota"></div>';
                                         $html .= '<div class="itemHeader itemNota" style="margin-left: ' . $marginLeft . 'px;">' . $subentry->getName() . '</div>';
