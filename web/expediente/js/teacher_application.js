@@ -643,11 +643,11 @@ var Tecnotek = {
                             $('.item_' + $parent + "_" + $stdId).each(function() {
                                 $notaDigitada = $(this).val();
                                 $valorMax = $(this).attr("max");
-                                $porcentageAsignado = $(this).attr("perc");
+                                $porcentageAsignado = parseFloat($(this).attr("perc"));
                                 $sumaPorcentagesAsignados = $porcentageAsignado;
                                 if($notaDigitada != ""){
                                     //100/valor max * nota digitada * %asignado
-                                    $sumaPorcentage += (100 / parseFloat($valorMax) * parseFloat($notaDigitada) * (parseFloat($porcentageAsignado) / 100));
+                                    $sumaPorcentage += (100 / parseFloat($valorMax) * parseFloat($notaDigitada) * ($porcentageAsignado / 100));
                                     $sum += parseFloat( $notaDigitada );
                                     $counter++;
                                 }
@@ -743,11 +743,11 @@ var Tecnotek = {
                                         $('.item_' + $parent + "_" + $stdId).each(function() {
                                             $notaDigitada = $(this).val();
                                             $valorMax = $(this).attr("max");
-                                            $porcentageAsignado = $(this).attr("perc");
+                                            $porcentageAsignado = parseFloat($(this).attr("perc"));
                                             $sumaPorcentagesAsignados += $porcentageAsignado;
                                             if($notaDigitada != ""){
                                                 //100/valor max * nota digitada * %asignado
-                                                $sumaPorcentage += (100 / parseFloat($valorMax) * parseFloat($notaDigitada) * (parseFloat($porcentageAsignado) / 100));
+                                                $sumaPorcentage += (100 / parseFloat($valorMax) * parseFloat($notaDigitada) * ($porcentageAsignado / 100));
                                                 $sum += parseFloat( $notaDigitada );
                                                 $counter++;
                                             }
@@ -764,6 +764,7 @@ var Tecnotek = {
                                             $("#prom_" + $parent + "_" + $stdId).html("" + Tecnotek.roundTo(($sum/$childs)));
 
                                             $porcentageRubro = $("#total_" + $parent + "_" + $stdId).attr("perc");
+                                            console.debug("" + $sumaPorcentagesAsignados + " :: " + $porcentageAsignado + " :: " + ($sumaPorcentagesAsignados == $porcentageRubro) + " :: " + ($sumaPorcentagesAsignados === $porcentageRubro));
                                             if($sumaPorcentagesAsignados == $porcentageRubro){
                                                 $("#total_" + $parent + "_" + $stdId).html("" + Tecnotek.roundTo($sumaPorcentage));
                                             } else {
