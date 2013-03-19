@@ -763,8 +763,8 @@ var Tecnotek = {
                                             $max =  $("#prom_" + $parent + "_" + $stdId).attr('max');
                                             $("#prom_" + $parent + "_" + $stdId).html("" + Tecnotek.roundTo(($sum/$childs)));
 
-                                            $porcentageRubro = $("#total_" + $parent + "_" + $stdId).attr("perc");
-                                            console.debug("" + $sumaPorcentagesAsignados + " :: " + $porcentageAsignado + " :: " + ($sumaPorcentagesAsignados == $porcentageRubro) + " :: " + ($sumaPorcentagesAsignados === $porcentageRubro));
+											$porcentageRubro = $("#prom_" + $parent + "_" + $stdId).attr("perc");
+											console.debug("" + $sumaPorcentagesAsignados + " :: " + $porcentageAsignado + " :: " + ($sumaPorcentagesAsignados == $porcentageRubro) + " :: " + ($sumaPorcentagesAsignados === $porcentageRubro));
                                             if($sumaPorcentagesAsignados == $porcentageRubro){
                                                 $("#total_" + $parent + "_" + $stdId).html("" + Tecnotek.roundTo($sumaPorcentage));
                                             } else {
