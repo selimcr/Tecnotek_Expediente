@@ -639,11 +639,12 @@ var Tecnotek = {
                             $sum = 0;
                             $sumaPorcentage = 0;
                             $counter = 0;
+                            $sumaPorcentagesAsignados = 0;
                             $('.item_' + $parent + "_" + $stdId).each(function() {
                                 $notaDigitada = $(this).val();
                                 $valorMax = $(this).attr("max");
                                 $porcentageAsignado = $(this).attr("perc");
-
+                                $sumaPorcentagesAsignados = $porcentageAsignado;
                                 if($notaDigitada != ""){
                                     //100/valor max * nota digitada * %asignado
                                     $sumaPorcentage += (100 / parseFloat($valorMax) * parseFloat($notaDigitada) * (parseFloat($porcentageAsignado) / 100));
@@ -661,7 +662,15 @@ var Tecnotek = {
                                  $max = $("#prom_" + $parent + "_" + $stdId).attr('max');
                                  $("#prom_" + $parent + "_" + $stdId).html("" + Tecnotek.roundTo(($sum/$childs)));
                                  //$("#total_" + $parent + "_" + $stdId).html("" + Tecnotek.roundTo(($percentage * ($sum/$childs) / $max)));
-                                $("#total_" + $parent + "_" + $stdId).html("" + Tecnotek.roundTo($sumaPorcentage));
+
+
+                                $porcentageRubro = $("#total_" + $parent + "_" + $stdId).attr("perc");
+                                if($sumaPorcentagesAsignados == $porcentageRubro){
+                                    $("#total_" + $parent + "_" + $stdId).html("" + Tecnotek.roundTo($sumaPorcentage));
+                                } else {
+                                    $("#total_" + $parent + "_" + $stdId).html("" + Tecnotek.roundTo($sumaPorcentage / $counter));
+                                }
+
                              }
                         }
 
@@ -730,10 +739,12 @@ var Tecnotek = {
                                         $sum = 0;
                                         $counter = 0;
                                         $sumaPorcentage = 0;
+                                        $sumaPorcentagesAsignados = 0;
                                         $('.item_' + $parent + "_" + $stdId).each(function() {
                                             $notaDigitada = $(this).val();
                                             $valorMax = $(this).attr("max");
                                             $porcentageAsignado = $(this).attr("perc");
+                                            $sumaPorcentagesAsignados += $porcentageAsignado;
                                             if($notaDigitada != ""){
                                                 //100/valor max * nota digitada * %asignado
                                                 $sumaPorcentage += (100 / parseFloat($valorMax) * parseFloat($notaDigitada) * (parseFloat($porcentageAsignado) / 100));
@@ -751,9 +762,15 @@ var Tecnotek = {
                                             $percentage =  $("#prom_" + $parent + "_" + $stdId).attr('perc');
                                             $max =  $("#prom_" + $parent + "_" + $stdId).attr('max');
                                             $("#prom_" + $parent + "_" + $stdId).html("" + Tecnotek.roundTo(($sum/$childs)));
-                                            $("#total_" + $parent + "_" + $stdId).html("" + Tecnotek.roundTo($sumaPorcentage));
+
+                                            $porcentageRubro = $("#total_" + $parent + "_" + $stdId).attr("perc");
+                                            if($sumaPorcentagesAsignados == $porcentageRubro){
+                                                $("#total_" + $parent + "_" + $stdId).html("" + Tecnotek.roundTo($sumaPorcentage));
+                                            } else {
+                                                $("#total_" + $parent + "_" + $stdId).html("" + Tecnotek.roundTo($sumaPorcentage / $counter));
+                                            }
                                         }
-                                                                                
+
                                     }
 
                                     $sum = 0;
