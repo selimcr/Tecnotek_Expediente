@@ -412,6 +412,7 @@ var Tecnotek = {
                                 for(i=0; i<data.courses.length; i++) {
                                     $('#courses').append('<option value="' + data.courses[i].id + '">' + data.courses[i].name + '</option>');
                                 }
+
                                 Tecnotek.CourseEntries.loadEntriesByCourse($('#courses').val());
                             }
                         },
@@ -440,6 +441,14 @@ var Tecnotek = {
                                 $('#subentriesRows').append(data.subentriesHtml);
                                 $('#subentryFormParent').append(data.entries);
                                 $('#subentryFormCourseClassId').val(data.courseClassId);
+
+                                console.debug("HEIGHT: " + $("#tabsContainer").height() + " :: " + (data.counter * 35 + 80)  );
+                                /*if( $("#tabsContainer").height() < (data.courses.length * 35 + 80) ){
+                                    $("#tabsContainer").height(data.counter * 35 + 80);
+                                };*/
+
+                                $("#tabsContainer").height(data.counter * 35 + 80);
+
                                 Tecnotek.CourseEntries.initializeSubEntriesButtons();
                             }
                         },
@@ -565,6 +574,11 @@ var Tecnotek = {
                             if(data.error === true) {
                                 Tecnotek.showErrorMessage(data.message,true, "", false);
                             } else {
+                                console.debug("WIDHT----> " + data.codesCounter);
+
+                                $("#tableContainer").width(data.codesCounter * 46 + 280);
+
+
                                 $('#contentBody').html(data.html);
                                 $('#studentsHeader').html(data.studentsHeader);
                                 $('#tableContainer').show();

@@ -43,7 +43,7 @@
         </div>
 
         <div class="centeredDiv">
-            <div class="formContainer" style="width: 920px; height: 650px;">
+            <div class="formContainer" style="width: 920px;">
                 <div id="showContainer">
                     <div style="margin-bottom: 15px;">
                         <div class="left" style="width: 50px; font-weight: bold;">{%trans%}label.period{%endtrans%}</div>
@@ -74,12 +74,12 @@
                         <div class="clear"></div>
                     </div>
                     <!-- Tabs -->
-                    <div id="tabs" style="height: 600px">
-                        <nav class="tabs">
+                    <div id="tabs" class="clearfix">
+                        <nav id="tabsContainer" name="tabsContainer" class="tabs clearfix" style="height: 80px;">
 
                             <!-- Tab Course Entries Start -->
                             <div class="tab-header tab-current" id="entriesTab">{%trans%}label.entries.by.course{%endtrans%}</div>
-                            <section class="tabs-content" id="entriesSection">
+                            <section class="tabs-content clearfix" id="entriesSection">
 
                                 <div class="left" style="width: 100%">
                                     <div class="row tableHeader">
@@ -95,33 +95,33 @@
                                 </div>
                                 <div class="clear"></div>
                                 <br/>
-                                <div class="clear"></div>
                             </section>
                             <!-- End Tab Course Entries-->
 
                             <!-- Tab Course Entries Start -->
                             <div class="tab-header" id="subentriesTab">{%trans%}label.subentries.by.course{%endtrans%}</div>
-                            <section class="tabs-content" style="display: none;" id="subentriesSection">
+                            <section class="tabs-content clearfix" style="display: none;" id="subentriesSection">
 
                                 <div class="left" style="width: 100%">
                                     <div class="row tableHeader">
-                                        <div class="option_width" style="float: left; width: 150px;">{% trans %}label.name{% endtrans %}</div>
+                                        <div class="option_width" style="float: left; width: 230px;">{% trans %}label.name{% endtrans %}</div>
                                         <div class="option_width" style="float: left; width: 100px;">{% trans %}label.code{% endtrans %}</div>
-                                        <div class="option_width" style="float: left; width: 100px;">{% trans %}label.percentage{% endtrans %}</div>
-                                        <div class="option_width" style="float: left; width: 100px;">{% trans %}label.max_value{% endtrans %}</div>
+                                        <div class="option_width" style="float: left; width: 40px;">%</div>
+                                        <div class="option_width" style="float: left; width: 80px;">Maximo</div>
                                         <div class="option_width" style="float: left; width: 100px;">{% trans %}label.order{% endtrans %}</div>
                                         <div class="option_width" style="float: left; width: 150px;">{% trans %}label.parent{% endtrans %}</div>
                                         <a id="openEntryForm" class="right btn new modalbox" style="margin-top: -5px;" href="#subentryFormContainer">{% trans %}label.include{% endtrans %}</a>
 
                                     </div>
-                                    <div id="subentriesRows" name="subentriesRows">
+                                    <div id="subentriesRows" name="subentriesRows" class="clearfix">
                                     </div>
+                                    <div class="clear"></div>
                                 </div>
                                 <div class="clear"></div>
                                 <br/>
 
                                 <!-- hidden courseFormContainer form -->
-                                <div id="subentryFormContainer" style="display: none;">
+                                <div id="subentryFormContainer" style="display: none; width: 400px;">
                                     <h2 style="margin-bottom: 0px;"><div class="left" id="entryTitleOption" name="entryTitleOption"></div> &nbsp;subrubro</h2>
 
                                     <form class="customForm" id="subentryForm" name="subentryForm">

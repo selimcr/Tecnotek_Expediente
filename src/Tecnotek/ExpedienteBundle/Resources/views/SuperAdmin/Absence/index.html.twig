@@ -125,14 +125,14 @@ $(function() {
     </div>
 </div>
 <!-- hidden inline form -->
-<div id="inline" style="width: 470px;">
+<div id="inline" style="width: 550px;">
     <h2>Registrar nueva ausencia</h2>
 
     <form class="customForm" id="createAbsenceForm" name="createAbsenceForm" action="#" method="post" }}>
 
         <div class="left">
         <label><span class="text-form" style="min-width: 150px;">{% trans %}label.student{% endtrans %}</span>
-        <select id="studentId" name="studentId">
+        <select id="studentId" name="studentId" style="width: 285px;">
             {% for student in students %}
                 <option value="{{ student.id }}">{{ student }}</option>
             {% endfor %}

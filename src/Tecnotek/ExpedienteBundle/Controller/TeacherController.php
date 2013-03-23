@@ -151,6 +151,9 @@ class TeacherController extends Controller
                     $entriesOptions = "";
                     $temp = new \Tecnotek\ExpedienteBundle\Entity\CourseEntry();
                     $courseClassId = 0;
+
+                    $counterEntries = 0;
+
                     foreach( $entries as $entry ){
                         $temp = $entry;
                         $courseClassId = $temp->getCourseClass()->getId();
@@ -168,6 +171,7 @@ class TeacherController extends Controller
 
                         $html .= '    <div class="clear"></div>';
                         $html .= '</div>';
+                        $counterEntries++;
 
                         foreach ( $childrens as $child){
                             $html .= '<div id="entryRow_' . $child->getId() . '" class="row userRow tableRowOdd">';
@@ -179,6 +183,7 @@ class TeacherController extends Controller
                             $html .= '    <div id="entryParentField_' . $child->getId() . '" name="entryParentField_' . $child->getId() . '" class="option_width" style="float: left; width: 150px;">' . $child->getParent() . '</div>';
                             $html .= '    <div class="clear"></div>';
                             $html .= '</div>';
+                            $counterEntries++;
                         }
                     }
 
@@ -189,12 +194,13 @@ class TeacherController extends Controller
                     $query = $em->createQuery($dql);
                     $subentries = $query->getResult();
                     $html2 = "";
+                    $counterSubEntries = 0;
                     foreach( $subentries as $entry ){
                         $html2 .= '<div id="subentryRow_' . $entry->getId() . '" class="row userRow tableRowOdd">';
-                        $html2 .= '    <div id="subentryNameField_' . $entry->getId() . '" name="subentryNameField_' . $entry->getId() . '" class="option_width" style="float: left; width: 150px;">' . $entry->getName() . '</div>';
+                        $html2 .= '    <div id="subentryNameField_' . $entry->getId() . '" name="subentryNameField_' . $entry->getId() . '" class="option_width" style="float: left; width: 230px;">' . $entry->getName() . '</div>';
                         $html2 .= '    <div id="subentryCodeField_' . $entry->getId() . '" name="subentryCodeField_' . $entry->getId() . '" class="option_width" style="float: left; width: 100px;">' . $entry->getCode() . '</div>';
-                        $html2 .= '    <div id="subentryPercentageField_' . $entry->getId() . '" name="subentryPercentageField_' . $entry->getId() . '" class="option_width" style="float: left; width: 100px;">' . $entry->getPercentage() . '</div>';
-                        $html2 .= '    <div id="subentryMaxValueField_' . $entry->getId() . '" name="subentryMaxValueField_' . $entry->getId() . '" class="option_width" style="float: left; width: 100px;">' . $entry->getMaxValue() . '</div>';
+                        $html2 .= '    <div id="subentryPercentageField_' . $entry->getId() . '" name="subentryPercentageField_' . $entry->getId() . '" class="option_width" style="float: left; width: 40px;">' . $entry->getPercentage() . '</div>';
+                        $html2 .= '    <div id="subentryMaxValueField_' . $entry->getId() . '" name="subentryMaxValueField_' . $entry->getId() . '" class="option_width" style="float: left; width: 80px;">' . $entry->getMaxValue() . '</div>';
                         $html2 .= '    <div id="subentryOrderField_' . $entry->getId() . '" name="subentryOrderField_' . $entry->getId() . '" class="option_width" style="float: left; width: 100px;">' . $entry->getSortOrder() . '</div>';
                         $html2 .= '    <div id="subentryParentField_' . $entry->getId() . '" name="subentryParentField_' . $entry->getId() . '" class="option_width" style="float: left; width: 150px;">' . $entry->getParent() . '</div>';
 
@@ -202,9 +208,11 @@ class TeacherController extends Controller
                         $html2 .= '    <div class="right imageButton editButton editSubEntry" title="Editar" rel="' . $entry->getId() . '" entryParent="' . $entry->getParent()->getId() . '"></div>';
                         $html2 .= '    <div class="clear"></div>';
                         $html2 .= '</div>';
+                        $counterSubEntries++;
                     }
 
-                    return new Response(json_encode(array('error' => false, 'entries' => $entriesOptions, 'entriesHtml' => $html, 'subentriesHtml' => $html2, 'courseClassId' => $courseClassId)));
+                    return new Response(json_encode(array('error' => false, 'entries' => $entriesOptions, 'entriesHtml' => $html, 'subentriesHtml' => $html2,
+                        'courseClassId' => $courseClassId, 'counter' => ($counterEntries > $counterSubEntries)? $counterEntries:$counterSubEntries)));
                 } else {
                     return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
                 }
@@ -367,6 +375,9 @@ class TeacherController extends Controller
                     $studentsCount = sizeof($students);
                     $rowIndex = 1;
                     $colsCounter = 1;
+
+                    $specialCounter = 1;
+
                     foreach( $entries as $entry )
                     {
                         $temp = $entry;
@@ -389,17 +400,20 @@ class TeacherController extends Controller
                                     $studentRow .= '<input tabIndex=tabIndexCol'. $colsCounter . 'x type="text" class="textField itemNota item_' . $temp->getId() . '_stdId" val="val_stdId_' . $subentry->getId() .  '_" tipo="2" child="' . $size . '" parent="' . $temp->getId() . '" rel="total_' . $temp->getId() . '_stdId" max="' . $subentry->getMaxValue() . '" perc="' . $subentry->getPercentage() . '" std="stdId"  entry="' . $subentry->getId() . '"  stdyId="stdyIdd">';
                                     $colsCounter++;
                                     $htmlCodes .= '<div class="itemHeaderCode itemNota codeNota"></div>';
+                                    $specialCounter++;
                                     $html .= '<div class="itemHeader itemNota" style="margin-left: ' . $marginLeft . 'px;">' . $subentry->getName() . '</div>';
                                     $marginLeft += $jumpRight; $marginLeftCode += 25;
                                 }
 
                                 $studentRow .= '<div class="itemHeaderCode itemPromedio" id="prom_' . $temp->getId() . '_stdId" perc="' . $temp->getPercentage() . '">-</div>';
                                 $htmlCodes .= '<div class="itemHeaderCode itemPromedio codePromedio"></div>';
+                                $specialCounter++;
                                 $html .= '<div class="itemHeader itemPromedio" style="margin-left:' . $marginLeft . 'px;">Promedio ' . $temp->getName() . ' </div>';
                                 $marginLeft += $jumpRight; $marginLeftCode += 25;
 
                                 $studentRow .= '<div id="total_' . $temp->getId() . '_stdId" class="itemHeaderCode itemPorcentage nota_stdId">-</div>';
                                 $htmlCodes .= '<div class="itemHeaderCode itemPorcentage codePorcentage">' . $temp->getCode() . '</div>';
+                                $specialCounter++;
                                 $html .= '<div class="itemHeader itemPorcentage" style="margin-left: ' . $marginLeft . 'px;">' . $temp->getPercentage() . '% ' . $temp->getName() . '</div>';
                                 $marginLeft += $jumpRight; $marginLeftCode += 25;
 
@@ -412,15 +426,16 @@ class TeacherController extends Controller
                                         $studentRow .= '<input tabIndex=tabIndexCol'. $colsCounter . 'x type="text" class="textField itemNota item_' . $temp->getId() . '_stdId" val="val_stdId_' . $subentry->getId() .  '_" tipo="1"  max="' . $subentry->getMaxValue() . '" child="' . $size . '" parent="' . $temp->getId() . '" rel="total_' . $temp->getId() . '_stdId" perc="' . $subentry->getPercentage() . '" std="stdId"  entry="' . $subentry->getId() . '"  stdyId="stdyIdd">';
                                         $colsCounter++;
                                         $htmlCodes .= '<div class="itemHeaderCode itemNota codeNota"></div>';
+                                        $specialCounter++;
                                         $html .= '<div class="itemHeader itemNota" style="margin-left: ' . $marginLeft . 'px;">' . $subentry->getName() . '</div>';
                                         $marginLeft += $jumpRight; $marginLeftCode += 25;
                                     }
 
                                     $studentRow .= '<div id="total_' . $temp->getId() . '_stdId" class="itemHeaderCode itemPorcentage nota_stdId">-</div>';
                                     $htmlCodes .= '<div class="itemHeaderCode itemPorcentage codePorcentage">' . $temp->getCode() . '</div>';
+                                    $specialCounter++;
                                     $html .= '<div class="itemHeader itemPorcentage" style="margin-left: ' . $marginLeft . 'px;">' . $temp->getPercentage() . '% ' . $temp->getName() . '</div>';
                                     $marginLeft += $jumpRight; $marginLeftCode += 25;
-
                                     $html3 .= '<div class="itemHeader2 itemNota" style="width: ' . (($width * 2) + ((sizeof($subentries)) * 2)) . 'px">' . $temp->getName() . '</div>';
                                 }
                             }
@@ -489,7 +504,7 @@ class TeacherController extends Controller
                         $html .=  '<div class="clear"></div><div id="total_trim_' . $stdy->getStudent()->getId() . '" class="itemHeaderCode itemPromedioPeriodo"style="color: #fff;">-</div>' . $row;
                     }
 
-                    return new Response(json_encode(array('error' => false, 'html' => $html, 'studentsHeader' => $studentsHeader, "studentsCounter" => $studentsCount)));
+                    return new Response(json_encode(array('error' => false, 'html' => $html, 'studentsHeader' => $studentsHeader, "studentsCounter" => $studentsCount, "codesCounter" => $specialCounter)));
                 } else {
                     return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
                 }
