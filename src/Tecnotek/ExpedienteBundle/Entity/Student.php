@@ -99,6 +99,66 @@ class Student
     private $age;
 
     /**
+     * @ORM\Column(type="string", length=15, nullable=true)
+     * @Assert\MaxLength(limit = 15)
+     */
+    private $birthday;
+
+    /**
+     * @ORM\Column(type="string", length=15, nullable=true)
+     * @Assert\MaxLength(limit = 15)
+     */
+    private $admission;
+
+    /**
+     * @ORM\Column(type="string", length=15, nullable=true)
+     * @Assert\MaxLength(limit = 25)
+     */
+    private $identification;
+
+    /**
+     * @ORM\Column(type="string", length=15, nullable=true)
+     * @Assert\MaxLength(limit = 5)
+     */
+    private $city;
+
+    /**
+     * @ORM\Column(type="string", length=15, nullable=true)
+     * @Assert\MaxLength(limit = 5)
+     */
+    private $nacionality;
+
+    /**
+     * @ORM\Column(type="string", length=15, nullable=true)
+     * @Assert\MaxLength(limit = 5)
+     */
+    private $religion;
+
+    /**
+     * @ORM\Column(type="string", length=15, nullable=true)
+     * @Assert\MaxLength(limit = 120)
+     */
+    private $observation;
+
+    /**
+     * @ORM\Column(type="string", length=15, nullable=true)
+     * @Assert\MaxLength(limit = 75)
+     */
+    private $email;
+
+    /**
+     * @ORM\Column(type="string", length=15, nullable=true)
+     * @Assert\MaxLength(limit = 5)
+     */
+    private $payment;
+
+    /**
+     * @ORM\Column(type="string", length=15, nullable=true)
+     * @Assert\MaxLength(limit = 15)
+     */
+    private $code;
+
+    /**
      * @ManyToOne(targetEntity="Route")
      * @JoinColumn(name="route_id", referencedColumnName="id", nullable=true)
      */
@@ -416,4 +476,203 @@ class Student
         return $this->gender;
     }
 
+    /**
+     * Set birthday
+     *
+     * @param string $birthday
+     */
+    public function setBirthday($birthday)
+    {
+        $this->birthday = $birthday;
+    }
+
+    /**
+     * Get birthday
+     *
+     * @return string
+     */
+    public function getBirthday()
+    {
+        return $this->birthday;
+    }
+
+    /**
+     * Set admission
+     *
+     * @param string $admission
+     */
+    public function setAdmission($admission)
+    {
+        $this->admission = $admission;
+    }
+
+    /**
+     * Get admission
+     *
+     * @return string
+     */
+    public function getAdmission()
+    {
+        return $this->admission;
+    }
+
+    /**
+     * Set identification
+     *
+     * @param string $identification
+     */
+    public function setIdentification($identification)
+    {
+        $this->identification = $identification;
+    }
+
+    /**
+     * Get identification
+     *
+     * @return string
+     */
+    public function getIdentification()
+    {
+        return $this->identification;
+    }
+
+    /**
+     * Set city
+     *
+     * @param string $city
+     */
+    public function setCity($city)
+    {
+        $this->city = $city;
+    }
+
+    /**
+     * Get city
+     *
+     * @return string
+     */
+    public function getCity()
+    {
+        return $this->city;
+    }
+
+    /**
+     * Set nacionality
+     *
+     * @param string $nacionality
+     */
+    public function setNacionality($nacionality)
+    {
+        $this->nacionality = $nacionality;
+    }
+
+    /**
+     * Get nacionality
+     *
+     * @return string
+     */
+    public function getNacionality()
+    {
+        return $this->nacionality;
+    }
+
+    /**
+     * Set religion
+     *
+     * @param string $religion
+     */
+    public function setReligion($religion)
+    {
+        $this->religion = $religion;
+    }
+
+    /**
+     * Get religion
+     *
+     * @return string
+     */
+    public function getReligion()
+    {
+        return $this->religion;
+    }
+
+    /**
+     * Set observation
+     *
+     * @param string $observation
+     */
+    public function setObservation($observation)
+    {
+        $this->observation = $observation;
+    }
+
+    /**
+     * Get observation
+     *
+     * @return string
+     */
+    public function getObservation()
+    {
+        return $this->observation;
+    }
+
+    /**
+     * Set email
+     *
+     * @param string $email
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+    }
+
+    /**
+     * Get email
+     *
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * Set payment
+     *
+     * @param string $payment
+     */
+    public function setPayment($payment)
+    {
+        $this->payment = $payment;
+    }
+
+    /**
+     * Get payment
+     *
+     * @return string
+     */
+    public function getPayment()
+    {
+        return $this->payment;
+    }
+
+    /**
+     * Set code
+     *
+     * @param string $code
+     */
+    public function setCode($code)
+    {
+        $this->code = $code;
+    }
+
+    /**
+     * Get code
+     *
+     * @return string
+     */
+    public function getCode()
+    {
+        return $this->code;
+    }
 }
