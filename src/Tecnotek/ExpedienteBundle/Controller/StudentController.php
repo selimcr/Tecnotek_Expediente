@@ -533,6 +533,13 @@ class StudentController extends Controller
                 $firstname = $request->get('tecnotek_expediente_contactformtype[firstname]');
                 $lastname = $request->get('tecnotek_expediente_contactformtype[lastname]');
                 $identification = $request->get('tecnotek_expediente_contactformtype[identification]');
+                $phoneh = $request->get('tecnotek_expediente_contactformtype[phoneh]');
+                $phonew = $request->get('tecnotek_expediente_contactformtype[phonew]');
+                $phonec = $request->get('tecnotek_expediente_contactformtype[phonec]');
+                $workplace = $request->get('tecnotek_expediente_contactformtype[workplace]');
+                $email = $request->get('tecnotek_expediente_contactformtype[email]');
+                $adress = $request->get('tecnotek_expediente_contactformtype[adress]');
+                $restriction = $request->get('tecnotek_expediente_contactformtype[restriction]');
                 $kinship = $request->get('kinship');
                 $detail = $request->get('detail');
 
@@ -543,6 +550,13 @@ class StudentController extends Controller
                     $contact->setFirstname($firstname);
                     $contact->setLastname($lastname);
                     $contact->setIdentification($identification);
+                    $contact->setPhoneh($phoneh);
+                    $contact->setPhonew($phonew);
+                    $contact->setPhonec($phonec);
+                    $contact->setWorkplace($workplace);
+                    $contact->setEmail($email);
+                    $contact->setAdress($adress);
+                    $contact->setRestriction($restriction);
 
                     $form = $this->createForm(new ContactFormType(), $contact);
                     $form->bindRequest($this->getRequest());

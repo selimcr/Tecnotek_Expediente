@@ -206,6 +206,17 @@ label.motherPhoneShort: Tel. Madre
 label.female: Mujer
 label.male: Hombre
 
+label.observation: Observaciones
+label.admission: Admision
+label.birthday: Nacimiento
+
+label.phonec: Tel. Celular
+label.phonew: Tel. Trabajo
+label.phoneh: Tel. Casa
+label.workplace: Lugar de trabajo
+label.adress: Direccion
+label.restriction: Restriccion
+
 label.routes.by.zone: Rutas por Zona
 label.students.by.route: Estudiantes por Ruta
 label.students.absences.by.route: Est. Ausentes por Ruta

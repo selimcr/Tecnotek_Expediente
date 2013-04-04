@@ -20,6 +20,10 @@ class StudentFormType extends AbstractType
             add('motherPhone', 'text', array('trim' => true))->
             add('pickUp', 'text', array('trim' => true))->
             add('leaveTime', 'text', array('trim' => true))->
+            add('birthday', 'text', array('trim' => true))->
+            add('admission', 'text', array('trim' => true))->
+            add('identification', 'text', array('trim' => true))->
+            add('observation', 'text', array('trim' => true))->
             add('route');
         ;
     }

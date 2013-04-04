@@ -1674,6 +1674,13 @@ var Tecnotek = {
                     $firstname = $("#firstname").val();
                     $lastname = $("#lastname").val();
                     $identification = $("#identification").val();
+                    $phonec = $("#phonec").val();
+                    $phonew = $("#phonew").val();
+                    $phoneh = $("#phoneh").val();
+                    $workplace = $("#workplace").val();
+                    $email = $("#email").val();
+                    $adress = $("#adress").val();
+                    $restriction = $("#restriction").val();
                     $detail = "";
 
                     switch($("#kinship").val()){
@@ -1693,6 +1700,13 @@ var Tecnotek = {
                                 'tecnotek_expediente_contactformtype[firstname]': $firstname,
                                 'tecnotek_expediente_contactformtype[lastname]': $lastname,
                                 'tecnotek_expediente_contactformtype[identification]': $identification,
+                                'tecnotek_expediente_contactformtype[phonec]': $phonec,
+                                'tecnotek_expediente_contactformtype[phonew]': $phonew,
+                                'tecnotek_expediente_contactformtype[phoneh]': $phoneh,
+                                'tecnotek_expediente_contactformtype[workplace]': $workplace,
+                                'tecnotek_expediente_contactformtype[email]': $email,
+                                'tecnotek_expediente_contactformtype[adress]': $adress,
+                                'tecnotek_expediente_contactformtype[restriction]': $restriction,
                                 'kinship': $("#kinship").val(), 'detail': $detail},
                             function(data){
                                 if(data.error === true) {

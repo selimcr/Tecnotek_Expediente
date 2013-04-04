@@ -85,6 +85,26 @@
                                 <div class="clear"></div>
                             </div>
                             <div>
+                                <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.birthday{%endtrans%}</div>
+                                <div id="birthday" class="left">{{ entity.birthday }}</div>
+                                <div class="clear"></div>
+                            </div>
+                            <div>
+                                <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.admission{%endtrans%}</div>
+                                <div id="admission" class="left">{{ entity.admission }}</div>
+                                <div class="clear"></div>
+                            </div>
+                            <div>
+                                <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.identification{%endtrans%}</div>
+                                <div id="identification" class="left">{{ entity.identification }}</div>
+                                <div class="clear"></div>
+                            </div>
+                            <div>
+                                <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.observation{%endtrans%}</div>
+                                <div id="observation" class="left">{{ entity.observation }}</div>
+                                <div class="clear"></div>
+                            </div>
+                            <div>
                                 <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.pickUp{%endtrans%}</div>
                                 <div id="pickUp" class="left">{{ entity.pickUp }}</div>
                                 <div class="clear"></div>
@@ -144,6 +164,29 @@
 
                                 <label><span class="text-form" style="min-width: 150px;">{% trans %}label.identification{% endtrans %}</span>
                                 <input type="text" id="identification" name="identification" required="required"></label>
+
+                                <label><span class="text-form" style="min-width: 150px;">{% trans %}label.phonec{% endtrans %}</span>
+                                <input type="text" id="phonec" name="phonec"></label>
+
+                                <label><span class="text-form" style="min-width: 150px;">{% trans %}label.phonew{% endtrans %}</span>
+                                <input type="text" id="phonew" name="phonew"></label>
+
+                                <label><span class="text-form" style="min-width: 150px;">{% trans %}label.phoneh{% endtrans %}</span>
+                                <input type="text" id="phoneh" name="phoneh"></label>
+
+                                <label><span class="text-form" style="min-width: 150px;">{% trans %}label.workplace{% endtrans %}</span>
+                                <input type="text" id="workplace" name="workplace"></label>
+
+                                <label><span class="text-form" style="min-width: 150px;">{% trans %}label.email{% endtrans %}</span>
+                                <input type="text" id="email" name="email"></label>
+
+                                <label><span class="text-form" style="min-width: 150px;">{% trans %}label.adress{% endtrans %}</span>
+                                <input type="text" id="adress" name="adress"></label>
+
+                                <label><span class="text-form" style="min-width: 150px;">{% trans %}label.restriction{% endtrans %}</span>
+                                <input type="text" id="restriction" name="restriction" required="required"></label>
+
+
 
                                 <label><span class="text-form" style="min-width: 150px;">{% trans %}label.kinship{% endtrans %}</span>
                                     <select id="kinship">

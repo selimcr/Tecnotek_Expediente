@@ -40,6 +40,7 @@ html[xmlns] .clearfix {
     /*display: none;*/
 }
 .tabs {
+    min-height: 400px;
     padding-bottom: 0px;
     overflow: hidden;
     background: #e1e1e1;

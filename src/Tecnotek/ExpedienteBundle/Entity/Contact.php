@@ -49,7 +49,7 @@ class Contact
      * @ORM\Column(type="string", length=15, nullable=true)
      * @Assert\MaxLength(limit = 15)
      */
-    private $phone_c;
+    private $phonec;
 
     /**
      * @ORM\Column(type="string", length=15, nullable=true)
@@ -61,13 +61,13 @@ class Contact
      * @ORM\Column(type="string", length=15, nullable=true)
      * @Assert\MaxLength(limit = 15)
      */
-    private $phone_w;
+    private $phonew;
 
     /**
      * @ORM\Column(type="string", length=15, nullable=true)
      * @Assert\MaxLength(limit = 15)
      */
-    private $phone_h;
+    private $phoneh;
 
     /**
      * @ORM\Column(type="string", length=15, nullable=true)
@@ -241,23 +241,23 @@ class Contact
     }
 
     /**
-     * Set phone_c
+     * Set phonec
      *
-     * @param string $phone_c
+     * @param string $phonec
      */
-    public function setPhone_c($phone_c)
+    public function setPhonec($phonec)
     {
-        $this->phone_c = $phone_c;
+        $this->phonec = $phonec;
     }
 
     /**
-     * Get phone_c
+     * Get phonec
      *
      * @return string
      */
-    public function getPhone_c()
+    public function getPhonec()
     {
-        return $this->phone_c;
+        return $this->phonec;
     }
 
     /**
@@ -281,43 +281,43 @@ class Contact
     }
 
     /**
-     * Set phone_w
+     * Set phonew
      *
-     * @param string $phone_w
+     * @param string $phonew
      */
-    public function setPhone_w($phone_w)
+    public function setPhonew($phonew)
     {
-        $this->phone_w = $phone_w;
+        $this->phonew = $phonew;
     }
 
     /**
-     * Get phone_w
+     * Get phonew
      *
      * @return string
      */
-    public function getPhone_w()
+    public function getPhonew()
     {
-        return $this->phone_w;
+        return $this->phonew;
     }
 
     /**
-     * Set phone_h
+     * Set phoneh
      *
-     * @param string $phone_h
+     * @param string $phoneh
      */
-    public function setPhone_h($phone_h)
+    public function setPhoneh($phoneh)
     {
-        $this->phone_h = $phone_h;
+        $this->phoneh = $phoneh;
     }
 
     /**
-     * Get phone_h
+     * Get phoneh
      *
      * @return string
      */
-    public function getPhone_h()
+    public function getPhoneh()
     {
-        return $this->phone_h;
+        return $this->phoneh;
     }
 
     /**
