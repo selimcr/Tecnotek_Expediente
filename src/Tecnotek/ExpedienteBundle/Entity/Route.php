@@ -83,6 +83,7 @@ class Route
      * @var Students
      *
      * @ORM\OneToMany(targetEntity="Student", mappedBy="route")
+     * @ORM\OrderBy({"lastname" = "ASC"})
      */
     private $students;
 

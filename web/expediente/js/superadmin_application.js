@@ -38,7 +38,7 @@ var Tecnotek = {
             shadow: false, // Whether to render a shadow
             hwaccel: false, // Whether to use hardware acceleration
             className: 'spinner', // The CSS class to assign to the spinner
-            zIndex: 2e9, // The z-index (defaults to 2000000000)
+            zIndex: 2e9 // The z-index (defaults to 2000000000)
             //top: 'auto', // Top position relative to parent in px
             //left: 'auto' // Left position relative to parent in px
         }).spin(document.getElementById('spin')),
@@ -439,12 +439,14 @@ var Tecnotek = {
                     var $str = $("#studentsIds").val();
                     if($(this).is(":checked") ) {
                         $("#justify_" + $id).removeAttr("disabled");
+                        $("#number_" + $id).removeAttr("disabled");
                         $("#comments_" + $id).removeAttr("disabled");
                         $("#type_" + $id).focus().removeAttr("disabled");
                         $str += " " + $id; //Add the id
                     } else {
                         $("#type_" + $id).attr("disabled", true);
                         $("#justify_" + $id).attr("disabled", true);
+                        $("#number_" + $id).attr("disabled", true);
                         $("#comments_" + $id).attr("disabled", true);
                         //studentsIds //Remove the id
                         var Re = new RegExp(" " + $id,"g");
@@ -919,9 +921,9 @@ var Tecnotek = {
                                     $data += '    <span class="category">Estudiantes</span>';
                                     for(i=0; i<data.students.length; i++) {
                                         $data += '    <a class="searchResult" rel="' + data.students[i].id + '" name="' +
-                                            data.students[i].firstname + ' ' + data.students[i].lastname + '">';
-                                        $data += '      <span class="searchheading">' + data.students[i].firstname
-                                            + ' ' + data.students[i].lastname +  '</span>';
+                                            data.students[i].lastname + ' ' + data.students[i].firstname + '">';
+                                        $data += '      <span class="searchheading">' + data.students[i].lastname
+                                            + ' ' + data.students[i].firstname +  '</span>';
                                         $data += '      <span>Incluir este estudiante.</span>';
                                         $data += '    </a>';
                                     }
@@ -1445,9 +1447,9 @@ var Tecnotek = {
                                     $data += '    <span class="category">Estudiantes</span>';
                                     for(i=0; i<data.students.length; i++) {
                                         $data += '    <a class="searchResult" rel="' + data.students[i].id + '" name="' +
-                                            data.students[i].firstname + ' ' + data.students[i].lastname + '">';
-                                        $data += '      <span class="searchheading">' + data.students[i].firstname
-                                            + ' ' + data.students[i].lastname +  '</span>';
+                                            data.students[i].lastname + ' ' + data.students[i].firstname + '">';
+                                        $data += '      <span class="searchheading">' + data.students[i].lastname
+                                            + ' ' + data.students[i].firstname +  '</span>';
                                         $data += '      <span>Incluir este estudiante.</span>';
                                         $data += '    </a>';
                                     }
@@ -1560,9 +1562,9 @@ var Tecnotek = {
                                     for(i=0; i<data.students.length; i++) {
                                         console.debug();
                                         $data += '    <a class="searchResult" rel="' + data.students[i].id + '" name="' +
-                                            data.students[i].firstname + ' ' + data.students[i].lastname + '">';
-                                        $data += '      <span class="searchheading">' + data.students[i].firstname
-                                            + ' ' + data.students[i].lastname +  '</span>';
+                                            data.students[i].lastname + ' ' + data.students[i].firstname + '">';
+                                        $data += '      <span class="searchheading">' + data.students[i].lastname
+                                            + ' ' + data.students[i].firstname +  '</span>';
                                         $data += '      <span>Incluir este estudiante.</span>';
                                         $data += '    </a>';
                                     }

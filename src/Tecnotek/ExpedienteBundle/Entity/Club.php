@@ -54,6 +54,7 @@ class Club
 
     /**
      * @ORM\ManyToMany(targetEntity="Student", inversedBy="students")
+     * @ORM\OrderBy({"lastname" = "ASC"})
      *
      */
     private $students;

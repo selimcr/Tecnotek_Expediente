@@ -2,6 +2,7 @@
 namespace Tecnotek\ExpedienteBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\OrderBy;
 use Doctrine\ORM\Mapping\ManyToOne as ManyToOne;
 use Doctrine\ORM\Mapping\JoinColumn as JoinColumn;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -13,6 +14,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Table(name="tek_students")
  * @ORM\Entity()
  * @UniqueEntity("carne")
+ * @ORM\OrderBy({"lastname" = "ASC"})
  */
 class Student
 {
@@ -186,7 +188,8 @@ class Student
 
     public function __toString()
     {
-        return $this->firstname . " " . $this->lastname;
+
+        return $this->lastname . " " . $this->firstname;
     }
 
     /**

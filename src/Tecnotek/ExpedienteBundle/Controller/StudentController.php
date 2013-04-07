@@ -278,12 +278,12 @@ class StudentController extends Controller
                 $clubId = $request->get('clubId');
 
                 $em = $this->getDoctrine()->getEntityManager();
-                $sql = "SELECT std.id, std.firstname, std.lastname "
+                $sql = "SELECT std.id, std.lastname, std.firstname "
                     . " FROM tek_students std, tek_students_year stdy"
                     . " WHERE (std.firstname like '%" . $text . "%' OR std.lastname like '%" . $text . "%')"
                     . " AND std.id NOT IN (SELECT cs.student_id FROM club_student cs WHERE cs.club_id = " . $clubId . ")"
                     . " AND std.id = stdy.student_id"
-                    . " ORDER BY std.firstname, std.lastname";
+                    . " ORDER BY std.lastname, std.firstname";
                 $stmt = $em->getConnection()->prepare($sql);
                 $stmt->execute();
                 $students = $stmt->fetchAll();
@@ -356,20 +356,20 @@ class StudentController extends Controller
                 $route = $em->getRepository("TecnotekExpedienteBundle:Route")->find($routeId);
 
                 if($route->getRouteType() == 1){
-                    $sql = "SELECT std.id, std.firstname, std.lastname "
+                    $sql = "SELECT std.id, std.lastname, std.firstname "
                         . " FROM tek_students std, tek_students_year stdy"
                         . " WHERE (std.firstname like '%" . $text . "%' OR std.lastname like '%" . $text . "%')"
                         . " AND (std.route_id is null Or std.route_id <> $routeId)"
                         . " AND std.id = stdy.student_id"
-                        . " ORDER BY std.firstname, std.lastname";
+                        . " ORDER BY std.lastname, std.firstname";
                 } else {
-                    $sql = "SELECT std.id, std.firstname, std.lastname "
+                    $sql = "SELECT std.id, std.lastname, std.firstname "
                         . " FROM tek_students std, tek_students_year stdy"
                         . " LEFT JOIN tek_students_to_routes stdToRoute ON stdToRoute.student_id = std.id"
                         . " WHERE (std.firstname like '%" . $text . "%' OR std.lastname like '%" . $text . "%')"
                         . " AND (stdToRoute.id is null Or stdToRoute.route_id <> $routeId)"
                         . " AND std.id = stdy.student_id"
-                        . " ORDER BY std.firstname, std.lastname";
+                        . " ORDER BY std.lastname, std.firstname";
                 }
                 $stmt = $em->getConnection()->prepare($sql);
                 $stmt->execute();
@@ -659,7 +659,7 @@ class StudentController extends Controller
                     . " FROM tek_contacts c"
                     . " WHERE (c.firstname like '%" . $text . "%' OR c.lastname like '%" . $text . "%')"
                     . " AND c.id NOT IN (SELECT r.contact_id FROM tek_relatives r WHERE r.student_id = " . $studentId . ")"
-                    . " ORDER BY c.firstname, c.lastname";
+                    . " ORDER BY c.lastname, c.firstname";
 
                 $logger->err($sql);
                 $stmt = $em->getConnection()->prepare($sql);
@@ -842,17 +842,17 @@ class StudentController extends Controller
 
                 $em = $this->getDoctrine()->getEntityManager();
                 if( isset($searchType) && isset($groupId) && $searchType == 1 ){
-                    $sql = "SELECT stdy.id, CONCAT(e.firstname, ' ', e.lastname) as 'name'  "
+                    $sql = "SELECT stdy.id, CONCAT(e.lastname, ' ', e.firstname) as 'name'  "
                         . " FROM tek_students e, tek_students_year stdy"
                         . " WHERE stdy.group_id = $groupId AND stdy.student_id = e.id"
-                        . " ORDER BY e.firstname, e.lastname";
+                        . " ORDER BY e.lastname, e.firstname";
 
                 } else {
-                    $sql = "SELECT e.id, e.firstname, e.lastname "
+                    $sql = "SELECT e.id, e.lastname, e.firstname "
                         . " FROM tek_students e, tek_students_year stdy"
                         . " WHERE (e.firstname like '%" . $text . "%' OR e.lastname like '%" . $text . "%')"
                         . " AND e.id = stdy.student_id"
-                        . " ORDER BY e.firstname, e.lastname";
+                        . " ORDER BY e.lastname, e.firstname";
                 }
 
                 $stmt = $em->getConnection()->prepare($sql);
@@ -931,14 +931,14 @@ class StudentController extends Controller
             ->leftJoin("absences.studentYear", "stdY")
             ->leftJoin("stdY.student", "std")
             ->add('where', "absences.date between :start and :end")
-            ->add('orderBy', 'std.firstname ASC')
+            ->add('orderBy', 'std.lastname ASC')
             ->setParameter('start', $start . " 00:00:00")
             ->setParameter('end', $end . " 23:59:59");
         $query = $qb->getQuery();
 
         $entities = $query->getResult();
 
-        $dql = "SELECT students FROM TecnotekExpedienteBundle:Student students ORDER BY students.firstname, students.lastname";
+        $dql = "SELECT students FROM TecnotekExpedienteBundle:Student students ORDER BY students.lastname, students.firstname";
         $query = $em->createQuery($dql);
         $students = $query->getResult();
 
@@ -982,7 +982,7 @@ class StudentController extends Controller
             ->leftJoin("absences.studentYear", "stdY")
             ->leftJoin("stdY.student", "std")
             ->add('where', "absences.date between :start and :end " . $statusQuery . $studentQuery)
-            ->add('orderBy', 'std.firstname ASC, std.lastname ASC')
+            ->add('orderBy', 'std.lastname ASC, std.firstname ASC')
             ->setParameter('start', $start . " 00:00:00")
             ->setParameter('end', $end . " 23:59:59");
 
@@ -991,7 +991,7 @@ class StudentController extends Controller
 
         $entities = $query->getResult();
 
-        $dql = "SELECT students FROM TecnotekExpedienteBundle:Student students ORDER BY students.firstname, students.lastname";
+        $dql = "SELECT students FROM TecnotekExpedienteBundle:Student students ORDER BY students.lastname, students.firstname";
         $query = $em->createQuery($dql);
         $students = $query->getResult();
 
@@ -1138,15 +1138,18 @@ class StudentController extends Controller
                 $comments = $request->get('comments_' . $studentYearId);
                 $typeId = $request->get('type_' . $studentYearId);
                 $justify = $request->get('justify_' . $studentYearId);
+                $number = $request->get('number_' . $studentYearId);
                 //$logger->err("Save absence with stdId:  " . $studentYearId . ", type: " . $typeId . ", justify: " . $justify . ":" . ($justify == "on") . ", comments: " . $comments);
-                $absence = new Absence();
-                $absence->setDate(new \DateTime($date));
-                $absence->setComments($comments);
-                $absence->setJustify(($justify == "on"));
-                $absence->setStudentYear($em->getRepository("TecnotekExpedienteBundle:StudentYear")->find($studentYearId));
-                $absence->setType($em->getRepository("TecnotekExpedienteBundle:AbsenceType")->find($typeId));
 
-                $em->persist($absence);
+                for ($i=0; $i < $number; $i++){
+                    $absence = new Absence();
+                    $absence->setDate(new \DateTime($date));
+                    $absence->setComments($comments);
+                    $absence->setJustify(($justify == "on"));
+                    $absence->setStudentYear($em->getRepository("TecnotekExpedienteBundle:StudentYear")->find($studentYearId));
+                    $absence->setType($em->getRepository("TecnotekExpedienteBundle:AbsenceType")->find($typeId));
+                    $em->persist($absence);
+                }
             }
         }
 
@@ -1176,14 +1179,14 @@ class StudentController extends Controller
             ->leftJoin("penalties.studentYear", "stdy")
             ->leftJoin("stdy.student", "std")
             ->add('where', "penalties.date between :start and :end")
-            ->add('orderBy', 'std.firstname ASC')
+            ->add('orderBy', 'std.lastname ASC')
             ->setParameter('start', $start . " 00:00:00")
             ->setParameter('end', $end . " 23:59:59");
         $query = $qb->getQuery();
 
         $entities = $query->getResult();
 
-        $dql = "SELECT students FROM TecnotekExpedienteBundle:Student students ORDER BY students.firstname, students.lastname";
+        $dql = "SELECT students FROM TecnotekExpedienteBundle:Student students ORDER BY students.lastname, students.firstname";
 
         $query = $em->createQuery($dql);
         $students = $query->getResult();
@@ -1231,14 +1234,14 @@ class StudentController extends Controller
             ->leftJoin("penalties.studentYear", "stdy")
             ->leftJoin("stdy.student", "std")
             ->add('where', "penalties.date between :start and :end " . $periodQuery . $studentQuery)
-            ->add('orderBy', 'std.firstname ASC')
+            ->add('orderBy', 'std.lastname ASC')
             ->setParameter('start', $start . " 00:00:00")
             ->setParameter('end', $end . " 23:59:59");
         $query = $qb->getQuery();
 
         $entities = $query->getResult();
 
-        $dql = "SELECT students FROM TecnotekExpedienteBundle:Student students ORDER BY students.firstname, students.lastname";
+        $dql = "SELECT students FROM TecnotekExpedienteBundle:Student students ORDER BY students.lastname, students.firstname";
 
         $query = $em->createQuery($dql);
         $students = $query->getResult();
@@ -1400,7 +1403,7 @@ class StudentController extends Controller
                     . " FROM tek_students_year stdY"
                     . " JOIN tek_students std ON std.id = stdY.student_id"
                     . " WHERE stdY.group_id = " . $groupId
-                    . " ORDER BY std.firstname, std.lastname";
+                    . " ORDER BY std.lastname, std.firstname";
                 $stmt = $em->getConnection()->prepare($sql);
                 $stmt->execute();
                 $students = $stmt->fetchAll();
@@ -1440,7 +1443,7 @@ class StudentController extends Controller
                     . " WHERE (std.firstname like '%" . $text . "%' OR std.lastname like '%" . $text . "%')"
                     . " AND (stdy.id is null or (stdy.period_id = " . $periodId . " AND stdy.group_id <> " . $groupId . " OR stdy.group_id is null))"
                     . " GROUP BY std.id"
-                    . " ORDER BY std.firstname, std.lastname";
+                    . " ORDER BY std.lastname, std.firstname";
                 $stmt = $em->getConnection()->prepare($sql);
                 $stmt->execute();
                 $students = $stmt->fetchAll();
