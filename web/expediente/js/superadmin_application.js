@@ -1108,8 +1108,8 @@ var Tecnotek = {
                                 $html += '    <div id="groupTeacherField_' + data.groups[i].id + '" name="groupTeacherField_' + data.groups[i].id + '" class="option_width" style="float: left; width: 250px;">' + data.groups[i].teacherName + '</div>';
                                 $html += '    <div id="groupInstitutionField_' + data.groups[i].id + '" name="groupInstitutionField_' + data.groups[i].id + '" class="option_width" style="float: left; width: 250px;">' + ((data.groups[i].institutionName == null)? "":data.groups[i].institutionName) + '</div>';
 
-                                $html += '    <div class="right imageButton deleteButton deleteGroup" style="height: 16px;" title="Eliminar"  rel="' + data.groups[i].id + '"></div>';
-                                $html += '    <div class="right imageButton editButton editGroup"  title="Editar"  rel="' + data.groups[i].id + '" groupName="' + data.groups[i].name + '" teacher="' + data.groups[i].teacherId + '" institution="' + data.groups[i].institutionId + '"></div>';
+                                $html += '    <div class="right imageButton deleteButton deleteGroup" style="height: 16px; width: 22px;" title="Eliminar"  rel="' + data.groups[i].id + '"></div>';
+                                $html += '    <div class="right imageButton editButton editGroup"  title="Editar" style=" width: 22px;"  rel="' + data.groups[i].id + '" groupName="' + data.groups[i].name + '" teacher="' + data.groups[i].teacherId + '" institution="' + data.groups[i].institutionId + '"></div>';
                                 $html += '    <div class="right imageButton studentsButton studentsToGroup"  title="Asociar estudiantes"  rel="' + data.groups[i].id + '" groupName="' + data.groups[i].name + '"></div>';
                                 $html += '    <div class="clear"></div>';
                                 $html += '</div>';
@@ -1714,8 +1714,8 @@ var Tecnotek = {
                                 if(data.error === true) {
                                     Tecnotek.showErrorMessage(data.message,true, "", false);
                                 } else {
-                                    $html = '<div id="relative_row_' + data.id + '" class="row userRow" rel="' + data.id + '">';
-                                    $html += '<div class="option_width" style="float: left; width: 200px;">' + $firstname + " " + $lastname + '</div>';
+                                    $html = '<div id="relative_row_' + data.id + '" class="row userRow" rel="' + data.id + '" style="padding: 0px;">';
+                                    $html += '<div class="option_width" style="float: left; width: 350px;">' + $firstname + " " + $lastname + '</div>';
                                     $html += '<div class="option_width" style="float: left; width: 100px;">' + $detail + '</div>';
                                     $html += '<div class="right imageButton deleteButton" style="height: 16px;"  title="delete???"  rel="' + data.id + '"></div>';
                                     $html += '<div class="clear"></div>';

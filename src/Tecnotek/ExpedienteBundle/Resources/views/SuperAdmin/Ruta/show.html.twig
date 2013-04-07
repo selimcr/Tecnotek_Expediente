@@ -91,13 +91,12 @@
                 <p class="title"><a href="#panel2">{%trans%}label.students.in.club{%endtrans%}</a></p>
                 <div class="content">
 
-                    <div class="left table" id="studentsList">
+                    <div class="left table">
                         <div class="row tableHeader">
                             <div class="option_width" style="float: left; width: 300px;">{% trans %}label.name{% endtrans %}</div>
                         </div>
-                        <div style="overflow: scroll; height: 350px;">
+                        <div  id="studentsList" style="overflow: scroll; height: 350px;">
                             {% set counter = 0 %}
-
                             {% if entity.routeType == 1 %}
                                     {% for student in students %}
                                         <div id="student_row_{{ student.id }}" class="row userRow rel="{{ student.id }}">
@@ -118,8 +117,6 @@
                                 {% endfor %}
                             {% endif %}
                         </div>
-
-
                     </div>
 
                     <div class="left" style="margin-left: 50px;">

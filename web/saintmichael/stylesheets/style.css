@@ -74,7 +74,8 @@ body:before {
 .viewButton {background: url(../images/icons/token_dark_full.png) no-repeat left 0px; background-position: -144px -438px;}
 .deleteButton {background: url(../images/icons/icons-dark.png) -1728px -36px; height: 16px;}
 .editButton {background: url(../images/icons/token_dark_full.png) no-repeat left 0px; background-position: -78px -42px;}
-
+.adminButton {background: url(../images/icons/setup.png) no-repeat left 0px;}
+.studentsButton {background: url(../images/icons/token_dark_full.png) no-repeat left 0px; background-position: -38px -258px;}
 
 /*KPaginator Style*/
 .pagination {

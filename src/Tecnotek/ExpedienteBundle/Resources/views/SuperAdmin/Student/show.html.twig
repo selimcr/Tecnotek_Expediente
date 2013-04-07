@@ -122,22 +122,20 @@
                 </div>
             </section>
             <section class="section">
-                <p class="title"><a href="#panel2">{%trans%}label.students.in.club{%endtrans%}</a></p>
+                <p class="title"><a href="#panel2">{%trans%}label.relatives.in.student{%endtrans%}</a></p>
                 <div class="content">
-                    <div class="left" style="width: 420px;">
+                    <div class="left" style="width: 510px;">
                         <div class="table" id="relativesList">
-                            <div class="row tableHeader">
-                                <div class="option_width" style="float: left; width: 200px;">{% trans %}label.name{% endtrans %}</div>
+                            <div class="row tableHeader" style="padding: 0px;">
+                                <div class="option_width" style="float: left; width: 350px;">{% trans %}label.name{% endtrans %}</div>
                                 <div class="option_width" style="float: left; width: 100px;">{% trans %}label.kinship{% endtrans %}</div>
                             </div>
                             {% set counter = 0 %}
 
                             {% for relative in relatives %}
-                            <div id="relative_row_{{ relative.id }}" class="row" rel="{{ relative.id }}">
-                                <div class="" style="float: left; width: 200px;">&nbsp;</div>
+                            <div id="relative_row_{{ relative.id }}" class="row" rel="{{ relative.id }}" style="padding: 0px; font-size: 10px;">
+                                <div class="" style="float: left; width: 350px;">{{ relative.contact }}</div>
                                 <div class="" style="float: left; width: 100px;">{{ relative.description }}</div>
-
-
                                 <div class="right imageButton deleteButton" style="height: 16px;"  title="{% trans %}label.delete{% endtrans %}"  rel="{{ relative.id }}"></div>
                                 <div class="clear"></div>
                             </div>
@@ -146,7 +144,7 @@
                         </div>
 
                         <div class="table" style="padding: 5px; margin-top: 10px;">
-                            <form id="searchform" class="custom">
+                            <form id="searchform" class="customForm">
                                 <div>
                                     <div>{% trans %}student.include.contact{%endtrans%}</div>
                                     <div style="font-size: 10px;">{% trans %}student.include.help{%endtrans%}</div><br/>
@@ -168,46 +166,46 @@
                         </div>
                     </div>
 
-                    <div class="left" style="margin-left: 30px; font-size: 14px;">
+                    <div class="left" style="margin-left: 10px; font-size: 14px; width: 345px;">
                         <div class="table" style="padding: 5px;">
                             <div>{% trans %}student.create.new.contact{%endtrans%}</div>
-                            <form class="custom" id="newcontact" action="{{ path('_expediente_sysadmin_club_save') }}" method="post" {{ form_enctype(form) }}>
+                            <form class="customF" id="newcontact" action="{{ path('_expediente_sysadmin_club_save') }}" method="post" {{ form_enctype(form) }}>
                                 {{ form_errors(form) }}
 
                                 {{ form_widget(form._token) }}
 
                                 <label style=""><span class="text-form" style="display: inline-block; width: 125px; min-width: 125px;">{% trans %}label.firstname{% endtrans %}</span>
-                                    <input type="text" id="firstname" name="firstname" required="required"></label>
+                                    <input type="text" id="firstname" name="firstname" required="required" style="margin: 0; width: 200px;"></label>
 
                                 <label><span class="text-form" style="display: inline-block; width: 125px;min-width: 125px;">{% trans %}label.lastname{% endtrans %}</span>
-                                    <input type="text" id="lastname" name="lastname" required="required" style="margin: 0;"></label>
+                                    <input type="text" id="lastname" name="lastname" required="required" style="margin: 0; width: 200px;""></label>
 
                                 <label><span class="text-form" style="display: inline-block; width: 125px;min-width: 125px;">{% trans %}label.identification{% endtrans %}</span>
-                                    <input type="text" id="identification" name="identification" required="required" style="margin: 0;"></label>
+                                    <input type="text" id="identification" name="identification" required="required" style="margin: 0; width: 200px;""></label>
 
                                 <label><span class="text-form" style="display: inline-block; width: 125px;min-width: 125px;">{% trans %}label.phonec{% endtrans %}</span>
-                                    <input type="text" id="phonec" name="phonec" style="margin: 0;"></label>
+                                    <input type="text" id="phonec" name="phonec" style="margin: 0; width: 200px;""></label>
 
                                 <label><span class="text-form" style="display: inline-block; width: 125px;min-width: 125px;">{% trans %}label.phonew{% endtrans %}</span>
-                                    <input type="text" id="phonew" name="phonew" style="margin: 0;"></label>
+                                    <input type="text" id="phonew" name="phonew" style="margin: 0; width: 200px;""></label>
 
                                 <label><span class="text-form" style="display: inline-block; width: 125px;min-width: 125px;">{% trans %}label.phoneh{% endtrans %}</span>
-                                    <input type="text" id="phoneh" name="phoneh" style="margin: 0;"></label>
+                                    <input type="text" id="phoneh" name="phoneh" style="margin: 0; width: 200px;""></label>
 
                                 <label><span class="text-form" style="display: inline-block; width: 125px;min-width: 125px;">{% trans %}label.workplace{% endtrans %}</span>
-                                    <input type="text" id="workplace" name="workplace" style="margin: 0;"></label>
+                                    <input type="text" id="workplace" name="workplace" style="margin: 0; width: 200px;""></label>
 
                                 <label><span class="text-form" style="display: inline-block; width: 125px;min-width: 125px;">{% trans %}label.email{% endtrans %}</span>
-                                    <input type="text" id="email" name="email" style="margin: 0;"></label>
+                                    <input type="text" id="email" name="email" style="margin: 0; width: 200px;""></label>
 
                                 <label><span class="text-form" style="display: inline-block; width: 125px;min-width: 125px;">{% trans %}label.adress{% endtrans %}</span>
-                                    <input type="text" id="adress" name="adress" style="margin: 0;"></label>
+                                    <input type="text" id="adress" name="adress" style="margin: 0; width: 200px;""></label>
 
                                 <label><span class="text-form" style="display: inline-block; width: 125px;min-width: 125px;">{% trans %}label.restriction{% endtrans %}</span>
-                                    <input type="text" id="restriction" name="restriction" required="required" style="margin: 0;"></label>
+                                    <input type="text" id="restriction" name="restriction" required="required" style="margin: 0; width: 200px;""></label>
 
                                 <label><span class="text-form" style="display: inline-block; width: 125px; min-width: 125px;">{% trans %}label.kinship{% endtrans %}</span>
-                                    <select id="kinship">
+                                    <select id="kinship" style="width: 200px;"">
                                         <option value="1">{% trans %}label.father{% endtrans %}</option>
                                         <option value="2">{% trans %}label.mother{% endtrans %}</option>
                                         <option value="3">{% trans %}label.brother{% endtrans %}</option>

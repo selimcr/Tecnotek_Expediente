@@ -124,53 +124,56 @@ $(function() {
 </div>
 <!-- hidden inline form -->
 <div id="inline" style="width: 550px;">
-    <h2>Registrar nueva ausencia</h2>
+    <h3>Registrar nueva ausencia</h3>
 
     <form class="customForm" id="createAbsenceForm" name="createAbsenceForm" action="#" method="post" }}>
 
-        <div class="left">
-        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.student{% endtrans %}</span>
-        <select id="studentId" name="studentId" style="width: 285px;">
-            {% for student in students %}
+        <div class="left" style="margin-right: 10px;">
+            <label style="display: inline-block; width: 150px">{% trans %}label.student{% endtrans %}</label>
+            <select id="studentId" name="studentId" style="width: 250px">
+                {% for student in students %}
                 <option value="{{ student.id }}">{{ student }}</option>
-            {% endfor %}
-        </select>
-        </label>
+                {% endfor %}
+            </select>
         </div>
         <div class="left">
-            <button style="margin-left: 15px; margin-top: 0px;" type="button" class="right btn new" name="buttonSearchStudent" id="buttonSearchStudent" href="#inline"><a class="modalbox" href="#searchStudentWindow">{% trans %}label.search{% endtrans %}</a></button>
+            <a class="modalbox button success-darker tiny" href="#searchStudentWindow">{% trans %}label.search{% endtrans %}</a>
         </div>
         <div class="clear"></div>
 
-        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.type{% endtrans %}</span>
-            <select id="typeId" name="typeId">
+        <div style="margin-bottom: 5px;">
+            <label style="display: inline-block; width: 150px">{% trans %}label.type{% endtrans %}</label>
+            <select id="typeId" name="typeId" style="width: 250px">
                 {% for type in absenceTypes %}
                 <option value="{{ type.id }}">{{ type }}</option>
                 {% endfor %}
             </select>
-        </label>
+        </div>
 
-        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.date{% endtrans %}</span>
-            <input type="text" id="date" name="date">
-        </label>
+        <div style="margin-bottom: 5px;">
+            <label style="display: inline-block; width: 150px">{% trans %}label.date{% endtrans %}</label>
+            <input id="date" name="date" style="width: 250px">
+        </div>
 
-        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.justify{% endtrans %}</span>
+        <div style="margin-bottom: 5px;">
+            <label style="display: inline-block; width: 150px">{% trans %}label.justify{% endtrans %}</label>
             <input type="checkbox" id="justify" name="justify" value="1">
-        </label>
+        </div>
 
-        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.comments{% endtrans %}</span>
+        <div style="margin-bottom: 5px;">
+            <label style="display: inline-block; width: 150px">{% trans %}label.comments{% endtrans %}</label>
             <textarea rows="3" cols="15" id="comments" name="comments"></textarea>
-        </label>
+        </div>
 
-        <div class="left"><input class="btn cancelButton" style="margin-top: 0px;" type="button" value="{% trans %}label.cancelar{% endtrans %}"/></div>
-        <div class="left" style="margin-left: 25px;"><input class="btn" style="margin-top: 0px;" type="submit" name="save" value="{% trans %}label.save{% endtrans %}"/></div>
+        <div class="left"><input class="button success-darker tiny cancelButton" style="margin-top: 0px;" type="button" value="{% trans %}label.cancelar{% endtrans %}"/></div>
+        <div class="left" style="margin-left: 25px;"><input class="button success-darker tiny" style="margin-top: 0px;" type="submit" name="save" value="{% trans %}label.save{% endtrans %}"/></div>
         <div class="clear"></div>
     </form>
 </div>
 
 <!-- hidden inline form -->
 <div id="searchStudentWindow" name="searchStudentWindow" style="display: none;">
-    <h2>Buscar estudiante</h2>
+    <h3>Buscar estudiante</h3>
     <div style="line-height: 10px; vertical-align: middle;">
         <div class="left">
             <div>
@@ -182,6 +185,6 @@ $(function() {
         <div class="clear"></div>
     </div>
 
-    <div class="left"><input class="btn cancelButton" style="margin-top: 0px;" type="button" value="{% trans %}label.cancelar{% endtrans %}"/></div>
+    <div class="left"><input class="button success-darker tiny cancelButton" style="margin-top: 0px;" type="button" value="{% trans %}label.cancelar{% endtrans %}"/></div>
 </div>
 {% endblock %}

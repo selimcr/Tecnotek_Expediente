@@ -41,15 +41,15 @@
 <div class="container_24">
     <div class="grid_24">
         <div>
-            <div class="left"><h1>{% trans %}label.period.admin{% endtrans %}: {{ entity }}</h1></div>
-            <div class="right"><a href="{{ path('_expediente_sysadmin_period') }}" class="btn list"><span></span>{% trans %}label.back.list{% endtrans %}</a></div>
+            <div class="left"><h3>{% trans %}label.period.admin{% endtrans %}: {{ entity }}</h3></div>
+            <div class="right"><a href="{{ path('_expediente_sysadmin_period') }}" class="button success-darker tiny"><span></span>{% trans %}label.back.list{% endtrans %}</a></div>
             <div class="clear"></div>
         </div>
 
         <div class="centeredDiv">
             <div class="formContainer" style="width: 920px; height: 650px;">
                 <div id="showContainer">
-                    <div>
+                    <div style="margin-bottom: 10px;">
                         <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.grade{%endtrans%}</div>
                         <div id="labelName" class="left">
                             <select id="grade" name="grade">
@@ -70,16 +70,17 @@
                         <div class="clear"></div>
                     </div>
                     <!-- Tabs -->
-                    <div id="tabs" style="height: 643px">
-                        <nav class="tabs">
-                            <div class="tab-header tab-current" id="groupTab">{%trans%}label.groups{%endtrans%}</div>
-                            <section class="tabs-content" id="groupSection">
+                    <div class="section-container auto" data-section>
+                        <section class="section">
+                            <p class="title" id="groupTab"><a href="#panel1">{%trans%}label.groups{%endtrans%}</a></p>
+                            <div class="content">
+                                <!-- Content of Tab #1 -->
                                 <div class="left">
                                     <div class="row tableHeader">
                                         <div class="option_width" style="float: left; width: 250px;">{% trans %}label.name{% endtrans %}</div>
                                         <div class="option_width" style="float: left; width: 250px;">{% trans %}label.teacher.guide{% endtrans %}</div>
                                         <div class="option_width" style="float: left; width: 250px;">{% trans %}label.institution{% endtrans %}</div>
-                                        <button style="margin-left: 15px; margin-top: -5px;" type="button" class="right btn new" name="buttonNew" id="buttonNewGroup" href="#inline"><a id="openGroupForm" class="modalbox" href="#groupFormContainer">{% trans %}label.new{% endtrans %}</a></button>
+                                        <a id="openGroupForm" class="modalbox right button success-darker tiny" style="margin: 5px 0px 0px 0px;" href="#groupFormContainer">{% trans %}label.new{% endtrans %}</a>
                                     </div>
                                     <div id="groupRows" name="groupRows">
 
@@ -90,57 +91,60 @@
 
                                 <!-- hidden groupForm form -->
                                 <div id="groupFormContainer" style="display: none;">
-                                    <h2 style="margin-bottom: 0px;">Crear nuevo grupo</h2>
+                                    <h3 style="margin-bottom: 0px;">Crear nuevo grupo</h3>
 
                                     <form class="customForm" id="groupForm" name="groupForm">
                                         <div class="formErrors"></div>
-                                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.name{% endtrans %}</span>
-                                            <input id="groupFormName" name="groupFormName">
-                                        </label>
 
-                                        <div class="formErrors"></div>
-                                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.teacher.guide{% endtrans %}</span>
-                                            <select id="groupFormTeacher" name="groupFormTeacher">
+                                        <div style="margin-bottom: 5px;">
+                                            <label style="display: inline-block; width: 120px">{% trans %}label.name{% endtrans %}</label>
+                                            <input id="groupFormName" name="groupFormName" style="width: 250px">
+                                        </div>
+
+                                        <div style="margin-bottom: 5px;">
+                                            <label style="display: inline-block; width: 120px">{% trans %}label.teacher.guide{% endtrans %}</label>
+                                            <select id="groupFormTeacher" name="groupFormTeacher" style="width: 250px;">
                                                 {% for teacher in teachers %}
-                                                    <option value="{{ teacher.id }}">{{ teacher.firstname ~ " " ~ teacher.lastname }}</option>
+                                                <option value="{{ teacher.id }}">{{ teacher.firstname ~ " " ~ teacher.lastname }}</option>
                                                 {% endfor %}
                                             </select>
-                                        </label>
+                                        </div>
 
-                                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.institution{% endtrans %}</span>
-                                            <select id="groupFormInstitution" name="groupFormInstitution">
+                                        <div style="margin-bottom: 5px;">
+                                            <label style="display: inline-block; width: 120px">{% trans %}label.institution{% endtrans %}</label>
+                                            <select id="groupFormInstitution" name="groupFormInstitution" style="width: 250px;">
                                                 {% for institution in institutions %}
                                                 <option value="{{ institution.id }}">{{ institution.name }}</option>
                                                 {% endfor %}
                                             </select>
-                                        </label>
+                                        </div>
 
-                                        <div class="left"><input class="btn" style="margin-top: 0px;" type="button" name="groupFormCancel" id="groupFormCancel" value="{% trans %}label.cancelar{% endtrans %}"/></div>
-                                        <div class="left"><input class="btn" style="margin-top: 0px; margin-left: 25px;" type="submit" name="save" value="{% trans %}label.save{% endtrans %}"/></div>
+                                        <div class="left "><input class="button success-darker tiny" style="margin-top: 0px;" type="button" name="groupFormCancel" id="groupFormCancel" value="{% trans %}label.cancelar{% endtrans %}"/></div>
+                                        <div class="left"><input class="button success-darker tiny" style="margin-top: 0px; margin-left: 25px;" type="submit" name="save" value="{% trans %}label.save{% endtrans %}"/></div>
                                         <div class="clear"></div>
                                     </form>
                                 </div>
 
                                 <!-- hidden studentsToGroup form -->
-                                <div id="studentsToGroupContainer" style="display: none; width: 800px;">
+                                <div id="studentsToGroupContainer" style="display: none; width: 700px;">
                                     <div>
-                                        <h2 style="margin-bottom: 0px;" class="left">Estudiantes en el grupo: &nbsp;<span id="groupNameOfList" name="groupNameOfList"></span></h2>
+                                        <h3 style="margin-bottom: 0px;" class="left">Estudiantes en el grupo: &nbsp;<span id="groupNameOfList" name="groupNameOfList"></span></h3>
                                         <a id="openStudentsToGroup" class="modalbox left" href="#studentsToGroupContainer">&nbsp;</a>
-                                        <div class="right"><input class="btn" style="margin-top: 0px;" type="button" name="studentsToGroupCancel" id="studentsToGroupCancel" value="{% trans %}label.cancelar{% endtrans %}"/></div>
+                                        <div class="right"><input class="button success-darker tiny" style="margin-top: 0px;" type="button" name="studentsToGroupCancel" id="studentsToGroupCancel" value="{% trans %}label.cancelar{% endtrans %}"/></div>
                                         <div class="clear"></div>
                                     </div>
 
 
-                                    <div class="left">
+                                    <div class="left table">
                                         <div class="row tableHeader">
                                             <div class="option_width" style="float: left; width: 300px;">{% trans %}label.name{% endtrans %}</div>
                                         </div>
-                                        <div class="left" id="studentsList">
+                                        <div class="left" id="studentsList" style="height: 250px; overflow: scroll;">
 
                                         </div>
                                     </div>
 
-                                    <div class="left" style="margin-left: 50px;">
+                                    <div class="left" style="width: 275px; margin-left: 20px;">
                                         <form id="searchform">
                                             <div>
                                                 <div>{% trans %}group.include.students{%endtrans%}</div>
@@ -154,16 +158,18 @@
                                     <div class="clear"></div>
 
                                 </div>
-                            </section>
-
-                            <div class="tab-header" id="courseTab">{%trans%}label.courses{%endtrans%}</div>
-                            <section class="tabs-content" style="display: none;" id="courseSection">
-
-                                <div class="left">
+                                <!-- End Content of Tab #1-->
+                            </div>
+                        </section>
+                        <section class="section">
+                            <p class="title" id="courseTab"><a href="#panel2">{%trans%}label.courses{%endtrans%}</a></p>
+                            <div class="content">
+                                <!-- Content of Tab #2 -->
+                                <div class="left table">
                                     <div class="row tableHeader">
                                         <div class="option_width" style="float: left; width: 250px;">{% trans %}label.name{% endtrans %}</div>
                                         <div class="option_width" style="float: left; width: 250px;">{% trans %}label.teacher.default{% endtrans %}</div>
-                                        <button style="margin-left: 15px; margin-top: -5px;" type="button" class="right btn new" name="buttonNew" id="buttonNewCourse" href="#inline"><a id="openCourseForm" class="modalbox" href="#courseFormContainer">{% trans %}label.include{% endtrans %}</a></button>
+                                        <a id="openCourseForm" class="modalbox button success-darker tiny" href="#courseFormContainer">{% trans %}label.include{% endtrans %}</a>
                                     </div>
                                     <div id="courseRows" name="courseRows">
 
@@ -174,39 +180,37 @@
 
                                 <!-- hidden courseFormContainer form -->
                                 <div id="courseFormContainer" style="display: none;">
-                                    <h2 style="margin-bottom: 0px;">Incluir materia</h2>
+                                    <h3 style="margin-bottom: 0px;">Incluir materia</h3>
 
                                     <form class="customForm" id="courseForm" name="courseForm">
-                                        <div class="formErrors"></div>
-                                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.course{% endtrans %}</span>
-                                            <select id="courseToAsociate" name="courseToAsociate">
 
+                                        <div style="margin-bottom: 5px;">
+                                            <label style="display: inline-block; width: 165px">{% trans %}label.course{% endtrans %}</label>
+                                            <select id="courseToAsociate" name="courseToAsociate" style="width: 250px;">
                                             </select>
-                                        </label>
+                                        </div>
 
-                                        <div class="formErrors"></div>
-                                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.teacher.default{% endtrans %}</span>
-                                            <select id="courseFormTeacher" name="courseFormTeacher">
-                                                {% for teacher in teachers %}
-                                                <option value="{{ teacher.id }}">{{ teacher.firstname ~ " " ~ teacher.lastname }}</option>
-                                                {% endfor %}
+                                        <div style="margin-bottom: 5px;">
+                                            <label style="display: inline-block; width: 165px">{% trans %}label.teacher.default{% endtrans %}</label>
+                                            <select id="courseFormTeacher" name="courseFormTeacher" style="width: 250px;">
                                             </select>
-                                        </label>
+                                        </div>
 
-                                        <div class="left"><input class="btn" style="margin-top: 0px;" type="button" name="groupFormCancel" id="courseFormCancel" value="{% trans %}label.cancelar{% endtrans %}"/></div>
-                                        <div class="left"><input class="btn" style="margin-top: 0px; margin-left: 25px;" type="submit" name="save" value="{% trans %}label.include{% endtrans %}"/></div>
+                                        <div class="left"><input class="button success-darker tiny" style="margin-top: 0px;" type="button" name="groupFormCancel" id="courseFormCancel" value="{% trans %}label.cancelar{% endtrans %}"/></div>
+                                        <div class="left"><input class="button success-darker tiny" style="margin-top: 0px; margin-left: 25px;" type="submit" name="save" value="{% trans %}label.include{% endtrans %}"/></div>
                                         <div class="clear"></div>
                                     </form>
                                 </div>
 
                                 <div class="clear"></div>
-                            </section>
-
-                            <!-- Tab Course Entries Start -->
-                            <div class="tab-header" id="entriesTab">{%trans%}label.entries.by.course{%endtrans%}</div>
-                            <section class="tabs-content" style="display: none;" id="entriesSection">
-
-                                <div class="left" style="width: 100%">
+                                <!-- End Content of Tab #2 -->
+                            </div>
+                        </section>
+                        <section class="section">
+                            <p class="title" id="entriesTab"><a href="#panel2">{%trans%}label.entries.by.course{%endtrans%}</a></p>
+                            <div class="content">
+                                <!-- Content of Tab #3 -->
+                                <div class="left table" style="width: 100%">
                                     <div class="row tableHeader">
                                         <div class="option_width" style="float: left; width: 150px;">{% trans %}label.name{% endtrans %}</div>
                                         <div class="option_width" style="float: left; width: 100px;">{% trans %}label.code{% endtrans %}</div>
@@ -214,7 +218,7 @@
                                         <div class="option_width" style="float: left; width: 100px;">{% trans %}label.max_value{% endtrans %}</div>
                                         <div class="option_width" style="float: left; width: 100px;">{% trans %}label.order{% endtrans %}</div>
                                         <div class="option_width" style="float: left; width: 150px;">{% trans %}label.parent{% endtrans %}</div>
-                                        <button style="margin-left: 15px; margin-top: -5px;" type="button" class="right btn new" name="buttonNewEntry" id="buttonNewEntry" href="#inline"><a id="openEntryForm" class="modalbox" href="#entryFormContainer">{% trans %}label.include{% endtrans %}</a></button>
+                                        <a id="openEntryForm" class="right modalbox button success-darker tiny" style="margin: 4px 0px 0px 0px;" href="#entryFormContainer">{% trans %}label.include{% endtrans %}</a>
                                     </div>
                                     <div id="entriesRows" name="entriesRows">
                                     </div>
@@ -224,50 +228,57 @@
 
                                 <!-- hidden courseFormContainer form -->
                                 <div id="entryFormContainer" style="display: none;">
-                                    <h2 style="margin-bottom: 0px;"><div class="left" id="entryTitleOption" name="entryTitleOption"></div> &nbsp; rubro</h2>
+                                    <h3 style="margin-bottom: 0px;"><div class="left" id="entryTitleOption" name="entryTitleOption"></div> &nbsp; rubro</h3>
 
                                     <form class="customForm" id="entryForm" name="entryForm">
-
                                         <input type="hidden" id="entryFormCourseClassId" name="entryFormCourseClassId" value="0">
                                         <div id="formEntryError" class="formErrors"></div>
 
-                                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.name{% endtrans %}</span>
-                                            <input id="entryFormName" name="entryFormName">
-                                        </label>
+                                        <div style="margin-bottom: 5px;">
+                                            <label style="display: inline-block; width: 150px">{% trans %}label.name{% endtrans %}</label>
+                                            <input id="entryFormName" name="entryFormName" style="width: 250px">
+                                        </div>
 
-                                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.code{% endtrans %}</span>
-                                            <input id="entryFormCode" name="entryFormCode">
-                                        </label>
+                                        <div style="margin-bottom: 5px;">
+                                            <label style="display: inline-block; width: 150px">{% trans %}label.code{% endtrans %}</label>
+                                            <input id="entryFormCode" name="entryFormCode" style="width: 250px">
+                                        </div>
 
-                                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.percentage{% endtrans %}</span>
-                                            <input id="entryFormPercentage" name="entryFormPercentage">
-                                        </label>
+                                        <div style="margin-bottom: 5px;">
+                                            <label style="display: inline-block; width: 150px">{% trans %}label.percentage{% endtrans %}</label>
+                                            <input id="entryFormPercentage" name="entryFormPercentage" style="width: 250px">
+                                        </div>
 
-                                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.max_value{% endtrans %}</span>
-                                            <input id="entryFormMaxValue" name="entryFormMaxValue">
-                                        </label>
+                                        <div style="margin-bottom: 5px;">
+                                            <label style="display: inline-block; width: 150px">{% trans %}label.max_value{% endtrans %}</label>
+                                            <input id="entryFormMaxValue" name="entryFormMaxValue" style="width: 250px">
+                                        </div>
 
-                                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.order{% endtrans %}</span>
-                                            <input id="entryFormSortOrder" name="entryFormSortOrder">
-                                        </label>
+                                        <div style="margin-bottom: 5px;">
+                                            <label style="display: inline-block; width: 150px">{% trans %}label.order{% endtrans %}</label>
+                                            <input type="number" id="entryFormSortOrder" name="entryFormSortOrder" style="width: 250px">
+                                        </div>
 
-                                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.parent{% endtrans %}</span>
-                                            <select id="entryFormParent" name="entryFormParent">
+                                        <div style="margin-bottom: 5px;">
+                                            <label style="display: inline-block; width: 150px">{% trans %}label.parent{% endtrans %}</label>
+                                            <select id="entryFormParent" name="entryFormParent" style="width: 250px;">
                                             </select>
-                                        </label>
+                                        </div>
 
-                                        <div class="left"><input class="btn" style="margin-top: 0px;" type="button" name="entryFormCancel" id="entryFormCancel" value="{% trans %}label.cancelar{% endtrans %}"/></div>
-                                        <div class="left"><input class="btn" style="margin-top: 0px; margin-left: 25px;" type="submit" name="save" value="{% trans %}label.save{% endtrans %}"/></div>
+                                        <div class="left"><input class="button success-darker tiny" style="margin-top: 0px;" type="button" name="entryFormCancel" id="entryFormCancel" value="{% trans %}label.cancelar{% endtrans %}"/></div>
+                                        <div class="left"><input class="button success-darker tiny" style="margin-top: 0px; margin-left: 25px;" type="submit" name="save" value="{% trans %}label.save{% endtrans %}"/></div>
                                         <div class="clear"></div>
                                     </form>
                                 </div>
 
                                 <div class="clear"></div>
-                            </section>
-                            <!-- End Tab Course Entries-->
-                        </nav>
+                                <!-- End Content of Tab #3 -->
+                            </div>
+                        </section>
                     </div>
-                    <!-- End Tabs -->
+
+
+
                 </div>
             </div>    
         </div>        
