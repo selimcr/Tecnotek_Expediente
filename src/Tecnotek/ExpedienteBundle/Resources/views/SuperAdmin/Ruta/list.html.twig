@@ -16,9 +16,9 @@
 {% block content %}
 <div class="container_24">
     <div class="grid_24">
-        <div>
-            <div class="left"><h1>{% trans %}label.route.listar{% endtrans %}</h1></div>
-            <div class="right"><a href="{{ path('_expediente_sysadmin_route_create') }}" class="btn add"><span></span>{% trans %}label.add{% endtrans %}</a></div>
+        <div class="titleRow">
+            <div class="left"><h3>{% trans %}label.route.listar{% endtrans %}</h3></div>
+            <div class="right"><a href="{{ path('_expediente_sysadmin_route_create') }}" class="button success-darker tiny"><span></span>{% trans %}label.add{% endtrans %}</a></div>
             <div class="clear"></div>
         </div>
         
@@ -52,12 +52,6 @@
             {{ pagination.render()|raw }}
         </div>    
         <div class="clear"></div>
-    </div>
-    <div class="clear"></div>
-    <div class="wrapper">
-            <div class="grid_24 padline">
-                    <div class="lineH"></div>
-            </div>
     </div>
 </div>
 {% endblock %}

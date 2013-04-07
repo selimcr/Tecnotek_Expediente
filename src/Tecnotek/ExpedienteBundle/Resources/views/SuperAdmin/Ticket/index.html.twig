@@ -21,44 +21,53 @@
 {% block content %}
 <div class="container_24">
     <div class="grid_24">
-        <div class="left" style="width: 45%;" id="ticketsList" name="ticketsList">
+        <div class="left" style="width: 575px;" id="ticketsList" name="ticketsList">
             <div>
-                <div class="left"><h1>{% trans %}label.ticket.today.list{% endtrans %}</h1></div>
+                <div class="left"><h3>{% trans %}label.ticket.today.list{% endtrans %}</h3></div>
                 <div class="clear"></div>
             </div>
 
-            <div class="row tableHeader">
-                <div class="option_width" style="float: left; width: 150px;">{% trans %}label.student{% endtrans %}</div>
-                <div class="option_width" style="float: left; width: 115px;">{% trans %}label.relative{% endtrans %}</div>
-                <div class="option_width" style="float: left; width: 110px;">{% trans %}label.time{% endtrans %}</div>
+            <div class="table">
+                <div class="row tableHeader" style="padding: 0;">
+                    <div class="option_width" style="float: left; width: 215px;">{% trans %}label.student{% endtrans %}</div>
+                    <div class="option_width" style="float: left; width: 260px;">{% trans %}label.relative{% endtrans %}</div>
+                    <div class="option_width" style="float: left; width: 95px;">{% trans %}label.time{% endtrans %}</div>
+                </div>
+
+                {% for ticket in tickets %}
+                <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}" style="padding: 0px;">
+                    <div class="option_width" style="float: left; width: 215px; font-size: 10px;">{{ ticket.student }}</div>
+                    <div class="option_width" style="float: left; width: 260px; font-size: 10px;">{{ ticket.relative.contact }}</div>
+                    <div class="option_width" style="float: left; width: 95px; font-size: 10px;">{{ ticket.date|date("d/M/y H:i:s") }}</div>
+                    <div class="clear"></div>
+                </div>
+                {% else %}
+                <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
+                    <div class="option_width" style="float: left; width: 375px;">{% trans %}tickets.not.found{% endtrans %}</div>
+                    <div class="clear"></div>
+                </div>
+                {% endfor %}
             </div>
 
-            {% for ticket in tickets %}
-            <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
-                <div class="option_width" style="float: left; width: 150px;">{{ ticket.student }}</div>
-                <div class="option_width" style="float: left; width: 115px;">{{ ticket.relative.contact }}</div>
-                <div class="option_width" style="float: left; width: 110px;">{{ ticket.date|date("d/M/y H:i:s") }}</div>
-                <div class="clear"></div>
-            </div>
-            {% else %}
-            <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
-                <div class="option_width" style="float: left; width: 375px;">{% trans %}tickets.not.found{% endtrans %}</div>
-                <div class="clear"></div>
-            </div>
-            {% endfor %}
         </div>
 
-        <div class="right" style="width: 45%;">
-            <div class="left"><h1>{% trans %}label.ticket.new{% endtrans %}</h1></div>
+        <div class="right" style="width: 360px;">
+            <div class="left"><h3>{% trans %}label.ticket.new{% endtrans %}</h3></div>
             <div class="clear"></div>
-            <div class="form-ticket">
-                <div class="internal">
-                    <div class="left" style="width: 85px;"><label>{% trans %}label.student{% endtrans %}</label></div><input id="student" name="student" rel="0"><br/>
-                    <div id="suggestions" style="left: 85px;"></div>
-                    <div class="left" style="width: 85px;"><label>{% trans %}label.relative{% endtrans %}</label></div><select id="relative" name="relative"></select><br/>
+            <div class="form-ticket table" style="background-color: #fff">
+                <div class="internal custom">
+                    <div class="formRow" style="margin: 0; margin-bottom: 15px;">
+                        <div class="left" style="width: 85px;"><label>{% trans %}label.student{% endtrans %}</label></div><input id="student" name="student" rel="0" style="width: 270px;"><br/>
+                        <div id="suggestions" style="left: 85px;"></div>
+                    </div>
+
+                    <div class="formRow" style="margin: 0; margin-bottom: 15px;">
+                        <div class="left" style="width: 85px;"><label>{% trans %}label.relative{% endtrans %}</label></div><select id="relative" name="relative"></select><br/>
+                    </div>
+
                     <div class="left" style="width: 85px;"><label style="line-height: 10px;">{% trans %}label.comments{% endtrans %}</label></div><textarea id="comments" name="comments" rows="10" cols="25"></textarea><br/>
 
-                    <button style="float: right; margin-top: 15px;" type="button" class="left btn save" id="save" name="save"><span></span>{% trans %}label.save{% endtrans %}</button>
+                    <button style="float: left; margin-top: 15px;" type="button" class="right button success-darker tiny" id="save" name="save"><span></span>{% trans %}label.save{% endtrans %}</button>
                     <div class="clear"></div>
                 </div>
 
@@ -67,10 +76,5 @@
         <div class="clear"></div>
     </div>
     <div class="clear"></div>
-    <div class="wrapper">
-            <div class="grid_24 padline">
-                    <div class="lineH"></div>
-            </div>
-    </div>
 </div>
 {% endblock %}

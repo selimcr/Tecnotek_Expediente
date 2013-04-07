@@ -23,15 +23,15 @@
     <div class="grid_24">
         <div>
             <div class="left">
-                <h1>{% trans %}label.reports.bus{% endtrans %}</h1>
+                <h3>{% trans %}label.reports.bus{% endtrans %}</h3>
             </div>
             <div class="left" style="line-height: 48px; margin-left: 25px;">
                 <span>{% trans %}label.reports.bus.message{% endtrans %}</span>
             </div>
             <div class="clear"></div>
         </div>
-        <div class="filter-search">
-            <div class="internal">
+        <div class="filter-search table">
+            <div class="internal" style="padding: 0px;">
                 <form id="searchForm" action="{{ path('_expediente_report_bus_search') }}" method="post">
                     <div class="filter-row">
                         <div class="field">
@@ -55,7 +55,7 @@
                         </div>
                         <div class="field">
                             <label style="padding-left: 60px;">{%trans%}label.route{%endtrans%}</label>
-                            <select id="route" name="route">
+                            <select id="route" name="route" style="width: 309px;">
                                 <option value="0">{%trans%}label.all{%endtrans%}</option>
                                 {% for route in routes %}
                                 <option value="{{route.id}}">{{ route }}</option>
@@ -64,7 +64,7 @@
                         </div>
                     </div>
                     <div class="filter-row">
-                        <button style="margin-left: 15px; margin-top: 0px;" type="submit" class="right btn save" name="search"><span></span>{% trans %}label.filter{% endtrans %}</button>
+                        <button style="margin-right: 9px; margin-top: 0px;" type="submit" class="right button success-darker tiny" name="search"><span></span>{% trans %}label.filter{% endtrans %}</button>
                     </div>
 
                     <div class="clear"></div>
@@ -73,7 +73,7 @@
         </div>
 
         <div style="margin-top: 25px;">
-            <button style="margin-left: 15px; margin-top: 0px;" type="button" class="right btn print" id="btnPrint" name="btnPrint" rel="Cat&aacute;logo de Buses"><span></span>{% trans %}label.print{% endtrans %}</button>
+            <button style="margin-left: 15px; margin-top: 0px;" type="button" class="right button success-darker tiny" id="btnPrint" name="btnPrint" rel="Cat&aacute;logo de Buses"><span></span>{% trans %}label.print{% endtrans %}</button>
             <div class="clear"></div>
         </div>
 

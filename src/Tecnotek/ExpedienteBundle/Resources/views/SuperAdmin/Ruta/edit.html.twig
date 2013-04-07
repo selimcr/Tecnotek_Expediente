@@ -14,62 +14,99 @@
 {% endblock %}
 
 {% block content %}
-<div class="container_24">
-    <div class="grid_24">
-        <div>
-            <div class="left"><h1>{% trans %}label.route.show{% endtrans %}</h1></div>
-            <div class="right"><a href="{{ path('_expediente_sysadmin_route') }}" class="btn list"><span></span>{% trans %}label.back.list{% endtrans %}</a></div>
+<div class="container_24" style="width: 800px;">
+    <div class="grid_24" style="width: 100%;">
+        <div class="titleRow">
+            <div class="left"><h3>{% trans %}label.route.edit{% endtrans %}</h3></div>
+            <div class="right"><a href="{{ path('_expediente_sysadmin_route') }}" class="button success-darker tiny"><span></span>{% trans %}label.back.list{% endtrans %}</a></div>
             <div class="clear"></div>
         </div>
 
-        <div class="centeredDiv">
-            <div class="formContainer" style="width: 920px;">
-                <div id="editContainer">
-                    <form class="customForm" id="mainForm" name="mainForm" action="{{ path('_expediente_sysadmin_route_update') }}" method="post">
-                        <input type="hidden" id="id" name="id" value="{{ entity.id }}">
+        <div class="panelRow" id="doc-forms">
+            <div class="large-12 columns">
 
-                        {{ form_errors(form) }}
 
-                        {{ form_widget(form._token) }}
+                <form class="custom" id="mainForm" name="mainForm" action="{{ path('_expediente_sysadmin_route_update') }}" method="post">
+                    <input type="hidden" id="id" name="id" value="{{ entity.id }}">
+                    {{ form_errors(form) }}
 
-                        <div class="formErrors">{{ form_errors(form.code) }}</div>
-                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.code{% endtrans %}</span>{{ form_widget(form.code) }}</label>
+                    {{ form_widget(form._token) }}
 
-                        <div class="formErrors">{{ form_errors(form.name) }}</div>
-                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.name{% endtrans %}</span>{{ form_widget(form.name) }}</label>
+                    <fieldset>
+                        <legend></legend>
 
-                        <div class="formErrors">{{ form_errors(form.description) }}</div>
-                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.description{% endtrans %}</span>{{ form_widget(form.description) }}</label>
+                        <div class="formRow">
+                            <label class="error">{{ form_errors(form.code) }}</label>
+                            <div class="large-12 columns">
+                                <label>{% trans %}label.code{% endtrans %}</label>{{ form_widget(form.code) }}
+                            </div>
+                        </div>
 
-                        <div class="formErrors">{{ form_errors(form.mapUrl) }}</div>
-                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.route{% endtrans %}</span>{{ form_widget(form.mapUrl) }}</label>
+                        <div class="formRow">
+                            <label class="error">{{ form_errors(form.name) }}</label>
+                            <div class="large-12 columns">
+                                <label>{% trans %}label.name{% endtrans %}</label>{{ form_widget(form.name) }}
+                            </div>
+                        </div>
 
-                        <div class="formErrors">{{ form_errors(form.zone) }}</div>
-                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.zone{% endtrans %}</span>{{ form_widget(form.zone) }}</label>
+                        <div class="formRow">
+                            <label class="error">{{ form_errors(form.description) }}</label>
+                            <div class="large-12 columns">
+                                <label>{% trans %}label.description{% endtrans %}</label>{{ form_widget(form.description) }}
+                            </div>
+                        </div>
 
-                        <div class="formErrors">{{ form_errors(form.bus) }}</div>
-                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.bus{% endtrans %}</span>{{ form_widget(form.bus) }}</label>
+                        <div class="formRow">
+                            <label class="error">{{ form_errors(form.mapUrl) }}</label>
+                            <div class="large-12 columns">
+                                <label>{% trans %}label.route{% endtrans %}</label>{{ form_widget(form.mapUrl) }}
+                            </div>
+                        </div>
 
-                        <div class="formErrors">{{ form_errors(form.institution) }}</div>
-                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.institution{% endtrans %}</span>{{ form_widget(form.institution) }}</label>
+                        <div class="formRow">
+                            <label class="error">{{ form_errors(form.zone) }}</label>
+                            <div class="large-12 columns">
+                                <label>{% trans %}label.zone{% endtrans %}:</label>{{ form_widget(form.zone) }}
+                            </div>
+                        </div>
 
-                        <div class="formErrors">{{ form_errors(form.routeType) }}</div>
-                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.type{% endtrans %}</span>{{ form_widget(form.routeType) }}</label>
+                        <div class="formRow">
+                            <label class="error">{{ form_errors(form.bus) }}</label>
+                            <div class="large-12 columns">
+                                <label>{% trans %}label.bus{% endtrans %}:</label>{{ form_widget(form.bus) }}
+                            </div>
+                        </div>
 
-                        <a href="{{ path('_expediente_sysadmin_route_show', {'id': entity.id}) }}" class="left btn delete"><span></span>{% trans %}label.cancelar{% endtrans %}</a>
-                        <button style="margin-left: 15px; margin-top: 0px;" type="submit" class="left btn save" name="save"><span></span>{% trans %}label.save{% endtrans %}</button>
-                        <div class="clear"></div>
-                    </form>
-                </div>
-            </div>    
-        </div>        
-        <div class="clear"></div>
-    </div>
-    <div class="clear"></div>
-    <div class="wrapper">
-            <div class="grid_24 padline">
-                    <div class="lineH"></div>
+                        <div class="formRow">
+                            <label class="error">{{ form_errors(form.institution) }}</label>
+                            <div class="large-12 columns">
+                                <label>{% trans %}label.institution{% endtrans %}:</label>{{ form_widget(form.institution) }}
+                            </div>
+                        </div>
+
+                        <div class="formRow">
+                            <label class="error">{{ form_errors(form.routeType) }}</label>
+                            <div class="large-12 columns">
+                                <label>{% trans %}label.type{% endtrans %}:</label>{{ form_widget(form.routeType) }}
+                            </div>
+                        </div>
+
+                        <div class="formRow ">
+                            <div class="large-12 columns buttonsPanel">
+                                <a href="{{ path('_expediente_sysadmin_route_show', {'id': entity.id}) }}" class="button success-darker tiny"><span></span>{% trans %}label.cancelar{% endtrans %}</a>
+
+                                <button style="margin-left: 15px; margin-top: 0px;" type="submit" class="button success-darker tiny" name="save"><span></span>{% trans %}label.save{% endtrans %}</button>
+
+
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+
+                    </fieldset>
+                </form>
             </div>
+        </div>
+        <div class="clear"></div>
     </div>
 </div>
 {% endblock %}

@@ -30,43 +30,43 @@
     <div class="grid_24">
         <div>
             <div class="left">
-                <h1>{% trans %}label.absences.by.group.title{% endtrans %}</h1>
+                <h3>{% trans %}label.absences.by.group.title{% endtrans %}</h3>
                 <span>Marque las ausencias que desea ingresar y defina los datos para cada una de ellas.</span>
             </div>
            <div class="clear"></div>
         </div>
 
-        <div style="margin-bottom: 15px; margin-top: 15px;">
-            <div class="left" style="width: 50px; font-weight: bold;">{%trans%}label.period{%endtrans%}</div>
-            <div id="labelPeriod" class="left">
-                <select id="period" name="period">
-                    {% for period in periods %}
-                    <option value="{{ period.id }}">{{period}}</option>
-                    {% endfor %}
-                </select>
-            </div>
-
-            <div id="groupsContainer" class="left" style="margin-left: 50px;">
-                <div class="left" style="width: 50px; font-weight: bold;">{%trans%}label.groups{%endtrans%}</div>
-                <div class="left">
-                    <select id="groups" name="groups">
-                    </select>
-                </div>
-            </div>
-
-            <div class="left" style="margin-left: 50px;">
-                <div class="left" style="width: 50px; font-weight: bold;">{%trans%}label.date{%endtrans%}</div>
-                <input type="text" id="date" name="date" style="width: 100px; padding: 2px;" value="" />
-            </div>
-
-            <div class="clear"></div>
+        <div style="margin-top: 15px; line-height: 25px; vertical-align: middle;">
+        <div class="left" style="width: 65px; font-weight: bold;">{%trans%}label.period{%endtrans%}</div>
+        <div id="labelPeriod" class="left">
+            <select id="period" name="period">
+                {% for period in periods %}
+                <option value="{{ period.id }}">{{period}}</option>
+                {% endfor %}
+            </select>
         </div>
 
-        <div class="search-results" style="margin-top: 25px;">
+        <div id="groupsContainer" class="left" style="margin-left: 30px;">
+            <div class="left" style="width: 62px; font-weight: bold;">{%trans%}label.groups{%endtrans%}</div>
+            <div class="left">
+                <select id="groups" name="groups">
+                </select>
+            </div>
+        </div>
+
+        <div class="left" style="margin-left: 50px;">
+            <div class="left" style="width: 50px; font-weight: bold; margin-right: 5px;">{%trans%}label.date{%endtrans%}</div>
+            <input type="text" id="date" name="date" style="width: 100px; padding: 2px;" value="" />
+        </div>
+
+        <div class="clear"></div>
+    </div>
+
+        <div class="search-results table">
             <div class="row tableHeader" style="height: 32px; line-height: 32px;">
                 <div class="option_width" style="float: left; width: 25px;"></div>
-                <div class="option_width" style="float: left; width: 225px;">{% trans %}label.student{% endtrans %}</div>
-                <div class="option_width" style="float: left; width: 200px;">{% trans %}label.type{% endtrans %}</div>
+                <div class="option_width" style="float: left; width: 300px;">{% trans %}label.student{% endtrans %}</div>
+                <div class="option_width" style="float: left; width: 170px;">{% trans %}label.type{% endtrans %}</div>
                 <div class="option_width" style="float: left; width: 125px;">{% trans %}label.justify{% endtrans %}</div>
                 <div class="option_width" style="float: left; width: 150px;">{% trans %}label.comments{% endtrans %}</div>
             </div>
@@ -76,7 +76,7 @@
                 <div id="studentsRows" name="studentsRows">
 
                 </div>
-                <button style="margin-left: 15px; margin-top: 15px;" type="submit" class="right btn save" name="save"><span></span>{% trans %}label.save{% endtrans %}</button>
+                <button style="margin-left: 15px; margin-top: 15px;" type="submit" class="right button success-darker tiny" name="save"><span></span>{% trans %}label.save{% endtrans %}</button>
                 <div class="clear"></div>
             </form>
 
@@ -84,9 +84,9 @@
                 <div class="option_width" style="float: left; width: 25px;">
                     <input type="checkbox" class="cbRow" rel="STDYID">
                 </div>
-                <div class="option_width" style="float: left; width: 225px;">STDNAME</div>
-                <div class="option_width" style="float: left; width: 200px;">
-                    <select id="type_STDYID" name="type_STDYID" disabled="disabled">
+                <div class="option_width" style="float: left; width: 300px;">STDNAME</div>
+                <div class="option_width" style="float: left; width: 170px;">
+                    <select id="type_STDYID" name="type_STDYID" disabled="disabled" style="width: 150px;">
                         {% for absenceType in absencesTypes %}
                             <option value="{{ absenceType.id }}">{{ absenceType }}</option>
                         {% endfor %}
@@ -96,17 +96,12 @@
                     <input type="checkbox" id="justify_STDYID" name="justify_STDYID" disabled="disabled">
                 </div>
                 <div class="option_width" style="float: left; width: 150px;">
-                    <textarea class="commentsArea" id="comments_STDYID" name="comments_STDYID" rows="1" cols="15" style="height: 18px" rel="STDYID" disabled="disabled"></textarea>
+                    <textarea class="commentsArea" id="comments_STDYID" name="comments_STDYID" rows="1" cols="15" style="height: 24px" rel="STDYID" disabled="disabled"></textarea>
                 </div>
                 <div class="clear"></div>
             </div>
         </div>
     </div>
     <div class="clear"></div>
-    <div class="wrapper">
-            <div class="grid_24 padline">
-                    <div class="lineH"></div>
-            </div>
-    </div>
 </div>
 {% endblock %}

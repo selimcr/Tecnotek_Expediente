@@ -11,56 +11,91 @@
 {% endblock %}
 
 {% block content %}
-<div class="container_24">
-    <div class="grid_24">
-        <div>
-            <div class="left"><h1>{% trans %}label.route.new{% endtrans %}</h1></div>
-            <div class="clear"></div>
-        </div>
-        <div class="centeredDiv" style="width: 700px;">
-            <div class="formContainer">
+<div class="container_24" style="width: 800px;">
+    <div class="grid_24" style="width: 100%;">
+        <div class="panelRow" id="doc-forms">
+            <div class="large-12 columns">
                 <form class="customForm" id="createAdminForm" action="{{ path('_expediente_sysadmin_route_save') }}" method="post" {{ form_enctype(form) }}>
                     {{ form_errors(form) }}
 
                     {{ form_widget(form._token) }}
 
-                    <div class="formErrors">{{ form_errors(form.code) }}</div>
-                    <label><span class="text-form" style="min-width: 150px;">{% trans %}label.code{% endtrans %}</span>{{ form_widget(form.code) }}</label>
+                    <fieldset>
+                        <legend>{% trans %}label.route.new{% endtrans %}</legend>
 
-                    <div class="formErrors">{{ form_errors(form.name) }}</div>
-                    <label><span class="text-form" style="min-width: 150px;">{% trans %}label.name{% endtrans %}</span>{{ form_widget(form.name) }}</label>
+                        <div class="formRow">
+                            <label class="error">{{ form_errors(form.code) }}</label>
+                            <div class="large-12 columns">
+                                <label>{% trans %}label.code{% endtrans %}</label>{{ form_widget(form.code) }}
+                            </div>
+                        </div>
 
-                    <div class="formErrors">{{ form_errors(form.description) }}</div>
-                    <label><span class="text-form" style="min-width: 150px;">{% trans %}label.description{% endtrans %}</span>{{ form_widget(form.description) }}</label>
+                        <div class="formRow">
+                            <label class="error">{{ form_errors(form.name) }}</label>
+                            <div class="large-12 columns">
+                                <label>{% trans %}label.name{% endtrans %}</label>{{ form_widget(form.name) }}
+                            </div>
+                        </div>
 
-                    <div class="formErrors">{{ form_errors(form.mapUrl) }}</div>
-                    <label><span class="text-form" style="min-width: 150px;">{% trans %}label.route{% endtrans %}</span>{{ form_widget(form.mapUrl) }}</label>
+                        <div class="formRow">
+                            <label class="error">{{ form_errors(form.description) }}</label>
+                            <div class="large-12 columns">
+                                <label>{% trans %}label.description{% endtrans %}</label>{{ form_widget(form.description) }}
+                            </div>
+                        </div>
 
-                    <div class="formErrors">{{ form_errors(form.zone) }}</div>
-                    <label><span class="text-form" style="min-width: 150px;">{% trans %}label.zone{% endtrans %}</span>{{ form_widget(form.zone) }}</label>
+                        <div class="formRow">
+                            <label class="error">{{ form_errors(form.mapUrl) }}</label>
+                            <div class="large-12 columns">
+                                <label>{% trans %}label.route{% endtrans %}</label>{{ form_widget(form.mapUrl) }}
+                            </div>
+                        </div>
 
-                    <div class="formErrors">{{ form_errors(form.bus) }}</div>
-                    <label><span class="text-form" style="min-width: 150px;">{% trans %}label.bus{% endtrans %}</span>{{ form_widget(form.bus) }}</label>
+                        <div class="formRow">
+                            <label class="error">{{ form_errors(form.zone) }}</label>
+                            <div class="large-12 columns">
+                                <label>{% trans %}label.zone{% endtrans %}:</label>{{ form_widget(form.zone) }}
+                            </div>
+                        </div>
 
-                    <div class="formErrors">{{ form_errors(form.institution) }}</div>
-                    <label><span class="text-form" style="min-width: 150px;">{% trans %}label.institution{% endtrans %}</span>{{ form_widget(form.institution) }}</label>
+                        <div class="formRow">
+                            <label class="error">{{ form_errors(form.bus) }}</label>
+                            <div class="large-12 columns">
+                                <label>{% trans %}label.bus{% endtrans %}:</label>{{ form_widget(form.bus) }}
+                            </div>
+                        </div>
 
-                    <div class="formErrors">{{ form_errors(form.routeType) }}</div>
-                    <label><span class="text-form" style="min-width: 150px;">{% trans %}label.type{% endtrans %}</span>{{ form_widget(form.routeType) }}</label>
+                        <div class="formRow">
+                            <label class="error">{{ form_errors(form.institution) }}</label>
+                            <div class="large-12 columns">
+                                <label>{% trans %}label.institution{% endtrans %}:</label>{{ form_widget(form.institution) }}
+                            </div>
+                        </div>
 
-                    <div class="left"><a href="{{ path('_expediente_sysadmin_route') }}" class="btn delete"><span></span>{% trans %}label.cancelar{% endtrans %}</a></div>
-                    <button style="margin-left: 15px; margin-top: 0px;" type="submit" class="left btn save" name="save"><span></span>{% trans %}label.save{% endtrans %}</button>
-                    <div class="clear"></div>                    
+                        <div class="formRow">
+                            <label class="error">{{ form_errors(form.routeType) }}</label>
+                            <div class="large-12 columns">
+                                <label>{% trans %}label.type{% endtrans %}:</label>{{ form_widget(form.routeType) }}
+                            </div>
+                        </div>
+
+                        <div class="formRow ">
+                            <div class="large-12 columns buttonsPanel">
+                                <a href="{{ path('_expediente_sysadmin_route') }}"
+                                   class="button success-darker tiny"><span></span>{% trans %}label.cancelar{% endtrans %}</a>
+
+                                <input class="button success-darker tiny" style="margin-top: 0px;"
+                                       type="submit" name="save"
+                                       value="{% trans %}label.save{% endtrans %}"/>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+
+                    </fieldset>
                 </form>
-            </div>    
-        </div>        
-        <div class="clear"></div>
-    </div>
-    <div class="clear"></div>
-    <div class="wrapper">
-            <div class="grid_24 padline">
-                    <div class="lineH"></div>
             </div>
+        </div>
+        <div class="clear"></div>
     </div>
 </div>
 {% endblock %}

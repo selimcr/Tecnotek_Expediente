@@ -22,103 +22,93 @@
 {% endblock %}
 
 {% block content %}
-<div class="container_24">
-    <div class="grid_24">
-        <div>
-            <div class="left"><h1>{% trans %}label.club.show{% endtrans %}</h1></div>
-            <div class="right"><a href="{{ path('_expediente_sysadmin_club') }}" class="btn list"><span></span>{% trans %}label.back.list{% endtrans %}</a></div>
+<div class="container_24" style="width: 900px;">
+<div class="grid_24" style="width: 100%;">
+<div class="titleRow">
+    <div class="left"><h3>{% trans %}label.club.show{% endtrans %}</h3></div>
+    <div class="right"><a href="{{ path('_expediente_sysadmin_club') }}" class="button success-darker tiny"><span></span>{% trans %}label.back.list{% endtrans %}</a></div>
+    <div class="clear"></div>
+</div>
+<!-- -->
+<div class="section-container auto" data-section>
+    <section class="section">
+        <p class="title"><a href="#panel1">{%trans%}label.general{%endtrans%}</a></p>
+        <div class="content">
+            <div id="showContainer">
+                <div>
+                    <label>{%trans%}label.name{%endtrans%}</label>
+                    <span id="labelName">{{ entity.name }}</span>
+                </div>
+
+                <div>
+                    <label>{%trans%}label.coordinator{%endtrans%}</label>
+                    <span id="labelCoordinator">{{ entity.coordinator }}</span>
+                </div>
+
+                <div>
+                    <label>{%trans%}label.day{%endtrans%}</label>
+                    <span id="labelDay">{% transchoice entity.day %}
+                        {1} Lunes|{2} Martes|{3} Miercoles|{4} Jueves|{5} Viernes|{6} Sabado|{7} Domingo
+                        {% endtranschoice %}</span>
+                </div>
+
+                <div>
+                    <label>{%trans%}label.timeI{%endtrans%}</label>
+                    <span id="labelTimeI">{{ entity.timeI }}</span>
+                </div>
+
+                <div>
+                    <label>{%trans%}label.timeO{%endtrans%}</label>
+                    <span id="labelTimeO">{{ entity.timeO }}</span>
+                </div>
+
+                <div id="buttonsContainer" style="margin-top: 25px;">
+                    <a href="{{ path('_expediente_sysadmin_club_edit', {'id': entity.id}) }}" class="left button success-darker tiny"><span></span>{% trans %}label.edit{% endtrans %}</a>
+                    <div class="left button success-darker tiny" id="btnEliminar" style="margin-left: 25px;"><span></span>{% trans %}label.eliminar{% endtrans %}</div>
+                    <div class="clear"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="section">
+        <p class="title"><a href="#panel2">{%trans%}label.students.in.club{%endtrans%}</a></p>
+        <div class="content">
+
+            <!--- -->
+            <div class="left table">
+                <div class="row tableHeader">
+                    <div class="option_width" style="float: left; width: 300px;">{% trans %}label.name{% endtrans %}</div>
+                </div>
+
+                <div id="studentsList" style="overflow: scroll; height: 350px;" >
+                    {% set counter = 0 %}
+                    {% for student in entity.students %}
+                        <div id="student_row_{{ student.id }}" class="row userRow rel="{{ student.id }}">
+                            <div class="option_width" style="float: left; width: 300px;">{{ student }}</div>
+                            <div class="right imageButton deleteButton" style="height: 16px;"  title="{% trans %}label.delete{% endtrans %}"  rel="{{ student.id }}"></div>
+                            <div class="clear"></div>
+                        </div>
+                    {% set counter = counter + 1 %}
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="left" style="margin-left: 50px;">
+                <form id="searchform">
+                    <div>
+                        <div>{% trans %}club.include.students{%endtrans%}</div>
+                        <div style="font-size: 10px;">{% trans %}club.include.help{%endtrans%}</div>
+
+                        <input type="text" size="30" value="" id="searchBox"/>
+                    </div>
+                    <div id="suggestions"></div>
+                </form>
+            </div>
+
             <div class="clear"></div>
         </div>
-
-        <div class="centeredDiv">
-                <!-- Tabs -->
-                <div id="tabs">
-                    <nav class="tabs">
-                        <div class="tab-header tab-current" id="generalTab">{%trans%}label.general{%endtrans%}</div>
-                        <section class="tabs-content" id="generalSection">
-                            <div id="showContainer" class="left">
-                                <div>
-                                    <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.name{%endtrans%}</div>
-                                    <div id="labelCode" class="left">{{ entity.name }}</div>
-                                    <div class="clear"></div>
-                                </div>
-                                <div>
-                                    <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.coordinator{%endtrans%}</div>
-                                    <div id="labelCoordinator" class="left">{{ entity.coordinator }}</div>
-                                    <div class="clear"></div>
-                                </div>
-                                <div>
-                                    <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.day{%endtrans%}</div>
-                                    <div id="labelDay" class="left">
-                                        {% transchoice entity.day %}
-                                        {1} Lunes|{2} Martes|{3} Miercoles|{4} Jueves|{5} Viernes|{6} Sabado|{7} Domingo
-                                        {% endtranschoice %}</div>
-                                    <div class="clear"></div>
-                                </div>
-                                <div>
-                                    <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.timeI{%endtrans%}</div>
-                                    <div id="labelTimeI" class="left">{{ entity.timeI }}</div>
-                                    <div class="clear"></div>
-                                </div>
-                                <div>
-                                    <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.timeO{%endtrans%}</div>
-                                    <div id="labelTimeO" class="left">{{ entity.timeO }}</div>
-                                    <div class="clear"></div>
-                                </div>
-
-                                <div id="buttonsContainer" style="margin-top: 25px;">
-                                    <a href="{{ path('_expediente_sysadmin_club_edit', {'id': entity.id}) }}" class="left btn edit"><span></span>{% trans %}label.edit{% endtrans %}</a>
-                                    <div class="left btn delete" id="btnEliminar" style="margin-left: 25px;"><span></span>{% trans %}label.eliminar{% endtrans %}</div>
-                                    <div class="clear"></div>
-                                </div>
-                            </div>
-                            <div class="clear"></div>
-                            <br/>
-                        </section>
-
-                        <div class="tab-header" id="studentsTab">{%trans%}label.students.in.club{%endtrans%}</div>
-                        <section class="tabs-content" style="display: none;" id="studentsSection">
-
-                            <div class="left" id="studentsList" style="overflow: scroll; height: 350px;" >
-                                <div class="row tableHeader">
-                                    <div class="option_width" style="float: left; width: 300px;">{% trans %}label.name{% endtrans %}</div>
-                                </div>
-                                {% set counter = 0 %}
-
-                                {% for student in entity.students %}
-                                <div id="student_row_{{ student.id }}" class="row userRow rel="{{ student.id }}">
-                                    <div class="option_width" style="float: left; width: 300px;">{{ student }}</div>
-                                    <div class="right imageButton deleteButton" style="height: 16px;"  title="{% trans %}label.delete{% endtrans %}"  rel="{{ student.id }}"></div>
-                                    <div class="clear"></div>
-                                </div>
-                                {% set counter = counter + 1 %}
-                                {% endfor %}
-                            </div>
-
-                            <div class="left" style="margin-left: 50px;">
-                                <form id="searchform">
-                                    <div>
-                                        <div>{% trans %}club.include.students{%endtrans%}</div>
-                                        <div style="font-size: 10px;">{% trans %}club.include.help{%endtrans%}</div>
-
-                                        <input type="text" size="30" value="" id="searchBox"/>
-                                    </div>
-                                    <div id="suggestions"></div>
-                                </form>
-                            </div>
-                            <div class="clear"></div>
-                        </section>
-                    </nav>
-                </div>
-                <!-- End Tabs -->
-        </div>        
-        <div class="clear"></div>
-    </div>
-    <div class="clear"></div>
-    <div class="wrapper">
-            <div class="grid_24 padline">
-                    <div class="lineH"></div>
-            </div>
-    </div>
+    </section>
+</div>
+</div>
 </div>
 {% endblock %}

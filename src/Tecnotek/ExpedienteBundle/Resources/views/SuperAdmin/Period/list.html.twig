@@ -17,19 +17,20 @@
 {% block content %}
 <div class="container_24">
     <div class="grid_24">
-        <div>
-            <div class="left"><h1>{% trans %}label.period.listar{% endtrans %}</h1></div>
-            <div class="right"><a href="{{ path('_expediente_sysadmin_period_create') }}" class="btn add"><span></span>{% trans %}label.add{% endtrans %}</a></div>
+        <div class="titleRow">
+            <div class="left"><h3>{% trans %}label.period.listar{% endtrans %}</h3></div>
+            <div class="right"><a href="{{ path('_expediente_sysadmin_period_create') }}" class="button success-darker tiny"><span></span>{% trans %}label.add{% endtrans %}</a></div>
             <div class="clear"></div>
         </div>
-        
-        <div class="row tableHeader">
-            <div class="option_width" style="float: left; width: 150px;">{% trans %}label.name{% endtrans %}</div>
-            <div class="option_width" style="float: left; width: 75px;">{% trans %}label.year{% endtrans %}</div>
-            <div class="option_width" style="float: left; width: 150px;">{% trans %}label.current.period{% endtrans %}</div>
-        </div>
 
-        {% for entity in pagination %}            
+        <div class="table">
+            <div class="row tableHeader">
+                <div class="option_width" style="float: left; width: 150px;">{% trans %}label.name{% endtrans %}</div>
+                <div class="option_width" style="float: left; width: 75px;">{% trans %}label.year{% endtrans %}</div>
+                <div class="option_width" style="float: left; width: 150px;">{% trans %}label.current.period{% endtrans %}</div>
+            </div>
+
+            {% for entity in pagination %}
             <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
                 <div class="option_width" style="float: left; width: 150px;">{{ entity.name }}</div>
                 <div class="option_width" style="float: left; width: 75px;">{{ entity.year }}</div>
@@ -39,9 +40,10 @@
                 <div class="right imageButton viewButton"  title="{% trans %}label.view{% endtrans %}"  rel="{{ entity.id }}"></div>
                 <div class="clear"></div>
             </div>
-        {% endfor %}
+            {% endfor %}
+
+        </div>
         <br/>
-    
         <div style="margin-bottom:75px;">
             {# display navigation #}    
             {{ pagination.render()|raw }}
@@ -49,10 +51,5 @@
         <div class="clear"></div>
     </div>
     <div class="clear"></div>
-    <div class="wrapper">
-            <div class="grid_24 padline">
-                    <div class="lineH"></div>
-            </div>
-    </div>
 </div>
 {% endblock %}

@@ -220,7 +220,7 @@ class SecuredController extends Controller
     }
 
     public function showMenuAction(){
-
+        $logger = $this->get('logger');
         $user= $this->get('security.context')->getToken()->getUser();
 
         //Get Current User Privileges
@@ -240,19 +240,20 @@ class SecuredController extends Controller
 
         foreach($privileges as $privilege){
             if( $privilege['parent_id'] == $parentId) {
-                    $html .= '      <li><a style="text-align: left;" href="' . ($privilege["route"] == "#"? "#":$this->generateUrl($privilege['route'])) . '">' . $privilege['label'] . '</a></li>';
+                    $html .= '      <li><a href="' . ($privilege["route"] == "#"? "#":$this->generateUrl($privilege['route'])) . '">' . $privilege['label'] . '</a></li>';
             } else {
                 if($parentId == 0){//First Menu
-                    $html .= '<li><a href="' . ($privilege["father_route"] == "#"? "#":$this->generateUrl($privilege['father_route'])) . '"><em>' . $privilege['father_label'] . '</em><strong></strong></a>';
-                    $html .= '  <ul>';
-                    $html .= '      <li><a style="text-align: left;" href="' . ($privilege["route"] == "#"? "#":$this->generateUrl($privilege['route'])) . '">' . $privilege['label'] . '</a></li>';
+                    $html .= '<li class="divider"></li>';
+                    $html .= '<li class="has-dropdown"><a href="' . ($privilege["father_route"] == "#"? "#":$this->generateUrl($privilege['father_route'])) . '">' . $privilege['father_label'] . '</a>';
+                    $html .= '  <ul class="dropdown">';
+                    $html .= '      <li><a href="' . ($privilege["route"] == "#"? "#":$this->generateUrl($privilege['route'])) . '">' . $privilege['label'] . '</a></li>';
                 } else {
                     $html .= '  </ul>';
                     $html .= '</li>';
-
-                    $html .= '<li><a href="' . ($privilege["father_route"] == "#"? "#":$this->generateUrl($privilege['father_route'])) . '"><em>' . $privilege['father_label'] . '</em><strong></strong></a>';
-                    $html .= '  <ul>';
-                    $html .= '      <li><a style="text-align: left;" href="' . ($privilege["route"] == "#"? "#":$this->generateUrl($privilege['route'])) . '">' . $privilege['label'] . '</a></li>';
+                    $html .= '<li class="divider"></li>';
+                    $html .= '<li class="has-dropdown"><a href="' . ($privilege["father_route"] == "#"? "#":$this->generateUrl($privilege['father_route'])) . '">' . $privilege['father_label'] . '</a>';
+                    $html .= '  <ul class="dropdown">';
+                    $html .= '      <li><a  href="' . ($privilege["route"] == "#"? "#":$this->generateUrl($privilege['route'])) . '">' . $privilege['label'] . '</a></li>';
                 }
             }
             $parentId = $privilege['parent_id'];

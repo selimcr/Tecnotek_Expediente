@@ -14,53 +14,70 @@
 {% endblock %}
 
 {% block content %}
-<div class="container_24">
-    <div class="grid_24">
-        <div>
-            <div class="left"><h1>{% trans %}label.absence.show{% endtrans %}</h1></div>
-            <div class="right"><a href="{{ path('_expediente_absences') }}" class="btn list"><span></span>{% trans %}label.back.list{% endtrans %}</a></div>
+<div class="container_24" style="width: 800px;">
+    <div class="grid_24" style="width: 100%;">
+        <div class="titleRow">
+            <div class="left"><h3>{% trans %}label.absence.show{% endtrans %}</h3></div>
+            <div class="right"><a href="{{ path('_expediente_absences') }}" class="button success-darker tiny"><span></span>{% trans %}label.back.list{% endtrans %}</a></div>
             <div class="clear"></div>
         </div>
 
-        <div class="centeredDiv">
-            <div class="formContainer" style="width: 920px;">
-                <div id="editContainer">
-                    <form class="customForm" id="mainForm" name="mainForm" action="{{ path('_expediente_sysadmin_absence_update') }}" method="post">
-                        <input type="hidden" id="id" name="id" value="{{ entity.id }}">
+        <div class="panelRow" id="doc-forms">
+            <div class="large-12 columns">
 
-                        {{ form_errors(form) }}
+                <form class="customForm" id="mainForm" name="mainForm" action="{{ path('_expediente_sysadmin_absence_update') }}" method="post">
+                    <input type="hidden" id="id" name="id" value="{{ entity.id }}">
+                    {{ form_errors(form) }}
 
-                        {{ form_widget(form._token) }}
+                    {{ form_widget(form._token) }}
 
-                        <div class="formErrors">{{ form_errors(form.studentYear) }}</div>
-                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.student{% endtrans %}</span>
-                            <input type="hidden" id="tecnotek_expediente_absenceformtype_studentYear" name="tecnotek_expediente_absenceformtype[studentYear]" value="{{ entity.studentYear.id }}">
-                            {{ entity.studentYear }}
-                        </label>
+                    <fieldset>
+                        <legend></legend>
 
-                        <div class="formErrors">{{ form_errors(form.date) }}</div>
-                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.date{% endtrans %}</span>{{ form_widget(form.date) }}</label>
+                        <div class="formRow">
+                            <label class="error">{{ form_errors(form.studentYear) }}</label>
+                            <div class="large-12 columns">
+                                <label>{% trans %}label.student{% endtrans %}</label><input type="hidden" id="tecnotek_expediente_absenceformtype_studentYear" name="tecnotek_expediente_absenceformtype[studentYear]" value="{{ entity.studentYear.id }}">
+                                {{ entity.studentYear }}
+                            </div>
+                        </div>
 
-                        <div class="formErrors">{{ form_errors(form.justify) }}</div>
-                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.justify{% endtrans %}</span>{{ form_widget(form.justify) }}</label>
+                        <div class="formRow">
+                            <label class="error">{{ form_errors(form.date) }}</label>
+                            <div class="large-12 columns">
+                                <label>{% trans %}label.date{% endtrans %}</label>{{ form_widget(form.date) }}
+                            </div>
+                        </div>
 
-                        <div class="formErrors">{{ form_errors(form.comments) }}</div>
-                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.comments{% endtrans %}</span>{{ form_widget(form.comments) }}</label>
+                        <div class="formRow">
+                            <label class="error">{{ form_errors(form.justify) }}</label>
+                            <div class="large-12 columns">
+                                <label>{% trans %}label.justify{% endtrans %}</label>{{ form_widget(form.justify) }}
+                            </div>
+                        </div>
 
-                        <a href="{{ path('_expediente_sysadmin_absence_show', {'id': entity.id}) }}" class="left btn delete"><span></span>{% trans %}label.cancelar{% endtrans %}</a>
-                        <button style="margin-left: 15px; margin-top: 0px;" type="submit" class="left btn save" name="save"><span></span>{% trans %}label.save{% endtrans %}</button>
-                        <div class="clear"></div>
-                    </form>
-                </div>
-            </div>    
-        </div>        
+                        <div class="formRow">
+                            <label class="error">{{ form_errors(form.comments) }}</label>
+                            <div class="large-12 columns">
+                                <label>{% trans %}label.comments{% endtrans %}</label>{{ form_widget(form.comments) }}
+                            </div>
+                        </div>
+
+
+                        <div class="formRow ">
+                            <div class="large-12 columns buttonsPanel">
+                                <a href="{{ path('_expediente_sysadmin_absence_show', {'id': entity.id}) }}" class="button success-darker tiny"><span></span>{% trans %}label.cancelar{% endtrans %}</a>
+                                <button style="margin-left: 15px; margin-top: 0px;" type="submit" class="button success-darker tiny" name="save"><span></span>{% trans %}label.save{% endtrans %}</button>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+
+                    </fieldset>
+                </form>
+            </div>
+        </div>
         <div class="clear"></div>
     </div>
-    <div class="clear"></div>
-    <div class="wrapper">
-            <div class="grid_24 padline">
-                    <div class="lineH"></div>
-            </div>
-    </div>
 </div>
+
 {% endblock %}

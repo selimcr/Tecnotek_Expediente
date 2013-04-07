@@ -45,51 +45,49 @@ $(function() {
 {% block content %}
 <div class="container_24">
     <div class="grid_24">
-        <div>
-            <div class="left">
-                <h1>{% trans %}label.absences.title{% endtrans %}</h1>
-                <span>{% trans %}label.absences.message{% endtrans %}</span>
+        <div class="titleRow">
+            <div>
+                <h3 class="left" style="margin: 0px;">{% trans %}label.absences.title{% endtrans %}</h3>
+                <a id="newAbsence"  class="modalbox right button success-darker tiny" href="#inline">{% trans %}label.new{% endtrans %}</a>
+                <a class="right button success-darker tiny" style="margin-right: 15px;" href="{{ path('_expediente_sysadmin_absence_enter_by_group')}}">{% trans %}label.enter.by.group{% endtrans %}</a>
+                <div class="clear"></div>
             </div>
-            <button style="margin-left: 15px; margin-top: 0px;" type="button" class="right btn new" name="buttonNew" id="buttonNew" href="#inline"><a id="newAbsence"  class="modalbox" href="#inline">{% trans %}label.new{% endtrans %}</a></button>
-            <button style="margin-left: 15px; margin-top: 0px;" type="button" class="right btn new" name="buttonNewByGroup" id="buttonNewByGroup"><a href="{{ path('_expediente_sysadmin_absence_enter_by_group')}}">{% trans %}label.enter.by.group{% endtrans %}</a></button>
+            <div class="clear"></div>
+            <span>{% trans %}label.absences.message{% endtrans %}</span>
             <div class="clear"></div>
         </div>
-        <div class="filter-search">
+        <div class="clear"></div>
+        <div class="filter-search table" style="margin-top: 25px;">
             <div class="internal">
                 <form id="searchForm" action="{{ path('_expediente_absences_search') }}" method="post">
-                    <div class="filter-row">
-                        <div class="field">
-                            <label>{%trans%}label.student{%endtrans%}</label><input type="text" id="student" name="student" value="{{ student }}" style="margin-right: 5px;" {% if student == "" %}disabled="disabled"{% endif %}><input type="checkbox" id="searchByStudent" name="searchByStudent" class="check" rel="student" {% if student != "" %}checked="checked"{% endif %}>
-                        </div>
-                        <div class="field">
-                            <label style="padding-left: 60px;">{%trans%}label.status{%endtrans%}</label>
-                            <select id="status" name="status" style="width: 290px;">
-                                <option value="-1" {% if status == '-1' %}selected="selected"{% endif %}>{%trans%}label.all{%endtrans%}</option>
-                                <option value="1" {% if status == '1' %}selected="selected"{% endif %}>{%trans%}label.justify{%endtrans%}</option>
-                                <option value="0" {% if status == '0' %}selected="selected"{% endif %}>{%trans%}label.injustify{%endtrans%}</option>
-                            </select>
-                        </div>
+                    <div class="left" style="width: 50%;">
+                        <label>{%trans%}label.student{%endtrans%}</label><input type="text" id="student" name="student" value="{{ student }}" style="margin-right: 5px;" {% if student == "" %}disabled="disabled"{% endif %}><input type="checkbox" id="searchByStudent" name="searchByStudent" class="check" rel="student" {% if student != "" %}checked="checked"{% endif %}>
                     </div>
-                    <div class="filter-row">
-                        <div class="field">
-                            <label for="from">Desde</label>
-                            <input type="text" id="from" name="from" value="{{ dateFrom }}" />
-                        </div>
-                        <div class="field">
-                            <label for="to" style="padding-left: 60px;">Hasta</label>
-                            <input type="text" id="to" name="to" value="{{ dateTo }}" />
-                        </div>
+                    <div class="left" style="width: 50%;">
+                        <label style="padding-left: 60px;">{%trans%}label.status{%endtrans%}</label>
+                        <select id="status" name="status" style="width: 290px;">
+                            <option value="-1" {% if status == '-1' %}selected="selected"{% endif %}>{%trans%}label.all{%endtrans%}</option>
+                            <option value="1" {% if status == '1' %}selected="selected"{% endif %}>{%trans%}label.justify{%endtrans%}</option>
+                            <option value="0" {% if status == '0' %}selected="selected"{% endif %}>{%trans%}label.injustify{%endtrans%}</option>
+                        </select>
                     </div>
+                    <div class="clear"></div>
 
-                    <div class="filter-row">
-                        <button style="margin-left: 15px; margin-top: 0px;" type="submit" class="right btn save" name="search"><span></span>{% trans %}label.filter{% endtrans %}</button>
+                    <div class="left" style="width: 50%;">
+                        <label for="from">Desde</label><input type="text" id="from" name="from" value="{{ dateFrom }}" />
                     </div>
+                    <div class="left" style="width: 50%;">
+                        <label for="to" style="padding-left: 60px;">Hasta</label><input type="text" id="to" name="to" value="{{ dateTo }}" />
+                    </div>
+                    <div class="clear"></div>
 
+                    <button style="margin-right: 30px; margin-top: 0px;" type="submit" class="right button success-darker tiny" name="search"><span></span>{% trans %}label.filter{% endtrans %}</button>
                     <div class="clear"></div>
                 </form>
             </div>
         </div>
-        <div class="search-results" style="margin-top: 25px;">
+
+        <div class="search-results table" style="margin-top: 25px;">
             <div class="row tableHeader" style="height: 32px; line-height: 32px;">
                 <div class="option_width" style="float: left; width: 350px;">{% trans %}label.student{% endtrans %}</div>
                 <div class="option_width" style="float: left; width: 150px;">{% trans %}label.date{% endtrans %}</div>

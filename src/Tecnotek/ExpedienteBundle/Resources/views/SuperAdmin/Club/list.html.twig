@@ -20,24 +20,25 @@
 {% block content %}
 <div class="container_24">
     <div class="grid_24">
-        <div>
-            <div class="left"><h1>{% trans %}label.club.listar{% endtrans %}</h1></div>
-            <div class="right"><a href="{{ path('_expediente_sysadmin_club_create') }}" class="btn add"><span></span>{% trans %}label.add{% endtrans %}</a></div>
+        <div class="titleRow">
+            <div class="left"><h3>{% trans %}label.club.listar{% endtrans %}</h3></div>
+            <div class="right"><a href="{{ path('_expediente_sysadmin_club_create') }}" class="button success-darker tiny"><span></span>{% trans %}label.add{% endtrans %}</a></div>
             <div class="clear"></div>
         </div>
-        
-        <div class="row tableHeader">
-            <div class="option_width" style="float: left; width: 200px;">{% trans %}label.name{% endtrans %}</div>
-            <div class="option_width" style="float: left; width: 200px;">{% trans %}label.coordinator{% endtrans %}</div>
-            <div class="option_width" style="float: left; width: 100px;">{% trans %}label.day{% endtrans %}</div>
-            <div class="option_width" style="float: left; width: 100px;">{% trans %}label.timeI{% endtrans %}</div>
-            <div class="option_width" style="float: left; width: 100px;">{% trans %}label.timeO{% endtrans %}</div>
-            <div class="option_width" style="float: left; width: 100px;">{% trans %}label.students{% endtrans %}</div>
-        </div>
-            
-        {% set counter = 0 %}   
 
-        {% for entity in pagination %}            
+        <div class="table">
+            <div class="row tableHeader">
+                <div class="option_width" style="float: left; width: 200px;">{% trans %}label.name{% endtrans %}</div>
+                <div class="option_width" style="float: left; width: 200px;">{% trans %}label.coordinator{% endtrans %}</div>
+                <div class="option_width" style="float: left; width: 100px;">{% trans %}label.day{% endtrans %}</div>
+                <div class="option_width" style="float: left; width: 100px;">{% trans %}label.timeI{% endtrans %}</div>
+                <div class="option_width" style="float: left; width: 100px;">{% trans %}label.timeO{% endtrans %}</div>
+                <div class="option_width" style="float: left; width: 100px;">{% trans %}label.students{% endtrans %}</div>
+            </div>
+
+            {% set counter = 0 %}
+
+            {% for entity in pagination %}
             <div class="row userRow {% if counter%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}" rel="{{ entity.id }}">
                 <div class="option_width" style="float: left; width: 200px;">{{ entity.name }}</div>
                 <div class="option_width" style="float: left; width: 200px;">{{ entity.coordinator }}</div>
@@ -54,7 +55,9 @@
                 <div class="clear"></div>
             </div>
             {% set counter = counter + 1 %}
-        {% endfor %}
+            {% endfor %}
+        </div>
+
         <br/>
     
         <div style="margin-bottom:75px;">

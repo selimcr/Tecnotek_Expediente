@@ -15,51 +15,87 @@
 {% endblock %}
 
 {% block content %}
-<div class="container_24">
-    <div class="grid_24">
-        <div>
-            <div class="left"><h1>{% trans %}label.usuarios.profesor.new{% endtrans %}</h1></div>
-            <div class="clear"></div>
-        </div>
-        <div class="centeredDiv" style="width: 700px;">
-            <div class="formContainer">
+<div class="container_24" style="width: 800px;">
+    <div class="grid_24" style="width: 100%;">
+        <div class="panelRow" id="doc-forms">
+            <div class="large-12 columns">
                 <form class="customForm" id="createAdminForm" action="{{ path('_expediente_sysadmin_profesor_save') }}" method="post" {{ form_enctype(form) }}>
                     {{ form_errors(form) }}
 
                     {{ form_widget(form._token) }}
 
-                    <div class="formErrors">{{ form_errors(form.firstname) }}</div>
-                    <label><span class="text-form" style="min-width: 150px;">{% trans %}label.firstname{% endtrans %}</span>{{ form_widget(form.firstname) }}</label>
+                    <fieldset>
+                        <legend>{% trans %}label.usuarios.profesor.new{% endtrans %}</legend>
+                        <div class="formRow">
+                            <label class="error">{{ form_errors(form.firstname) }}</label>
+                            <div class="large-12 columns">
+                                <label>{% trans %}label.firstname{% endtrans %}</label>{{ form_widget(form.firstname) }}
+                            </div>
+                        </div>
 
-                    <div class="formErrors">{{ form_errors(form.lastname) }}</div>
-                    <label><span class="text-form" style="min-width: 150px;">{% trans %}label.lastname{% endtrans %}</span>{{ form_widget(form.lastname) }}</label>
+                        <div class="formRow">
+                            <label class="error">{{ form_errors(form.lastname) }}</label>
+                            <div class="large-12 columns">
+                                <label>{% trans %}label.lastname{% endtrans %}</label>{{ form_widget(form.lastname) }}
+                            </div>
+                        </div>
 
-                    <div class="formErrors">{{ form_errors(form.username) }}</div>
-                    <label><span class="text-form" style="min-width: 150px;">{% trans %}label.username{% endtrans %}</span>{{ form_widget(form.username) }}</label>
-                    
-                    <div class="formErrors">{{ form_errors(form.email) }}</div>
-                    <label><span class="text-form" style="min-width: 150px;">{% trans %}label.email{% endtrans %}</span>{{ form_widget(form.email) }}</label>
-                    
-                    <div class="formErrors">{{ form_errors(form.password) }}</div>
-                    <label><span class="text-form" style="min-width: 150px;">{% trans %}label.password{% endtrans %}</span><input type="password" id="tecnotek_expediente_userformtype_password_Password" name="tecnotek_expediente_userformtype[password][Password]" required="required"></label>
-                    <label><span class="text-form" style="min-width: 150px;">{% trans %}label.password.reenter{% endtrans %}</span><input type="password" id="tecnotek_expediente_userformtype_password_Re-enter Password" name="tecnotek_expediente_userformtype[password][Re-enter Password]" required="required"></label>
-                    
-                    <div class="formErrors">{{ form_errors(form.active) }}</div>
-                    <label><span class="text-form" style="min-width: 150px;">{% trans %}label.active{% endtrans %}:</span>{{ form_widget(form.active) }}</label>
+                        <div class="formRow">
+                            <label class="error">{{ form_errors(form.username) }}</label>
+                            <div class="large-12 columns">
+                                <label>{% trans %}label.username{% endtrans %}</label>{{ form_widget(form.username) }}
+                            </div>
+                        </div>
 
-                    <div class="left"><a href="{{ path('_expediente_sysadmin_profesor') }}" class="btn"><span></span>{% trans %}label.cancelar{% endtrans %}</a></div>
-                    <div class="left" style="margin-left: 25px;"><input class="btn" style="margin-top: 0px;" type="submit" name="save" value="{% trans %}label.save{% endtrans %}"/></div>
-                    <div class="clear"></div>                    
+                        <div class="formRow">
+                            <label class="error">{{ form_errors(form.email) }}</label>
+                            <div class="large-12 columns">
+                                <label>{% trans %}label.email{% endtrans %}</label>{{ form_widget(form.email) }}
+                            </div>
+                        </div>
+
+                        <div class="formRow">
+                            <label class="error">{{ form_errors(form.password) }}</label>
+                            <div class="large-12 columns">
+                                <label>{% trans %}label.password{% endtrans %}</label>
+                                <input type="password" id="tecnotek_expediente_userformtype_password_Password" name="tecnotek_expediente_userformtype[password][Password]" required="required">
+                            </div>
+                        </div>
+
+                        <div class="formRow">
+                            <div class="large-12 columns">
+                                <label>{% trans %}label.password.reenter{% endtrans %}</label>
+                                <input type="password" id="tecnotek_expediente_userformtype_password_Re-enter Password"
+                                       name="tecnotek_expediente_userformtype[password][Re-enter Password]"
+                                       required="required">
+                            </div>
+                        </div>
+
+                        <div class="formRow">
+                            <label class="error">{{ form_errors(form.active) }}</label>
+                            <div class="large-12 columns">
+                                <label>{% trans %}label.active{% endtrans %}:</label>
+                                {{ form_widget(form.active) }}
+                            </div>
+                        </div>
+
+                        <div class="formRow ">
+                            <div class="large-12 columns buttonsPanel">
+                                <a href="{{ path('_expediente_sysadmin_profesor') }}"
+                                   class="button success-darker tiny"><span></span>{% trans %}label.cancelar{% endtrans %}</a>
+
+                                <input class="button success-darker tiny" style="margin-top: 0px;"
+                                       type="submit" name="save"
+                                       value="{% trans %}label.save{% endtrans %}"/>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+
+                    </fieldset>
                 </form>
-            </div>    
-        </div>        
-        <div class="clear"></div>
-    </div>
-    <div class="clear"></div>
-    <div class="wrapper">
-            <div class="grid_24 padline">
-                    <div class="lineH"></div>
             </div>
+        </div>
+        <div class="clear"></div>
     </div>
 </div>
 {% endblock %}

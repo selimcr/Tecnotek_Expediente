@@ -1,177 +1,200 @@
 <!DOCTYPE html>
-<html lang="en">
+<!--[if IE 8]> 				 <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+
 <head>
-    <title>{% trans %}system.title{% endtrans %}</title>
-    <meta charset="utf-8">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width"/>
     <meta name="description" content={% trans %}system.description{% endtrans %}>
     <meta name="keywords" content="{% trans %}system.tags{% endtrans %}">
     <meta name="author" content="Selim Diaz A.">
-    <link rel="stylesheet" href="{{ asset('expediente/css/style.css') }}" type="text/css" media="all" />
-    <link rel="stylesheet" href="{{ asset('expediente/css/tabs.css') }}" type="text/css" media="all" />
+    <title>{% trans %}system.title{% endtrans %}</title>
 
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css" />
-    <script src="http://code.jquery.com/jquery-1.8.1.min.js"></script>
-    <script src="http://code.jquery.com/ui/1.9.1/jquery-ui.js"></script>
-    <script type="text/javascript" src="{{ asset('expediente/js/spin.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('expediente/js/jquery.spin.js') }}"></script>
+
+    <link rel="stylesheet" href="{{ asset('saintmichael/stylesheets/style.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('saintmichael/stylesheets/normalize.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('saintmichael/stylesheets/app.css') }}"/>
+
+    <link rel="stylesheet" href="{{ asset('expediente/css/grid.css') }}"/>
     {% block extracss %}
     {% endblock %}
+    <script src="{{ asset('saintmichael/javascripts/vendor/custom.modernizr.js') }}"></script>
 
-    {% if is_granted('ROLE_PROFESOR') %}
-    <script type="text/javascript" src="{{ asset('expediente/js/teacher_application.js') }}"></script>
-    {% else %}
-    <script type="text/javascript" src="{{ asset('expediente/js/superadmin_application.js') }}"></script>
-    {% endif %}
-
-    {% block extrajs %}{% endblock %}
-    <script type="text/javascript" src="{{ asset('expediente/js/script.js') }}"></script>
-    
-    
-<!--[if lt IE 8]>
-   <div style=' clear: both; text-align:center; position: relative;'>
-     <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
-       <img src="http://storage.ie6countdown.com/assets/100/images/banners/warning_bar_0000_us.jpg" border="0" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today." />
-    </a>
-  </div>
-<![endif]-->
-<!--[if lt IE 9]>
-	<script src="js/html5.js"></script>
-	<link rel="stylesheet" href="css/ie.css"> 
-<![endif]-->
+    <!--[if !IE 7]>
+    <style type="text/css">
+        #wrap {
+            display: table;
+            height: 100%
+        }
+    </style>
+    <![endif]-->
 </head>
 <body>
 
-<div style="min-height:100%;position:relative;">
-    <!-- PRO Framework Panel Begin -->
-    <div id="advanced">
-        <div class="bg_pro">
-            <div class="pro_main">
-                <a href="" class="pro_logo"></a>
-                <div>
-                    <div style="float: left;">
-                        <ul class="pro_menu">
-                            <li><a href="index.html"><img src="{{ asset('expediente/images/pro_home.png') }}" alt=""></a></li>
+<div id="wrap">
 
-                        </ul>
-                    </div>
-                    <div style="float: right;">
-                        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                        <ul class="pro_menu">
-                            <li class="current"><a href="#">{{ app.user.username }}<span></span></a>
-                                <ul>
-                                    <li class="current"><a href="{{ path('_expediente_my_account') }}">{% trans %}label.my.account{% endtrans %}</a></li>
-                                    <li class="current"><a href="{{ path('_expediente_logout') }}">{% trans %}label.logout{% endtrans %}</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                        {% endif %}
-                    </div>
-                </div>
-
-
-                <div class="clear"></div>
-            </div>
-        </div>
-        <div class="bg_pro2"></div>
+    <div id="header">
     </div>
-    <!-- PRO Framework Panel End -->
-<div class="bg-main">
-	<header>
-		<div class="container_24">
-			<div class="wrapper">
-				<div class="grid_17">
-					<h2><a href="{{ path('TecnotekExpedienteBundle_homepage') }}">{% trans %}label.home{% endtrans %}</a></h2>
-				</div>
-				<div class="grid_7">
-				</div>
-			</div>
-		</div>
-		<nav class="main-menu">
-                        
-			<ul class="sf-menu">
-                <li {% if menuIndex is not defined %}class="current"{% endif %}><a href="{{ path('TecnotekExpedienteBundle_homepage') }}"><em>{% trans %}label.home{% endtrans %}</em><strong></strong></a>
 
-                </li>
+    <nav class="top-bar" style="">
+        <ul class="title-area">
+            <!-- Title Area -->
+            <li class="name{% if menuIndex is not defined %} current{% endif %}">
+                <h1><a href="{{ path('TecnotekExpedienteBundle_homepage') }}">{% trans %}label.home{% endtrans %}</a></h1>
+            </li>
+            <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
+            <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+        </ul>
+
+        <section class="top-bar-section">
+
+            <!-- Menu -->
             {% if is_granted('ROLE_SUPERADMIN') %}
-                <li {% if menuIndex is defined and menuIndex == 1%}class="current"{% endif %}><a href="{{ path('_expediente_sysadmin_administrador') }}"><em>{% trans %}label.usuarios{% endtrans %}</em><strong></strong></a>
-                    <ul>
-                        <li><a style="text-align: left;" href="{{ path('_expediente_sysadmin_administrador') }}">{% trans %}label.usuarios.admin{% endtrans %}</a></li>
-                        <li><a style="text-align: left;" href="{{ path('_expediente_sysadmin_coordinador') }}">{% trans %}label.usuarios.coordinador{% endtrans %}</a></li>
-                        <li><a style="text-align: left;" href="{{ path('_expediente_sysadmin_profesor') }}">{% trans %}label.usuarios.profesor{% endtrans %}</a></li>
-                        <li><a style="text-align: left;" href="{{ path('_expediente_access') }}">{% trans %}label.access{% endtrans %}</a></li>
+            <ul class="left">
+                <li class="divider"></li>
+                <li class="has-dropdown{% if menuIndex is defined and menuIndex == 1%} current{% endif %}"><a href="{{ path('_expediente_sysadmin_administrador') }}">{% trans %}label.usuarios{% endtrans %}</a>
+                    <ul class="dropdown">
+                        <li><a href="{{ path('_expediente_sysadmin_administrador') }}">{% trans %}label.usuarios.admin{% endtrans %}</a></li>
+                        <li><a href="{{ path('_expediente_sysadmin_coordinador') }}">{% trans %}label.usuarios.coordinador{% endtrans %}</a></li>
+                        <li><a href="{{ path('_expediente_sysadmin_profesor') }}">{% trans %}label.usuarios.profesor{% endtrans %}</a></li>
+                        <li class="divider"></li>
+                        <li><a href="{{ path('_expediente_access') }}">{% trans %}label.access{% endtrans %}</a></li>
                     </ul>
                 </li>
-                <li {% if menuIndex is defined and menuIndex == 2%}class="current"{% endif %}><a href="#"><em>{% trans %}label.transport{% endtrans %}</em><strong></strong></a>
-                    <ul>
-                        <li><a style="text-align: left;" href="{{ path('_expediente_sysadmin_route') }}">{% trans %}label.routes{% endtrans %}</a></li>
-                        <li><a style="text-align: left;" href="{{ path('_expediente_sysadmin_bus') }}">{% trans %}label.buses{% endtrans %}</a></li>
+                <li class="divider"></li>
+                <li class="has-dropdown{% if menuIndex is defined and menuIndex == 2%} current{% endif %}"><a href="#">{% trans %}label.transport{% endtrans %}</a>
+                    <ul class="dropdown">
+                        <li><a href="{{ path('_expediente_sysadmin_route') }}">{% trans %}label.routes{% endtrans %}</a></li>
+                        <li><a href="{{ path('_expediente_sysadmin_bus') }}">{% trans %}label.buses{% endtrans %}</a></li>
                     </ul>
                 </li>
-                <li {% if menuIndex is defined and menuIndex == 3%}class="current"{% endif %}><a href="#"><em>{% trans %}label.estudiantado{% endtrans %}</em><strong></strong></a>
-                    <ul>
-                        <li><a style="text-align: left;" href="{{ path('_expediente_sysadmin_student') }}">{% trans %}label.students{% endtrans %}</a></li>
-                        <li><a style="text-align: left;" href="{{ path('_expediente_sysadmin_club') }}">{% trans %}label.clubs{% endtrans %}</a></li>
-                        <li><a style="text-align: left;" href="{{ path('_expediente_sysadmin_ticket') }}">{% trans %}label.tickets{% endtrans %}</a></li>
-                        <li><a style="text-align: left;" href="{{ path('_expediente_absences') }}">{% trans %}label.absences{% endtrans %}</a></li>
-                        <li><a style="text-align: left;" href="{{ path('_expediente_sysadmin_absence_enter_by_group')}}">{% trans %}label.absences.by.group{% endtrans %}</a></li>
+                <li class="divider"></li>
+                <li class="has-dropdown{% if menuIndex is defined and menuIndex == 3%} current{% endif %}"><a href="#">{% trans %}label.estudiantado{% endtrans %}</a>
+                    <ul class="dropdown">
+                        <li><a href="{{ path('_expediente_sysadmin_student') }}">{% trans %}label.students{% endtrans %}</a></li>
+                        <li><a href="{{ path('_expediente_sysadmin_club') }}">{% trans %}label.clubs{% endtrans %}</a></li>
+                        <li><a href="{{ path('_expediente_sysadmin_ticket') }}">{% trans %}label.tickets{% endtrans %}</a></li>
+                        <li><a href="{{ path('_expediente_absences') }}">{% trans %}label.absences{% endtrans %}</a></li>
+                        <li><a href="{{ path('_expediente_sysadmin_absence_enter_by_group')}}">{% trans %}label.absences.by.group{% endtrans %}</a></li>
 
                         <li><a style="text-align: left;" href="{{ path('_expediente_penalties') }}">{% trans %}label.penalties{% endtrans %}</a></li>
                     </ul>
                 </li>
-                <li {% if menuIndex is defined and menuIndex == 4%}class="current"{% endif %}><a href="#"><em>{% trans %}label.reports{% endtrans %}</em><strong></strong></a>
-                    <ul>
-                        <li><a style="text-align: left;" href="{{ path('_expediente_report_bus') }}">{% trans %}label.buses{% endtrans %}</a></li>
-                        <li><a style="text-align: left;" href="{{ path('_expediente_report_routes') }}">{% trans %}label.routes{% endtrans %}</a></li>
-                        <li><a style="text-align: left;" href="{{ path('_expediente_report_zones') }}">{% trans %}label.routes.by.zone{% endtrans %}</a></li>
-                        <li><a style="text-align: left;" href="{{ path('_expediente_report_students_by_route') }}">{% trans %}label.students.by.route{% endtrans %}</a></li>
-                        <li><a style="text-align: left;" href="{{ path('_expediente_report_students_by_route') }}">{% trans %}label.students.absences.by.route{% endtrans %}</a></li>
-                        <li><a style="text-align: left;" href="{{ path('_expediente_report_daily_by_route') }}">{% trans %}label.students.daily.by.route{% endtrans %}</a></li>
-                        <li><a style="text-align: left;" href="{{ path('_expediente_report_students') }}">{% trans %}label.students{% endtrans %}</a></li>
-                        <li><a style="text-align: left;" href="{{ path('_expediente_report_clubs') }}">{% trans %}label.clubs{% endtrans %}</a></li>
+                <li class="divider"></li>
+                <li class="has-dropdown{% if menuIndex is defined and menuIndex == 4%} current{% endif %}"><a href="#">{% trans %}label.reports{% endtrans %}</a>
+                    <ul class="dropdown">
+                        <li><a href="{{ path('_expediente_report_bus') }}">{% trans %}label.buses{% endtrans %}</a></li>
+                        <li><a href="{{ path('_expediente_report_routes') }}">{% trans %}label.routes{% endtrans %}</a></li>
+                        <li><a href="{{ path('_expediente_report_zones') }}">{% trans %}label.routes.by.zone{% endtrans %}</a></li>
+                        <li><a href="{{ path('_expediente_report_students_by_route') }}">{% trans %}label.students.by.route{% endtrans %}</a></li>
+                        <li><a href="{{ path('_expediente_report_students_by_route') }}">{% trans %}label.students.absences.by.route{% endtrans %}</a></li>
+                        <li><a href="{{ path('_expediente_report_daily_by_route') }}">{% trans %}label.students.daily.by.route{% endtrans %}</a></li>
+                        <li><a href="{{ path('_expediente_report_students') }}">{% trans %}label.students{% endtrans %}</a></li>
+                        <li><a href="{{ path('_expediente_report_clubs') }}">{% trans %}label.clubs{% endtrans %}</a></li>
                     </ul>
                 </li>
-                <li {% if menuIndex is defined and menuIndex == 5%}class="current"{% endif %}><a href="#"><em>{% trans %}label.mantenimientos{% endtrans %}</em><strong></strong></a>
-                    <ul>
-                        <li><a style="text-align: left;" href="{{ path('_expediente_sysadmin_period') }}">{% trans %}label.period{% endtrans %}</a></li>
-                        <li><a style="text-align: left;" href="{{ path('_expediente_sysadmin_grade') }}">{% trans %}label.grade{% endtrans %}</a></li>
-                        <li><a style="text-align: left;" href="{{ path('_expediente_sysadmin_course') }}">{% trans %}label.course{% endtrans %}</a></li>
-                        <li><a style="text-align: left;" href="{{ path('_expediente_sysadmin_qualifications') }}">{% trans %}label.qualifications{% endtrans %}</a></li>
+                <li class="divider"></li>
+                <li class="has-dropdown{% if menuIndex is defined and menuIndex == 5%} current{% endif %}"><a href="#">{% trans %}label.mantenimientos{% endtrans %}</a>
+                    <ul class="dropdown">
+                        <li><a href="{{ path('_expediente_sysadmin_period') }}">{% trans %}label.period{% endtrans %}</a></li>
+                        <li><a href="{{ path('_expediente_sysadmin_grade') }}">{% trans %}label.grade{% endtrans %}</a></li>
+                        <li><a href="{{ path('_expediente_sysadmin_course') }}">{% trans %}label.course{% endtrans %}</a></li>
+                        <li><a href="{{ path('_expediente_sysadmin_qualifications') }}">{% trans %}label.qualifications{% endtrans %}</a></li>
 
                     </ul>
                 </li>
+            </ul>
             {% else %}
-                {% if is_granted('ROLE_PROFESOR') %}
-                    <li {% if menuIndex is defined and menuIndex == 1%}class="current"{% endif %}><a href="{{ path('_expediente_teacher_qualifications') }}"><em>{% trans %}label.qualifications{% endtrans %}</em><strong></strong></a>
-                    </li>
-                    <li {% if menuIndex is defined and menuIndex == 2%}class="current"{% endif %}><a href="{{ path('_expediente_teacher_course_entries') }}"><em>{% trans %}label.usuarios.courseEntry{% endtrans %}</em><strong></strong></a>
-                    </li>
-                {% else %}
-                    {% render "TecnotekExpedienteBundle:Secured:showMenu" %}
-                {% endif %}
+            {% if is_granted('ROLE_PROFESOR') %}
+            <ul class="left">
+                <li class="divider"></li>
+                <li {% if menuIndex is defined and menuIndex == 1%}class="current"{% endif %}><a href="{{ path('_expediente_teacher_qualifications') }}">{% trans %}label.qualifications{% endtrans %}</a></li>
+                <li class="divider"></li>
+                <li {% if menuIndex is defined and menuIndex == 2%}class="current"{% endif %}><a href="{{ path('_expediente_teacher_course_entries') }}">{% trans %}label.usuarios.courseEntry{% endtrans %}</a></li>
+                <li class="divider"></li>
+            </ul>
+            {% else %}
+            <ul class="left">
+
+                {% render "TecnotekExpedienteBundle:Secured:showMenu" %}
+            </ul>
             {% endif %}
-			</ul>
-			<div class="clear"></div>
-		</nav>
-	</header>
-	<section class="padsection">
-		{% block content %}{% endblock %}
-	</section>	
-</div>
-<footer>
-	<div class=" container_24">
-		<div class="wrapper">
-			<div class="grid_6 suffix_2">
-				<p class="color1 privacy">&copy; 2012 <span>|</span>  <a href="index-7.html">Privacy Policy</a> <!--  --></p>
-			</div>
-            <div class="right">Powered by <a href="http://www.tecnotekcr.net/" target="_blank" style="color: #fff; font-weight: bold;">Tecnotek</a></div>
-            <div class="clearer"></div>
-		</div>
-	</div>
-</footer>
-    <div id="spinner-modal" style="width: 150px">
-        <div style="width: 100%; margin-top: 10px; margin-bottom: 10px; text-align: center;">Por favor espere...</div>
-        <div id="spin" name="spin" style="height: 30px; line-height: 30px; padding-top: 35px; padding-left: 67px;"></div>
+            {% endif %}
+            <!-- Final del Menu -->
+
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+            <!-- Right Nav Section -->
+            <ul class="right">
+                <li class="divider hide-for-small"></li>
+                <li class="has-dropdown"><a href="#">{{ app.user.username }}</a>
+                    <ul class="dropdown">
+                        <li><a href="{{ path('_expediente_my_account') }}">{% trans %}label.my.account{% endtrans %}</a></li>
+                        <li class="divider"></li>
+                        <li><a href="{{ path('_expediente_logout') }}">{% trans %}label.logout{% endtrans %}</a></li>
+                    </ul>
+                </li>
+            </ul>
+            {% endif %}
+
+        </section>
+    </nav>
+
+    <div id="main">
+        {% block content %}{% endblock %}
     </div>
+
 </div>
+
+<div id="footer">
+    <div class="left">© 2013 <span>|</span> <a href="index-7.html">Privacy Policy</a></div>
+    <div class="powered">Powered by <a href="http://www.tecnotekcr.net/" target="_blank" >Tecnotek</a></div>
+</div>
+
+<script src="{{ asset('saintmichael/javascripts/vendor/jquery-1.8.1.min.js') }}"></script>
+
+<script type="text/javascript" src="{{ asset('expediente/js/spin.min.js') }}"></script>
+<script src="http://code.jquery.com/ui/1.9.1/jquery-ui.js"></script>
+
+<script src="{{ asset('saintmichael/javascripts/foundation/foundation.js') }}"></script>
+<script src="{{ asset('saintmichael/javascripts/foundation/foundation.alerts.js') }}"></script>
+<script src="{{ asset('saintmichael/javascripts/foundation/foundation.clearing.js') }}"></script>
+<script src="{{ asset('saintmichael/javascripts/foundation/foundation.cookie.js') }}"></script>
+<script src="{{ asset('saintmichael/javascripts/foundation/foundation.dropdown.js') }}"></script>
+<script src="{{ asset('saintmichael/javascripts/foundation/foundation.forms.js') }}"></script>
+<script src="{{ asset('saintmichael/javascripts/foundation/foundation.joyride.js') }}"></script>
+<script src="{{ asset('saintmichael/javascripts/foundation/foundation.magellan.js') }}"></script>
+<script src="{{ asset('saintmichael/javascripts/foundation/foundation.orbit.js') }}"></script>
+<script src="{{ asset('saintmichael/javascripts/foundation/foundation.placeholder.js') }}"></script>
+<script src="{{ asset('saintmichael/javascripts/foundation/foundation.reveal.js') }}"></script>
+<script src="{{ asset('saintmichael/javascripts/foundation/foundation.section.js') }}"></script>
+<script src="{{ asset('saintmichael/javascripts/foundation/foundation.tooltips.js') }}"></script>
+<script src="{{ asset('saintmichael/javascripts/foundation/foundation.topbar.js') }}"></script>
+
+{% if is_granted('ROLE_PROFESOR') %}
+<script type="text/javascript" src="{{ asset('expediente/js/teacher_application.js') }}"></script>
+{% else %}
+<script type="text/javascript" src="{{ asset('expediente/js/superadmin_application.js') }}"></script>
+{% endif %}
+
+{% block extrajs %}{% endblock %}
+<script type="text/javascript" src="{{ asset('expediente/js/script.js') }}"></script>
+
+<script>
+    $(document).foundation();
+</script>
+<script type="text/javascript">
+
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-19093680-2']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+
+</script>
 </body>
 </html>

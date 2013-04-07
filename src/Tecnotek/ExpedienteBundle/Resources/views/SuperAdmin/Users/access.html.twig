@@ -21,29 +21,29 @@
 <div class="container_24">
     <div class="grid_24">
         <div>
-            <div><h1>{% trans %}label.accesos.usuarios.title{% endtrans %}</h1></div>
-            <div><span>{% trans %}label.accesos.usuarios.subtitle{% endtrans %}</span></div>
+            <div><h3>{% trans %}label.accesos.usuarios.title{% endtrans %}</h3></div>
+            <h4><small>{% trans %}label.accesos.usuarios.subtitle{% endtrans %}</small></h4>
             <div class="clear"></div>
         </div>
 
-        <div class="left" style="width: 400px">
-            <div class="row tableHeader">
-                <div class="option_width" style="float: left; width: 400px;">{% trans %}label.users{% endtrans %}</div>
+        <div class="left table" style="width: 400px">
+            <div class="row tableHeader" style="padding: 0px 5px;">
+                <div class="option_width selectList" style="float: left; width: 400px;">{% trans %}label.users{% endtrans %}</div>
             </div>
 
-            <select id="users" name="users" size="20" style="width: 400px;">
+            <select class="selectList" id="users" name="users" size="20" style="width: 397px; font-size: 12px;">
                 {% for user in users %}
                 <option value="{{ user.id }}">{{ user}}</option>
                 {% endfor %}
             </select>
         </div>
 
-        <div class="right" style="width: 500px; display: none;" id="privilegesContainer" name="privilegesContainer">
-            <div class="row tableHeader">
-                <div class="option_width" style="float: left; width: 300px;">{% trans %}label.access{% endtrans %}</div>
+        <div class="right table" style="width: 500px; display: none;" id="privilegesContainer" name="privilegesContainer">
+            <div class="row tableHeader" style="padding: 0px 5px;">
+                <div class="option_width selectList" style="float: left; width: 300px;">{% trans %}label.access{% endtrans %}</div>
             </div>
 
-            <div id="demo1" class="demo" style="height:100%;">
+            <div id="demo1" class="demo" style="height:100%; font-size: 12px;">
                 <ul>
                     {% for permiso in permisos %}
                     <li id="{{ permiso.id }}" name="{{ permiso.id }}">
@@ -65,7 +65,7 @@
             </div>
 
             <div style="margin-top: 10px;">
-                <button style="margin-left: 15px; margin-top: 0px;" type="button" class="right btn save" id="btnSave" name="btnSave"><span></span>Guardar</button>
+                <button style="margin-left: 15px; margin-top: 0px;" type="button" class="right button success-darker tiny" id="btnSave" name="btnSave"><span></span>Guardar</button>
             </div>
 
         </div>
@@ -76,10 +76,5 @@
         <div class="clear"></div>
     </div>
     <div class="clear"></div>
-    <div class="wrapper">
-            <div class="grid_24 padline">
-                    <div class="lineH"></div>
-            </div>
-    </div>
 </div>
 {% endblock %}

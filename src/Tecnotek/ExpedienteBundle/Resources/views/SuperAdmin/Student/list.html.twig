@@ -16,38 +16,40 @@
 {% block content %}
 <div class="container_24">
     <div class="grid_24">
-        <div>
-            <div class="left"><h1>{% trans %}label.student.listar{% endtrans %}</h1></div>
-            <div class="right"><a href="{{ path('_expediente_sysadmin_student_create') }}" class="btn add"><span></span>{% trans %}label.add{% endtrans %}</a></div>
+        <div class="titleRow">
+            <div class="left"><h3>{% trans %}label.student.listar{% endtrans %}</h3></div>
+            <div class="right"><a href="{{ path('_expediente_sysadmin_student_create') }}" class="button success-darker tiny"><span></span>{% trans %}label.add{% endtrans %}</a></div>
             <div class="clear"></div>
         </div>
-        
-        <div class="row tableHeader">
-            <div class="option_width" style="float: left; width: 100px; margin-left: -6px;">
-                {{ pagination.sortable('Carne', 's.carne')|raw }}
-            </div>
-            <div class="option_width" style="float: left; width: 200px; margin-left: -6px;">
-                {{ pagination.sortable('Nombre', 's.firstname')|raw }}
-            </div>
-            <div class="option_width" style="float: left; width: 200px; margin-left: -6px;">
-                {{ pagination.sortable('Apellidos', 's.lastname')|raw }}
-            </div>
-            <div class="option_width" style="float: left; width: 90px; margin-left: -6px;">
-                {{ pagination.sortable('Edad', 's.age')|raw }}
-            </div>
-            <div class="option_width" style="float: left; width: 100px; margin-left: -6px;">
-                {{ pagination.sortable('Genero', 's.gender')|raw }}
-            </div>
-            <div class="right"><a style="margin-top: -6px;" href="#" class="btn search" id="btnSearch" name="btnSearch"><span></span>{% trans %}label.search{% endtrans %}</a></div>
-            <div class="option_width right" style="margin-top: -4px;">
-                <input id="searchText" name="searchText" value="{{ text }}">
+
+        <div class="table">
+            <div class="row tableHeader">
+                <div class="option_width" style="float: left; width: 100px; margin-left: -6px;">
+                    {{ pagination.sortable('Carne', 's.carne')|raw }}
+                </div>
+                <div class="option_width" style="float: left; width: 200px; margin-left: -6px;">
+                    {{ pagination.sortable('Nombre', 's.firstname')|raw }}
+                </div>
+                <div class="option_width" style="float: left; width: 200px; margin-left: -6px;">
+                    {{ pagination.sortable('Apellidos', 's.lastname')|raw }}
+                </div>
+                <div class="option_width" style="float: left; width: 90px; margin-left: -6px;">
+                    {{ pagination.sortable('Edad', 's.age')|raw }}
+                </div>
+                <div class="option_width" style="float: left; width: 100px; margin-left: -6px;">
+                    {{ pagination.sortable('Genero', 's.gender')|raw }}
+                </div>
+                <div class="right" style="margin-top: -2px;"><a style="margin-top: -6px;" href="#" class="button success-darker tiny" id="btnSearch" name="btnSearch"><span></span>{% trans %}label.search{% endtrans %}</a></div>
+                <div class="right" style="width: 5px; height: 26px"></div>
+                <div class="option_width right">
+                    <input id="searchText" name="searchText" value="{{ text }}">
+                </div>
+
             </div>
 
-        </div>
-            
-        {% set counter = 0 %}   
+            {% set counter = 0 %}
 
-        {% for entity in pagination %}            
+            {% for entity in pagination %}
             <div class="row userRow {% if counter%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}" rel="{{ entity.id }}">
                 <div class="option_width" style="float: left; width: 100px; margin-left: -6px;">{{ entity.carne }}</div>
                 <div class="option_width" style="float: left; width: 200px; margin-left: -6px;">{{ entity.firstname }}</div>
@@ -59,7 +61,9 @@
                 <div class="clear"></div>
             </div>
             {% set counter = counter + 1 %}
-        {% endfor %}
+            {% endfor %}
+        </div>
+
         <br/>
     
         <div style="margin-bottom:75px;">
@@ -69,10 +73,5 @@
         <div class="clear"></div>
     </div>
     <div class="clear"></div>
-    <div class="wrapper">
-            <div class="grid_24 padline">
-                    <div class="lineH"></div>
-            </div>
-    </div>
 </div>
 {% endblock %}

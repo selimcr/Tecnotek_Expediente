@@ -24,131 +24,120 @@
 {% endblock %}
 
 {% block content %}
-<div class="container_24">
-    <div class="grid_24">
-        <div>
-            <div class="left"><h1>{% trans %}label.route.show{% endtrans %}</h1></div>
-            <div class="right"><a href="{{ path('_expediente_sysadmin_route') }}" class="btn list"><span></span>{% trans %}label.back.list{% endtrans %}</a></div>
+<div class="container_24" style="width: 900px;">
+    <div class="grid_24" style="width: 100%;">
+        <div class="titleRow">
+            <div class="left"><h3>{% trans %}label.route.show{% endtrans %}</h3></div>
+            <div class="right"><a href="{{ path('_expediente_sysadmin_route') }}" class="button success-darker tiny"><span></span>{% trans %}label.back.list{% endtrans %}</a></div>
             <div class="clear"></div>
         </div>
-
-        <div class="centeredDiv">
-            <!-- Tabs -->
-            <div id="tabs">
-                <nav class="tabs">
-                    <div class="tab-header tab-current" id="generalTab">{%trans%}label.general{%endtrans%}</div>
-                    <section class="tabs-content" id="generalSection">
-
-
-                        <div class="centeredDiv">
-                            <div class="formContainer" style="width: 920px;">
-                                <div id="showContainer">
-                                    <div>
-                                        <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.code{%endtrans%}</div>
-                                        <div id="labelCode" class="left">{{ entity.code }}</div>
-                                        <div class="clear"></div>
-                                    </div>
-                                    <div>
-                                        <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.name{%endtrans%}</div>
-                                        <div id="labelName" class="left">{{ entity.name }}</div>
-                                        <div class="clear"></div>
-                                    </div>
-                                    <div>
-                                        <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.description{%endtrans%}</div>
-                                        <div id="labelDescription" class="left">{{ entity.description }}</div>
-                                        <div class="clear"></div>
-                                    </div>
-                                    <div>
-                                        <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.route{%endtrans%}</div>
-                                        <div id="labelMapUrl" class="left"><div id="viewMap" url="{{ entity.mapUrl }}">View Route</div></div>
-                                        <div class="clear"></div>
-                                    </div>
-                                    <div>
-                                        <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.zone{%endtrans%}</div>
-                                        <div id="labelZone" class="left">{{ entity.zone }}</div>
-                                        <div class="clear"></div>
-                                    </div>
-                                    <div>
-                                        <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.bus{%endtrans%}</div>
-                                        <div id="labelBus" class="left">{{ entity.bus }}</div>
-                                        <div class="clear"></div>
-                                    </div>
-                                    <div>
-                                        <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.institution{%endtrans%}</div>
-                                        <div id="labelInstitution" class="left">{{ entity.institution }}</div>
-                                        <div class="clear"></div>
-                                    </div>
-                                    <div>
-                                        <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.type{%endtrans%}</div>
-                                        <div id="labelType" class="left">{% if entity.routeType == 1 %}{%trans%} label.route.type.1 {% endtrans %} {% else %} {%trans%} label.route.type.2 {% endtrans %} {% endif %}</div>
-                                        <div class="clear"></div>
-                                    </div>
-                                    <div id="buttonsContainer" style="margin-top: 25px;">
-                                        <a href="{{ path('_expediente_sysadmin_route_edit', {'id': entity.id}) }}" class="left btn edit"><span></span>{% trans %}label.edit{% endtrans %}</a>
-                                        <div class="left btn delete" id="btnEliminar" style="margin-left: 25px;"><span></span>{% trans %}label.eliminar{% endtrans %}</div>
-                                        <div class="clear"></div>
-                                    </div>
-                                </div>
-                            </div>
+        <!-- -->
+        <div class="section-container auto" data-section>
+            <section class="section">
+                <p class="title"><a href="#panel1">{%trans%}label.general{%endtrans%}</a></p>
+                <div class="content">
+                    <div id="showContainer">
+                        <div>
+                            <label>{%trans%}label.code{%endtrans%}</label>
+                            <span id="labelCode">{{ entity.code }}</span>
                         </div>
-                        <div class="clear"></div>
-                    </section>
 
-                    <div class="tab-header" id="studentsTab">{%trans%}label.students.in.club{%endtrans%}</div>
-                    <section class="tabs-content" style="display: none;" id="studentsSection">
+                        <div>
+                            <label>{%trans%}label.name{%endtrans%}</label>
+                            <span id="labelName">{{ entity.name }}</span>
+                        </div>
 
-                        <div class="left" id="studentsList" style="overflow: scroll; height: 350px;">
-                            <div class="row tableHeader">
-                                <div class="option_width" style="float: left; width: 300px;">{% trans %}label.name{% endtrans %}</div>
-                            </div>
+                        <div>
+                            <label>{%trans%}label.description{%endtrans%}</label>
+                            <span id="labelDescription">{{ entity.description }}</span>
+                        </div>
+
+                        <div>
+                            <label>{%trans%}label.route{%endtrans%}</label>
+                            <span id="labelMapUrl" url="{{ entity.mapUrl }}">View Route</span>
+                        </div>
+
+                        <div>
+                            <label>{%trans%}label.zone{%endtrans%}</label>
+                            <span id="labelZone">{{ entity.zone }}</span>
+                        </div>
+
+                        <div>
+                            <label>{%trans%}label.bus{%endtrans%}</label>
+                            <span id="labelBus">{{ entity.bus }}</span>
+                        </div>
+
+                        <div>
+                            <label>{%trans%}label.institution{%endtrans%}</label>
+                            <span id="labelInstitution">{{ entity.institution }}</span>
+                        </div>
+
+                        <div>
+                            <label>{%trans%}label.type{%endtrans%}</label>
+                            <span id="labelType">{% if entity.routeType == 1 %}{%trans%} label.route.type.1 {% endtrans %} {% else %} {%trans%} label.route.type.2 {% endtrans %} {% endif %}</span>
+                        </div>
+
+                        <div id="buttonsContainer" style="margin-top: 25px;">
+                            <a href="{{ path('_expediente_sysadmin_route_edit', {'id': entity.id}) }}" class="left button success-darker tiny"><span></span>{% trans %}label.edit{% endtrans %}</a>
+                            <div class="left button success-darker tiny" id="btnEliminar" style="margin-left: 25px;"><span></span>{% trans %}label.eliminar{% endtrans %}</div>
+                            <div class="clear"></div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </section>
+            <section class="section">
+                <p class="title"><a href="#panel2">{%trans%}label.students.in.club{%endtrans%}</a></p>
+                <div class="content">
+
+                    <div class="left table" id="studentsList">
+                        <div class="row tableHeader">
+                            <div class="option_width" style="float: left; width: 300px;">{% trans %}label.name{% endtrans %}</div>
+                        </div>
+                        <div style="overflow: scroll; height: 350px;">
                             {% set counter = 0 %}
 
                             {% if entity.routeType == 1 %}
-                                {% for student in students %}
-                                <div id="student_row_{{ student.id }}" class="row userRow rel="{{ student.id }}">
-                                    <div class="option_width" style="float: left; width: 300px;">{{ student }}</div>
-                                    <div class="right imageButton deleteButton" style="height: 16px;"  title="{% trans %}label.delete{% endtrans %}"  rel="{{ student.id }}"></div>
-                                    <div class="clear"></div>
-                                </div>
-                                {% set counter = counter + 1 %}
-                                {% endfor %}
+                                    {% for student in students %}
+                                        <div id="student_row_{{ student.id }}" class="row userRow rel="{{ student.id }}">
+                                            <div class="option_width" style="float: left; width: 300px;">{{ student }}</div>
+                                            <div class="right imageButton deleteButton" style="height: 16px;"  title="{% trans %}label.delete{% endtrans %}"  rel="{{ student.id }}"></div>
+                                            <div class="clear"></div>
+                                        </div>
+                                        {% set counter = counter + 1 %}
+                                    {% endfor %}
                             {% else %}
                                 {% for studentToRoute in students %}
-                                <div id="student_row_{{ studentToRoute.student.id }}" class="row userRow rel="{{ studentToRoute.student.id }}">
-                                    <div class="option_width" style="float: left; width: 300px;">{{ studentToRoute.student }}</div>
-                                    <div class="right imageButton deleteButton" style="height: 16px;"  title="{% trans %}label.delete{% endtrans %}"  rel="{{ studentToRoute.student.id }}"></div>
-                                    <div class="clear"></div>
-                                </div>
-                                {% set counter = counter + 1 %}
+                                    <div id="student_row_{{ studentToRoute.student.id }}" class="row userRow rel="{{ studentToRoute.student.id }}">
+                                        <div class="option_width" style="float: left; width: 300px;">{{ studentToRoute.student }}</div>
+                                        <div class="right imageButton deleteButton" style="height: 16px;"  title="{% trans %}label.delete{% endtrans %}"  rel="{{ studentToRoute.student.id }}"></div>
+                                        <div class="clear"></div>
+                                    </div>
+                                    {% set counter = counter + 1 %}
                                 {% endfor %}
                             {% endif %}
-
                         </div>
 
-                        <div class="left" style="margin-left: 50px;">
-                            <form id="searchform">
-                                <div>
-                                    <div>{% trans %}route.include.students{%endtrans%}</div>
-                                    <div style="font-size: 10px;">{% trans %}club.include.help{%endtrans%}</div>
 
-                                    <input type="text" size="30" value="" id="searchBox"/>
-                                </div>
-                                <div id="suggestions"></div>
-                            </form>
-                        </div>
-                        <div class="clear"></div>
-                    </section>
-            </nav>
+                    </div>
+
+                    <div class="left" style="margin-left: 50px;">
+                        <form id="searchform">
+                            <div>
+                                <div>{% trans %}route.include.students{%endtrans%}</div>
+                                <div style="font-size: 10px;">{% trans %}club.include.help{%endtrans%}</div>
+
+                                <input type="text" size="30" value="" id="searchBox"/>
+                            </div>
+                            <div id="suggestions"></div>
+                        </form>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+            </section>
         </div>
-        <!-- End Tabs -->
+
     </div>
-    <div class="clear"></div>
-</div>
-<div class="clear"></div>
-<div class="wrapper">
-    <div class="grid_24 padline">
-        <div class="lineH"></div>
-    </div>
-</div>
 </div>
 {% endblock %}

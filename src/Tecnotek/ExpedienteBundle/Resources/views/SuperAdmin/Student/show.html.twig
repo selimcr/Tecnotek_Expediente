@@ -28,108 +28,104 @@
 {% endblock %}
 
 {% block content %}
-<div class="container_24">
-    <div class="grid_24">
-        <div>
-            <div class="left"><h1>{% trans %}label.student.show{% endtrans %}</h1></div>
-            <div class="right"><a href="{{ path('_expediente_sysadmin_student') }}" class="btn list"><span></span>{% trans %}label.back.list{% endtrans %}</a></div>
+<div class="container_24" style="width: 900px;">
+    <div class="grid_24" style="width: 100%;">
+        <div class="titleRow">
+            <div class="left"><h3>{% trans %}label.student.show{% endtrans %}</h3></div>
+            <div class="right"><a href="{{ path('_expediente_sysadmin_student') }}" class="button success-darker tiny"><span></span>{% trans %}label.back.list{% endtrans %}</a></div>
             <div class="clear"></div>
         </div>
-
-        <div class="centeredDiv">
-            <!-- Tabs -->
-            <div id="tabs" style="height: 600px">
-                <nav class="tabs">
-                    <div class="tab-header tab-current" id="generalTab">{%trans%}label.general{%endtrans%}</div>
-                    <section class="tabs-content" id="generalSection">
-                        <!-- -->
-                        <div id="showContainer" class="left">
-                            <div>
-                                <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.firstname{%endtrans%}</div>
-                                <div id="labelCode" class="left">{{ entity.firstname }}</div>
-                                <div class="clear"></div>
-                            </div>
-                            <div>
-                                <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.lastname{%endtrans%}</div>
-                                <div id="labelName" class="left">{{ entity.lastname }}</div>
-                                <div class="clear"></div>
-                            </div>
-                            <div>
-                                <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.carne{%endtrans%}</div>
-                                <div id="carne" class="left">{{ entity.carne }}</div>
-                                <div class="clear"></div>
-                            </div>
-                            <div>
-                                <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.age{%endtrans%}</div>
-                                <div id="age" class="left">{{ entity.age }}</div>
-                                <div class="clear"></div>
-                            </div>
-                            <div>
-                                <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.gender{%endtrans%}</div>
-                                <div id="gender" class="left">{% if entity.gender == 1%}{% trans %}label.male{% endtrans %}{% else %}{% trans %}label.female{% endtrans %}{% endif %}</div>
-                                <div class="clear"></div>
-                            </div>
-                            <div>
-                                <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.address{%endtrans%}</div>
-                                <div id="address" class="left">{{ entity.address }}</div>
-                                <div class="clear"></div>
-                            </div>
-                            <div>
-                                <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.fatherPhone{%endtrans%}</div>
-                                <div id="fatherPhone" class="left">{{ entity.fatherPhone }}</div>
-                                <div class="clear"></div>
-                            </div>
-                            <div>
-                                <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.motherPhone{%endtrans%}</div>
-                                <div id="motherPhone" class="left">{{ entity.motherPhone }}</div>
-                                <div class="clear"></div>
-                            </div>
-                            <div>
-                                <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.birthday{%endtrans%}</div>
-                                <div id="birthday" class="left">{{ entity.birthday }}</div>
-                                <div class="clear"></div>
-                            </div>
-                            <div>
-                                <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.admission{%endtrans%}</div>
-                                <div id="admission" class="left">{{ entity.admission }}</div>
-                                <div class="clear"></div>
-                            </div>
-                            <div>
-                                <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.identification{%endtrans%}</div>
-                                <div id="identification" class="left">{{ entity.identification }}</div>
-                                <div class="clear"></div>
-                            </div>
-                            <div>
-                                <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.observation{%endtrans%}</div>
-                                <div id="observation" class="left">{{ entity.observation }}</div>
-                                <div class="clear"></div>
-                            </div>
-                            <div>
-                                <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.pickUp{%endtrans%}</div>
-                                <div id="pickUp" class="left">{{ entity.pickUp }}</div>
-                                <div class="clear"></div>
-                            </div>
-                            <div>
-                                <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.leaveTime{%endtrans%}</div>
-                                <div id="leaveTime" class="left">{{ entity.leaveTime }}</div>
-                                <div class="clear"></div>
-                            </div>
-
-                            <div id="buttonsContainer" style="margin-top: 25px;">
-                                <a href="{{ path('_expediente_sysadmin_student_edit', {'id': entity.id}) }}" class="left btn edit"><span></span>{% trans %}label.edit{% endtrans %}</a>
-                                <div class="left btn delete" id="btnEliminar" style="margin-left: 25px;"><span></span>{% trans %}label.eliminar{% endtrans %}</div>
-                                <div class="clear"></div>
-                            </div>
+        <!-- -->
+        <div class="section-container auto" data-section>
+            <section class="section">
+                <p class="title"><a href="#panel1">{%trans%}label.general{%endtrans%}</a></p>
+                <div class="content">
+                    <div id="showContainer">
+                        <div>
+                            <label>{%trans%}label.firstname{%endtrans%}</label>
+                            <span id="labelFirstname">{{ entity.firstname }}</span>
                         </div>
 
-                        <div class="clear"></div>
-                        <br/>
-                    </section>
+                        <div>
+                            <label>{%trans%}label.lastname{%endtrans%}</label>
+                            <span id="labelName">{{ entity.lastname }}</span>
+                        </div>
 
-                    <div class="tab-header" id="relativesTab">{%trans%}label.relatives.in.student{%endtrans%}</div>
-                    <section class="tabs-content" style="display: none;" id="relativesSection">
+                        <div>
+                            <label>{%trans%}label.carne{%endtrans%}</label>
+                            <span id="labelCarne">{{ entity.carne }}</span>
+                        </div>
 
-                        <div class="left" id="relativesList">
+                        <div>
+                            <label>{%trans%}label.age{%endtrans%}</label>
+                            <span id="labelAge">{{ entity.age }}</span>
+                        </div>
+
+                        <div>
+                            <label>{%trans%}label.gender{%endtrans%}</label>
+                            <span id="labelGender">{% if entity.gender == 1%}{% trans %}label.male{% endtrans %}{% else %}{% trans %}label.female{% endtrans %}{% endif %}</span>
+                        </div>
+
+                        <div>
+                            <label>{%trans%}label.address{%endtrans%}</label>
+                            <span id="labelAddress">{{ entity.address }}</span>
+                        </div>
+
+                        <div>
+                            <label>{%trans%}label.fatherPhone{%endtrans%}</label>
+                            <span id="labelFatherPhone">{{ entity.fatherPhone }}</span>
+                        </div>
+
+                        <div>
+                            <label>{%trans%}label.motherPhone{%endtrans%}</label>
+                            <span id="labelMotherPhone">{{ entity.motherPhone }}</span>
+                        </div>
+
+                        <div>
+                            <label>{%trans%}label.birthday{%endtrans%}</label>
+                            <span id="labelBirthday">{{ entity.birthday }}</span>
+                        </div>
+
+                        <div>
+                            <label>{%trans%}label.admission{%endtrans%}</label>
+                            <span id="labelAdmission">{{ entity.admission }}</span>
+                        </div>
+
+                        <div>
+                            <label>{%trans%}label.identification{%endtrans%}</label>
+                            <span id="labelIdentification">{{ entity.identification }}</span>
+                        </div>
+
+                        <div>
+                            <label>{%trans%}label.observation{%endtrans%}</label>
+                            <span id="labelObservation">{{ entity.observation }}</span>
+                        </div>
+
+                        <div>
+                            <label>{%trans%}label.pickUp{%endtrans%}</label>
+                            <span id="labelPickUp">{{ entity.pickUp }}</span>
+                        </div>
+
+                        <div>
+                            <label>{%trans%}label.leaveTime{%endtrans%}</label>
+                            <span id="labelLeaveTime">{{ entity.leaveTime }}</span>
+                        </div>
+
+                        <div id="buttonsContainer" style="margin-top: 25px;">
+                            <a href="{{ path('_expediente_sysadmin_student_edit', {'id': entity.id}) }}" class="left button success-darker tiny"><span></span>{% trans %}label.edit{% endtrans %}</a>
+                            <div class="left button success-darker tiny" id="btnEliminar" style="margin-left: 25px;"><span></span>{% trans %}label.eliminar{% endtrans %}</div>
+                            <div class="clear"></div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </section>
+            <section class="section">
+                <p class="title"><a href="#panel2">{%trans%}label.students.in.club{%endtrans%}</a></p>
+                <div class="content">
+                    <div class="left" style="width: 420px;">
+                        <div class="table" id="relativesList">
                             <div class="row tableHeader">
                                 <div class="option_width" style="float: left; width: 200px;">{% trans %}label.name{% endtrans %}</div>
                                 <div class="option_width" style="float: left; width: 100px;">{% trans %}label.kinship{% endtrans %}</div>
@@ -137,9 +133,11 @@
                             {% set counter = 0 %}
 
                             {% for relative in relatives %}
-                            <div id="relative_row_{{ relative.id }}" class="row userRow" rel="{{ relative.id }}">
-                                <div class="option_width" style="float: left; width: 200px;">{{ relative.contact }}</div>
-                                <div class="option_width" style="float: left; width: 100px;">{{ relative.description }}</div>
+                            <div id="relative_row_{{ relative.id }}" class="row" rel="{{ relative.id }}">
+                                <div class="" style="float: left; width: 200px;">&nbsp;</div>
+                                <div class="" style="float: left; width: 100px;">{{ relative.description }}</div>
+
+
                                 <div class="right imageButton deleteButton" style="height: 16px;"  title="{% trans %}label.delete{% endtrans %}"  rel="{{ relative.id }}"></div>
                                 <div class="clear"></div>
                             </div>
@@ -147,48 +145,68 @@
                             {% endfor %}
                         </div>
 
-                        <div class="left" style="margin-left: 50px; font-size: 14px;">
+                        <div class="table" style="padding: 5px; margin-top: 10px;">
+                            <form id="searchform" class="custom">
+                                <div>
+                                    <div>{% trans %}student.include.contact{%endtrans%}</div>
+                                    <div style="font-size: 10px;">{% trans %}student.include.help{%endtrans%}</div><br/>
+                                    <label><span class="text-form" style="display: inline-block; width: 75px;min-width: 75px;">{% trans %}label.kinship{% endtrans %}</span>
+                                        <select id="kinship2">
+                                            <option value="1">{% trans %}label.father{% endtrans %}</option>
+                                            <option value="2">{% trans %}label.mother{% endtrans %}</option>
+                                            <option value="3">{% trans %}label.brother{% endtrans %}</option>
+                                            <option value="4">{% trans %}label.sister{% endtrans %}</option>
+                                            <option value="99">{% trans %}label.other{% endtrans %}</option>
+                                        </select>
+                                    </label>
+                                    <label><span class="text-form" style="display: inline-block; width: 75px;min-width: 75px;">{% trans %}label.name{% endtrans %}</span>
+                                        <input type="text" size="30" value="" id="searchBox" style="margin: 0;"/></label>
 
+                                </div>
+                                <div id="suggestions"></div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="left" style="margin-left: 30px; font-size: 14px;">
+                        <div class="table" style="padding: 5px;">
                             <div>{% trans %}student.create.new.contact{%endtrans%}</div>
-                            <div style="font-size: 10px;">{% trans %}student.include.help{%endtrans%}</div>
-                            <form class="customForm" id="newcontact" action="{{ path('_expediente_sysadmin_club_save') }}" method="post" {{ form_enctype(form) }}>
+                            <form class="custom" id="newcontact" action="{{ path('_expediente_sysadmin_club_save') }}" method="post" {{ form_enctype(form) }}>
                                 {{ form_errors(form) }}
 
                                 {{ form_widget(form._token) }}
 
-                                <label><span class="text-form" style="min-width: 150px;">{% trans %}label.firstname{% endtrans %}</span>
-                                <input type="text" id="firstname" name="firstname" required="required"></label>
+                                <label style=""><span class="text-form" style="display: inline-block; width: 125px; min-width: 125px;">{% trans %}label.firstname{% endtrans %}</span>
+                                    <input type="text" id="firstname" name="firstname" required="required"></label>
 
-                                <label><span class="text-form" style="min-width: 150px;">{% trans %}label.lastname{% endtrans %}</span>
-                                <input type="text" id="lastname" name="lastname" required="required"></label>
+                                <label><span class="text-form" style="display: inline-block; width: 125px;min-width: 125px;">{% trans %}label.lastname{% endtrans %}</span>
+                                    <input type="text" id="lastname" name="lastname" required="required" style="margin: 0;"></label>
 
-                                <label><span class="text-form" style="min-width: 150px;">{% trans %}label.identification{% endtrans %}</span>
-                                <input type="text" id="identification" name="identification" required="required"></label>
+                                <label><span class="text-form" style="display: inline-block; width: 125px;min-width: 125px;">{% trans %}label.identification{% endtrans %}</span>
+                                    <input type="text" id="identification" name="identification" required="required" style="margin: 0;"></label>
 
-                                <label><span class="text-form" style="min-width: 150px;">{% trans %}label.phonec{% endtrans %}</span>
-                                <input type="text" id="phonec" name="phonec"></label>
+                                <label><span class="text-form" style="display: inline-block; width: 125px;min-width: 125px;">{% trans %}label.phonec{% endtrans %}</span>
+                                    <input type="text" id="phonec" name="phonec" style="margin: 0;"></label>
 
-                                <label><span class="text-form" style="min-width: 150px;">{% trans %}label.phonew{% endtrans %}</span>
-                                <input type="text" id="phonew" name="phonew"></label>
+                                <label><span class="text-form" style="display: inline-block; width: 125px;min-width: 125px;">{% trans %}label.phonew{% endtrans %}</span>
+                                    <input type="text" id="phonew" name="phonew" style="margin: 0;"></label>
 
-                                <label><span class="text-form" style="min-width: 150px;">{% trans %}label.phoneh{% endtrans %}</span>
-                                <input type="text" id="phoneh" name="phoneh"></label>
+                                <label><span class="text-form" style="display: inline-block; width: 125px;min-width: 125px;">{% trans %}label.phoneh{% endtrans %}</span>
+                                    <input type="text" id="phoneh" name="phoneh" style="margin: 0;"></label>
 
-                                <label><span class="text-form" style="min-width: 150px;">{% trans %}label.workplace{% endtrans %}</span>
-                                <input type="text" id="workplace" name="workplace"></label>
+                                <label><span class="text-form" style="display: inline-block; width: 125px;min-width: 125px;">{% trans %}label.workplace{% endtrans %}</span>
+                                    <input type="text" id="workplace" name="workplace" style="margin: 0;"></label>
 
-                                <label><span class="text-form" style="min-width: 150px;">{% trans %}label.email{% endtrans %}</span>
-                                <input type="text" id="email" name="email"></label>
+                                <label><span class="text-form" style="display: inline-block; width: 125px;min-width: 125px;">{% trans %}label.email{% endtrans %}</span>
+                                    <input type="text" id="email" name="email" style="margin: 0;"></label>
 
-                                <label><span class="text-form" style="min-width: 150px;">{% trans %}label.adress{% endtrans %}</span>
-                                <input type="text" id="adress" name="adress"></label>
+                                <label><span class="text-form" style="display: inline-block; width: 125px;min-width: 125px;">{% trans %}label.adress{% endtrans %}</span>
+                                    <input type="text" id="adress" name="adress" style="margin: 0;"></label>
 
-                                <label><span class="text-form" style="min-width: 150px;">{% trans %}label.restriction{% endtrans %}</span>
-                                <input type="text" id="restriction" name="restriction" required="required"></label>
+                                <label><span class="text-form" style="display: inline-block; width: 125px;min-width: 125px;">{% trans %}label.restriction{% endtrans %}</span>
+                                    <input type="text" id="restriction" name="restriction" required="required" style="margin: 0;"></label>
 
-
-
-                                <label><span class="text-form" style="min-width: 150px;">{% trans %}label.kinship{% endtrans %}</span>
+                                <label><span class="text-form" style="display: inline-block; width: 125px; min-width: 125px;">{% trans %}label.kinship{% endtrans %}</span>
                                     <select id="kinship">
                                         <option value="1">{% trans %}label.father{% endtrans %}</option>
                                         <option value="2">{% trans %}label.mother{% endtrans %}</option>
@@ -199,46 +217,24 @@
 
                                 <div id="otherDetail" style="display: none;">
                                     <label><span class="text-form" style="min-width: 150px;">{% trans %}label.description{% endtrans %}</span>
-                                    <input type="text" id="description" name="description" required="required"></label>
+                                        <input type="text" id="description" name="description" required="required"></label>
                                 </div>
 
-                                <button id="asociateButton" style="margin-top: 0px;" type="button" class="right btn save" name="save"><span></span>{% trans %}label.asociate{% endtrans %}</button>
+                                <button id="asociateButton" style="margin-top: 0px;" type="button" class="right button success-darker tiny" name="save"><span></span>{% trans %}label.asociate{% endtrans %}</button>
                                 <div class="clear"></div>
                             </form>
-                            <br/>
-                            <hr/>
-                            <br/>
-                            <form id="searchform">
-                                <div>
-                                    <div>{% trans %}student.include.contact{%endtrans%}</div>
-                                    <div style="font-size: 10px;">{% trans %}student.include.help{%endtrans%}</div><br/>
-                                    <label><span class="text-form" style="min-width: 150px;">{% trans %}label.kinship{% endtrans %}</span>
-                                        <select id="kinship2">
-                                            <option value="1">{% trans %}label.father{% endtrans %}</option>
-                                            <option value="2">{% trans %}label.mother{% endtrans %}</option>
-                                            <option value="3">{% trans %}label.brother{% endtrans %}</option>
-                                            <option value="4">{% trans %}label.sister{% endtrans %}</option>
-                                            <option value="99">{% trans %}label.other{% endtrans %}</option>
-                                        </select>
-                                    </label><br/><br/>
-                                    <input type="text" size="30" value="" id="searchBox"/>
-                                </div>
-                                <div id="suggestions"></div>
-                            </form>
                         </div>
-                        <div class="clear"></div>
-                    </section>
-                </nav>
-            </div>
-            <!-- End Tabs -->
-        </div>
-        <div class="clear"></div>
-    </div>
-    <div class="clear"></div>
-    <div class="wrapper">
-        <div class="grid_24 padline">
-            <div class="lineH"></div>
+                    </div>
+
+
+                    <div class="clear"></div>
+                </div>
+            </section>
         </div>
     </div>
 </div>
+
+
+
+
 {% endblock %}

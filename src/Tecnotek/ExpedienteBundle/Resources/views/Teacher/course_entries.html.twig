@@ -38,50 +38,48 @@
 <div class="container_24">
     <div class="grid_24">
         <div>
-            <div class="left"><h1>{% trans %}title.course.entries.by.group{% endtrans %}:</h1></div>
+            <div class="left"><h3>{% trans %}title.course.entries.by.group{% endtrans %}:</h3></div>
             <div class="clear"></div>
         </div>
 
         <div class="centeredDiv">
             <div class="formContainer" style="width: 920px;">
                 <div id="showContainer">
-                    <div style="margin-bottom: 15px;">
-                        <div class="left" style="width: 50px; font-weight: bold;">{%trans%}label.period{%endtrans%}</div>
+                    <div style="margin-top: 10px; margin-bottom: 10px; line-height: 25px; vertical-align: middle;">
+                        <div class="left" style="width: 70px; font-weight: bold;">{%trans%}label.period{%endtrans%}</div>
                         <div id="labelPeriod" class="left">
-                            <select id="period" name="period">
+                            <select id="period" name="period" style="width: 205px;">
                                 {% for period in periods %}
                                 <option value="{{ period.id }}">{{period}}</option>
                                 {% endfor %}
                             </select>
                         </div>
 
-                        <div id="groupsContainer" class="left" style="margin-left: 50px;">
-                            <div class="left" style="width: 50px; font-weight: bold;">{%trans%}label.groups{%endtrans%}</div>
+                        <div id="groupsContainer" class="left" style="margin-left: 30px;">
+                            <div class="left" style="width: 70px; font-weight: bold;">{%trans%}label.groups{%endtrans%}</div>
                             <div class="left">
-                                <select id="groups" name="groups">
+                                <select id="groups" name="groups" style="width: 205px;">
                                 </select>
                             </div>
                         </div>
 
                         <div id="coursesContainer" class="left" style="margin-left: 50px;">
-                            <div class="left" style="width: 50px; font-weight: bold;">{%trans%}label.courses{%endtrans%}</div>
+                            <div class="left" style="width: 75px; font-weight: bold;">{%trans%}label.courses{%endtrans%}</div>
                             <div class="left">
-                                <select id="courses" name="courses">
+                                <select id="courses" name="courses" style="width: 205px;">
                                 </select>
                             </div>
                         </div>
 
                         <div class="clear"></div>
                     </div>
+
                     <!-- Tabs -->
-                    <div id="tabs" class="clearfix">
-                        <nav id="tabsContainer" name="tabsContainer" class="tabs clearfix" style="height: 80px;">
-
-                            <!-- Tab Course Entries Start -->
-                            <div class="tab-header tab-current" id="entriesTab">{%trans%}label.entries.by.course{%endtrans%}</div>
-                            <section class="tabs-content clearfix" id="entriesSection">
-
-                                <div class="left" style="width: 100%">
+                    <div class="section-container auto" data-section>
+                        <section class="section">
+                            <p class="title" id="entriesTab"><a href="#panel1">{%trans%}label.entries.by.course{%endtrans%}</a></p>
+                            <div class="content">
+                                <div class="left table" style="width: 100%">
                                     <div class="row tableHeader">
                                         <div class="option_width" style="float: left; width: 150px;">{% trans %}label.name{% endtrans %}</div>
                                         <div class="option_width" style="float: left; width: 100px;">{% trans %}label.code{% endtrans %}</div>
@@ -95,14 +93,12 @@
                                 </div>
                                 <div class="clear"></div>
                                 <br/>
-                            </section>
-                            <!-- End Tab Course Entries-->
-
-                            <!-- Tab Course Entries Start -->
-                            <div class="tab-header" id="subentriesTab">{%trans%}label.subentries.by.course{%endtrans%}</div>
-                            <section class="tabs-content clearfix" style="display: none;" id="subentriesSection">
-
-                                <div class="left" style="width: 100%">
+                            </div>
+                        </section>
+                        <section class="section">
+                            <p class="title" id="subentriesTab"><a href="#panel2">{%trans%}label.subentries.by.course{%endtrans%}</a></p>
+                            <div class="content">
+                                <div class="left table" style="width: 100%">
                                     <div class="row tableHeader">
                                         <div class="option_width" style="float: left; width: 230px;">{% trans %}label.name{% endtrans %}</div>
                                         <div class="option_width" style="float: left; width: 100px;">{% trans %}label.code{% endtrans %}</div>
@@ -110,7 +106,7 @@
                                         <div class="option_width" style="float: left; width: 80px;">Maximo</div>
                                         <div class="option_width" style="float: left; width: 100px;">{% trans %}label.order{% endtrans %}</div>
                                         <div class="option_width" style="float: left; width: 150px;">{% trans %}label.parent{% endtrans %}</div>
-                                        <a id="openEntryForm" class="right btn new modalbox" style="margin-top: -5px;" href="#subentryFormContainer">{% trans %}label.include{% endtrans %}</a>
+                                        <a id="openEntryForm" class="right button success-darker tiny modalbox" style="margin: 4px 0px 0 0;" href="#subentryFormContainer">{% trans %}label.include{% endtrans %}</a>
 
                                     </div>
                                     <div id="subentriesRows" name="subentriesRows" class="clearfix">
@@ -122,49 +118,54 @@
 
                                 <!-- hidden courseFormContainer form -->
                                 <div id="subentryFormContainer" style="display: none; width: 400px;">
-                                    <h2 style="margin-bottom: 0px;"><div class="left" id="entryTitleOption" name="entryTitleOption"></div> &nbsp;subrubro</h2>
+                                    <h3 style="margin-bottom: 0px;"><div class="left" id="entryTitleOption" name="entryTitleOption"></div> &nbsp;subrubro</h3>
 
-                                    <form class="customForm" id="subentryForm" name="subentryForm">
+                                    <form id="subentryForm" name="subentryForm">
 
                                         <input type="hidden" id="subentryFormCourseClassId" name="subentryFormCourseClassId" value="0">
                                         <div id="subformEntryError" class="formErrors"></div>
 
-                                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.parent{% endtrans %}</span>
-                                            <select id="subentryFormParent" name="subentryFormParent">
-                                            </select>
-                                        </label>
+                                        <div style="margin-bottom: 5px;">
+                                            <label style="display: inline-block; width: 100px">{% trans %}label.parent{% endtrans %}</label>
+                                            <select id="subentryFormParent" name="subentryFormParent"></select>
+                                        </div>
 
-                                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.name{% endtrans %}</span>
-                                            <input id="subentryFormName" name="subentryFormName">
-                                        </label>
+                                        <div style="margin-bottom: 5px;">
+                                            <label style="display: inline-block; width: 100px">{% trans %}label.name{% endtrans %}</label>
+                                            <input id="subentryFormName" name="subentryFormName" style="width: 270px">
+                                        </div>
 
-                                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.code{% endtrans %}</span>
-                                            <input id="subentryFormCode" name="subentryFormCode">
-                                        </label>
+                                        <div style="margin-bottom: 5px;">
+                                        <label style="display: inline-block; width: 100px">{% trans %}label.code{% endtrans %}</label>
+                                        <input id="subentryFormCode" name="subentryFormCode" style="width: 270px">
+                                        </div>
 
-                                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.percentage{% endtrans %}</span>
-                                            <input id="subentryFormPercentage" name="subentryFormPercentage">
-                                        </label>
+                                        <div style="margin-bottom: 5px;">
+                                        <label style="display: inline-block; width: 100px">{% trans %}label.percentage{% endtrans %}</label>
+                                        <input id="subentryFormPercentage" name="subentryFormPercentage" style="width: 270px">
+                                        </div>
 
-                                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.max_value{% endtrans %}</span>
-                                            <input id="subentryFormMaxValue" name="subentryFormMaxValue">
-                                        </label>
+                                        <div style="margin-bottom: 5px;">
+                                        <label style="display: inline-block; width: 100px">{% trans %}label.max_value{% endtrans %}</label>
+                                        <input id="subentryFormMaxValue" name="subentryFormMaxValue" style="width: 270px">
+                                        </div>
 
-                                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.order{% endtrans %}</span>
-                                            <input id="subentryFormSortOrder" name="subentryFormSortOrder">
-                                        </label>
+                                        <div style="margin-bottom: 5px;">
+                                        <label style="display: inline-block; width: 100px">{% trans %}label.order{% endtrans %}</label>
+                                        <input id="subentryFormSortOrder" name="subentryFormSortOrder" style="width: 270px">
+                                        </div>
 
-                                        <div class="left"><input class="btn" style="margin-top: 0px;" type="button" name="entryFormCancel" id="entryFormCancel" value="{% trans %}label.cancelar{% endtrans %}"/></div>
-                                        <div class="left"><input class="btn" style="margin-top: 0px; margin-left: 25px;" type="submit" name="save" value="{% trans %}label.save{% endtrans %}"/></div>
+                                        <div class="left"><input class="button success-darker tiny" style="margin-top: 0px;" type="button" name="entryFormCancel" id="entryFormCancel" value="{% trans %}label.cancelar{% endtrans %}"/></div>
+                                        <div class="left"><input class="button success-darker tiny" style="margin-top: 0px; margin-left: 25px;" type="submit" name="save" value="{% trans %}label.save{% endtrans %}"/></div>
                                         <div class="clear"></div>
                                     </form>
                                 </div>
 
                                 <div class="clear"></div>
-                            </section>
-                            <!-- End Tab Course Entries-->
-                        </nav>
+                            </div>
+                        </section>
                     </div>
+
                     <!-- End Tabs -->
                 </div>
             </div>    
@@ -172,10 +173,5 @@
         <div class="clear"></div>
     </div>
     <div class="clear"></div>
-    <div class="wrapper">
-            <div class="grid_24 padline">
-                    <div class="lineH"></div>
-            </div>
-    </div>
 </div>
 {% endblock %}

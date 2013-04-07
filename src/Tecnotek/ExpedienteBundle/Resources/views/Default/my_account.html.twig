@@ -53,27 +53,22 @@
 {% endblock %}
 
 {% block content %}
-<div class="container_24">
-    <div class="grid_24">
+<div class="container_24" style="width: 800px;">
+    <div class="grid_24" style="width: 100%;">
+
         <div>
-            <label>Mi nombre de usuario: </label>&nbsp;{{ app.user.username }}
-            <div class="right btn" id="btnCambiarPass" style="margin-left: 25px;">{% trans %}label.password.cambiar{% endtrans %}</div>
+            <div class="left"><label style="display: inline-block;">Administraci&oacute;n de Cuenta: </label>&nbsp;{{ app.user.username }}</div>
+            <div class="right button success-darker tiny" id="btnCambiarPass" style="margin-left: 25px;">{% trans %}label.password.cambiar{% endtrans %}</div>
             <div class="clear"></div>
         </div>
 
         <div id="changePasswordContainer" style="margin-top: 25px; display: none; line-height: 30px; height: 30px; vertical-align: middle; border-top: solid 1px; padding-top: 5px;">
             <div class="left" style="font-weight: bold; width: 325px;">{%trans%}label.new.password{%endtrans%}: <input type="password" style="width: 185px;" id="newPassword" name="newPassword" value=""/></div>
             <div class="left" style="font-weight: bold; width: 325px;">{%trans%}label.confirm.password{%endtrans%}: <input type="password" style="width: 185px;" id="confirmPassword" name="confirmPassword" value=""/></div>
-            <div class="left btn" id="btnCancelarPassword" style="margin-left: 25px;">{% trans %}label.cancelar{% endtrans %}</div>
-            <div class="left btn" id="btnActualizarPassword" style="margin-left: 25px;">{% trans %}label.actualizar{% endtrans %}</div>
+            <div class="left button success-darker tiny" id="btnCancelarPassword" style="margin-left: 25px;">{% trans %}label.cancelar{% endtrans %}</div>
+            <div class="left button success-darker tiny" id="btnActualizarPassword" style="margin-left: 25px;">{% trans %}label.actualizar{% endtrans %}</div>
             <div class="clear"></div>
         </div>
-    </div>
-
-    <div class="wrapper">
-            <div class="grid_24 padline">
-                    <div class="lineH"></div>
-            </div>
     </div>
 </div>
 {% endblock %}

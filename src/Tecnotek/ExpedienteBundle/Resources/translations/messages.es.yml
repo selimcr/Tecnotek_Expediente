@@ -121,6 +121,7 @@ messages.confirmation.student.delete: ¿Está seguro que desea eliminar el estud
 
 label.route.new: Crear nueva Ruta
 label.route.show: Información de Ruta
+label.route.edit: Edición de Ruta
 label.route.listar: Lista de Ruta
 messages.confirmation.route.delete: ¿Está seguro que desea eliminar la ruta?
 

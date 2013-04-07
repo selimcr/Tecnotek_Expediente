@@ -95,12 +95,12 @@
 
 .fancybox-close {
 	position: absolute;
-	top: -18px;
-	right: -18px;
+	top: -4px;
+	right: -4px;
 	width: 36px;
 	height: 36px;
 	cursor: pointer;
-	z-index: 8040;
+	z-index: 108040;
 }
 
 .fancybox-nav {

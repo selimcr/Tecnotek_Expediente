@@ -17,43 +17,36 @@
 {% endblock %}
 
 {% block content %}
-<div class="container_24">
-    <div class="grid_24">
-        <div>
-            <div class="left"><h1>{% trans %}label.grade.show{% endtrans %}</h1></div>
-            <div class="right"><a href="{{ path('_expediente_sysadmin_grade') }}" class="btn list"><span></span>{% trans %}label.back.list{% endtrans %}</a></div>
-            <div class="clear"></div>
-        </div>
+<div class="container_24" style="width: 800px;">
+    <div class="grid_24" style="width: 100%;">
+        <div class="panelRow" id="doc-forms">
+            <div class="large-12 columns">
+                <div class="titleRow">
+                    <div class="left"><h3>{% trans %}label.grade.show{% endtrans %}</h3></div>
+                    <div class="right"><a href="{{ path('_expediente_sysadmin_grade') }}" class="button success-darker tiny"><span></span>{% trans %}label.back.list{% endtrans %}</a></div>
+                    <div class="clear"></div>
+                </div>
 
-        <div class="centeredDiv">
-            <div class="formContainer" style="width: 920px;">
                 <div id="showContainer">
+
                     <div>
-                        <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.name{%endtrans%}</div>
-                        <div id="labelName" class="left">{{ entity.name }}</div>
-                        <div class="clear"></div>
+                        <label>{%trans%}label.name{%endtrans%}</label>
+                        <span id="labelName">{{ entity.name }}</span>
                     </div>
+
                     <div>
-                        <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.number{%endtrans%}</div>
-                        <div id="labelYear" class="left">{{ entity.number }}</div>
-                        <div class="clear"></div>
+                        <label>{%trans%}label.number{%endtrans%}</label>
+                        <span id="labelName">{{ entity.number }}</span>
                     </div>
 
                     <div id="buttonsContainer" style="margin-top: 25px;">
-                        <a href="{{ path('_expediente_sysadmin_grade_edit', {'id': entity.id}) }}" class="left btn edit"><span></span>{% trans %}label.edit{% endtrans %}</a>
-                        <div class="left btn delete" id="btnEliminar" style="margin-left: 25px;"><span></span>{% trans %}label.eliminar{% endtrans %}</div>
+                        <a href="{{ path('_expediente_sysadmin_grade_edit', {'id': entity.id}) }}" class="left button success-darker tiny"><span></span>{% trans %}label.edit{% endtrans %}</a>
+                        <div class="left button success-darker tiny" id="btnEliminar" style="margin-left: 25px;"><span></span>{% trans %}label.eliminar{% endtrans %}</div>
                         <div class="clear"></div>
                     </div>
                 </div>
-            </div>    
-        </div>        
-        <div class="clear"></div>
-    </div>
-    <div class="clear"></div>
-    <div class="wrapper">
-            <div class="grid_24 padline">
-                    <div class="lineH"></div>
             </div>
+        </div>
     </div>
 </div>
 {% endblock %}

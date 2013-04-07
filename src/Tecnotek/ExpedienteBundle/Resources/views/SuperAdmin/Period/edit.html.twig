@@ -14,47 +14,60 @@
 {% endblock %}
 
 {% block content %}
-<div class="container_24">
-    <div class="grid_24">
-        <div>
-            <div class="left"><h1>{% trans %}label.period.show{% endtrans %}</h1></div>
-            <div class="right"><a href="{{ path('_expediente_sysadmin_period') }}" class="btn list"><span></span>{% trans %}label.back.list{% endtrans %}</a></div>
+<div class="container_24" style="width: 800px;">
+    <div class="grid_24" style="width: 100%;">
+        <div class="titleRow">
+            <div class="left"><h3>{% trans %}label.period.show{% endtrans %}</h3></div>
+            <div class="right"><a href="{{ path('_expediente_sysadmin_period') }}" class="button success-darker tiny"><span></span>{% trans %}label.back.list{% endtrans %}</a></div>
             <div class="clear"></div>
         </div>
 
-        <div class="centeredDiv">
-            <div class="formContainer" style="width: 920px;">
-                <div id="editContainer">
-                    <form class="customForm" id="mainForm" name="mainForm" action="{{ path('_expediente_sysadmin_period_update') }}" method="post">
-                        <input type="hidden" id="id" name="id" value="{{ entity.id }}">
+        <div class="panelRow" id="doc-forms">
+            <div class="large-12 columns">
 
-                        {{ form_errors(form) }}
+                <form class="customForm" id="mainForm" name="mainForm" action="{{ path('_expediente_sysadmin_period_update') }}" method="post">
+                    <input type="hidden" id="id" name="id" value="{{ entity.id }}">
+                    {{ form_errors(form) }}
 
-                        {{ form_widget(form._token) }}
+                    {{ form_widget(form._token) }}
 
-                        <div class="formErrors">{{ form_errors(form.name) }}</div>
-                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.name{% endtrans %}</span>{{ form_widget(form.name) }}</label>
+                    <fieldset>
+                        <legend></legend>
 
-                        <div class="formErrors">{{ form_errors(form.year) }}</div>
-                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.year{% endtrans %}</span>{{ form_widget(form.year) }}</label>
+                        <div class="formRow">
+                            <label class="error">{{ form_errors(form.name) }}</label>
+                            <div class="large-12 columns">
+                                <label>{% trans %}label.name{% endtrans %}</label>{{ form_widget(form.name) }}
+                            </div>
+                        </div>
 
-                        <div class="formErrors">{{ form_errors(form.actual) }}</div>
-                        <label><span class="text-form" style="min-width: 150px;">{% trans %}label.current.period{% endtrans %}</span>{{ form_widget(form.actual) }}</label>
+                        <div class="formRow">
+                            <label class="error">{{ form_errors(form.year) }}</label>
+                            <div class="large-12 columns">
+                                <label>{% trans %}label.year{% endtrans %}</label>{{ form_widget(form.year) }}
+                            </div>
+                        </div>
 
-                        <a href="{{ path('_expediente_sysadmin_period_show', {'id': entity.id}) }}" class="left btn delete"><span></span>{% trans %}label.cancelar{% endtrans %}</a>
-                        <button style="margin-left: 15px; margin-top: 0px;" type="submit" class="left btn save" name="save"><span></span>{% trans %}label.save{% endtrans %}</button>
-                        <div class="clear"></div>
-                    </form>
-                </div>
-            </div>    
-        </div>        
-        <div class="clear"></div>
-    </div>
-    <div class="clear"></div>
-    <div class="wrapper">
-            <div class="grid_24 padline">
-                    <div class="lineH"></div>
+                        <div class="formRow">
+                            <label class="error">{{ form_errors(form.actual) }}</label>
+                            <div class="large-12 columns">
+                                <label>{% trans %}label.current.period{% endtrans %}</label>{{ form_widget(form.actual) }}
+                            </div>
+                        </div>
+
+                        <div class="formRow ">
+                            <div class="large-12 columns buttonsPanel">
+                                <a href="{{ path('_expediente_sysadmin_period_show', {'id': entity.id}) }}" class="button success-darker tiny"><span></span>{% trans %}label.cancelar{% endtrans %}</a>
+                                <button style="margin-left: 15px; margin-top: 0px;" type="submit" class="button success-darker tiny" name="save"><span></span>{% trans %}label.save{% endtrans %}</button>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+
+                    </fieldset>
+                </form>
             </div>
+        </div>
+        <div class="clear"></div>
     </div>
 </div>
 {% endblock %}
