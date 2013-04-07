@@ -63,10 +63,11 @@
     </div>
 
         <div class="search-results table">
-            <div class="row tableHeader" style="height: 32px; line-height: 32px;">
+            <div class="row tableHeader" style="height: 32px; line-height: 32px; padding: 0px 0px;">
                 <div class="option_width" style="float: left; width: 25px;"></div>
                 <div class="option_width" style="float: left; width: 300px;">{% trans %}label.student{% endtrans %}</div>
                 <div class="option_width" style="float: left; width: 170px;">{% trans %}label.type{% endtrans %}</div>
+                <div class="option_width" style="float: left; width: 50px;">Cant.</div>
                 <div class="option_width" style="float: left; width: 125px;">{% trans %}label.justify{% endtrans %}</div>
                 <div class="option_width" style="float: left; width: 150px;">{% trans %}label.comments{% endtrans %}</div>
             </div>
@@ -80,7 +81,7 @@
                 <div class="clear"></div>
             </form>
 
-            <div class="row userRow tableRowOdd tableRow" id="stdRow_STDYID" name="stdRow_STDYID" style="height: 30px; line-height: 30px; display: none;">
+            <div class="row userRow tableRowOdd tableRow" id="stdRow_STDYID" name="stdRow_STDYID" style="height: 30px; line-height: 30px; display: none; padding: 0px 0px;">
                 <div class="option_width" style="float: left; width: 25px;">
                     <input type="checkbox" class="cbRow" rel="STDYID">
                 </div>
@@ -91,6 +92,9 @@
                             <option value="{{ absenceType.id }}">{{ absenceType }}</option>
                         {% endfor %}
                     </select>
+                </div>
+                <div class="option_width" style="float: left; width: 50px;">
+                    <input type="number" id="number_STDYID" name="number_STDYID" required="required" value="1" style="width: 45px; height: 26px;">
                 </div>
                 <div class="option_width" style="float: left; width: 125px;">
                     <input type="checkbox" id="justify_STDYID" name="justify_STDYID" disabled="disabled">
