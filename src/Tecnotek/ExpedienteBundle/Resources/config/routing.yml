@@ -757,3 +757,15 @@ _expediente_teacher_subentry_remove:
 _expediente_teacher_save_student_qualification:
     pattern:  /t/student/qualification/save
     defaults: { _controller: TecnotekExpedienteBundle:Teacher:saveStudentQualification }
+
+_expediente_sysadmin_student_show_ticket:
+    pattern: /ticket/show/[id]
+    defaults: { _controller: TecnotekExpedienteBundle:Student:ticketShow }
+
+_expediente_sysadmin_student_show_ticket_simple:
+    pattern: /ticket/show
+    defaults: { _controller: TecnotekExpedienteBundle:Student:ticketShow }
+
+_expediente_sysadmin_student_show_ticket_return:
+    pattern: /ticket
+    defaults: { _controller: TecnotekExpedienteBundle:Student:ticketIndex2 }

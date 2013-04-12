@@ -37,8 +37,23 @@
                     <div class="left">
                         <label>{%trans%}label.generate.by{%endtrans%}:</label>
                         <input type="radio" name="tipo" value="1" {% if tipo==1 or tipo==0 %}checked{% endif %} > {%trans%}label.group{%endtrans%}
+                        <select id="grade" name="grade" style="width: 100px">
+                            {% for group in groups %}
+                                <option value="{{ group.id }}">{{group}}</option>
+                            {% endfor %}
+                        </select>
                         <input type="radio" name="tipo" value="2" {% if tipo==2 %}checked{% endif %}> {%trans%}label.grade{%endtrans%}
+                        <select id="grade" name="grade" style="width: 100px">
+                            {% for grade in grades %}
+                                <option value="{{ grade.id }}">{{grade}}</option>
+                            {% endfor %}
+                        </select>
                         <input type="radio" name="tipo" value="3" {% if tipo==3 %}checked{% endif %}> {%trans%}label.institution{%endtrans%}
+                        <select id="institution" name="institution" style="width: 100px">
+                            {% for institution in institutions %}
+                                <option value="{{ institution.id }}">{{institution}}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                     <button style="margin-left: 15px; margin-top: 0px;" type="submit" class="right button success-darker tiny" name="search"><span></span>{% trans %}label.generate{% endtrans %}</button>
                     <div class="clear"></div>

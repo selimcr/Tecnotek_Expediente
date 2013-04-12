@@ -15,13 +15,15 @@
     Tecnotek.StudentShow.translates["student.not.selected"] = "{% trans %}message.student.not.selected{% endtrans %}";
     Tecnotek.StudentShow.translates["relative.not.exists"] = "{% trans %}message.relative.not.exists{% endtrans %}";
 
+
+    Tecnotek.UI.urls["show"] = "{{ path('_expediente_sysadmin_student_show_ticket_simple')}}";
 </script>
 {% endblock %}
 
 {% block content %}
 <div class="container_24">
     <div class="grid_24">
-        <div class="left" style="width: 575px;" id="ticketsList" name="ticketsList">
+        <div class="left" style="width: 615px;" id="ticketsList" name="ticketsList">
             <div>
                 <div class="left"><h3>{% trans %}label.ticket.today.list{% endtrans %}</h3></div>
                 <div class="clear"></div>
@@ -31,14 +33,15 @@
                 <div class="row tableHeader" style="padding: 0;">
                     <div class="option_width" style="float: left; width: 215px;">{% trans %}label.student{% endtrans %}</div>
                     <div class="option_width" style="float: left; width: 260px;">{% trans %}label.relative{% endtrans %}</div>
-                    <div class="option_width" style="float: left; width: 95px;">{% trans %}label.time{% endtrans %}</div>
+                    <div class="option_width" style="float: left; width: 135px;">{% trans %}label.time{% endtrans %}</div>
                 </div>
 
                 {% for ticket in tickets %}
-                <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}" style="padding: 0px;">
+                <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}" style="padding: 0px;" rel="{{ ticket.id }}">
                     <div class="option_width" style="float: left; width: 215px; font-size: 10px;">{{ ticket.student }}</div>
                     <div class="option_width" style="float: left; width: 260px; font-size: 10px;">{{ ticket.relative.contact }}</div>
                     <div class="option_width" style="float: left; width: 95px; font-size: 10px;">{{ ticket.date|date("d/M/y H:i:s") }}</div>
+                    <div class="right imageButton viewButton"  title="{% trans %}label.view{% endtrans %}"  rel="{{ ticket.id }}"></div>
                     <div class="clear"></div>
                 </div>
                 {% else %}
@@ -51,7 +54,7 @@
 
         </div>
 
-        <div class="right" style="width: 360px;">
+        <div class="right" style="width: 320px;">
             <div class="left"><h3>{% trans %}label.ticket.new{% endtrans %}</h3></div>
             <div class="clear"></div>
             <div class="form-ticket table" style="background-color: #fff">
