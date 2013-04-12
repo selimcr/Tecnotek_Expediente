@@ -16,10 +16,12 @@ $loader->registerNamespaces(array(
     'Metadata'         => __DIR__.'/../vendor/metadata/src',
     'Knp\\Component'   => __DIR__.'/../vendor/knp-components/src',
     'Knp\\Bundle'      => __DIR__.'/../vendor/bundles',
+    'Export'           => __DIR__.'/../vendor/bundles',
 ));
 $loader->registerPrefixes(array(
     'Twig_Extensions_' => __DIR__.'/../vendor/twig-extensions/lib',
     'Twig_'            => __DIR__.'/../vendor/twig/lib',
+    'PHPExcel'         => __DIR__.'/../vendor/bundles/Export/ExcelBundle/Library/phpExcel/Classes',
 ));
 
 // intl

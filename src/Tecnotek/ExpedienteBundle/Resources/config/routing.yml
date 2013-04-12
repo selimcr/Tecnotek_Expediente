@@ -668,6 +668,26 @@ _expediente_sysadmin_qualifications:
   pattern:  /qualifications/
   defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:enterQualifications }
 
+_expediente_sysadmin_load_groups_of_period:
+  pattern: /qualifications/loadGroupsOfPeriod/
+  defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:loadGroupsOfPeriod }
+
+_expediente_sysadmin_load_courses_of_group_by_teacher:
+  pattern: /qualifications/loadCourseOfGroupByTeacher/
+  defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:loadCourseOfGroupByTeacher }
+
+_expediente_sysadmin_load_group_qualifications:
+  pattern:  /qualifications/loadGroupQualifications
+  defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:loadGroupQualifications }
+
+_expediente_sysadmin_printable_group_qualifications:
+  pattern:  /qualifications/printable/loadGroupQualifications
+  defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:loadPrintableGroupQualifications }
+
+_expediente_sysadmin_save_student_qualification:
+    pattern:  /qualifications/save
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:saveStudentQualification }
+
 _expediente_get_students_list_of_group:
   pattern:  /group/getStudents
   defaults: { _controller: TecnotekExpedienteBundle:Student:getListStudentsOfGroup }
@@ -696,6 +716,10 @@ _expediente_access_save:
 _expediente_load_privileges:
     pattern:  /privileges/load
     defaults: { _controller: TecnotekExpedienteBundle:Secured:loadPrivileges }
+
+_expediente_export_group:
+    pattern:  /sysadmin/export/generateFile
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:generateExcel }
 
 ######################    TEACHER    ######################
 _expediente_teacher_qualifications:

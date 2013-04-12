@@ -7,105 +7,21 @@
 
 
 {% block extrajs %}
-<script type="text/javascript" src="{{ asset('fancybox/jquery.fancybox.js?v=2.0.6') }}"></script>
+<script type="text/javascript" src="{{ asset('expediente/js/jquery.printElement.min.js') }}"></script>
 
 <script type="text/javascript">
-    Tecnotek.module = "absences";
+    Tecnotek.module = "qualifications";
     Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
 
+    Tecnotek.UI.urls["loadGroupsOfPeriodURL"] = "{{ path('_expediente_sysadmin_load_groups_of_period')}}";
+    Tecnotek.UI.urls["loadCoursesOfGroupByTeacherURL"] = "{{ path("_expediente_sysadmin_load_courses_of_group_by_teacher") }}";
+    Tecnotek.UI.urls["loadQualificationsOfGroupURL"] = "{{ path("_expediente_sysadmin_load_group_qualifications") }}";
+
+    Tecnotek.UI.urls["saveStudentQualificationURL"] = "{{ path("_expediente_sysadmin_save_student_qualification") }}";
+    Tecnotek.UI.urls["viewPrintableVersionURL"] = "{{ path("_expediente_sysadmin_printable_group_qualifications") }}";
+
     Tecnotek.UI.urls["getStudentsURL"] = "{{ path('_expediente_sysadmin_student_ajax_list')}}";
-    Tecnotek.UI.urls["loadStudentRelativesURL"] = "{{ path('_expediente_sysadmin_relatives_list')}}";
-    Tecnotek.UI.urls["saveTicketURL"] = "{{ path('_expediente_sysadmin_ticket_save')}}";
     Tecnotek.StudentShow.translates["relative.not.selected"] = "{% trans %}message.relative.not.selected{% endtrans %}";
-    Tecnotek.StudentShow.translates["student.not.selected"] = "{% trans %}message.student.not.selected{% endtrans %}";
-    Tecnotek.StudentShow.translates["relative.not.exists"] = "{% trans %}message.relative.not.exists{% endtrans %}";
-</script>
-<script type="text/javascript">
-
-$(function() {
-   // $(".modalbox").fancybox();
-
-
-    $(".textField").blur(function(e){
-        e.preventDefault();
-        $this = $(this);
-        $type = $this.attr('tipo');
-        $nota = $this.val();
-        $stdId = $this.attr('std');
-
-        if($type == 1){
-            $percentage = $this.attr('perc');
-            $totalField = $("#" + $this.attr('rel'));
-            console.debug("Type = " + $type + ", Nota: " + $nota + ", Perc = " + $percentage + " :: " + $totalField);
-            if($nota == "") {
-                $totalField.html("-");
-            } else {
-                console.debug("Calcular total para " + $(this).attr('rel') + ", total = " + ($percentage * $nota / 100));
-                $totalField.html("" + ($percentage * $nota / 100) + "%");
-            }
-            /*$sum = 0;
-            $counter = 0;
-            $('.nota_' + $stdId).each(function() {
-                $temp = $(this).html();
-                if($temp != "-"){
-                    $temp = $temp.slice(0, -1);
-                    $sum += parseFloat( $temp );
-                    $counter++;
-                }
-            });
-            if($counter == 0){
-                $("#total_trim_" + $stdId).html("-");
-            } else {
-                $("#total_trim_" + $stdId).html("" + $sum);
-            }*/
-            //p / 100 = x / nota
-            //p * nota / 100;
-        } else {
-            $childs = $this.attr('child');
-            $parent = $this.attr('parent');
-
-            console.debug("Type = " + $type + ", Nota: " + $nota + " :: childs = " + $childs + " :: $stdId = " + $stdId);
-            $sum = 0;
-            $counter = 0;
-            $('.item_' + $parent + "_" + $stdId).each(function() {
-                $temp = $(this).val();
-                console.debug("-> " + $temp);
-
-                if($temp != ""){
-                    $sum += parseFloat( $temp );
-                    $counter++;
-                }
-                console.debug("$sum = " + $sum);
-                if($counter == 0){
-                    $("#prom_" + $parent + "_" + $stdId).html("-");
-                    $totalField = $("#" + $this.attr('rel'));
-                    $("#total_" + $parent + "_" + $stdId).html("-");
-                } else {
-                    $percentage =  $("#prom_" + $parent + "_" + $stdId).attr('perc');
-                    $("#prom_" + $parent + "_" + $stdId).html("" + ($sum/$childs));
-                    $("#total_" + $parent + "_" + $stdId).html("" + ($percentage * ($sum/$childs) / 100) + "%");
-                }
-            });
-        }
-
-        $sum = 0;
-        $counter = 0;
-        $('.nota_' + $stdId).each(function() {
-            $temp = $(this).html();
-            if($temp != "-"){
-                $temp = $temp.slice(0, -1);
-                $sum += parseFloat( $temp );
-                $counter++;
-            }
-        });
-        if($counter == 0){
-            $("#total_trim_" + $stdId).html("-");
-        } else {
-            $("#total_trim_" + $stdId).html("" + $sum);
-        }
-
-    });
-});
 </script>
 {% endblock %}
 
@@ -114,43 +30,78 @@ $(function() {
 <link rel="stylesheet" href="{{ asset('expediente/css/fancybox_style.css') }}" type="text/css" media="all" />
 <link rel="stylesheet" href="{{ asset('expediente/css/jquery-ui-timepicker-addon.css') }}" type="text/css" media="all" />
 <style>
-    .itemCarne{ background-color: #82c0fd; width: 75px; color: #000; float: left; font-weight: bold; color: #000; /*position: absolute; */text-align: center; float: left; height: 25px; line-height: 25px;
-        vertical-align: middle; border-bottom: solid thin black; border-right: solid thin black; border-left: solid thin black; border-top: solid thin black; }
-    .itemEstudiante{ background-color: #A4D2FD; color: #000; font-weight: bold; color: #000; /*position: absolute; */text-align: center; float: left; width: 146px; height: 25px; line-height: 25px;
-        vertical-align: middle; border-bottom: solid thin black; border-right: solid thin black; border-left: solid thin black; border-top: solid thin black;}
-
-    .qualificationTable{ /*margin-top: 75px;*/ margin-bottom: 50px;}
-    .qualificationTable .itemNota{ background-color: #A4D2FD; }
-    .qualificationTable .itemPromedio{ background-color: #5F96E7; }
-    .qualificationTable .itemPorcentage{ background-color: #B698EE; }
-    .qualificationTable .itemPromedioPeriodo{ background-color: #2b34ee; color: #fff; font-weight: bold;}
-    .qualificationTable .itemHeader {font-weight: bold; color: #000;
-        position: absolute;
-        text-align: center; float: left; width: 150px; height: 32px; line-height: 32px; vertical-align: middle;
-        border: solid thin black; top: 60px;
-        -moz-transform: rotate(90deg);  /* FF3.5+ */
-        -o-transform: rotate(90deg);  /* Opera 10.5 */
-        -webkit-transform: rotate(90deg);  /* Saf3.1+, Chrome */
-        filter:  progid:DXImageTransform.Microsoft.BasicImage(rotation=0.90);  /* IE6,IE7 */
-        -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=0.90)"; /* IE8 */
+    @media screen {
+        .noPrint {/*display:block !important;*/}
     }
-    .itemHeaderCode {font-weight: bold; color: #000; /*position: absolute; */text-align: center; float: left; width: 32px; height: 25px; line-height: 25px;
-        vertical-align: middle; border-bottom: solid thin black; border-right: solid thin black; border-left: solid thin black; border-top: solid thin black;}
 
-    .qualificationTable .itemHeader2 {font-weight: bold; color: #000; /*position: absolute; */text-align: center; float: left; width: 32px; height: 25px; line-height: 25px;
-        vertical-align: middle; border-bottom: solid thin black; border-right: solid thin black; border-left: solid thin black;}
+        /* Print Only */
+    @media print {
+        .noPrint {display:none !important;}
+    }
 
-    .qualificationTable .textField {font-weight: bold; color: #000; /*position: absolute; */text-align: center; float: left; width: 18px; height: 11px; line-height: 11px;
-        vertical-align: middle; border-bottom: solid thin black; border-right: solid thin black; border-left: solid thin black; border-top: solid thin black; font-size: 10px;}
+    #wrap {min-width: 960px;}
+    .tableQualifications {border: 1px;}
+    .tableQualifications table, th, td { border: 1px solid black; font-size: 11px; color: #000;}
+    .tableQualifications td { width: 45px; text-align: center; font-size: 11px;}
+    /*.tableQualifications .azul {background-color: #2b34ee; color: #000; line-height: 0px;}*/
+    .tableQualifications .azul {background-color: #2b34ee; color: #000;}
+    .tableQualifications .celesteClaro {background-color: #A4D2FD; color: #000;}
+    .tableQualifications .celesteOscuro {background-color: #5F96E7; color: #000;}
+    .tableQualifications .morado {background-color: #B698EE; color: #000;}
+    .tableQualifications .bold {font-weight: bold;}
+
+    .verticalText{text-align: center; vertical-align: middle; width: 20px; margin: 0px; padding: 0px; padding-left: 3px; padding-right: 3px; padding-top: 10px; white-space: nowrap; font-size: 11px; -webkit-transform: rotate(-90deg); -moz-transform: rotate(-90deg);}
+
+    .itemEstudiante{ background-color: #A4D2FD; }
+    .qualificationTable .itemNota{ background-color: #A4D2FD; }
+    .qualificationTable .textField {font-weight: bold; color: #000; /*position: absolute; */text-align: center; float: left; width: 44px; height: 24px; line-height: 11px;
+        vertical-align: middle; border: none; font-size: 10px; padding: 0px; margin: 0px;}
+
+    .qualificationTable {width: 950px}
+    #contentBody {width: auto; overflow-x:scroll; margin-left:369px; }
+    .headcolcarne { height: 30px; border: 1px solid black; position:absolute; left:0; line-height: 30px; }
+    .headcolnombre { height: 30px; border: 1px solid black; position:absolute; left:75px; line-height: 30px; }
+    .headcoltrim { height: 30px;  border: 1px solid black; position:absolute; left:325px; line-height: 30px; }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="container_24">
     <div class="grid_24">
+        <div style="line-height: 26px;">
+            <div class="left" style="width: 70px; font-weight: bold;">{%trans%}label.period{%endtrans%}</div>
+            <div id="labelPeriod" class="left">
+                <select id="period" name="period" style="width: 150px;">
+                    {% for period in periods %}
+                    <option value="{{ period.id }}">{{period}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div id="groupsContainer" class="left" style="margin-left: 50px;">
+                <div class="left" style="width: 65px; font-weight: bold;">{%trans%}label.groups{%endtrans%}</div>
+                <div class="left">
+                    <select id="groups" name="groups" style="width: 150px;">
+                    </select>
+                </div>
+            </div>
+
+            <div id="coursesContainer" class="left" style="margin-left: 50px;">
+                <div class="left" style="width: 75px; font-weight: bold;">{%trans%}label.courses{%endtrans%}</div>
+                <div class="left">
+                    <select id="courses" name="courses" style="width: 150px;">
+                    </select>
+                </div>
+            </div>
+
+            <div class="left" style="margin-left: 15px;"><a href="#" class="button success-darker tiny" id="viewPrintable" name="viewPrintable"><span></span>Versi&oacute;n Imprimible</a></div>
+
+            <div class="clear"></div>
+        </div>
+        <!-- Qualifications -->
         <div>
             <div class="left">
-                <h1>{% trans %}label.qualifications{% endtrans %}</h1>
+                <h3>{% trans %}label.qualifications{% endtrans %}</h3>
             </div>
             <div class="left" style="line-height: 48px; margin-left: 25px;">
                 <span>Ingrese o verifique la informacion de las notas de los estudiantes por grupo</span>
@@ -159,28 +110,13 @@ $(function() {
         </div>
         <div class="clear"></div>
 
-        <div class="left" style="width: 225px; background-color: #d2b48c; position: relative; height: 286px;">
-            <div class="itemCarne">Periodo</div><div class="itemEstudiante">Curso</div><div class="clear"></div>
-
-            <div class="itemCarne" style="height: 150px; line-height: 150px;"></div><div class="itemEstudiante"  style="height: 150px; line-height: 150px;">02-A</div><div class="clear"></div>
-
-            <div class="itemCarne">CARNE</div><div class="itemEstudiante">NOMBRE DEL ESTUDIANTE</div><div class="clear"></div>
-
-            {{ studentsHeader|raw }}
-        </div>
-        <div class="left qualificationTable" style="position: relative;">
-            {{ table|raw}}
+        <div id="tableContainer" name="tableContainer" style="display: none;">
+            <div class="left qualificationTable" id="tablaCalificacion" name="tablaCalificacion">
+                <div  name="contentBody" id="contentBody"></div>
+                <div class="clear"></div>
+            </div>
             <div class="clear"></div>
         </div>
-        <div class="clear"></div>
-        <br /><br /> <br /><br /> <br /><br />
-        <br /><br /><br /><br />
-    </div>
-    <div class="clear"></div>
-    <div class="wrapper">
-            <div class="grid_24 padline">
-                    <div class="lineH"></div>
-            </div>
     </div>
 </div>
 {% endblock %}

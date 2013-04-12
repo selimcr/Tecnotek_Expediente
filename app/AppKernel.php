@@ -24,7 +24,8 @@ class AppKernel extends Kernel
             new Acme\DemoBundle\AcmeDemoBundle(),
             new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle(),
             new Sensio\Bundle\DistributionBundle\SensioDistributionBundle(),
-            new Sensio\Bundle\GeneratorBundle\SensioGeneratorBundle()
+            new Sensio\Bundle\GeneratorBundle\SensioGeneratorBundle(),
+            new Export\ExcelBundle\ExportExcelBundle(),
         );
 
         /*if (in_array($this->getEnvironment(), array('dev', 'test'))) {
