@@ -2013,6 +2013,14 @@ var Tecnotek = {
                     $(this).val("");
                     $('#suggestions').fadeOut(); // Hide the suggestions box
                 });
+
+                $('.viewButton').click(function(event){
+                    event.preventDefault();
+                    var id = $(this).attr("rel");
+                    //Lo que quiere que haga con el id
+                    location.href = Tecnotek.UI.urls["show"] + "/" + $(this).attr("rel");
+                    //console.debug("ver boleta con id: " + id);
+                });
             }
         },
         PermisosUsuarios : {

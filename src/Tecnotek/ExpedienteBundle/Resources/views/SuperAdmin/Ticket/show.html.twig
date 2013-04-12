@@ -8,10 +8,10 @@
 {% endblock %}
 
 {% block extrajs %}
+<script type="text/javascript" src="{{ asset('expediente/js/jquery.printElement.min.js') }}"
+        xmlns="http://www.w3.org/1999/html"></script>
 <script type="text/javascript">
-    Tecnotek.UI.urls["deleteURL"] = "{{ path("_delete_bus", {id: entity.id}) }}";
-    Tecnotek.UI.translates["confirmDelete"] = "{% trans %}messages.confirmation.bus.delete{% endtrans %}";
-    Tecnotek.module = "showEntity";
+    Tecnotek.module = "reports";
     Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
 </script>
 {% endblock %}
@@ -20,67 +20,35 @@
 <div class="container_24">
     <div class="grid_24">
         <div>
-            <div class="left"><h1>{% trans %}label.bus.show{% endtrans %}</h1></div>
-            <div class="right"><a href="{{ path('_expediente_sysadmin_bus') }}" class="btn list"><span></span>{% trans %}label.back.list{% endtrans %}</a></div>
+            <div class="left">
+                <h3>{% trans %}label.ticket4{% endtrans %}</h3>
+            </div>
+            <div class="right"><a href="{{ path('_expediente_sysadmin_student_show_ticket_return') }}" class="button success-darker tiny"><span></span>{% trans %}label.back.list{% endtrans %}</a></div>
+            <div class="right"><button style="margin-left: 15px; margin-top: 0px;" type="button" class="right button success-darker tiny" id="btnPrint" name="btnPrint" rel="Boleta de Salida"><span></span>{% trans %}label.print{% endtrans %}</button></div>
             <div class="clear"></div>
+
         </div>
 
-        <div class="centeredDiv">
-            <div class="formContainer" style="width: 920px;">
-                <div id="showContainer">
-                    <div>
-                        <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.name{%endtrans%}</div>
-                        <div id="labelName" class="left">{{ entity.name }}</div>
-                        <div class="clear"></div>
-                    </div>
-                    <div>
-                        <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.licensePlate{%endtrans%}</div>
-                        <div id="labelLicensePlate" class="left">{{ entity.licensePlate }}</div>
-                        <div class="clear"></div>
-                    </div>
-                    <div>
-                        <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.color{%endtrans%}</div>
-                        <div id="labelColor" class="left">{{ entity.color }}</div>
-                        <div class="clear"></div>
-                    </div>
-                    <div>
-                        <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.driver{%endtrans%}</div>
-                        <div id="labelDriver" class="left">{{ entity.driver }}</div>
-                        <div class="clear"></div>
-                    </div>
-                    <div>
-                        <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.capacity{%endtrans%}</div>
-                        <div id="labelCapacity" class="left">{{ entity.capacity }}</div>
-                        <div class="clear"></div>
-                    </div>
-                    <div>
-                        <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.riteve{%endtrans%}</div>
-                        <div id="labelRiteve" class="left">{% if entity.riteve != null %}{{ entity.riteve|date("d/M/y") }}{% endif %}</div>
-                        <div class="clear"></div>
-                    </div>
-                    <div>
-                        <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.ins{%endtrans%}</div>
-                        <div id="labelIns" class="left">{% if entity.ins != null %}{{ entity.ins|date("d/M/y") }}{% endif %}</div>
-                        <div class="clear"></div>
-                    </div>
-                    <div>
-                        <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.permission{%endtrans%}</div>
-                        <div id="labelPermission" class="left">{% if entity.permission != null %}{{ entity.permission|date("d/M/y") }} {% endif %}</div>
-                        <div class="clear"></div>
-                    </div>
-                    <div>
-                        <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.route{%endtrans%}</div>
-                        <div id="labelRoute" class="left">{{ entity.route }}</div>
-                        <div class="clear"></div>
-                    </div>
+        <div id="report" style="margin-top: 25px;">
 
-                    <div id="buttonsContainer" style="margin-top: 25px;">
-                        <a href="{{ path('_expediente_sysadmin_bus_edit', {'id': entity.id}) }}" class="left btn edit"><span></span>{% trans %}label.edit{% endtrans %}</a>
-                        <div class="left btn delete" id="btnEliminar" style="margin-left: 25px;"><span></span>{% trans %}label.eliminar{% endtrans %}</div>
-                        <div class="clear"></div>
-                    </div>
-                </div>
-            </div>    
+            <div class="center"><h3>{% trans %}label.ticket4{% endtrans %}</h3></div>
+
+            <div class="center" style="float: left; width: 920px; font-size: 10px;">{% trans %}label.ticket1 {% endtrans %}{{ ticket.student }}</div>
+            </br></br>
+
+            <div class="center" style="float: left; width: 920px; font-size: 10px;">{% trans %}label.ticket2 {% endtrans %}{{ ticket.relative.contact }}</div>
+            </br></br>
+
+            <div class="center" style="float: left; width: 920px; font-size: 10px;">{% trans %}label.ticket3 {% endtrans %}{{ ticket.date|date("d/M/y H:i:s") }}</div>
+
+            </br></br></br></br></br></br></br></br>
+
+            <div class="center" style="float: left; width: 320px; font-size: 10px;">{% trans %}label.ticket5a {% endtrans %}</div>
+            <div class="center" style="float: left; width: 320px; font-size: 10px;">{% trans %}label.ticket5a {% endtrans %}</div>
+            </br></br>
+            <div class="center" style="float: left; width: 320px; font-size: 10px;">{% trans %}label.ticket5 {% endtrans %}</div>
+            <div class="center" style="float: left; width: 320px; font-size: 10px;">{% trans %}label.ticket6 {% endtrans %}</div>
+
         </div>        
         <div class="clear"></div>
     </div>

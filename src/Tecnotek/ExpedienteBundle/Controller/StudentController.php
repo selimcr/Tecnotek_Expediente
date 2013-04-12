@@ -1571,4 +1571,24 @@ class StudentController extends Controller
             return new Response("<b>Not an ajax call!!!" . "</b>");
         }
     }
+
+    public function ticketShowAction($id)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $ticket = $em->getRepository("TecnotekExpedienteBundle:Ticket")->find($id);
+        //$relatives = $em->getRepository("TecnotekExpedienteBundle:Relative")->findByStudent($id);
+        //$contact = new \Tecnotek\ExpedienteBundle\Entity\Contact();
+        //$form   = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\ContactFormType(), $contact);
+
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Ticket/show.html.twig', array('ticket' => $ticket));
+
+        //return $this->render('TecnotekExpedienteBundle:SuperAdmin:Student/show.html.twig', array('entity' => $entity,
+          //  'form'   => $form->createView(), 'menuIndex' => 3, 'relatives' => $relatives));
+    }
+
+    public function ticketIndex2Action()
+    {
+
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Ticket/index.html.twig');
+    }
 }

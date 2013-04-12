@@ -161,6 +161,13 @@ class Student
     private $code;
 
     /**
+     * @ORM\Column(type="string", length=30, nullable=true)
+     * @Assert\MaxLength(limit = 30)
+     */
+    private $groupyear;
+
+
+    /**
      * @ManyToOne(targetEntity="Route")
      * @JoinColumn(name="route_id", referencedColumnName="id", nullable=true)
      */
@@ -677,5 +684,26 @@ class Student
     public function getCode()
     {
         return $this->code;
+    }
+
+
+    /**
+     * Set groupyear
+     *
+     * @param string $groupyear
+     */
+    public function setGroupyear($groupyear)
+    {
+        $this->groupyear = $groupyear;
+    }
+
+    /**
+     * Get groupyear
+     *
+     * @return string
+     */
+    public function getGroupyear()
+    {
+        return $this->groupyear;
     }
 }
