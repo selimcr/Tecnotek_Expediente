@@ -5,11 +5,11 @@
 {% endblock %}
 
 {% block extracss %}
-<link rel="stylesheet" href="{{ asset('expediente/css/jquery-ui-timepicker-addon.css') }}" type="text/css" media="all" />
+<link rel="stylesheet" href="{{ asset('css/jquery-ui-timepicker-addon.css') }}" type="text/css" media="all" />
 {% endblock %}
 
 {% block extrajs %}
-<script type="text/javascript" src="{{ asset('expediente/js/jquery.printElement.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/jquery.printElement.min.js') }}"></script>
 <script type="text/javascript">
     Tecnotek.module = "reportClubs";
     Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";

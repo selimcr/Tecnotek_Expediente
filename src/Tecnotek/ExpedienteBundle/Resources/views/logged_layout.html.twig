@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="{{ asset('saintmichael/stylesheets/normalize.css') }}"/>
     <link rel="stylesheet" href="{{ asset('saintmichael/stylesheets/app.css') }}"/>
 
-    <link rel="stylesheet" href="{{ asset('expediente/css/grid.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('css/grid.css') }}"/>
     {% block extracss %}
     {% endblock %}
     <script src="{{ asset('saintmichael/javascripts/vendor/custom.modernizr.js') }}"></script>
@@ -153,7 +153,7 @@
 
 <script src="{{ asset('saintmichael/javascripts/vendor/jquery-1.8.1.min.js') }}"></script>
 
-<script type="text/javascript" src="{{ asset('expediente/js/spin.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/spin.min.js') }}"></script>
 <script src="http://code.jquery.com/ui/1.9.1/jquery-ui.js"></script>
 
 <script src="{{ asset('saintmichael/javascripts/foundation/foundation.js') }}"></script>
@@ -172,13 +172,12 @@
 <script src="{{ asset('saintmichael/javascripts/foundation/foundation.topbar.js') }}"></script>
 
 {% if is_granted('ROLE_PROFESOR') %}
-<script type="text/javascript" src="{{ asset('expediente/js/teacher_application.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/teacher_application.js') }}"></script>
 {% else %}
-<script type="text/javascript" src="{{ asset('expediente/js/superadmin_application.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/superadmin_application.js') }}"></script>
 {% endif %}
 
 {% block extrajs %}{% endblock %}
-<script type="text/javascript" src="{{ asset('expediente/js/script.js') }}"></script>
 
 <script>
     $(document).foundation();

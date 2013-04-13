@@ -32,16 +32,18 @@
             <div class="table">
                 <div class="row tableHeader" style="padding: 0;">
                     <div class="option_width" style="float: left; width: 215px;">{% trans %}label.student{% endtrans %}</div>
-                    <div class="option_width" style="float: left; width: 260px;">{% trans %}label.relative{% endtrans %}</div>
+                    <div class="option_width" style="float: left; width: 250px;">{% trans %}label.relative{% endtrans %}</div>
                     <div class="option_width" style="float: left; width: 135px;">{% trans %}label.time{% endtrans %}</div>
                 </div>
 
                 {% for ticket in tickets %}
                 <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}" style="padding: 0px;" rel="{{ ticket.id }}">
                     <div class="option_width" style="float: left; width: 215px; font-size: 10px;">{{ ticket.student }}</div>
-                    <div class="option_width" style="float: left; width: 260px; font-size: 10px;">{{ ticket.relative.contact }}</div>
+                    <div class="option_width" style="float: left; width: 250px; font-size: 10px;">{{ ticket.relative.contact }}</div>
                     <div class="option_width" style="float: left; width: 95px; font-size: 10px;">{{ ticket.date|date("d/M/y H:i:s") }}</div>
-                    <div class="right imageButton viewButton"  title="{% trans %}label.view{% endtrans %}"  rel="{{ ticket.id }}"></div>
+
+                    <div class="right imageButton deleteButton"  title="{% trans %}label.delete{% endtrans %}"  rel="{{ ticket.id }}" style="margin-right: 0px; margin-top: 3px; width: 17px;"></div>
+                    <div class="right imageButton viewButton"  title="{% trans %}label.view{% endtrans %}"  rel="{{ ticket.id }}" style="margin-top: 3px;"></div>
                     <div class="clear"></div>
                 </div>
                 {% else %}

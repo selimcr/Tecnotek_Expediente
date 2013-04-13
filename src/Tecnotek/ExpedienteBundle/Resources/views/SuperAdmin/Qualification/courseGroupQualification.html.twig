@@ -69,10 +69,10 @@
         </div>
     </div>
 
-    <script src="/expediente/web/saintmichael/javascripts/vendor/jquery-1.8.1.min.js"></script>
-    <script type="text/javascript" src="/expediente/web/expediente/js/spin.min.js"></script>
+    <script src="{{ asset('saintmichael/javascripts/vendor/jquery-1.8.1.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/spin.min.js') }}"></script>
     <script src="http://code.jquery.com/ui/1.9.1/jquery-ui.js"></script>
-    <script type="text/javascript" src="{{ asset('expediente/js/superadmin_application.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/superadmin_application.js') }}"></script>
     <script type="text/javascript">
         Tecnotek.module = "printQualifications";
         Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
