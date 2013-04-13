@@ -1846,7 +1846,7 @@ var Tecnotek = {
                 });
             }
         },
-        Tickets : {
+        /*Tickets : {
             translates : {},
             init : function() {
                 $('#generalTab').click(function(event){
@@ -2032,7 +2032,7 @@ var Tecnotek = {
                     //console.debug("ver boleta con id: " + id);
                 });
             }
-        },
+        },*/
         PermisosUsuarios : {
             init : function() {
                 Tecnotek.PermisosUsuarios.initComponents();

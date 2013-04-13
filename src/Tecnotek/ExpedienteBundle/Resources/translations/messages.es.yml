@@ -24,6 +24,7 @@ label.save: Guardar
 label.view: Ver
 label.volver: Volver
 label.edit: Editar
+label.delete: Eliminar
 label.eliminar: Eliminar
 label.usuarios: Usuarios
 label.actualizar: Actualizar
@@ -73,7 +74,7 @@ messages.confirmation.course.delete: Esta seguro que desea eliminar la materia?
 label.course.show: Detalle de la materia
 
 messages.confirmation.absence.delete: Esta seguro que desea eliminar esta ausencia?
-
+message.ticket.confirm.delete: Esta seguro que desea eliminar esta boleta?
 label.period.admin: Administraci&oacute;n de Periodo
 label.admin: Administrar
 label.groups: Grupos

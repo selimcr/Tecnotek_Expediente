@@ -1591,4 +1591,34 @@ class StudentController extends Controller
 
         return $this->render('TecnotekExpedienteBundle:SuperAdmin:Ticket/index.html.twig');
     }
+
+    public function removeTicketAction(){
+        $logger = $this->get('logger');
+        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
+        {
+            try {
+                $request = $this->get('request')->request;
+                $id = $request->get('id');
+
+                $em = $this->getDoctrine()->getEntityManager();
+                $ticket = $em->getRepository("TecnotekExpedienteBundle:Ticket")->find($id);
+                if ( isset($ticket) ) {
+                    $em->remove($ticket);
+                    $em->flush();
+                    return new Response(json_encode(array('error' => false)));
+                } else {
+                    return new Response(json_encode(array('error' => true, 'message' => "Ticket not found.")));
+                }
+            }
+            catch (Exception $e) {
+                $info = toString($e);
+                $logger->err('Student::removeTicketAction [' . $info . "]");
+                return new Response(json_encode(array('error' => true, 'message' => $info)));
+            }
+        }// endif this is an ajax request
+        else
+        {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+    }
 }
