@@ -38,7 +38,7 @@ class Ticket
 
     /**
      * @ManyToOne(targetEntity="Student")
-     * @JoinColumn(name="student_id", referencedColumnName="id")
+     * @JoinColumn(name="student_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $student;
 

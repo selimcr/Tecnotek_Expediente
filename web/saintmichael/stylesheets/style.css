@@ -212,14 +212,32 @@ a.desc {line-height: 32px; font-size: 15px; float: left; text-align: right; colo
 .filter-search .internal #searchForm input[type="radio"] {width: 25px;}
 
 /***     REPORTS    ***/
-#report {background-color: #fff; padding: 15px;}
-#report .header_row{border-bottom: thin solid #000; height: 23px; line-height: 23px; vertical-align: bottom; margin-bottom: 15px;}
-#report .header_row .field{font-weight: bold; font-size: 16px; color: #000;}
-#report .fields_row .field_value {font-size: 16px; color: #000;}
-#report .titles{font-size: 18px; color: #000;}
-#report .footer{font-size: 16px; margin-bottom: 15px; margin-top: 15px; font-weight: bold; color: #000;}
-#report .route{font-weight: bold; font-size: 13px; color: #000; margin-top: 25px;}
-#report .student_title{border-bottom: thin solid #000; font-size: 11px; color: #000; font-weight: bold; line-height: 16px; height: 14px; margin-bottom: 15px; margin-top: 15px;}
-#report .student_row{font-size: 11px; height: 14px; line-height: 16px; color: #000;}
-#report .student_footer{font-size: 10px; color: #000; font-weight: bold;}
-#report .area_title{font-weight: bold; margin-top: 25px; text-decoration: underline; color: #000;}
+#report {background-color: #fff; padding: 15px; width: 950px;}
+.header_row{border-bottom: thin solid #000; height: 23px; line-height: 23px; vertical-align: bottom; margin-bottom: 15px;}
+.field{font-weight: bold; font-size: 16px; color: #000; width: 100%; display: inline-block; vertical-align: top;}
+.field_value {font-size: 11px; color: #000; display: inline-block; vertical-align: top;}
+.titles{font-size: 18px; color: #000;}
+.report_footer{font-size: 16px; margin-bottom: 15px; margin-top: 15px; font-weight: bold; color: #000;}
+.route{font-weight: bold; font-size: 13px; color: #000; margin-top: 25px;}
+.student_title{border-bottom: thin solid #000; font-size: 11px; color: #000; font-weight: bold; line-height: 16px; height: 17px; margin-bottom: 15px; margin-top: 15px;}
+.student_row{font-size: 11px; height: 14px; line-height: 16px; color: #000; display: inline-block;}
+.student_footer{font-size: 10px; color: #000; font-weight: bold;}
+.area_title{font-weight: bold; margin-top: 25px; text-decoration: underline; color: #000;}
+
+@media print {
+    #report {background-color: #fff; padding: 15px; width: 950px;}
+    .header_row{border-bottom: thin solid #000; height: 23px; line-height: 23px; vertical-align: bottom; margin-bottom: 15px;}
+    .field{font-weight: bold; font-size: 11px; color: #000; width: 100%; display: inline-block; vertical-align: top;}
+    .field_value {font-size: 11px; color: #000; display: inline-block; vertical-align: top;}
+    .titles{font-size: 18px; color: #000;}
+    .report_footer{font-size: 16px; margin-bottom: 15px; margin-top: 15px; font-weight: bold; color: #000;}
+    .route{font-weight: bold; font-size: 13px; color: #000; margin-top: 25px;}
+    .student_title{border-bottom: thin solid #000; font-size: 11px; color: #000; font-weight: bold; line-height: 16px; height: 17px; margin-bottom: 15px; margin-top: 15px;}
+    .student_row{font-size: 11px; height: 14px; line-height: 16px; color: #000; display: inline-block;}
+    .student_footer{font-size: 10px; color: #000; font-weight: bold;}
+    .area_title{font-weight: bold; margin-top: 25px; text-decoration: underline; color: #000;}
+}
+
+/****   loginPanel   ***/
+.loginPanel{margin: auto; background-color: #fff; width: 450px; padding: 15px;}
+.loginPanel label {display: inline-block; width: 135px;}

@@ -43,7 +43,7 @@ class Absence
 
     /**
      * @ManyToOne(targetEntity="StudentYear")
-     * @JoinColumn(name="studentYear_id", referencedColumnName="id")
+     * @JoinColumn(name="studentYear_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $studentYear;
 

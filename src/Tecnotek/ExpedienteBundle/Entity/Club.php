@@ -53,9 +53,14 @@ class Club
     private $timeO;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Student", inversedBy="students")
+     * @var ArrayCollection $students
+     * @ORM\ManyToMany(targetEntity="Student", inversedBy="clubs", cascade={"all"})
+     * @ORM\JoinTable(
+     *      name="club_student",
+     *      joinColumns={@ORM\JoinColumn(name="club_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="student_id", referencedColumnName="id")}
+     * )
      * @ORM\OrderBy({"lastname" = "ASC"})
-     *
      */
     private $students;
 

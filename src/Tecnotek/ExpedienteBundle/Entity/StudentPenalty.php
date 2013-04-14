@@ -42,7 +42,7 @@ class StudentPenalty
 
     /**
      * @ManyToOne(targetEntity="StudentYear")
-     * @JoinColumn(name="student_year_id", referencedColumnName="id")
+     * @JoinColumn(name="student_year_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $studentYear;
 

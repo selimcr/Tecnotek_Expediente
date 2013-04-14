@@ -275,7 +275,7 @@ var Tecnotek = {
                     }
                 });
                 $('#btnPrint').click(function(event){
-                    $("#report").printElement({printMode:'iframe', pageTitle:$(this).attr('rel')});
+                    $("#report").printElement({printMode:'popup', pageTitle:$(this).attr('rel')});
                 });
 
             }

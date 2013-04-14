@@ -1,31 +1,21 @@
-{% extends 'TecnotekExpedienteBundle::layout.html.twig' %}
+{% extends 'TecnotekExpedienteBundle::logged_layout.html.twig' %}
 
 {% block content %}
-<div class="constuction-main" style="min-height: 300px;">
-    <div id="constuction-box" style="min-height: 300px;">
-        <div class="inside" style="min-height: 300px;">
-            <div class="inner">
-                    <h1>{%trans%}label.loginTitle{%endtrans%}</h1>
-                    {% if error %}
-                        <div class="error">{{ error.message }}</div>
-                    {% endif %}
-                    <form id="login" class="customForm" action="{{ path("_expediente_security_check") }}" method="post" >
-                        <label><span class="text-form">{%trans%}label.username{%endtrans%}:</span><input type="text" id="username" name="_username" value="{{ last_username }}"></label>
-                        <label><span class="text-form">{%trans%}label.password{%endtrans%}:</span><input type="password" id="password" name="_password"></label>
-                        <input type="submit" class="btn" value="{%trans%}button.label.login{%endtrans%}" />
-                    </form>
-            </div>
-        </div>
-    </div>
-</div>
 <div class="container_24">
-    <div class="wrapper">
-        <div class="grid_24">
-            
+    <div class="grid_24" style="text-align: center;">
+        <div class="loginPanel">
+            <h3>{%trans%}label.loginTitle{%endtrans%}</h3>
+            {% if error %}
+            <div class="error">{{ error.message }}</div>
+            {% endif %}
+            <form id="login" class="custom" action="{{ path("_expediente_security_check") }}" method="post" >
+                <label>{%trans%}label.username{%endtrans%}:</label><input type="text" id="username" name="_username" value="{{ last_username }}">
+                <label>{%trans%}label.password{%endtrans%}:</label><input type="password" id="password" name="_password">
+                <input type="submit" class="button success-darker tiny" value="{%trans%}button.label.login{%endtrans%}">
+            </form>
         </div>
     </div>
 </div>
-    
 {% endblock %}
 
 {% set code = code(_self) %}

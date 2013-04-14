@@ -38,106 +38,109 @@
     </div>
 
     <nav class="top-bar" style="">
-        <ul class="title-area">
-            <!-- Title Area -->
-            <li class="name{% if menuIndex is not defined %} current{% endif %}">
-                <h1><a href="{{ path('TecnotekExpedienteBundle_homepage') }}">{% trans %}label.home{% endtrans %}</a></h1>
-            </li>
-            <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
-            <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
-        </ul>
-
-        <section class="top-bar-section">
-
-            <!-- Menu -->
-            {% if is_granted('ROLE_SUPERADMIN') %}
-            <ul class="left">
-                <li class="divider"></li>
-                <li class="has-dropdown{% if menuIndex is defined and menuIndex == 1%} current{% endif %}"><a href="{{ path('_expediente_sysadmin_administrador') }}">{% trans %}label.usuarios{% endtrans %}</a>
-                    <ul class="dropdown">
-                        <li><a href="{{ path('_expediente_sysadmin_administrador') }}">{% trans %}label.usuarios.admin{% endtrans %}</a></li>
-                        <li><a href="{{ path('_expediente_sysadmin_coordinador') }}">{% trans %}label.usuarios.coordinador{% endtrans %}</a></li>
-                        <li><a href="{{ path('_expediente_sysadmin_profesor') }}">{% trans %}label.usuarios.profesor{% endtrans %}</a></li>
-                        <li class="divider"></li>
-                        <li><a href="{{ path('_expediente_access') }}">{% trans %}label.access{% endtrans %}</a></li>
-                    </ul>
+        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+            <ul class="title-area">
+                <!-- Title Area -->
+                <li class="name{% if menuIndex is not defined %} current{% endif %}">
+                    <h1><a href="{{ path('TecnotekExpedienteBundle_homepage') }}">{% trans %}label.home{% endtrans %}</a></h1>
                 </li>
-                <li class="divider"></li>
-                <li class="has-dropdown{% if menuIndex is defined and menuIndex == 2%} current{% endif %}"><a href="#">{% trans %}label.transport{% endtrans %}</a>
-                    <ul class="dropdown">
-                        <li><a href="{{ path('_expediente_sysadmin_route') }}">{% trans %}label.routes{% endtrans %}</a></li>
-                        <li><a href="{{ path('_expediente_sysadmin_bus') }}">{% trans %}label.buses{% endtrans %}</a></li>
-                    </ul>
-                </li>
-                <li class="divider"></li>
-                <li class="has-dropdown{% if menuIndex is defined and menuIndex == 3%} current{% endif %}"><a href="#">{% trans %}label.estudiantado{% endtrans %}</a>
-                    <ul class="dropdown">
-                        <li><a href="{{ path('_expediente_sysadmin_student') }}">{% trans %}label.students{% endtrans %}</a></li>
-                        <li><a href="{{ path('_expediente_sysadmin_club') }}">{% trans %}label.clubs{% endtrans %}</a></li>
-                        <li><a href="{{ path('_expediente_sysadmin_ticket') }}">{% trans %}label.tickets{% endtrans %}</a></li>
-                        <li><a href="{{ path('_expediente_absences') }}">{% trans %}label.absences{% endtrans %}</a></li>
-                        <li><a href="{{ path('_expediente_sysadmin_absence_enter_by_group')}}">{% trans %}label.absences.by.group{% endtrans %}</a></li>
-
-                        <li><a style="text-align: left;" href="{{ path('_expediente_penalties') }}">{% trans %}label.penalties{% endtrans %}</a></li>
-                    </ul>
-                </li>
-                <li class="divider"></li>
-                <li class="has-dropdown{% if menuIndex is defined and menuIndex == 4%} current{% endif %}"><a href="#">{% trans %}label.reports{% endtrans %}</a>
-                    <ul class="dropdown">
-                        <li><a href="{{ path('_expediente_report_bus') }}">{% trans %}label.buses{% endtrans %}</a></li>
-                        <li><a href="{{ path('_expediente_report_routes') }}">{% trans %}label.routes{% endtrans %}</a></li>
-                        <li><a href="{{ path('_expediente_report_zones') }}">{% trans %}label.routes.by.zone{% endtrans %}</a></li>
-                        <li><a href="{{ path('_expediente_report_students_by_route') }}">{% trans %}label.students.by.route{% endtrans %}</a></li>
-                        <li><a href="{{ path('_expediente_report_students_by_route') }}">{% trans %}label.students.absences.by.route{% endtrans %}</a></li>
-                        <li><a href="{{ path('_expediente_report_daily_by_route') }}">{% trans %}label.students.daily.by.route{% endtrans %}</a></li>
-                        <li><a href="{{ path('_expediente_report_students') }}">{% trans %}label.students{% endtrans %}</a></li>
-                        <li><a href="{{ path('_expediente_report_clubs') }}">{% trans %}label.clubs{% endtrans %}</a></li>
-                    </ul>
-                </li>
-                <li class="divider"></li>
-                <li class="has-dropdown{% if menuIndex is defined and menuIndex == 5%} current{% endif %}"><a href="#">{% trans %}label.mantenimientos{% endtrans %}</a>
-                    <ul class="dropdown">
-                        <li><a href="{{ path('_expediente_sysadmin_period') }}">{% trans %}label.period{% endtrans %}</a></li>
-                        <li><a href="{{ path('_expediente_sysadmin_grade') }}">{% trans %}label.grade{% endtrans %}</a></li>
-                        <li><a href="{{ path('_expediente_sysadmin_course') }}">{% trans %}label.course{% endtrans %}</a></li>
-                        <li><a href="{{ path('_expediente_sysadmin_qualifications') }}">{% trans %}label.qualifications{% endtrans %}</a></li>
-
-                    </ul>
-                </li>
+                <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
+                <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
             </ul>
-            {% else %}
-            {% if is_granted('ROLE_PROFESOR') %}
-            <ul class="left">
-                <li class="divider"></li>
-                <li {% if menuIndex is defined and menuIndex == 1%}class="current"{% endif %}><a href="{{ path('_expediente_teacher_qualifications') }}">{% trans %}label.qualifications{% endtrans %}</a></li>
-                <li class="divider"></li>
-                <li {% if menuIndex is defined and menuIndex == 2%}class="current"{% endif %}><a href="{{ path('_expediente_teacher_course_entries') }}">{% trans %}label.usuarios.courseEntry{% endtrans %}</a></li>
-                <li class="divider"></li>
-            </ul>
-            {% else %}
-            <ul class="left">
 
-                {% render "TecnotekExpedienteBundle:Secured:showMenu" %}
-            </ul>
-            {% endif %}
-            {% endif %}
-            <!-- Final del Menu -->
+            <section class="top-bar-section">
 
-            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-            <!-- Right Nav Section -->
-            <ul class="right">
-                <li class="divider hide-for-small"></li>
-                <li class="has-dropdown"><a href="#">{{ app.user.username }}</a>
-                    <ul class="dropdown">
-                        <li><a href="{{ path('_expediente_my_account') }}">{% trans %}label.my.account{% endtrans %}</a></li>
-                        <li class="divider"></li>
-                        <li><a href="{{ path('_expediente_logout') }}">{% trans %}label.logout{% endtrans %}</a></li>
-                    </ul>
-                </li>
-            </ul>
-            {% endif %}
+                <!-- Menu -->
+                {% if is_granted('ROLE_SUPERADMIN') %}
+                <ul class="left">
+                    <li class="divider"></li>
+                    <li class="has-dropdown{% if menuIndex is defined and menuIndex == 1%} current{% endif %}"><a href="{{ path('_expediente_sysadmin_administrador') }}">{% trans %}label.usuarios{% endtrans %}</a>
+                        <ul class="dropdown">
+                            <li><a href="{{ path('_expediente_sysadmin_administrador') }}">{% trans %}label.usuarios.admin{% endtrans %}</a></li>
+                            <li><a href="{{ path('_expediente_sysadmin_coordinador') }}">{% trans %}label.usuarios.coordinador{% endtrans %}</a></li>
+                            <li><a href="{{ path('_expediente_sysadmin_profesor') }}">{% trans %}label.usuarios.profesor{% endtrans %}</a></li>
+                            <li class="divider"></li>
+                            <li><a href="{{ path('_expediente_access') }}">{% trans %}label.access{% endtrans %}</a></li>
+                        </ul>
+                    </li>
+                    <li class="divider"></li>
+                    <li class="has-dropdown{% if menuIndex is defined and menuIndex == 2%} current{% endif %}"><a href="#">{% trans %}label.transport{% endtrans %}</a>
+                        <ul class="dropdown">
+                            <li><a href="{{ path('_expediente_sysadmin_route') }}">{% trans %}label.routes{% endtrans %}</a></li>
+                            <li><a href="{{ path('_expediente_sysadmin_bus') }}">{% trans %}label.buses{% endtrans %}</a></li>
+                        </ul>
+                    </li>
+                    <li class="divider"></li>
+                    <li class="has-dropdown{% if menuIndex is defined and menuIndex == 3%} current{% endif %}"><a href="#">{% trans %}label.estudiantado{% endtrans %}</a>
+                        <ul class="dropdown">
+                            <li><a href="{{ path('_expediente_sysadmin_student') }}">{% trans %}label.students{% endtrans %}</a></li>
+                            <li><a href="{{ path('_expediente_sysadmin_club') }}">{% trans %}label.clubs{% endtrans %}</a></li>
+                            <li><a href="{{ path('_expediente_sysadmin_ticket') }}">{% trans %}label.tickets{% endtrans %}</a></li>
+                            <li><a href="{{ path('_expediente_absences') }}">{% trans %}label.absences{% endtrans %}</a></li>
+                            <li><a href="{{ path('_expediente_sysadmin_absence_enter_by_group')}}">{% trans %}label.absences.by.group{% endtrans %}</a></li>
 
-        </section>
+                            <li><a style="text-align: left;" href="{{ path('_expediente_penalties') }}">{% trans %}label.penalties{% endtrans %}</a></li>
+                        </ul>
+                    </li>
+                    <li class="divider"></li>
+                    <li class="has-dropdown{% if menuIndex is defined and menuIndex == 4%} current{% endif %}"><a href="#">{% trans %}label.reports{% endtrans %}</a>
+                        <ul class="dropdown">
+                            <li><a href="{{ path('_expediente_report_bus') }}">{% trans %}label.buses{% endtrans %}</a></li>
+                            <li><a href="{{ path('_expediente_report_routes') }}">{% trans %}label.routes{% endtrans %}</a></li>
+                            <li><a href="{{ path('_expediente_report_zones') }}">{% trans %}label.routes.by.zone{% endtrans %}</a></li>
+                            <li><a href="{{ path('_expediente_report_students_by_route') }}">{% trans %}label.students.by.route{% endtrans %}</a></li>
+                            <li><a href="{{ path('_expediente_report_students_by_route') }}">{% trans %}label.students.absences.by.route{% endtrans %}</a></li>
+                            <li><a href="{{ path('_expediente_report_daily_by_route') }}">{% trans %}label.students.daily.by.route{% endtrans %}</a></li>
+                            <li><a href="{{ path('_expediente_report_students') }}">{% trans %}label.students{% endtrans %}</a></li>
+                            <li><a href="{{ path('_expediente_report_clubs') }}">{% trans %}label.clubs{% endtrans %}</a></li>
+                        </ul>
+                    </li>
+                    <li class="divider"></li>
+                    <li class="has-dropdown{% if menuIndex is defined and menuIndex == 5%} current{% endif %}"><a href="#">{% trans %}label.mantenimientos{% endtrans %}</a>
+                        <ul class="dropdown">
+                            <li><a href="{{ path('_expediente_sysadmin_period') }}">{% trans %}label.period{% endtrans %}</a></li>
+                            <li><a href="{{ path('_expediente_sysadmin_grade') }}">{% trans %}label.grade{% endtrans %}</a></li>
+                            <li><a href="{{ path('_expediente_sysadmin_course') }}">{% trans %}label.course{% endtrans %}</a></li>
+                            <li><a href="{{ path('_expediente_sysadmin_qualifications') }}">{% trans %}label.qualifications{% endtrans %}</a></li>
+
+                        </ul>
+                    </li>
+                </ul>
+                {% else %}
+                {% if is_granted('ROLE_PROFESOR') %}
+                <ul class="left">
+                    <li class="divider"></li>
+                    <li {% if menuIndex is defined and menuIndex == 1%}class="current"{% endif %}><a href="{{ path('_expediente_teacher_qualifications') }}">{% trans %}label.qualifications{% endtrans %}</a></li>
+                    <li class="divider"></li>
+                    <li {% if menuIndex is defined and menuIndex == 2%}class="current"{% endif %}><a href="{{ path('_expediente_teacher_course_entries') }}">{% trans %}label.usuarios.courseEntry{% endtrans %}</a></li>
+                    <li class="divider"></li>
+                </ul>
+                {% else %}
+                <ul class="left">
+
+                    {% render "TecnotekExpedienteBundle:Secured:showMenu" %}
+                </ul>
+                {% endif %}
+                {% endif %}
+                <!-- Final del Menu -->
+
+                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                <!-- Right Nav Section -->
+                <ul class="right">
+                    <li class="divider hide-for-small"></li>
+                    <li class="has-dropdown"><a href="#">{{ app.user.username }}</a>
+                        <ul class="dropdown">
+                            <li><a href="{{ path('_expediente_my_account') }}">{% trans %}label.my.account{% endtrans %}</a></li>
+                            <li class="divider"></li>
+                            <li><a href="{{ path('_expediente_logout') }}">{% trans %}label.logout{% endtrans %}</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                {% endif %}
+
+            </section>
+        {% endif %}
+
     </nav>
 
     <div id="main">

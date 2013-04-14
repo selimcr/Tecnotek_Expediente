@@ -174,7 +174,8 @@ class Student
     private $route;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Club", mappedBy="clubs")
+     * @var ArrayCollection $clubs
+     * @ORM\ManyToMany(targetEntity="Club", mappedBy="students")
      */
     private $clubs;
 

@@ -23,13 +23,13 @@ class StudentYear
 
     /**
      * @ManyToOne(targetEntity="Student")
-     * @JoinColumn(name="student_id", referencedColumnName="id")
+     * @JoinColumn(name="student_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $student;
 
     /**
      * @ManyToOne(targetEntity="Period")
-     * @JoinColumn(name="period_id", referencedColumnName="id")
+     * @JoinColumn(name="period_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $period;
 
