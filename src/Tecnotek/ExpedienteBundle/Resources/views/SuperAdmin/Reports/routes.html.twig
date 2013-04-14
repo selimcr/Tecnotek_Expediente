@@ -26,10 +26,11 @@
             <div class="clear"></div>
         </div>
 
-        <div id="report" style="margin-top: 25px;">
+        <div id="report" style="margin-top: 25px; width: 950px;">
 
             <div class="titles">
                 <div class="left">Corporación Educativa Saint Michael S.A.</div>
+                <div class="right">Control de Buses Escuela.</div>
                 <div class="clear"></div>
 
                 <div class="left">{{ "now"|date("d/M/Y H:i:s") }}</div>
@@ -40,14 +41,14 @@
             </div>
 
             <div class="header_row">
-                <label class="field" style="display: inline-block;width: 115px;">{% trans %}label.code{% endtrans %}</label>
-                <label class="field" style="display: inline-block;width: 300px;">{% trans %}label.description{% endtrans %}</label>
+                <div class="field" style="float: left; width: 115px;">{% trans %}label.code{% endtrans %}</div>
+                <div class="field" style="float: left; width: 300px;">{% trans %}label.description{% endtrans %}</div>
             </div>
 
             {% for entity in entities %}
             <div class="fields_row">
-                <label class="field_value" style="display: inline-block;width: 115px;">{{ entity.code }}</label>
-                <label class="field_value" style="display: inline-block;width: 600px;">{{ entity.description }}</label>
+                <div class="field_value" style="float: left; width: 115px;">{{ entity.code }}</div>
+                <div class="field_value" style="float: left; width: 800px;">{{ entity.description }}</div>
                 <div class="clear"></div>
             </div>
             {% else %}
@@ -56,7 +57,7 @@
                 <div class="clear"></div>
             </div>
             {% endfor %}
-            <div class="report_footer">
+            <div class="footer">
                 Total de rutas: {{ entities|length }}
             </div>
         </div>

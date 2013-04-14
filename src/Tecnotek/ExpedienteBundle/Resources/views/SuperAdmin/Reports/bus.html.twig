@@ -77,33 +77,36 @@
             <div class="clear"></div>
         </div>
 
-        <div id="report" name="report" style="margin-top: 25px;">
+        <div id="report" style="margin-top: 25px; width: 950px;">
 
             <div class="titles">
-                <label style="display: inline-block; width: 400px;">Corporación Educativa Saint Michael S.A.</label>
-                <div class="clearfix"></div>
+                <div class="left">Corporación Educativa Saint Michael S.A.</div>
+                <div class="right">Control de Buses Escuela.</div>
+                <div class="clear"></div>
 
-                <label class="left">{{ "now"|date("d/M/Y H:i:s") }}</label>
-                <div class="clearfix"></div>
+                <div class="left">{{ "now"|date("d/M/Y H:i:s") }}</div>
+                <div class="clear"></div>
 
                 <p style="text-align: center;">Catálogo de Buses</p>
 
             </div>
 
             <div class="header_row">
-                <label class="field" style="display: inline-block; width: 115px;">{% trans %}label.licensePlate{% endtrans %}</label>
-                <label class="field" style="display: inline-block; width: 300px;">{% trans %}label.driver{% endtrans %}</label>
-                <label class="field" style="display: inline-block; width: 110px;">{% trans %}label.color{% endtrans %}</label>
-                <label class="field" style="display: inline-block; width: 110px;">{% trans %}label.telephone{% endtrans %}</label>
-                <label class="field" style="display: inline-block; width: 110px;">{% trans %}label.capacity{% endtrans %}</label>
+                <div class="field" style="float: left; width: 115px;">{% trans %}label.licensePlate{% endtrans %}</div>
+                <div class="field" style="float: left; width: 300px;">{% trans %}label.driver{% endtrans %}</div>
+                <div class="field" style="float: left; width: 110px;">{% trans %}label.color{% endtrans %}</div>
+                <div class="field" style="float: left; width: 110px;">{% trans %}label.telephone{% endtrans %}</div>
+                <div class="field" style="float: left; width: 110px;">{% trans %}label.capacity{% endtrans %}</div>
             </div>
+
             {% for entity in entities %}
             <div class="fields_row">
-                <label class="field_value" style="display: inline-block; width: 115px;">{{ entity.licensePlate }}</label>
-                <label class="field_value" style="display: inline-block; width: 300px;">{{ entity.driver }}</label>
-                <label class="field_value" style="display: inline-block; width: 110px;">{{ entity.color }}</label>
-                <label class="field_value" style="display: inline-block; width: 110px;">{{ entity.telephone }}</label>
-                <label class="field_value" style="display: inline-block; width: 110px;">{{ entity.capacity }}</label>
+                <div class="field_value" style="float: left; width: 115px;">{{ entity.licensePlate }}</div>
+                <div class="field_value" style="float: left; width: 300px;">{{ entity.driver }}</div>
+                <div class="field_value" style="float: left; width: 110px;">{{ entity.color }}</div>
+                <div class="field_value" style="float: left; width: 110px;">{{ entity.telephone }}</div>
+                <div class="field_value" style="float: left; width: 110px;">{{ entity.capacity }}</div>
+                <div class="clear"></div>
             </div>
             {% else %}
             <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
@@ -111,11 +114,9 @@
                 <div class="clear"></div>
             </div>
             {% endfor %}
-            <div class="clearfix"></div>
-            <div class="report_footer">
+            <div class="footer">
                 Total de buses: {{ entities|length }}
             </div>
-            <div class="clear"></div>
         </div>
 
     </div>

@@ -23,10 +23,11 @@
             <div class="clear"></div>
         </div>
 
-        <div id="report" style="margin-top: 25px;">
+        <div id="report" style="margin-top: 25px; width: 950px;">
 
             <div class="titles" style="font-size: 10px;">
                 <div class="left">Corporación Educativa Saint Michael S.A.</div>
+                <div class="right">Control de Buses Escuela.</div>
                 <div class="clear"></div>
 
                 <div class="left">{{ "now"|date("d/M/Y H:i:s") }}</div>
@@ -46,49 +47,50 @@
                 {% endif %}
             </div>
             <div class="fields_row student_title">
-                <div style="float: left; width: 70px;">{%trans%}label.carne{%endtrans%}</div>
-                <div style="float: left; width: 400px;">{%trans%}label.student.name{%endtrans%}</div>
-                <div style="float: left; width: 60px;">{%trans%}label.section{%endtrans%}</div>
+                <div style="float: left; width: 50px;">{%trans%}label.carne{%endtrans%}</div>
+                <div style="float: left; width: 350px;">{%trans%}label.student.name{%endtrans%}</div>
+                <div style="float: left; width: 75px;">{%trans%}label.section{%endtrans%}</div>
+                <div style="float: left; width: 150px;">{%trans%}label.description{%endtrans%}</div>
                 <div class="clear"></div>
             </div>
-                <div class="area_title">{% trans %} label.students.absences {% endtrans %}</div>
-                {% set counter = 0 %}
-                {% for student in route.students %}
-                    {%  if (student.dailyStatus == 1) %}
-                        <div class="student_row">
-                            <label class="field_value" style="display: inline-block; width: 70px;">{{ student.carne }}</label>
-                            <label class="field_value" style="display: inline-block; width: 400px;">{{ student }}</label>
-                            <label class="field_value" style="display: inline-block; width: 60px;">{{ student.groupyear }}</label>
-                            <label class="field_value" style="display: inline-block; width: 300px;">{{ student.dailyDescription }}</label>
-                        </div>
-                        <div class="clear"></div>
-                        {% set counter = counter + 1 %}
-                    {% endif %}
-                {% endfor %}
-                <div class="student_footer">
-                    Total de estudiantes ausentes por ruta: {{ counter }}
-                </div>
-                <div class="area_title">{% trans %} label.students.precenses {% endtrans %}</div>
-                {% set counter = 0 %}
-                {% for student in route.students %}
-                    {%  if (student.dailyStatus == 0) %}
-                    <div class="student_row">
-                        <label class="field_value" style="display: inline-block; width: 70px;">{{ student.carne }}</label>
-                        <label class="field_value" style="display: inline-block; width: 400px;">{{ student }}</label>
-                        <label class="field_value" style="display: inline-block; width: 60px;">{{ student.groupyear }}</label>
-                    </div>
-                    <div class="clear"></div>
-                    {% set counter = counter + 1 %}
-                    {% endif %}
-                {% endfor %}
-                <div class="student_footer">
-                    Total de estudiantes presentes por ruta: {{ counter }}
-                </div>
+            <div class="area_title">{% trans %} label.students.absences {% endtrans %}</div>
+            {% set counter = 0 %}
+            {% for student in route.students %}
+            {%  if (student.dailyStatus == 1) %}
+            <div class="student_row">
+                <div style="float: left; width: 50px;">{{ student.carne }}</div>
+                <div style="float: left; width: 350px;">{{ student }}</div>
+                <div style="float: left; width: 75px;">&nbsp;{{ student.groupyear }}</div>
+                <div style="float: left; width: 300px;">{{ student.dailyDescription }}</div>
+            </div>
+            <div class="clear"></div>
+            {% set counter = counter + 1 %}
+            {% endif %}
+            {% endfor %}
+            <div class="student_footer">
+                Total de estudiantes ausentes por ruta: {{ counter }}
+            </div>
+            <div class="area_title">{% trans %} label.students.precenses {% endtrans %}</div>
+            {% set counter = 0 %}
+            {% for student in route.students %}
+            {%  if (student.dailyStatus == 0) %}
+            <div class="student_row">
+                <div style="float: left; width: 50px;">{{ student.carne }}</div>
+                <div style="float: left; width: 350px;">{{ student }}</div>
+                <div style="float: left; width: 75px;">&nbsp;{{ student.groupyear }}</div>
+            </div>
+            <div class="clear"></div>
+            {% set counter = counter + 1 %}
+            {% endif %}
+            {% endfor %}
+            <div class="student_footer">
+                Total de estudiantes presentes por ruta: {{ counter }}
+            </div>
 
-                <div class="student_footer">
-                    Total de estudiantes por ruta: {{ route.students|length}}
-                </div>
-                <div class="pageBreak"> </div>
+            <div class="student_footer">
+                Total de estudiantes por ruta: {{ route.students|length}}
+            </div>
+            <div class="pageBreak"> </div>
             {% else %}
             <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
                 <div class="option_width" style="float: left; width: 375px;">{% trans %}results.not.found{% endtrans %}</div>

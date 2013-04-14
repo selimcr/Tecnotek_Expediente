@@ -23,10 +23,11 @@
             <div class="clear"></div>
         </div>
 
-        <div id="report" style="margin-top: 25px;">
+        <div id="report" style="margin-top: 25px; width: 950px;">
 
             <div class="titles" style="font-size: 10px;">
                 <div class="left">Corporación Educativa Saint Michael S.A.</div>
+                <div class="right">Control de Buses Escuela.</div>
                 <div class="clear"></div>
 
                 <div class="left">{{ "now"|date("d/M/Y H:i:s") }}</div>
@@ -41,34 +42,34 @@
                 <div class="field_value" style="text-align: center;">Zona {{ loop.index }}: {{ entity.name }}</div>
                 <div class="clear"></div>
             </div>
-                {% for route in entity.routes %}
-                <div class="fields_row route">
-                    Ruta {{ loop.index }}: {{ route.code ~ " - " ~ route.description }}
-                </div>
-                <div class="fields_row student_title">
-                    <label class="field_value" style="display: inline-block; width: 115px;">{%trans%}label.carne{%endtrans%}</label>
-                    <label class="field_value" style="display: inline-block; width: 300px;">{%trans%}label.student.name{%endtrans%}</label>
-                    <label class="field_value" style="display: inline-block; width: 115px;">{%trans%}label.section{%endtrans%}</label>
-                    <label class="field_value" style="display: inline-block; width: 115px;">{%trans%}label.address{%endtrans%}</label>
-                    <div class="clear"></div>
-                </div>
-                    {% for student in route.students %}
-                    <div class="student_row">
-                        <label class="field_value" style="display: inline-block; width: 115px;">{{ student.carne }}</label>
-                        <label class="field_value" style="display: inline-block; width: 300px;">{{ student }}</label>
-                        <label class="field_value" style="display: inline-block; width: 115px;">&nbsp;</label>
-                        <label class="field_value" style="display: inline-block; width: 350px;white-space:nowrap;">{{ student.address }}</label>
-                    </div>
-                    <div class="clear"></div>
-                    {% endfor %}
-                    <div class="student_footer">
-                        Total de estudiantes por ruta: {{ route.students|length}}
-                        {% set zoneCounter = zoneCounter + (route.students|length) %}
-                    </div>
-                {% endfor %}
-                <div class="report_footer">
-                    Total de estudiantes por zona: {{ zoneCounter }}
-                </div>
+            {% for route in entity.routes %}
+            <div class="fields_row route">
+                Ruta {{ loop.index }}: {{ route.code ~ " - " ~ route.description }}
+            </div>
+            <div class="fields_row student_title">
+                <div style="float: left; width: 115px;">{%trans%}label.carne{%endtrans%}</div>
+                <div style="float: left; width: 300px;">{%trans%}label.student.name{%endtrans%}</div>
+                <div style="float: left; width: 115px;">{%trans%}label.section{%endtrans%}</div>
+                <div style="float: left; width: 115px;">{%trans%}label.address{%endtrans%}</div>
+                <div class="clear"></div>
+            </div>
+            {% for student in route.students %}
+            <div class="student_row">
+                <div style="float: left; width: 115px;">{{ student.carne }}</div>
+                <div style="float: left; width: 300px;">{{ student }}</div>
+                <div style="float: left; width: 115px;">&nbsp;</div>
+                <div style="float: left; width: 390px;">{{ student.address }}</div>
+            </div>
+            <div class="clear"></div>
+            {% endfor %}
+            <div class="student_footer">
+                Total de estudiantes por ruta: {{ route.students|length}}
+                {% set zoneCounter = zoneCounter + (route.students|length) %}
+            </div>
+            {% endfor %}
+            <div class="footer">
+                Total de estudiantes por zona: {{ zoneCounter }}
+            </div>
             {% else %}
             <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
                 <div class="option_width" style="float: left; width: 375px;">{% trans %}results.not.found{% endtrans %}</div>
