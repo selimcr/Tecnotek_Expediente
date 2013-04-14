@@ -464,6 +464,10 @@ _expediente_save_new_contact:
     pattern:  /students/newContact
     defaults: { _controller: TecnotekExpedienteBundle:Student:createContact }
 
+_expediente_associate_new_contact:
+    pattern:  /students/associateContact
+    defaults: { _controller: TecnotekExpedienteBundle:Student:associateContact }
+
 _expediente_remove_relative:
     pattern:  /students/removeRelative
     defaults: { _controller: TecnotekExpedienteBundle:Student:removeRelative}

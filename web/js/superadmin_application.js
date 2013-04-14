@@ -1617,22 +1617,35 @@ var Tecnotek = {
                                     $('.searchResult').unbind();
                                     $('.searchResult').click(function(event){
                                         event.preventDefault();
-                                        /*Tecnotek.UI.vars["studentId"] = $(this).attr("rel");
-                                        Tecnotek.UI.vars["studentName"] = $(this).attr("name");
-                                        Tecnotek.ajaxCall(Tecnotek.UI.urls["associateStudentsURL"],
-                                            {studentId: $(this).attr("rel"), clubId: Tecnotek.UI.vars["clubId"]},
+                                        var relativeName = $(this).attr("name");
+
+                                        $detail = "";
+
+                                        switch($("#kinship2").val()){
+                                            case "1": $detail = "Padre"; break;
+                                            case "2": $detail = "Madre"; break;
+                                            case "3": $detail = "Hermano"; break;
+                                            case "4": $detail = "Hermana"; break;
+                                            case "99": $detail = "Otro"; break;
+                                        }
+
+                                        Tecnotek.ajaxCall(Tecnotek.UI.urls["associateContactURL"],
+                                            {studentId: Tecnotek.UI.vars["studentId"], contactId: $(this).attr("rel"),
+                                             'kinship': $("#kinship2").val(), 'detail': $detail},
                                             function(data){
                                                 if(data.error === true) {
                                                     Tecnotek.showErrorMessage(data.message,true, "", false);
                                                 } else {
-                                                    console.debug("Add Student with Id: " + Tecnotek.UI.vars["studentId"]);
-                                                    $html = '<div id="relative_row_' + Tecnotek.UI.vars["studentId"] + '" class="row userRow" rel="' + Tecnotek.UI.vars["studentId"] + '">';
-                                                    $html += '<div class="option_width" style="float: left; width: 300px;">' + Tecnotek.UI.vars["studentName"] + '</div>';
-                                                    $html += '<div class="right imageButton deleteButton" style="height: 16px;"  title="delete???"  rel="' + Tecnotek.UI.vars["studentId"] + '"></div>';
-                                                    $html += '<div class="clear"></div>';
+                                                    $html = '<div id="relative_row_' + data.id + '" class="row" rel="' + data.id + '" style="padding: 0px; font-size: 10px;">';
+                                                    $html += '    <div class="" style="float: left; width: 350px;">' + relativeName + '</div>';
+                                                    $html += '    <div class="" style="float: left; width: 100px;">' + $detail + '</div>';
+                                                    $html += '    <div class="right imageButton deleteButton" style="height: 16px;" title="Eliminar" rel="' + data.id + '"></div>';
+                                                    $html += '    <div class="clear"></div>';
                                                     $html += '</div>';
-                                                    $("#studentsList").append($html);
-                                                    Tecnotek.ClubShow.initDeleteButtons();
+
+                                                    $("#relativesList").append($html);
+                                                    $('#suggestions').fadeOut();
+                                                    Tecnotek.StudentShow.initDeleteButtons();
                                                 }
                                             },
                                             function(jqXHR, textStatus){
@@ -1640,7 +1653,7 @@ var Tecnotek = {
                                                     true, "", false);
                                                 $(this).val("");
                                                 $('#suggestions').fadeOut(); // Hide the suggestions box
-                                            }, true);*/
+                                            }, true);
                                     });
                                 }
                             },

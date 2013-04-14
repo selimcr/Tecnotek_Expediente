@@ -615,6 +615,46 @@ class StudentController extends Controller
         }
     }
 
+    public function associateContactAction(){
+        $logger = $this->get('logger');
+        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
+        {
+            try {
+                $request = $this->get('request')->request;
+                $studentId = $request->get('studentId');
+                $kinship = $request->get('kinship');
+                $contactId = $request->get('contactId');
+                $detail= $request->get('detail');
+
+                $em = $this->getDoctrine()->getEntityManager();
+                $student = $em->getRepository("TecnotekExpedienteBundle:Student")->find($studentId);
+                $contact = $em->getRepository("TecnotekExpedienteBundle:Contact")->find($contactId);
+                if ( isset($student) && isset($contact) ) {
+                    $relative = new Relative();
+                    $relative->setContact($contact);
+                    $relative->setStudent($student);
+                    $relative->setKinship($kinship);
+                    $relative->setDescription($detail);
+                    $em->persist($relative);
+                    $em->flush();
+                    return new Response(json_encode(array('error' => false, 'id' => $relative->getId())));
+
+                } else {
+                    return new Response(json_encode(array('error' => true, 'message' => "Student not found.")));
+                }
+            }
+            catch (Exception $e) {
+                $info = toString($e);
+                $logger->err('Student::createContactAction [' . $info . "]");
+                return new Response(json_encode(array('error' => true, 'message' => $info)));
+            }
+        }// endif this is an ajax request
+        else
+        {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+    }
+
     public function removeRelativeAction(){
         $logger = $this->get('logger');
         if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?

@@ -20,26 +20,24 @@
 <div class="container_24">
     <div class="grid_24">
         <div>
-            <div class="left">
-                <h3>{% trans %}label.ticket4{% endtrans %}</h3>
-            </div>
-            <div class="right"><a href="{{ path('_expediente_sysadmin_student_show_ticket_return') }}" class="button success-darker tiny"><span></span>{% trans %}label.back.list{% endtrans %}</a></div>
-            <div class="right"><button style="margin-left: 15px; margin-top: 0px;" type="button" class="right button success-darker tiny" id="btnPrint" name="btnPrint" rel="Boleta de Salida"><span></span>{% trans %}label.print{% endtrans %}</button></div>
+            <a href="{{ path('_expediente_sysadmin_student_show_ticket_return') }}" class="right button success-darker tiny"><span></span>{% trans %}label.back.list{% endtrans %}</a>
+            <button style="margin-right: 15px; margin-top: 0px;" type="button" class="right button success-darker tiny" id="btnPrint" name="btnPrint" rel="Boleta de Salida">
+                <span></span>{% trans %}label.print{% endtrans %}
+            </button>
             <div class="clear"></div>
-
         </div>
 
-        <div id="report" style="margin-top: 25px;">
+        <div id="report" style="margin-top: 25px; border: solid thin #000;">
 
             <div class="center"><h3>{% trans %}label.ticket4{% endtrans %}</h3></div>
 
-            <div class="center" style="float: left; width: 920px; font-size: 10px;">{% trans %}label.ticket1 {% endtrans %}{{ ticket.student }}</div>
+            <div class="center" style="float: left; width: 920px; font-size: 10px;">{% trans %}label.ticket1 {% endtrans %} {{ ticket.student }}</div>
             </br></br>
 
-            <div class="center" style="float: left; width: 920px; font-size: 10px;">{% trans %}label.ticket2 {% endtrans %}{{ ticket.relative.contact }}</div>
+            <div class="center" style="float: left; width: 920px; font-size: 10px;">{% trans %}label.ticket2 {% endtrans %} {{ ticket.relative.contact }}</div>
             </br></br>
 
-            <div class="center" style="float: left; width: 920px; font-size: 10px;">{% trans %}label.ticket3 {% endtrans %}{{ ticket.date|date("d/M/y H:i:s") }}</div>
+            <div class="center" style="float: left; width: 920px; font-size: 10px;">{% trans %}label.ticket3 {% endtrans %} {{ ticket.date|date("d/M/y H:i:s") }}</div>
 
             </br></br></br></br></br></br></br></br>
 
@@ -48,7 +46,7 @@
             </br></br>
             <div class="center" style="float: left; width: 320px; font-size: 10px;">{% trans %}label.ticket5 {% endtrans %}</div>
             <div class="center" style="float: left; width: 320px; font-size: 10px;">{% trans %}label.ticket6 {% endtrans %}</div>
-
+            </br>
         </div>        
         <div class="clear"></div>
     </div>

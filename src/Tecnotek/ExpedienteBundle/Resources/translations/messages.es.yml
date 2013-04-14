@@ -260,6 +260,8 @@ label.current.period: Periodo Actual
 
 results.not.found: No se han encontrado resultados.
 
+messages.confirmation.remove.relative: Esta seguro que desea desasociar este contacto?
+
 usuarios.estado.1: Activo
 usuarios.estado.2: Inactivo
 
