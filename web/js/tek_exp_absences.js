@@ -2,7 +2,6 @@ var Tecnotek = Tecnotek || {};
 
 Tecnotek.Absences = {
     init : function() {
-
         $( "#from" ).datepicker({
             defaultDate: "0d",
             changeMonth: true,
@@ -25,18 +24,9 @@ Tecnotek.Absences = {
                 $( "#from" ).datepicker( "option", "maxDate", selectedDate );
             }
         });
-        $( "#date" ).datepicker({
-            defaultDate: "0d",
-            changeMonth: true,
-            dateFormat: "yy-mm-dd",
-            showButtonPanel: true,
-            currentText: "Hoy",
-            numberOfMonths: 1
-        });
 
-        $("#date").keypress(function(event){event.preventDefault();});
-        $("#from").keypress(function(event){event.preventDefault();});
-        $("#to").keypress(function(event){event.preventDefault();});
+        $("#from").datepicker('setDate', new Date()).keypress(function(event){event.preventDefault();});
+        $("#to").datepicker('setDate', new Date()).keypress(function(event){event.preventDefault();});
 
         $("#searchByStudent").change(function(){
             $this = $(this);
