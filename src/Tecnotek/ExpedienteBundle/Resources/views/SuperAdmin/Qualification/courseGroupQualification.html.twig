@@ -18,13 +18,13 @@
             border-collapse:collapse;}
         .tableQualifications td { width: 45px; text-align: center; font-size: 11px;}
             /*.tableQualifications .azul {background-color: #2b34ee; color: #000; line-height: 0px;}*/
-        .tableQualifications .azul {background-color: #2b34ee; color: #000; }
-        .tableQualifications .celesteClaro {background-color: #A4D2FD; color: #000;}
-        .tableQualifications .celesteOscuro {background-color: #5F96E7; color: #000;}
-        .tableQualifications .morado {background-color: #B698EE; color: #000; padding: 1.5625em 0.625em; vertical-align: bottom; }
+        .tableQualifications .azul {background-color: #2b34ee; color: #000; font-size: 12px; }
+        .tableQualifications .celesteClaro {background-color: #A4D2FD; color: #000; font-size: 12px;}
+        .tableQualifications .celesteOscuro {background-color: #5F96E7; color: #000; font-size: 12px;}
+        .tableQualifications .morado {background-color: #B698EE; color: #000; padding: 1.5625em 0.625em; vertical-align: bottom; font-size: 12px; }
         .tableQualifications .bold {font-weight: bold;}
 
-        .verticalText{text-align: center; vertical-align: middle; width: 20px; margin: 0px; padding: 0px; padding-left: 3px; padding-right: 3px; padding-top: 10px; white-space: nowrap; font-size: 11px; -webkit-transform: rotate(-90deg); -moz-transform: rotate(-90deg);}
+        .verticalText{font-weight: bold; text-align: center; vertical-align: middle; width: 20px; margin: 0px; padding: 0px; padding-left: 3px; padding-right: 3px; padding-top: 10px; white-space: nowrap; font-size: 11px; -webkit-transform: rotate(-90deg); -moz-transform: rotate(-90deg);}
 
         .itemEstudiante{ background-color: #A4D2FD; }
         .qualificationTable .itemNota{ background-color: #A4D2FD; }
@@ -73,6 +73,7 @@
     <script type="text/javascript" src="{{ asset('js/spin.min.js') }}"></script>
     <script src="http://code.jquery.com/ui/1.9.1/jquery-ui.js"></script>
     <script type="text/javascript" src="{{ asset('js/superadmin_application.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/tek_exp_qualifications_print_version.js') }}"></script>
     <script type="text/javascript">
         Tecnotek.module = "printQualifications";
         Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";

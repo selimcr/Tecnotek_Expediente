@@ -466,6 +466,24 @@ var Tecnotek = {
                     //$("#tableContainer").printElement({printMode:'iframe', pageTitle:$(this).attr('rel')});
                 });
 
+                $('#viewPrintable').click(function(event){
+                    event.preventDefault();
+
+                    var url = Tecnotek.UI.urls["viewPrintableVersionURL"];
+                    var windowName = "Calificaciones de Grupo";
+                    //var windowSize = windowSizeArray[$(this).attr("rel")];
+
+                    var periodId = $("#period").val();
+                    var courseId = $("#courses").val();
+                    var groupId = $("#groups").val();
+
+                    if(periodId != null && courseId != null && groupId != null){
+                        url += "?periodId=" + periodId + "&groupId=" + groupId + "&courseId=" + courseId;
+                        window.open(url, windowName);
+                    }
+
+                });
+
                 $('#entriesTab').click(function(event){
                     $("#subentriesSection").hide();
                     $('#entriesSection').show();
