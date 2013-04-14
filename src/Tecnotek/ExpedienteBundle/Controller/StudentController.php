@@ -316,7 +316,7 @@ class StudentController extends Controller
 
                 $em = $this->getDoctrine()->getEntityManager();
 
-                $sql = "SELECT g.id, gr.name , CONCAT(g.name) as name_group"
+                $sql = "SELECT g.id, gr.name , g.name as name_group"
                     . " FROM tek_groups g, tek_grades gr"
                     . " WHERE g.period_id = " . $periodId
                     . " AND g.grade_id = gr.id"
@@ -944,7 +944,7 @@ class StudentController extends Controller
 
         $absenceTypes = $em->getRepository("TecnotekExpedienteBundle:AbsenceType")->findAll();
 
-        $currentPeriod = $em->getRepository("TecnotekExpedienteBundle:Period")->findOneBy(array('isActual' => 'true'));
+        $currentPeriod = $em->getRepository("TecnotekExpedienteBundle:Period")->findOneBy(array('isActual' => true));
         $currentPeriodId = 0;
         if( isset($currentPeriod) ){
             $currentPeriodId = $currentPeriod->getId();
@@ -997,7 +997,7 @@ class StudentController extends Controller
 
         $absenceTypes = $em->getRepository("TecnotekExpedienteBundle:AbsenceType")->findAll();
 
-        $currentPeriod = $em->getRepository("TecnotekExpedienteBundle:Period")->findOneBy(array('isActual' => 'true'));
+        $currentPeriod = $em->getRepository("TecnotekExpedienteBundle:Period")->findOneBy(array('isActual' => true));
         $currentPeriodId = 0;
         if( isset($currentPeriod) ){
             $currentPeriodId = $currentPeriod->getId();
@@ -1027,6 +1027,8 @@ class StudentController extends Controller
                 $em = $this->getDoctrine()->getEntityManager();
 
                 $studentYear = $em->getRepository("TecnotekExpedienteBundle:StudentYear")->findOneBy(array('period' => $periodId, 'student' => $studentId));
+
+                $logger->err("Period: " . $periodId . ", Student: " . $studentId);
 
                 if( isset($studentYear) && $studentYear->getGroup()!= null ){
                     $entity  = new Absence();
