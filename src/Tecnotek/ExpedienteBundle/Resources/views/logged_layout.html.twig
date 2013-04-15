@@ -114,6 +114,8 @@
                     <li class="divider"></li>
                     <li {% if menuIndex is defined and menuIndex == 2%}class="current"{% endif %}><a href="{{ path('_expediente_teacher_course_entries') }}">{% trans %}label.usuarios.courseEntry{% endtrans %}</a></li>
                     <li class="divider"></li>
+                    <li {% if menuIndex is defined and menuIndex == 3%}class="current"{% endif %}><a href="{{ path('_expediente_teacher_observations') }}">{% trans %}label.usuarios.observations{% endtrans %}</a></li>
+                    <li class="divider"></li>
                 </ul>
                 {% else %}
                 <ul class="left">

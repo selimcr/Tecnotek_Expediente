@@ -244,6 +244,7 @@ label.reports.routes_zones: Reporte de rutas
 label.reports.routes_zones.message:
 
 label.qualifications: Calificaciones
+label.observations: Observaciones
 
 label.absence.show: Informacion de Ausencia
 label.enter.by.group: Ingresar por grupo
@@ -252,6 +253,7 @@ label.percentage: Porcentaje
 label.max_value: Valor Maximo
 label.order: Order
 label.parent: Padre
+label.maxEntry: Nota Maxima
 
 label.route.type.1: Normal
 label.route.type.2: Club
@@ -308,6 +310,7 @@ label.usuarios.courseEntry: Rubros
 title.course.entries.by.group: Definicion de Rubros por Grupo
 title.qualifications.by.group: Ingreso de calificaciones por grupo
 label.subentries.by.course: Subrubros
+label.usuarios.observations: Observaciones
 
 #Validation
 not.blank.name: Probando proband.

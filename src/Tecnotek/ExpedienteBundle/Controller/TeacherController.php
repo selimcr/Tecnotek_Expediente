@@ -7,6 +7,7 @@ use Tecnotek\ExpedienteBundle\Entity\Club as Club;
 use Tecnotek\ExpedienteBundle\Entity\CourseEntry;
 use Tecnotek\ExpedienteBundle\Entity\Relative as Relative;
 use Tecnotek\ExpedienteBundle\Entity\Student;
+use Tecnotek\ExpedienteBundle\Entity\Observation;
 use Tecnotek\ExpedienteBundle\Entity\StudentQualification;
 use Tecnotek\ExpedienteBundle\Entity\SubCourseEntry;
 use Tecnotek\ExpedienteBundle\Entity\Ticket;
@@ -30,6 +31,14 @@ class TeacherController extends Controller
         $periods = $em->getRepository("TecnotekExpedienteBundle:Period")->findAll();
         return $this->render('TecnotekExpedienteBundle:Teacher:course_entries.html.twig', array('periods' => $periods,
             'menuIndex' => 2));
+    }
+
+    public function observationsAction()
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $periods = $em->getRepository("TecnotekExpedienteBundle:Period")->findAll();
+        return $this->render('TecnotekExpedienteBundle:Teacher:observations.html.twig', array('periods' => $periods,
+            'menuIndex' => 3));
     }
 
     public function loadGroupsOfPeriodAction(){
@@ -667,6 +676,130 @@ class TeacherController extends Controller
                             $row = str_replace("val_" . $stdy->getStudent()->getId() . "_" . $qualification->getSubCourseEntry()->getId() . "_", "" . $qualification->getQualification(), $row);
                         }
                         $html .=  '<td id="total_trim_' . $stdy->getStudent()->getId() . '" class="azul headcoltrim" style="color: #fff;">-</td>' . $row . "</tr>";
+                    }
+
+                    $html .= "</table>";
+
+                    return new Response(json_encode(array('error' => false, 'html' => $html, "studentsCounter" => $studentsCount, "codesCounter" => $specialCounter)));
+                } else {
+                    return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
+                }
+            }
+            catch (Exception $e) {
+                $info = toString($e);
+                $logger->err('Teacher::loadEntriesByCourseAction [' . $info . "]");
+                return new Response(json_encode(array('error' => true, 'message' => $info)));
+            }
+        }// endif this is an ajax request
+        else
+        {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+    }
+
+    public function loadGroupObservationsAction(){
+        $logger = $this->get('logger');
+        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
+        {
+            try {
+                $request = $this->get('request')->request;
+                $periodId = $request->get('periodId');
+                $groupId = $request->get('groupId');
+
+                $keywords = preg_split("/[\s-]+/", $groupId);
+                $groupId = $keywords[0];
+                $gradeId = $keywords[1];
+                $courseId = $request->get('courseId');
+
+                $translator = $this->get("translator");
+
+                if( isset($courseId) && isset($groupId) && isset($periodId)) {
+                    $em = $this->getDoctrine()->getEntityManager();
+
+                    $dql = "SELECT ce FROM TecnotekExpedienteBundle:CourseEntry ce "
+                        . " JOIN ce.courseClass cc"
+                        . " WHERE ce.parent IS NULL AND cc.period = " . $periodId . " AND cc.grade = " . $gradeId
+                        . " AND cc.course = " . $courseId
+                        . " ORDER BY ce.sortOrder";
+                    $query = $em->createQuery($dql);
+                    $entries = $query->getResult();
+                    $temp = new \Tecnotek\ExpedienteBundle\Entity\CourseEntry();
+                    $html =  '<tr  style="height: 175px; line-height: 0px;"><td class="celesteOscuro headcolcarne" style="width: 75px; font-size: 10px; height: 175px;"></td>';
+                    $html .=  '<td class="celesteClaro bold headcolnombre" style="width: 250px; font-size: 8px; height: 175px;"></td>';
+                    $html .= '<td class="azul headcoltrim" style="vertical-align: bottom; padding: 0.5625em 0.625em; height: 175px; line-height: 220px;"><div class="verticalText" style="color: #fff;">Promedio Trimestral</div></td>';
+                    $html .= '<td  style="vertical-align: bottom; padding: 0.5625em 0.625em; height: 175px; line-height: 220px;"><div class="verticalText" style="color: #fff;"></div></td>';
+
+                    $marginLeft = 48;
+                    $marginLeftCode = 62;
+                    $htmlCodes =  '<tr  style="height: 30px;"><td class="celesteOscuro headcolcarne" style="width: 75px; font-size: 10px;"></td>';
+                    $htmlCodes .=  '<td class="celesteClaro bold headcolnombre" style="width: 250px; font-size: 8px;"></td>';
+                    $htmlCodes .= '<td class="azul headcoltrim" style="color: #fff;"></td>';
+                    $htmlCodes .= '<td  style="color: #fff;"></td>';
+                    $jumpRight = 46;
+                    $width = 44;
+
+                    $html3 =  '<tr style="height: 30px; line-height: 0px;" class="noPrint"><td class="celesteOscuro bold headcolcarne" style="width: 75px; font-size: 12px;">Carne</td>';
+                    $html3 .=  '<td class="celesteClaro bold headcolnombre" style="width: 250px; font-size: 12px;">Estudiante</td>';
+                    $html3 .= '<td class="azul headcoltrim" style="color: #fff;">TRIM</td>';
+                    $html3 .= '<td  style="color: #fff;">Observaciones</td>';
+                    $studentRow = '';
+                    $studentsHeader = '';
+                    $colors = array(
+                        "one" => "#38255c",
+                        "two" => "#04D0E6"
+                    );
+
+                    $dql = "SELECT stdy FROM TecnotekExpedienteBundle:Student std, TecnotekExpedienteBundle:StudentYear stdy "
+                        . " WHERE stdy.student = std AND stdy.group = " . $groupId . " AND stdy.period = " . $periodId
+                        . " ORDER BY std.lastname, std.firstname";
+                    $query = $em->createQuery($dql);
+                    $students = $query->getResult();
+
+                    $studentsCount = sizeof($students);
+                    $rowIndex = 1;
+                    $colsCounter = 1;
+
+                    $specialCounter = 1;
+
+                    /*foreach( $entries as $entry )
+                    {
+                        $temp = $entry;
+                        $childrens = $temp->getChildrens();
+                        $size = sizeof($childrens);
+
+                    }*/
+
+                    $htmlCodes .= "</tr>";
+                    $html .= "</tr>";
+                    $html3 .= "</tr>";
+                    $html = '<table class="tableQualifications">' . $htmlCodes . $html . $html3;
+
+                    $studentRowIndex = 0;
+                    foreach($students as $stdy){
+                        $html .=  '<tr style="height: 30px; line-height: 0px;">';
+                        $studentRowIndex++;
+                        $html .=  '<td class="celesteOscuro headcolcarne" style="width: 75px; font-size: 10px;">' . $stdy->getStudent()->getCarne() . '</td>';
+                        $html .=  '<td class="celesteClaro bold headcolnombre" style="width: 250px; font-size: 12px;">' . $stdy->getStudent() . '</td>';
+
+
+                        $row = str_replace("stdId", $stdy->getStudent()->getId(), $studentRow);
+                        $row = str_replace("stdyIdd", $stdy->getId(), $row);
+
+                        //tabIndexColXx
+                        for ($i = 1; $i <= $colsCounter; $i++) {
+                            $indexVar = "tabIndexCol" . $i . "x";
+                            $row = str_replace($indexVar, "" . ($studentRowIndex + (($i - 1) * $studentsCount)), $row);
+                        }
+
+                        $dql = "SELECT qua FROM TecnotekExpedienteBundle:StudentQualification qua"
+                            . " WHERE qua.studentYear = " . $stdy->getId();
+                        $query = $em->createQuery($dql);
+                        $qualifications = $query->getResult();
+                        foreach($qualifications as $qualification){
+                            $row = str_replace("val_" . $stdy->getStudent()->getId() . "_" . $qualification->getSubCourseEntry()->getId() . "_", "" . $qualification->getQualification(), $row);
+                        }
+                        $html .=  '<td id="total_trim_' . $stdy->getStudent()->getId() . '" class="azul headcoltrim" style="color: #fff;">-</td>' . $row . "";
+                        $html .=  '<td id="obser_' . $stdy->getStudent()->getId() . '"  style="color: #fff; width: 1600px">  </td></tr>';
                     }
 
                     $html .= "</table>";
