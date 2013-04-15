@@ -96,6 +96,9 @@ var Tecnotek = {
                 case "qualifications":
                     Tecnotek.Qualifications.init();
                     break;
+                case "observations":
+                    Tecnotek.Observations.init();
+                    break;
                 default:
 					break;
 				}
@@ -797,6 +800,379 @@ var Tecnotek = {
 
 											$porcentageRubro = $("#prom_" + $parent + "_" + $stdId).attr("perc");
 											console.debug("" + $sumaPorcentagesAsignados + " :: " + $porcentageAsignado + " :: " + ($sumaPorcentagesAsignados == $porcentageRubro) + " :: " + ($sumaPorcentagesAsignados === $porcentageRubro));
+                                            if($sumaPorcentagesAsignados == $porcentageRubro){
+                                                $("#total_" + $parent + "_" + $stdId).html("" + Tecnotek.roundTo($sumaPorcentage));
+                                            } else {
+                                                $("#total_" + $parent + "_" + $stdId).html("" + Tecnotek.roundTo($sumaPorcentage / $counter));
+                                            }
+                                        }
+
+                                    }
+
+                                    $sum = 0;
+                                    $counter = 0;
+                                    $('.nota_' + $stdId).each(function() {
+                                        $temp = $(this).html();
+                                        if($temp != "-"){
+                                            //$temp = $temp.slice(0, -1);
+                                            $sum += parseFloat( $temp );
+                                            $counter++;
+                                        }
+                                    });
+                                    if($counter == 0){
+                                        $("#total_trim_" + $stdId).html("-");
+                                    } else {
+                                        $("#total_trim_" + $stdId).html("" + Tecnotek.roundTo($sum));
+                                    }
+                                }
+                            },
+                            function(jqXHR, textStatus){
+                                Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
+                            }, false);
+                    }
+
+                });
+            }
+        },
+        Observations : {
+            translates : {},
+            init : function() {
+                $('#btnPrint').click(function(event){
+                    //console.debug("print!!!");
+                    //$("#tableContainer").printElement({printMode:'iframe', pageTitle:$(this).attr('rel')});
+                });
+
+                $('#viewPrintable').click(function(event){
+                    event.preventDefault();
+
+                    var url = Tecnotek.UI.urls["viewPrintableVersionURL"];
+                    var windowName = "Calificaciones de Grupo";
+                    //var windowSize = windowSizeArray[$(this).attr("rel")];
+
+                    var periodId = $("#period").val();
+                    var courseId = $("#courses").val();
+                    var groupId = $("#groups").val();
+
+                    if(periodId != null && courseId != null && groupId != null){
+                        url += "?periodId=" + periodId + "&groupId=" + groupId + "&courseId=" + courseId;
+                        window.open(url, windowName);
+                    }
+
+                });
+
+                $('#entriesTab').click(function(event){
+                    $("#subentriesSection").hide();
+                    $('#entriesSection').show();
+                    $('#subentriesTab').removeClass("tab-current");
+                    $('#entriesTab').addClass("tab-current");
+                });
+
+                $('#subentriesTab').click(function(event){
+                    $('#subentriesSection').show();
+                    $("#entriesSection").hide();
+                    $('#subentriesTab').addClass("tab-current");
+                    $('#entriesTab').removeClass("tab-current");
+                });
+
+                $('#subentryForm').submit(function(event){
+                    event.preventDefault();
+                    Tecnotek.Observations.createEntry();
+                });
+
+                $("#period").change(function(event){
+                    event.preventDefault();
+                    $('#subentryFormParent').empty();
+                    Tecnotek.Observations.loadGroupsOfPeriod($(this).val());
+                });
+
+                $("#groups").change(function(event){
+                    event.preventDefault();
+                    Tecnotek.Observations.loadCoursesOfGroupByTeacher($(this).val());
+                });
+
+                $("#courses").change(function(event){
+                    event.preventDefault();
+                    Tecnotek.Observations.loadObservationsOfGroup($(this).val());
+                });
+
+                Tecnotek.Observations.loadGroupsOfPeriod($('#period').val());
+                Tecnotek.Observations.initButtons();
+            },
+            initButtons : function() {
+                $("#entryFormCancel").click(function(event){
+                    event.preventDefault();
+                    $.fancybox.close();
+                });
+            },
+            loadGroupsOfPeriod: function($periodId) {
+                if(($periodId!==null)){
+                    $('#groups').children().remove();
+                    $('#courses').children().remove();
+                    $('#subentryFormParent').empty();
+                    $('#tableContainer').hide();
+                    Tecnotek.ajaxCall(Tecnotek.UI.urls["loadGroupsOfPeriodURL"],
+                        {   periodId: $periodId },
+                        function(data){
+                            if(data.error === true) {
+                                Tecnotek.showErrorMessage(data.message,true, "", false);
+                            } else {
+                                for(i=0; i<data.groups.length; i++) {
+                                    $('#groups').append('<option value="' + data.groups[i].id + '">' + data.groups[i].name + '</option>');
+                                }
+                                Tecnotek.Observations.loadCoursesOfGroupByTeacher($('#groups').val());
+                            }
+                        },
+                        function(jqXHR, textStatus){
+                            Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
+                            $(this).val("");
+                        }, true);
+                }
+            },
+            loadCoursesOfGroupByTeacher: function($groupId) {
+                if(($groupId!==null)){
+                    $('#courses').children().remove();
+                    $('#subentryFormParent').empty();
+                    Tecnotek.Observations.loadObservationsOfGroup(0);
+                    Tecnotek.ajaxCall(Tecnotek.UI.urls["loadCoursesOfGroupByTeacherURL"],
+                        {   groupId: $groupId },
+                        function(data){
+                            if(data.error === true) {
+                                Tecnotek.showErrorMessage(data.message,true, "", false);
+                            } else {
+                                for(i=0; i<data.courses.length; i++) {
+                                    $('#courses').append('<option value="' + data.courses[i].id + '">' + data.courses[i].name + '</option>');
+                                }
+                                Tecnotek.Observations.loadObservationsOfGroup($('#courses').val());
+                            }
+                        },
+                        function(jqXHR, textStatus){
+                            Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
+                            $(this).val("");
+                        }, false);
+                }
+            },
+            loadObservationsOfGroup: function(courseId) {
+                $('.editEntry').unbind();
+                $('#entriesRows').empty();
+                $('#subentriesRows').empty();
+                $('#subentryFormParent').empty();
+                $('#contentBody').empty();
+                $('#studentsHeader').empty();
+                if(courseId == 0){//Clean page
+                } else {
+                    Tecnotek.ajaxCall(Tecnotek.UI.urls["loadObservationsOfGroupURL"],
+                        {   periodId: $("#period").val(),
+                            courseId: courseId,
+                            groupId: $("#groups").val()},
+                        function(data){
+                            if(data.error === true) {
+                                Tecnotek.showErrorMessage(data.message,true, "", false);
+                            } else {
+                                console.debug("WIDHT----> " + data.codesCounter);
+
+                                $("#tableContainer").width(data.codesCounter * 46 + 280);
+
+
+                                $('#contentBody').html(data.html);
+                                $('#studentsHeader').html(data.studentsHeader);
+                                $('#tableContainer').show();
+
+                                var height = data.studentsCounter * 26.66 + 300;
+                                $("#studentsTableContainer").css("height", height + "px");
+
+
+
+                                $(".textField").each(function(){
+                                    if($(this).attr("val") !== "-1" && $(this).attr("val").indexOf("val") !== 0){
+                                        $(this).val($(this).attr("val"));
+                                    }
+                                    $(this).trigger("blur");
+                                });
+
+                                //Tecnotek.Observations.initializeTable();
+                                Tecnotek.UI.vars["forzeBlur"] = true;
+                                $(".textField").each(function(){
+                                    $(this).trigger("focus");
+                                    $(this).trigger("blur");
+                                });
+                                Tecnotek.UI.vars["forzeBlur"] = false;
+                                //$( "#spinner-modal" ).dialog( "close" );
+                            }
+                        },
+                        function(jqXHR, textStatus){
+                            $( "#spinner-modal" ).dialog( "close" );
+                            Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
+                        }, false);
+                }
+            },
+            initializeTable: function() {
+                $('.editEntry').unbind();
+                $('#entriesRows').empty();
+                $('#subentriesRows').empty();
+                $('#subentryFormParent').empty();
+
+                $(".textField").focus(function(e){
+                    Tecnotek.UI.vars["textFieldValue"] = $(this).val();
+                });
+                $(".textField").blur(function(e){
+                    e.preventDefault();
+                    $this = $(this);
+                    $type = $this.attr('tipo');
+                    $max = $this.attr('max');
+                    $nota = $this.val();
+                    $stdId = $this.attr('std');
+
+                    if(($nota * 1) > ($max * 1)){
+                        Tecnotek.showInfoMessage("El valor maximo permitido es " + $max,true, "", false);
+                        $this.val("");
+                        $nota = "";
+                    }
+                    if(Tecnotek.UI.vars["forzeBlur"] == true){
+                        if($type == 1){
+                            $percentage = $this.attr('perc');
+                            $max = $this.attr('max');
+                            $totalField = $("#" + $this.attr('rel'));
+                            //console.debug("Type = " + $type + ", Nota: " + $nota + ", Perc = " + $percentage + " :: " + $totalField);
+                            if($nota == "") {
+                                $totalField.html("-");
+                            } else {
+                                //console.debug("Calcular total para " + $(this).attr('rel') + ", total = " + ($percentage * $nota / 100));
+                                $totalField.html("" + Tecnotek.roundTo(($percentage * $nota / $max)));
+                            }
+                        } else {
+                            $childs = $this.attr('child');
+                            $parent = $this.attr('parent');
+
+                            //console.debug("Type = " + $type + ", Nota: " + $nota + " :: childs = " + $childs + " :: $stdId = " + $stdId);
+                            $sum = 0;
+                            $sumaPorcentage = 0;
+                            $counter = 0;
+                            $sumaPorcentagesAsignados = 0;
+                            $('.item_' + $parent + "_" + $stdId).each(function() {
+                                $notaDigitada = $(this).val();
+                                $valorMax = $(this).attr("max");
+                                $porcentageAsignado = parseFloat($(this).attr("perc"));
+                                $sumaPorcentagesAsignados = $porcentageAsignado;
+                                if($notaDigitada != ""){
+                                    //100/valor max * nota digitada * %asignado
+                                    $sumaPorcentage += (100 / parseFloat($valorMax) * parseFloat($notaDigitada) * ($porcentageAsignado / 100));
+                                    $sum += parseFloat( $notaDigitada );
+                                    $counter++;
+                                }
+                            });
+
+                            if($counter == 0){
+                                $("#prom_" + $parent + "_" + $stdId).html("-");
+                                $totalField = $("#" + $this.attr('rel'));
+                                //$("#total_" + $parent + "_" + $stdId).html("-");
+                            } else {
+                                $percentage =  $("#prom_" + $parent + "_" + $stdId).attr('perc');
+                                $max = $("#prom_" + $parent + "_" + $stdId).attr('max');
+                                $("#prom_" + $parent + "_" + $stdId).html("" + Tecnotek.roundTo(($sum/$childs)));
+                                //$("#total_" + $parent + "_" + $stdId).html("" + Tecnotek.roundTo(($percentage * ($sum/$childs) / $max)));
+
+
+                                $porcentageRubro = $("#total_" + $parent + "_" + $stdId).attr("perc");
+                                if($sumaPorcentagesAsignados == $porcentageRubro){
+                                    $("#total_" + $parent + "_" + $stdId).html("" + Tecnotek.roundTo($sumaPorcentage));
+                                } else {
+                                    $("#total_" + $parent + "_" + $stdId).html("" + Tecnotek.roundTo($sumaPorcentage / $counter));
+                                }
+
+                            }
+                        }
+
+                        $sum = 0;
+                        $counter = 0;
+                        $('.nota_' + $stdId).each(function() {
+                            $temp = $(this).html();
+                            if($temp != "-"){
+                                /*console.debug("Bandera Temp: " + $temp + "<-");
+                                 $temp = $temp.slice(0, -1);
+                                 console.debug("Bandera Temp: " + $temp + "<-");*/
+                                $sum += parseFloat( $temp );
+                                $counter++;
+                            }
+                        });
+
+                        if($counter == 0){
+                            $("#total_trim_" + $stdId).html("-");
+                        } else {
+                            $("#total_trim_" + $stdId).html("" + Tecnotek.roundTo($sum));
+                        }
+                    } else {
+                        if(Tecnotek.UI.vars["textFieldValue"] === $nota) return;
+                        Tecnotek.ajaxCall(Tecnotek.UI.urls["saveStudentQualificationURL"],
+                            {   subentryId: $this.attr('entry'),
+                                studentYearId: $this.attr('stdyid'),
+                                qualification: $nota},
+                            function(data){
+                                if(data.error === true) {
+                                    Tecnotek.showErrorMessage(data.message,true, "", false);
+                                    $this.val("");
+                                } else {
+                                    if($type == 1){
+                                        $percentage = $this.attr('perc');
+                                        $max = $this.attr('max');
+                                        $totalField = $("#" + $this.attr('rel'));
+                                        //console.debug("Type = " + $type + ", Nota: " + $nota + ", Perc = " + $percentage + " :: " + $totalField);
+                                        if($nota == "") {
+                                            $totalField.html("-");
+                                        } else {
+                                            //console.debug("Calcular total para " + $(this).attr('rel') + ", total = " + ($percentage * $nota / 100));
+                                            $totalField.html("" + Tecnotek.roundTo(($percentage * $nota / $max)));
+                                        }
+                                        /*$sum = 0;
+                                         $counter = 0;
+                                         $('.nota_' + $stdId).each(function() {
+                                         $temp = $(this).html();
+                                         if($temp != "-"){
+                                         $temp = $temp.slice(0, -1);
+                                         $sum += parseFloat( $temp );
+                                         $counter++;
+                                         }
+                                         });
+                                         if($counter == 0){
+                                         $("#total_trim_" + $stdId).html("-");
+                                         } else {
+                                         $("#total_trim_" + $stdId).html("" + $sum);
+                                         }*/
+                                        //p / 100 = x / nota
+                                        //p * nota / 100;
+                                    } else {
+                                        $childs = $this.attr('child');
+                                        $parent = $this.attr('parent');
+
+                                        //console.debug("Type = " + $type + ", Nota: " + $nota + " :: childs = " + $childs + " :: $stdId = " + $stdId);
+                                        $sum = 0;
+                                        $counter = 0;
+                                        $sumaPorcentage = 0;
+                                        $sumaPorcentagesAsignados = 0;
+                                        $('.item_' + $parent + "_" + $stdId).each(function() {
+                                            $notaDigitada = $(this).val();
+                                            $valorMax = $(this).attr("max");
+                                            $porcentageAsignado = parseFloat($(this).attr("perc"));
+                                            $sumaPorcentagesAsignados += $porcentageAsignado;
+                                            if($notaDigitada != ""){
+                                                //100/valor max * nota digitada * %asignado
+                                                $sumaPorcentage += (100 / parseFloat($valorMax) * parseFloat($notaDigitada) * ($porcentageAsignado / 100));
+                                                $sum += parseFloat( $notaDigitada );
+                                                $counter++;
+                                            }
+
+                                        });
+
+                                        if($counter == 0){
+                                            $("#prom_" + $parent + "_" + $stdId).html("-");
+                                            $totalField = $("#" + $this.attr('rel'));
+                                            $("#total_" + $parent + "_" + $stdId).html("-");
+                                        } else {
+                                            $percentage =  $("#prom_" + $parent + "_" + $stdId).attr('perc');
+                                            $max =  $("#prom_" + $parent + "_" + $stdId).attr('max');
+                                            $("#prom_" + $parent + "_" + $stdId).html("" + Tecnotek.roundTo(($sum/$childs)));
+
+                                            $porcentageRubro = $("#prom_" + $parent + "_" + $stdId).attr("perc");
+                                            console.debug("" + $sumaPorcentagesAsignados + " :: " + $porcentageAsignado + " :: " + ($sumaPorcentagesAsignados == $porcentageRubro) + " :: " + ($sumaPorcentagesAsignados === $porcentageRubro));
                                             if($sumaPorcentagesAsignados == $porcentageRubro){
                                                 $("#total_" + $parent + "_" + $stdId).html("" + Tecnotek.roundTo($sumaPorcentage));
                                             } else {

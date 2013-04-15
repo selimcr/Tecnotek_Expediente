@@ -734,6 +734,10 @@ _expediente_teacher_course_entries:
   pattern:  /t/courseEntries
   defaults: { _controller: TecnotekExpedienteBundle:Teacher:courseEntries }
 
+_expediente_teacher_observations:
+  pattern:  /t/observations
+  defaults: { _controller: TecnotekExpedienteBundle:Teacher:observations }
+
 _expediente_teacher_load_groups_of_period:
   pattern: /t/loadGroupsOfPeriod/
   defaults: { _controller: TecnotekExpedienteBundle:Teacher:loadGroupsOfPeriod }
@@ -753,6 +757,10 @@ _expediente_teacher_create_subentry:
 _expediente_teacher_load_group_qualifications:
   pattern:  /t/loadGroupQualifications
   defaults: { _controller: TecnotekExpedienteBundle:Teacher:loadGroupQualifications }
+
+_expediente_teacher_load_group_observations:
+  pattern:  /t/loadGroupObservations
+  defaults: { _controller: TecnotekExpedienteBundle:Teacher:loadGroupObservations }
 
 _expediente_teacher_subentry_remove:
     pattern:  /t/subentry/remove/
