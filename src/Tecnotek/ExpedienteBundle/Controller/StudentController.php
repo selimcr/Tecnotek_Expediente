@@ -1534,10 +1534,13 @@ class StudentController extends Controller
                     foreach ($results as $result) {
                         $studentYear = $result;
                     }
+
+                    $student = $em->getRepository("TecnotekExpedienteBundle:Student")->find($studentId);
+
                     if( isset($studentYear) ){
                         $studentYear->setGroup($group);
                     } else {
-                        $student = $em->getRepository("TecnotekExpedienteBundle:Student")->find($studentId);
+
                         $period = $em->getRepository("TecnotekExpedienteBundle:Period")->find($periodId);
                         $studentYear = new \Tecnotek\ExpedienteBundle\Entity\StudentYear();
                         $studentYear->setGroup($group);
@@ -1545,10 +1548,17 @@ class StudentController extends Controller
                         $studentYear->setPeriod($period);
                     }
 
+                    /*UPDATE tek_students SET
+                    groupyear =
+                        (   SELECT CONCAT( g.grade_id, '-', g.name ) AS groupyear
+                            FROM tek_groups g, tek_students_year sy
+                            WHERE tek_students.id = sy.student_id AND sy.group_id = g.id );*/
+
+                    $student->setGroupyear($group->getGrade()->getNumber() . "-" . $group->getName());
                     $em->persist($studentYear);
                     $em->flush();
 
-                    return new Response(json_encode(array('error' => false)));
+                    return new Response(json_encode(array('error' => false, 'id' => $studentYear->getId())));
                 } else {
                     return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
                 }
@@ -1594,6 +1604,10 @@ class StudentController extends Controller
 
                     $studentYear->removeFromGroup();
 
+                    $student = $studentYear->getStudent();
+                    $student->setGroupyear("");
+
+                    $em->persist($student);
                     $em->persist($studentYear);
                     $em->flush();
 
