@@ -82,12 +82,23 @@ class ReportController extends Controller
 
     public function reportStudentAbsencesByRouteAction(){
         $em = $this->getDoctrine()->getEntityManager();
+        $logger = $this->get('logger');
+        $errorMessage = "";
+        try{
+            $stmt = $em->getConnection()->prepare("CALL setStudentsDailyStatus()");
+            $stmt->execute();
+        } catch (\Exception $e) {
+            $errorMessage = $e->getMessage();
+            $logger->err('Report::reportStudentAbsencesByRouteAction [Error runing sp: ' . $errorMessage . "]");
+        } catch (PDOException $e) {
+            $errorMessage = $e->getMessage();
+            $logger->err('Report::reportStudentAbsencesByRouteAction [Error runing sp: ' . $errorMessage . "]");
+        }
+
         $entities = $em->getRepository("TecnotekExpedienteBundle:Route")->findAll();
 
-        $html = "";
-
         return $this->render('TecnotekExpedienteBundle:SuperAdmin:Reports/absences_by_route.html.twig', array('menuIndex' => 4,
-            'entities' => $entities
+            'entities' => $entities, 'errorMessage' => $errorMessage
         ));
     }
 

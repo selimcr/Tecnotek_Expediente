@@ -146,6 +146,18 @@
     </nav>
 
     <div id="main">
+
+        {% if errorMessage is defined and errorMessage != "" %}
+        <div class="container_24">
+            <div class="grid_24">
+                <div data-alert="" class="alert-box alert round">
+                    {{ errorMessage }}
+                    <a href="" class="close">×</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
         {% block content %}{% endblock %}
     </div>
 
