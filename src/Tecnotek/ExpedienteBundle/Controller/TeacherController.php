@@ -584,7 +584,7 @@ class TeacherController extends Controller
                             //Find SubEntries
                             $dql = "SELECT ce FROM TecnotekExpedienteBundle:SubCourseEntry ce "
                                 . " WHERE ce.parent = " . $temp->getId()  . " AND ce.group = " . $groupId
-                                . " ORDER BY ce.sortOrder";
+                                . " ORDER BY ce.sortOrder, ce.name";
                             $query = $em->createQuery($dql);
                             $subentries = $query->getResult();
 
@@ -720,7 +720,7 @@ class TeacherController extends Controller
                         . " JOIN ce.courseClass cc"
                         . " WHERE ce.parent IS NULL AND cc.period = " . $periodId . " AND cc.grade = " . $gradeId
                         . " AND cc.course = " . $courseId
-                        . " ORDER BY ce.sortOrder";
+                        . " ORDER BY ce.sortOrder, ce.name";
                     $query = $em->createQuery($dql);
                     $entries = $query->getResult();
                     $temp = new \Tecnotek\ExpedienteBundle\Entity\CourseEntry();
