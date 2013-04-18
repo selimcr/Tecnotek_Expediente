@@ -120,6 +120,9 @@ var Tecnotek = {
                 case "printQualifications":
                     Tecnotek.PrintQualifications.init();
                     break;
+                case "periodGroupQualifications":
+                    Tecnotek.PeriodGroupQualifications.init();
+                    break;
                 default:
 					break;
 				}
@@ -904,6 +907,7 @@ var Tecnotek = {
         StudentShow : {
             translates : {},
             init : function() {
+                console.debug("por aca vamos....");
                 $('#generalTab').click(function(event){
                     event.preventDefault();
                     $('#relativesSection').hide();
@@ -975,6 +979,7 @@ var Tecnotek = {
                                     $html += '<div class="option_width" style="float: left; width: 350px;">' + $firstname + " " + $lastname + '</div>';
                                     $html += '<div class="option_width" style="float: left; width: 100px;">' + $detail + '</div>';
                                     $html += '<div class="right imageButton deleteButton" style="height: 16px;"  title="delete???"  rel="' + data.id + '"></div>';
+                                    $html += '<div class="right imageButton viewButton" style="height: 16px;"  title="Ver"  rel="' + data.id + '"></div>';
                                     $html += '<div class="clear"></div>';
                                     $html += '</div>';
                                     $("#relativesList").append($html);
@@ -1047,7 +1052,9 @@ var Tecnotek = {
                                                     $html = '<div id="relative_row_' + data.id + '" class="row" rel="' + data.id + '" style="padding: 0px; font-size: 10px;">';
                                                     $html += '    <div class="" style="float: left; width: 350px;">' + relativeName + '</div>';
                                                     $html += '    <div class="" style="float: left; width: 100px;">' + $detail + '</div>';
+
                                                     $html += '    <div class="right imageButton deleteButton" style="height: 16px;" title="Eliminar" rel="' + data.id + '"></div>';
+                                                    $html += '    <div class="right imageButton viewButton" style="height: 16px;"  title="Ver"  rel="' + data.id + '"></div>';
                                                     $html += '    <div class="clear"></div>';
                                                     $html += '</div>';
 
@@ -1083,7 +1090,6 @@ var Tecnotek = {
                 Tecnotek.StudentShow.initDeleteButtons();
             },
             initDeleteButtons : function() {
-                console.debug("entro a initDeleteButtons!!!");
                 $('.deleteButton').unbind();
                 $('.deleteButton').click(function(event){
                     event.preventDefault();
@@ -1103,6 +1109,29 @@ var Tecnotek = {
                                     true, "", false);
                             }, true);
                     }
+                });
+
+
+                $('.viewButton').unbind();
+                $('.viewButton').click(function(event){
+                    console.debug("Click en view button: " + Tecnotek.UI.urls["getRelativeInfoURL"]);
+                    event.preventDefault();
+                    Tecnotek.UI.vars["relativeId"] = $(this).attr("rel");
+                    Tecnotek.ajaxCall(Tecnotek.UI.urls["getRelativeInfoURL"],
+                        {relativeId: Tecnotek.UI.vars["relativeId"]},
+                        function(data){
+                            if(data.error === true) {
+                                Tecnotek.showErrorMessage(data.message,true, "", false);
+                            } else {
+                                //Tecnotek.showInfoMessage(data.html, true, "", false);
+                                $("#contactContainer").html(data.html);
+                                $("#showContactInfoLink").trigger("click");
+                            }
+                        },
+                        function(jqXHR, textStatus){
+                            Tecnotek.showErrorMessage("Error in request: " + textStatus + ".",
+                                true, "", false);
+                        }, true);
                 });
             }
         },

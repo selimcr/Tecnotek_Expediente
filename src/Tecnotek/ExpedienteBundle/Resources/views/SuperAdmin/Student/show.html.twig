@@ -5,14 +5,18 @@
 {% endblock %}
 
 {% block extracss %}
+<link rel="stylesheet" href="{{ asset('fancybox/jquery.fancybox.css') }}" type="text/css" media="all" />
+<link rel="stylesheet" href="{{ asset('fancybox/fancybox_style.css') }}" type="text/css" media="all" />
 {% endblock %}
 
 {% block extrajs %}
+<script type="text/javascript" src="{{ asset('fancybox/jquery.fancybox.js?v=2.0.6') }}"></script>
 <script type="text/javascript">
     Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
     Tecnotek.UI.urls["deleteURL"] = "{{ path("_delete_student", {id: entity.id}) }}";
     Tecnotek.UI.urls["removeRelativeURL"] = "{{ path("_expediente_remove_relative") }}";
     Tecnotek.UI.urls["saveNewContactURL"] = "{{ path("_expediente_save_new_contact") }}";
+    Tecnotek.UI.urls["getRelativeInfoURL"] = "{{ path("_expediente_sysadmin_get_relative_info") }}";
 
     Tecnotek.UI.translates["confirmDelete"] = "{% trans %}messages.confirmation.student.delete{% endtrans %}";
     Tecnotek.UI.translates["confirmRemoveRelative"] = "{% trans %}messages.confirmation.remove.relative{% endtrans %}";
@@ -27,6 +31,11 @@
 
     Tecnotek.UI.urls["associateContactURL"] = "{{ path("_expediente_associate_new_contact") }}";
 
+
+</script>
+<!-- basic fancybox setup -->
+<script type="text/javascript">
+    $(function(){ $(".modalbox").fancybox(); });
 </script>
 {% endblock %}
 
@@ -130,16 +139,17 @@
                     <div class="left" style="width: 510px;">
                         <div class="table" id="relativesList">
                             <div class="row tableHeader" style="padding: 0px;">
-                                <div class="option_width" style="float: left; width: 350px;">{% trans %}label.name{% endtrans %}</div>
+                                <div class="option_width" style="float: left; width: 325px;">{% trans %}label.name{% endtrans %}</div>
                                 <div class="option_width" style="float: left; width: 100px;">{% trans %}label.kinship{% endtrans %}</div>
                             </div>
                             {% set counter = 0 %}
 
                             {% for relative in relatives %}
                             <div id="relative_row_{{ relative.id }}" class="row" rel="{{ relative.id }}" style="padding: 0px; font-size: 10px;">
-                                <div class="" style="float: left; width: 350px;">{{ relative.contact }}</div>
+                                <div class="" style="float: left; width: 325px;">{{ relative.contact }}</div>
                                 <div class="" style="float: left; width: 100px;">{{ relative.description }}</div>
                                 <div class="right imageButton deleteButton" style="height: 16px;"  title="{% trans %}label.delete{% endtrans %}"  rel="{{ relative.id }}"></div>
+                                <div class="right imageButton viewButton" style="height: 16px;"  title="{% trans %}label.view{% endtrans %}"  rel="{{ relative.id }}"></div>
                                 <div class="clear"></div>
                             </div>
                             {% set counter = counter + 1 %}
@@ -235,7 +245,14 @@
     </div>
 </div>
 
+<!-- hidden inline form -->
+<a id="showContactInfoLink" style="display: none;" class="modalbox" href="#inline"> </a>
+<div id="inline" style="width: 550px;">
+    <h3>Informaci&oacute;n de Contacto</h3>
+    <div id="contactContainer" name="contactContainer" class="contactInfo">
 
+    </div>
+</div>
 
 
 {% endblock %}

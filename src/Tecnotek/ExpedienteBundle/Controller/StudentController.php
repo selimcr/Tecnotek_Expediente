@@ -655,6 +655,48 @@ class StudentController extends Controller
         }
     }
 
+    public function getRelativeInfoAction(){
+        $logger = $this->get('logger');
+        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
+        {
+            try {
+                $request = $this->get('request')->request;
+                $relativeId = $request->get('relativeId');
+
+                $em = $this->getDoctrine()->getEntityManager();
+                $relative = new Relative();
+                $relative = $em->getRepository("TecnotekExpedienteBundle:Relative")->find($relativeId);
+                if ( isset($relative) ) {
+                    $html  = '<div class="fieldRow"><label>Nombre:</label><span>' . $relative->getContact()->getFirstname() . '</span></div>';
+                    $html .= '<div class="fieldRow"><label>Identificaci&oacute;n:</label><span>' . $relative->getContact()->getIdentification() . '</span></div>';
+                    $html .= '<div class="fieldRow"><label>Tel. Celular:</label><span>' . $relative->getContact()->getPhonec() . '</span></div>';
+                    $html .= '<div class="fieldRow"><label>Tel. Trabajo:</label><span>' . $relative->getContact()->getPhonew() . '</span></div>';
+                    $html .= '<div class="fieldRow"><label>Tel. Casa:</label><span>' . $relative->getContact()->getPhoneh() . '</span></div>';
+                    $html .= '<div class="fieldRow"><label>Lugar de trabajo:</label><span>' . $relative->getContact()->getWorkplace() . '</span></div>';
+                    $html .= '<div class="fieldRow"><label>Email:</label><span></span>' . $relative->getContact()->getEmail() . '</div>';
+                    $html .= '<div class="fieldRow"><label>Direcci&oacute;n:</label><span>' . $relative->getContact()->getAdress() . '</span></div>';
+                    $html .= '<div class="fieldRow"><label>Restricci&oacute;n:</label><span>' . $relative->getContact()->getRestriction() . '</span></div>';
+                    $html .= '<div class="fieldRow"><label>Relaci&oacute;n:</label><span>' . $relative->getDescription() . '</span></div>';
+
+                    //firstname (lastname no), identification, phonec (telefono celular), phonew (telefono trabajo), phoneh (telefono casa),
+                    //workplace, email, adress, restriction, relacion
+                    return new Response(json_encode(array('error' => false, 'html' => $html)));
+                } else {
+                    return new Response(json_encode(array('error' => true, 'message' => "Relative not found.")));
+                }
+            }
+            catch (Exception $e) {
+                $info = toString($e);
+                $logger->err('Student::createContactAction [' . $info . "]");
+                return new Response(json_encode(array('error' => true, 'message' => $info)));
+            }
+        }// endif this is an ajax request
+        else
+        {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+    }
+
     public function removeRelativeAction(){
         $logger = $this->get('logger');
         if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?

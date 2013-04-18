@@ -230,3 +230,9 @@ a.desc {line-height: 32px; font-size: 15px; float: left; text-align: right; colo
 /****   loginPanel   ***/
 .loginPanel{margin: auto; background-color: #fff; width: 450px; padding: 15px;}
 .loginPanel label {display: inline-block; width: 135px;}
+
+/* Relative Contact Information */
+.contactInfo{ background-color: #fff;}
+.contactInfo .fieldRow{font-size: 12px; height: 26px; line-height: 26px; vertical-align: middle; color: #000;}
+.contactInfo .fieldRow label {display: inline; width: 100px; font-weight: bold;}
+.contactInfo .fieldRow span {display: inline; width: 100%;}
