@@ -77,6 +77,13 @@ class CourseEntry
      */
     private $childrens;
 
+    /**
+     * @var subentries
+     *
+     * @ORM\OneToMany(targetEntity="SubCourseEntry", mappedBy="parent")
+     */
+    private $subentries;
+
 
     public function __construct()
     {
@@ -246,5 +253,9 @@ class CourseEntry
 
     public function getChildrens(){
         return $this->childrens;
+    }
+
+    public function getSubentries(){
+        return $this->subentries;
     }
 }

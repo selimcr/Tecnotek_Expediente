@@ -10,19 +10,19 @@
     <meta name="author" content="Selim Diaz A.">
     <title>{% trans %}system.title{% endtrans %}</title>
 
-    <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css" />
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css" type="text/css" media="all"/>
 
     <link rel="stylesheet" href="{{ asset('saintmichael/stylesheets/style.css') }}" type="text/css" media="all"/>
-    <link rel="stylesheet" href="{{ asset('saintmichael/stylesheets/normalize.css') }}"/>
-    <link rel="stylesheet" href="{{ asset('saintmichael/stylesheets/app.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('saintmichael/stylesheets/normalize.css') }}" type="text/css" media="all"/>
+    <link rel="stylesheet" href="{{ asset('saintmichael/stylesheets/app.css') }}" type="text/css" media="all"/>
 
-    <link rel="stylesheet" href="{{ asset('css/grid.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('css/grid.css') }}" type="text/css" media="all"/>
     {% block extracss %}
     {% endblock %}
     <script src="{{ asset('saintmichael/javascripts/vendor/custom.modernizr.js') }}"></script>
 
     <!--[if !IE 7]>
-    <style type="text/css">
+    <style type="text/css" type="text/css" media="all">
         #wrap {
             display: table;
             height: 100%

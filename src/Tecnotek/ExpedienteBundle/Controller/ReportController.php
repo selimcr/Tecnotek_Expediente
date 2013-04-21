@@ -3,9 +3,12 @@
 namespace Tecnotek\ExpedienteBundle\Controller;
 
 use Tecnotek\ExpedienteBundle\Entity\Contact;
+use Tecnotek\ExpedienteBundle\Entity\CourseClass;
 use Tecnotek\ExpedienteBundle\Entity\Club as Club;
 use Tecnotek\ExpedienteBundle\Entity\Relative as Relative;
 use Tecnotek\ExpedienteBundle\Entity\Student;
+use Tecnotek\ExpedienteBundle\Entity\StudentYear;
+use Tecnotek\ExpedienteBundle\Entity\StudentYearCourseQualification;
 use Tecnotek\ExpedienteBundle\Entity\Ticket;
 use Tecnotek\ExpedienteBundle\Form\ContactFormType;
 
@@ -275,7 +278,7 @@ class ReportController extends Controller
                     if($referenceId == 0){
                         $html = $this->getGroupHTMLQualifications($periodId, $gradeId, $groupId);
                     } else {
-                        $html = "Not available.";
+                        $html = $this->getStudentByPeriodHTMLQualifications($periodId, $gradeId, $groupId, $referenceId);
                     }
 
                     return new Response(json_encode(array('error' => false, 'html' => $html)));
@@ -295,9 +298,10 @@ class ReportController extends Controller
     }
 
     public function getGroupHTMLQualifications($periodId, $gradeId, $groupId){
+        $logger = $this->get('logger');
         $em = $this->getDoctrine()->getEntityManager();
 
-        $dql = "SELECT c "
+        $dql = "SELECT cc "
             . " FROM TecnotekExpedienteBundle:Course c, TecnotekExpedienteBundle:CourseClass cc "
             . " WHERE cc.grade = " . $gradeId . " AND cc.course = c"
             . " ORDER BY c.name";
@@ -320,8 +324,8 @@ class ReportController extends Controller
 
         foreach( $courses as $course )
         {
-            $headersRow .=  '<th style="vertical-align: bottom; padding: 0.5625em 0.625em;"><div class="verticalText">' . $course->getName() . '</div></th>';
-            $studentRow .= '<td id="std_stdId_' . $course->getId() . '_stdId">-</td>';
+            $headersRow .=  '<th style="vertical-align: bottom; padding: 0.5625em 0.625em;"><div class="verticalText">' . $course->getCourse()->getName() . '</div></th>';
+            $studentRow .= '<td>Nota_' . $course->getId() . '_</td>';
         }
 
         $headersRow .=  '    </tr>';
@@ -330,22 +334,25 @@ class ReportController extends Controller
 
         $studentRowIndex = 0;
         foreach($students as $stdy){
+            $this->calculateStudentYearQualification($periodId, $stdy->getId(), $stdy);
+
             $html .=  '<tr class="rowNotas">';
             $studentRowIndex++;
             $html .=  '<td>' . $stdy->getStudent()->getCarne() . '</td>';
             $html .=  '<td>' . $stdy->getStudent() . '</td>';
 
-            $row = str_replace("stdId", $stdy->getStudent()->getId(), $studentRow);
-            $row = str_replace("stdyIdd", $stdy->getId(), $row);
-
-            /*$dql = "SELECT qua FROM TecnotekExpedienteBundle:StudentQualification qua"
-. " WHERE qua.studentYear = " . $stdy->getId();
-$query = $em->createQuery($dql);
-$qualifications = $query->getResult();
-foreach($qualifications as $qualification){
-$row = str_replace("val_" . $stdy->getStudent()->getId() . "_" . $qualification->getSubCourseEntry()->getId() . "_", "" . $qualification->getQualification(), $row);
-}
-$html .=  '<td id="total_trim_' . $stdy->getStudent()->getId() . '" class="azul headcoltrim" style="color: #fff;">-</td>' . $row . "</tr>";*/
+            $row = $studentRow;
+            /***** Obtener Notas del Estudiante Inicio *****/
+            foreach( $courses as $course )
+            {
+                $notaFinal = $em->getRepository("TecnotekExpedienteBundle:StudentYearCourseQualification")->findOneBy(array('courseClass' => $course->getId(), 'studentYear' => $stdy->getId()));
+                if(isset($notaFinal)){//Si existe
+                    $row = str_replace("Nota_" . $course->getId() . "_", $notaFinal->getQualification(), $row);
+                } else {
+                    $row = str_replace("Nota_" . $course->getId() . "_", "-", $row);
+                }
+            }
+            /***** Obtener Notas del Estudiante Final *****/
             $html .=  $row . "</tr>";
         }
 
@@ -354,10 +361,14 @@ $html .=  '<td id="total_trim_' . $stdy->getStudent()->getId() . '" class="azul 
         return $html;
     }
 
-    public function getStudentByPeriodHTMLQualifications($periodId, $gradeId, $groupId){
+    public function getStudentByPeriodHTMLQualifications($periodId, $gradeId, $groupId, $studentId){
+
+        $logger = $this->get('logger');
         $em = $this->getDoctrine()->getEntityManager();
 
-        $dql = "SELECT c "
+        $studentYear = $em->getRepository("TecnotekExpedienteBundle:StudentYear")->find($studentId);
+
+        $dql = "SELECT cc "
             . " FROM TecnotekExpedienteBundle:Course c, TecnotekExpedienteBundle:CourseClass cc "
             . " WHERE cc.grade = " . $gradeId . " AND cc.course = c"
             . " ORDER BY c.name";
@@ -366,52 +377,93 @@ $html .=  '<td id="total_trim_' . $stdy->getStudent()->getId() . '" class="azul 
         $courses = $query->getResult();
 
         $headersRow =  '<thead>';
-        $headersRow .=  '    <tr style="height: 175px;">';
-        $headersRow .=  '        <th style="width: 75px; text-align: center;">Carne</th>';
-        $headersRow .=  '        <th style="width: 250px; text-align: center;">Estudiante</th>';
+        $headersRow .=  '    <tr style="height: 30px;">';
+        $headersRow .=  '        <th style="width: 350px; text-align: center;">Materia</th>';
+        $headersRow .=  '        <th style="width: 150px; text-align: center;">Nota Final</th>';
+        $headersRow .=  '    </tr>';
+        $headersRow .=  '</thead>';
 
-        $studentRow = '';
+        $courseRow = '';
 
-        $dql = "SELECT stdy FROM TecnotekExpedienteBundle:Student std, TecnotekExpedienteBundle:StudentYear stdy "
-            . " WHERE stdy.student = std AND stdy.group = " . $groupId . " AND stdy.period = " . $periodId
-            . " ORDER BY std.lastname, std.firstname";
-        $query = $em->createQuery($dql);
-        $students = $query->getResult();
+        $this->calculateStudentYearQualification($periodId, $studentId, $studentYear);
+
+        $html = '<table class="tableQualifications" cellSpacing="0" cellPadding="0">' . $headersRow;
+
+        $courseRow .=  '<tr class="rowNotas">';
+        $courseRow .= '<td>courseName</td>';
+        $courseRow .= '<td><div id="course_courseId_nota">-</div></td>';
+        $courseRow .=  "</tr>";
 
         foreach( $courses as $course )
         {
-            $headersRow .=  '<th style="vertical-align: bottom; padding: 0.5625em 0.625em;"><div class="verticalText">' . $course->getName() . '</div></th>';
-            $studentRow .= '<td id="std_stdId_' . $course->getId() . '_stdId">-</td>';
-        }
+            $row = str_replace("courseName", $course->getCourse()->getName(), $courseRow);
+            $row = str_replace("courseId", $course->getId(), $row);
 
-        $headersRow .=  '    </tr>';
-        $headersRow .=  '</thead>';
-        $html = '<table class="tableQualifications" cellSpacing="0" cellPadding="0">' . $headersRow;
+            $notaFinal = $em->getRepository("TecnotekExpedienteBundle:StudentYearCourseQualification")->findOneBy(array('courseClass' => $course->getId(), 'studentYear' => $studentYear->getId()));
+            if(isset($notaFinal)){//Si existe
+                $row = str_replace("-", $notaFinal->getQualification(), $row);
+            }
 
-        $studentRowIndex = 0;
-        foreach($students as $stdy){
-            $html .=  '<tr class="rowNotas">';
-            $studentRowIndex++;
-            $html .=  '<td>' . $stdy->getStudent()->getCarne() . '</td>';
-            $html .=  '<td>' . $stdy->getStudent() . '</td>';
-
-            $row = str_replace("stdId", $stdy->getStudent()->getId(), $studentRow);
-            $row = str_replace("stdyIdd", $stdy->getId(), $row);
-
-            /*$dql = "SELECT qua FROM TecnotekExpedienteBundle:StudentQualification qua"
-. " WHERE qua.studentYear = " . $stdy->getId();
-$query = $em->createQuery($dql);
-$qualifications = $query->getResult();
-foreach($qualifications as $qualification){
-$row = str_replace("val_" . $stdy->getStudent()->getId() . "_" . $qualification->getSubCourseEntry()->getId() . "_", "" . $qualification->getQualification(), $row);
-}
-$html .=  '<td id="total_trim_' . $stdy->getStudent()->getId() . '" class="azul headcoltrim" style="color: #fff;">-</td>' . $row . "</tr>";*/
-            $html .=  $row . "</tr>";
+            $html .=  $row;
         }
 
         $html .= "</table>";
 
         return $html;
+    }
+
+    public function calculateStudentYearQualification($periodId, $studentYearId, $studentYear){
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $logger = $this->get('logger');
+
+        //Obtener todas las notas obtenidas del estudiante en el periodo
+        $allQualifications = $em->getRepository("TecnotekExpedienteBundle:StudentQualification")->findBy(array('studentYear' => $studentYearId));
+
+        $notasCursos = array();
+
+        foreach($allQualifications as $qua){
+
+            $subEntry = $qua->getSubCourseEntry();
+            $n = $qua->getQualification();
+            $m = $subEntry->getMaxValue();
+            $p = $subEntry->getPercentage();
+
+            //Calcular porcentage ganado en la entrada
+            $pg = $p * $n / $m;
+
+            //Hack para cuando no se definen los porcentajes adecuados...
+            $courseEntry = $subEntry->getParent();
+
+            if($subEntry->getParent()->getPercentage() == $subEntry->getPercentage()){
+                $childrens = $em->getRepository("TecnotekExpedienteBundle:SubCourseEntry")->findBy(array('parent' => $courseEntry->getId(), 'group' => $studentYear->getGroup()->getId()));
+                $size = sizeof($childrens);
+                if( $size > 0){
+                    $pg = $pg / $size;
+                }
+            }
+
+            $pg = round( $pg, 2, PHP_ROUND_HALF_UP);
+
+            //Revisar si ya existe la entrada del curso (CourseEntry)
+            if( isset($notasCursos[$subEntry->getParent()->getCourseClass()->getId()]) ){
+                $pg = $notasCursos[$subEntry->getParent()->getCourseClass()->getId()] + $pg;
+            }
+            $notasCursos[$subEntry->getParent()->getCourseClass()->getId()] = $pg;
+        }
+
+        foreach ($notasCursos as $i => $value) {
+            //Guardar registro de nota final
+            $notaFinal = $em->getRepository("TecnotekExpedienteBundle:StudentYearCourseQualification")->findOneBy(array('courseClass' => $i, 'studentYear' => $studentYearId));
+            if(!isset($notaFinal)){//Si no existe crea el registro
+                $notaFinal = new StudentYearCourseQualification();
+                $notaFinal->setStudentYear($studentYear);
+                $notaFinal->setCourseClass($em->getRepository("TecnotekExpedienteBundle:CourseClass")->find($i));
+            }
+            $notaFinal->setQualification($value);
+            $em->persist($notaFinal);
+            $em->flush();
+        }
     }
 
     public function loadGroupQualificationssssAction(){

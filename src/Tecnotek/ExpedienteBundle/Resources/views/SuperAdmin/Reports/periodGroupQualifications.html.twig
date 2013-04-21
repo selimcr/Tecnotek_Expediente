@@ -29,53 +29,10 @@
 <link rel="stylesheet" href="{{ asset('fancybox/jquery.fancybox.css') }}" type="text/css" media="all" />
 <link rel="stylesheet" href="{{ asset('fancybox/fancybox_style.css') }}" type="text/css" media="all" />
 <link rel="stylesheet" href="{{ asset('css/jquery-ui-timepicker-addon.css') }}" type="text/css" media="all" />
-<style>
-    @media screen {
-        .noPrint {/*display:block !important;*/}
-    }
+<link rel="stylesheet" href="{{ asset('saintmichael//stylesheets/waitingBar.css') }}" type="text/css" media="all" />
+<link rel="stylesheet" href="{{ asset('saintmichael//stylesheets/qualificationsOfPeriod.css') }}" type="text/css" media="all" />
 
-        /* Print Only */
-    @media print {
-        .noPrint {display:none !important;}
-    }
-
-    #wrap {min-width: 960px;}
-    .tableQualifications {border: 1px;}
-    .tableQualifications table, th, td { border: 1px solid black; font-size: 11px; color: #000;}
-
-    .tableQualifications .rowNotas {
-        height: 30px; font-size: 12px; font-weight: bold; color: #000;
-    }
-
-    .tableQualifications table tr td {
-        color: #000;
-    }
-
-    .tableQualifications table tr.even, table tr.alt, table tr:nth-of-type(even) {
-        background: #f9f9f9;
-    }
-    .tableQualifications table thead, table tfoot {
-        background: whitesmoke;
-        font-weight: bold;
-    }
-
-    .tableQualifications td { width: 45px; text-align: center; color: #000;}
-    .tableQualifications .bold {font-weight: bold;}
-
-    .verticalText{text-align: center; vertical-align: middle; font-weight: bold; width: 20px; margin: 0px; padding: 0px; padding-left: 3px; padding-right: 3px; padding-top: 10px; white-space: nowrap; font-size: 11px; -webkit-transform: rotate(-90deg); -moz-transform: rotate(-90deg);}
-
-    .itemEstudiante{ background-color: #A4D2FD; }
-    .qualificationTable .itemNota{ background-color: #A4D2FD; }
-    .qualificationTable .textField {font-weight: bold; color: #000; /*position: absolute; */text-align: center; float: left; width: 44px; height: 24px; line-height: 11px;
-        vertical-align: middle; border: none; font-size: 12px; padding: 0px; margin: 0px; background-color: #A4D2FD;}
-
-    .qualificationTable {width: 950px}
-    #contentBody {width: auto; overflow-x:scroll; margin-left:0px; }
-    .headcolcarne { height: 30px; border: 1px solid black; position:absolute; left:0; line-height: 30px; }
-    .headcolnombre { height: 30px; border: 1px solid black; position:absolute; left:75px; line-height: 30px; }
-</style>
-
-<style type="text/css">
+<style type="text/css" type="text/css" media="all">
     input {font-weight:bold;}
 </style>
 {% endblock %}
@@ -109,8 +66,7 @@
                 </div>
             </div>
 
-            <div class="left" style="margin-left: 15px;"><a href="#" class="button success-darker tiny" id="viewPrintable" name="viewPrintable"><span></span>Versi&oacute;n Imprimible</a></div>
-
+            <button style="margin-left: 15px; margin-top: 0px;" type="button" class="right button success-darker tiny" id="btnPrint" name="btnPrint" rel="Calificaciones"><span></span>{% trans %}label.print{% endtrans %}</button>
             <div class="clear"></div>
         </div>
         <!-- Qualifications -->
@@ -127,10 +83,33 @@
 
         <div id="tableContainer" name="tableContainer" style="display: none;">
             <div class="left qualificationTable" id="tablaCalificacion" name="tablaCalificacion">
+                <div class="center"><h3><img width="840" height="145" src="{{ asset('images/encabezados1.png') }}" alt="" class="image-hover"></h3></div>
+                <div  name="contentHeader" id="contentHeader"></div>
                 <div  name="contentBody" id="contentBody"></div>
                 <div class="clear"></div>
             </div>
             <div class="clear"></div>
+        </div>
+
+        <div style="width: 100%; text-align: center;">
+            <div id="fountainG" >
+                <div id="fountainG_1" class="fountainG">
+                </div>
+                <div id="fountainG_2" class="fountainG">
+                </div>
+                <div id="fountainG_3" class="fountainG">
+                </div>
+                <div id="fountainG_4" class="fountainG">
+                </div>
+                <div id="fountainG_5" class="fountainG">
+                </div>
+                <div id="fountainG_6" class="fountainG">
+                </div>
+                <div id="fountainG_7" class="fountainG">
+                </div>
+                <div id="fountainG_8" class="fountainG">
+                </div>
+            </div>
         </div>
     </div>
 </div>

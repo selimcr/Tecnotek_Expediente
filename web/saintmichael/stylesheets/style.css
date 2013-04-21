@@ -236,3 +236,8 @@ a.desc {line-height: 32px; font-size: 15px; float: left; text-align: right; colo
 .contactInfo .fieldRow{font-size: 12px; height: 26px; line-height: 26px; vertical-align: middle; color: #000;}
 .contactInfo .fieldRow label {display: inline; width: 100px; font-weight: bold;}
 .contactInfo .fieldRow span {display: inline; width: 100%;}
+
+.reportContentHeader {margin-bottom: 15px; line-height: 25px; font-size: 14px; color: #000;}
+.reportContentHeader .reportContentLabel { font-weight: bold; width: 150px;}
+.reportContentHeader .reportContentText {}
+

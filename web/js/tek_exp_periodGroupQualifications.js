@@ -25,23 +25,8 @@ Tecnotek.PeriodGroupQualifications = {
         Tecnotek.PeriodGroupQualifications.initButtons();
     },
     initButtons : function() {
-        $('#viewPrintable').click(function(event){
-            event.preventDefault();
-            /*console.debug("print!!!");
-
-            var url = Tecnotek.UI.urls["viewPrintableVersionURL"];
-            var windowName = "Calificaciones de Grupo";
-            //var windowSize = windowSizeArray[$(this).attr("rel")];
-
-            var periodId = $("#period").val();
-            var courseId = $("#courses").val();
-            var groupId = $("#groups").val();
-
-            if(periodId != null && courseId != null && groupId != null){
-                url += "?periodId=" + periodId + "&groupId=" + groupId + "&courseId=" + courseId;
-                window.open(url, windowName);
-            }*/
-
+        $('#btnPrint').click(function(event){
+            $("#tablaCalificacion").printElement({printMode:'popup', pageTitle:$(this).attr('rel')});
         });
     },
     loadGroupsOfPeriod: function($periodId) {
@@ -99,25 +84,33 @@ Tecnotek.PeriodGroupQualifications = {
         $('#contentBody').empty();
         if(studentId === null){//Clean page
         } else {
+            $('#tableContainer').hide();
+            $('#fountainG').show();
             Tecnotek.ajaxCall(Tecnotek.UI.urls["loadQualificationsOfGroupURL"],
                 {   periodId: $("#period").val(),
                     referenceId: studentId,
                     groupId: $("#groups").val()},
                 function(data){
+                    $('#fountainG').hide();
                     if(data.error === true) {
                         Tecnotek.showErrorMessage(data.message,true, "", false);
                     } else {
-                        console.debug("WIDHT----> " + data.codesCounter);
-
+                        var tableHeader = "";
+                        if(studentId != 0){
+                            tableHeader += '<div class="reportContentHeader">';
+                            tableHeader += '<div class="left reportContentLabel">Periodo:</div><div class="left reportContentText">' + $("#period").find(":selected").text() + '</div><div class="clear"></div>';
+                            tableHeader += '<div class="left reportContentLabel">Grado y Grupo:</div><div class="left reportContentText">' + $("#groups").find(":selected").text() + '</div><div class="clear"></div>';
+                            tableHeader += '<div class="left reportContentLabel">Estudiante:</div><div class="left reportContentText">' + $("#students").find(":selected").text() + '</div><div class="clear"></div>';
+                            tableHeader += "</div>";
+                        }
+                        //
+                        $('#contentHeader').html(tableHeader);
                         $('#contentBody').html(data.html);
                         $('#tableContainer').show();
-
-                        //var height = data.studentsCounter * 26.66 + 300;
-                        //$("#studentsTableContainer").css("height", height + "px");
-
                     }
                 },
                 function(jqXHR, textStatus){
+                    $('#fountainG').hide();
                     $( "#spinner-modal" ).dialog( "close" );
                     Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
                 }, false);
