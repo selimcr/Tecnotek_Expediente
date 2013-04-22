@@ -56,6 +56,12 @@ class Observation
      */
     private $group;
 
+    /**
+     * @ManyToOne(targetEntity="StudentYear")
+     * @JoinColumn(name="student_year_id", referencedColumnName="id")
+     */
+    private $studentYear;
+
     public function __construct()
     {
         $this->detail = "";
@@ -63,7 +69,7 @@ class Observation
 
     public function __toString()
     {
-        return $this->id;
+        return $this->studentYear;
     }
 
     /**
@@ -174,6 +180,26 @@ class Observation
     public function getGroup()
     {
         return $this->group;
+    }
+
+    /**
+     * Set studentYear
+     *
+     * @param \Tecnotek\ExpedienteBundle\Entity\StudentYear $studentYear
+     */
+    public function setStudentYear(\Tecnotek\ExpedienteBundle\Entity\StudentYear $studentYear)
+    {
+        $this->studentYear = $studentYear;
+    }
+
+    /**
+     * Get studentYear
+     *
+     * @return \Tecnotek\ExpedienteBundle\Entity\StudentYear
+     */
+    public function getStudentYear()
+    {
+        return $this->studentYear;
     }
 
 }

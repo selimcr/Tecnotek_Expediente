@@ -761,14 +761,6 @@ class TeacherController extends Controller
 
                     $specialCounter = 1;
 
-                    /*foreach( $entries as $entry )
-                    {
-                        $temp = $entry;
-                        $childrens = $temp->getChildrens();
-                        $size = sizeof($childrens);
-
-                    }*/
-
                     $htmlCodes .= "</tr>";
                     $html .= "</tr>";
                     $html3 .= "</tr>";
@@ -791,15 +783,16 @@ class TeacherController extends Controller
                             $row = str_replace($indexVar, "" . ($studentRowIndex + (($i - 1) * $studentsCount)), $row);
                         }
 
-                        $dql = "SELECT qua FROM TecnotekExpedienteBundle:StudentQualification qua"
-                            . " WHERE qua.studentYear = " . $stdy->getId();
+                        $dql = "SELECT obs FROM TecnotekExpedienteBundle:Observation obs"
+                            . " WHERE obs.studentYear = " . $stdy->getId();
                         $query = $em->createQuery($dql);
-                        $qualifications = $query->getResult();
-                        foreach($qualifications as $qualification){
-                            $row = str_replace("val_" . $stdy->getStudent()->getId() . "_" . $qualification->getSubCourseEntry()->getId() . "_", "" . $qualification->getQualification(), $row);
+                        $observations = $query->getResult();
+                        foreach($observations as $observation){
+                            $row =  $observation->getDetail();
                         }
-                        $html .=  '<td id="total_trim_' . $stdy->getStudent()->getId() . '" class="azul headcoltrim" style="color: #fff;">-</td>' . $row . "";
-                        $html .=  '<td id="obser_' . $stdy->getStudent()->getId() . '"  style="color: #fff; width: 1600px">  </td></tr>';
+                        $temprr = $stdy->getId();
+                        $html .=  '<td id="total_trim_' . $stdy->getStudent()->getId() . '" class="azul headcoltrim" style="color: #fff;">-</td>';
+                        $html .=  '<td id="obser_' . $stdy->getStudent()->getId() . '"  style="color: #000; width: 1600px"><input  class="Large" size"255" maxlength="255"  std="stdId"  $stdyId="' . $stdy->getStudent()->getId() . '" value ="' . $row . '"></input></td></tr>';
                     }
 
                     $html .= "</table>";
@@ -850,6 +843,57 @@ class TeacherController extends Controller
                         $studentQ->setQualification($qualification);
                     }
                     $em->persist($studentQ);
+                    $em->flush();
+                    return new Response(json_encode(array('error' => false)));
+                } else {
+                    return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
+                }
+            }
+            catch (Exception $e) {
+                $info = toString($e);
+                $logger->err('SuperAdmin::saveStudentQualificationAction [' . $info . "]");
+                return new Response(json_encode(array('error' => true, 'message' => $info)));
+            }
+        }// endif this is an ajax request
+        else
+        {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+    }
+
+    public function saveStudentObservationAction(){
+
+        $logger = $this->get('logger');
+        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
+        {
+            try {
+                $request = $this->get('request')->request;
+                $course_classId = $request->get('course_class_id');
+                $studentYearId = $request->get('studentYearId');
+                $userId = $request->get('userId');
+                $groupId = $request->get('groupId');
+                $observation = $request->get('observation');
+                $translator = $this->get("translator");
+                $logger->err('--> ' . $studentYearId . " :: " . $observation);
+                /*if( !isset($observation) || $observation == ""){
+                    $observation = -1;
+                }*/
+                if( isset($course_classId) || isset($studentYearId) ) {
+                    $em = $this->getDoctrine()->getEntityManager();
+
+                    $studentO = $em->getRepository("TecnotekExpedienteBundle:StudentObservation")->findOneBy(array('course_classId' => $course_classId, 'studentYear' => $studentYearId));
+
+                    if ( isset($studentQ) ) {
+                        $studentO->setDetail($observation);
+                    } else {
+                        $studentO = new Observation();
+                        $studentO->setCourseClass($em->getRepository("TecnotekExpedienteBundle:CourseClass")->find( $course_classId ));
+                        $studentO->setStudentYear($em->getRepository("TecnotekExpedienteBundle:StudentYear")->find( $studentYearId ));
+                        $studentO->setTeacher($em->getRepository("TecnotekExpedienteBundle:User")->find( $userId ));
+                        $studentO->setGroup($em->getRepository("TecnotekExpedienteBundle:Group")->find( $groupId ));
+                        $studentO->setDetail($observation);
+                    }
+                    $em->persist($studentO);
                     $em->flush();
                     return new Response(json_encode(array('error' => false)));
                 } else {

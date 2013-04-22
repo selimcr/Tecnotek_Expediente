@@ -782,6 +782,10 @@ _expediente_teacher_save_student_qualification:
     pattern:  /t/student/qualification/save
     defaults: { _controller: TecnotekExpedienteBundle:Teacher:saveStudentQualification }
 
+_expediente_teacher_save_student_observation:
+    pattern:  /t/student/observation/save
+    defaults: { _controller: TecnotekExpedienteBundle:Teacher:saveStudentObservation }
+
 _expediente_sysadmin_remove_ticket:
     pattern:  /ticket/delete
     defaults: { _controller: TecnotekExpedienteBundle:Student:removeTicket}
