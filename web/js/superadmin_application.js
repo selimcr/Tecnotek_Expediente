@@ -75,6 +75,9 @@ var Tecnotek = {
                     Tecnotek.AdministratorList.init();
                     Tecnotek.Absences.init();
                     break;
+                case "absencesTypes":
+                    Tecnotek.AbsencesTypes.init();
+                    break;
 				case "administratorList":
                 case "coordinadorList":
                 case "profesorList":

@@ -737,6 +737,45 @@ _expediente_export_group:
     pattern:  /sysadmin/export/generateFile
     defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:generateExcel }
 
+
+#CRUD de Absences Type para SysAdmin
+_expediente_sysadmin_absenceType:
+    pattern:  /absenceType
+    defaults: { _controller: TecnotekExpedienteBundle:Absences:absencesTypeList }
+
+_expediente_sysadmin_absenceType_delete:
+    pattern:  /absenceType/delete/{id}
+    defaults: { _controller: TecnotekExpedienteBundle:Absences:absencesTypeDelete }
+
+_expediente_sysadmin_absenceType_create:
+    pattern:  /absenceType/create
+    defaults: { _controller: TecnotekExpedienteBundle:Absences:absencesTypeCreate }
+
+_expediente_sysadmin_absenceType_save:
+    pattern:  /absenceType/save
+    defaults: { _controller: TecnotekExpedienteBundle:Absences:absencesTypeSave }
+
+_expediente_sysadmin_absenceType_update:
+    pattern:  /absenceType/update
+    defaults: { _controller: TecnotekExpedienteBundle:Absences:absencesTypeUpdate }
+
+_expediente_sysadmin_absenceType_show:
+    pattern:  /absenceType/show/{id}
+    defaults: { _controller: TecnotekExpedienteBundle:Absences:absencesTypeShow }
+
+_expediente_sysadmin_absenceType_edit:
+    pattern:  /absenceType/edit/{id}
+    defaults: { _controller: TecnotekExpedienteBundle:Absences:absencesTypeEdit }
+
+_expediente_sysadmin_absenceType_show_simple:
+    pattern:  /absenceType/show
+    defaults: { _controller: TecnotekExpedienteBundle:Absences:absencesTypeShow }
+
+_expediente_sysadmin_absenceType_edit_simple:
+    pattern:  /absenceType/edit
+    defaults: { _controller: TecnotekExpedienteBundle:Absences:absencesTypeEdit }
+#Fin de CRUD de Absences Type
+
 ######################    TEACHER    ######################
 _expediente_teacher_qualifications:
   pattern:  /t/qualifications

@@ -151,3 +151,30 @@ Tecnotek.Absences = {
 
     }
 };
+
+Tecnotek.AbsencesTypes = {
+    init : function() {
+        $('#createForm').submit(function(event){
+
+            var error = "";
+
+            console.debug($("#name").val() + " --- " + $.trim($("#name").val()) + " --- " + ($.trim($("#name").val()) === "") );
+            if($.trim($("#name").val()) === ""){
+                error="El nombre no puede estar vacio.<br/>";
+            }
+
+            var errorIns = "";
+            $(".institution").each(function(){
+                if($(this).val() === ""){
+                    errorIns = "Es necesario definir los puntos para todas las instituciones.";
+                }
+            });
+
+            error += errorIns;
+            if(error !== ""){
+                event.preventDefault();
+                Tecnotek.showErrorMessage(error,true, "", false);
+            }
+        });
+    }
+};

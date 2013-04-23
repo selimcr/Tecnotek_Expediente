@@ -1,0 +1,73 @@
+{% extends 'TecnotekExpedienteBundle::logged_layout.html.twig' %}
+
+{% block htmlTitle %}
+    Tecnotek :: Expediente :: Super Administrador :: Curso
+{% endblock %}
+
+{% block extrajs %}
+<script type="text/javascript" src="{{ asset('js/tek_exp_absences.js') }}"></script>
+<script type="text/javascript">
+    Tecnotek.module = "absencesTypes";
+    Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="container_24" style="width: 800px;">
+    <div class="grid_24" style="width: 100%;">
+        <div class="panelRow" id="doc-forms">
+            <div class="large-12 columns">
+                <form class="custom" id="createForm" action="{{ path('_expediente_sysadmin_absenceType_save') }}" method="post">
+                    <fieldset>
+                        <legend>{% trans %}label.absenceTypes.new{% endtrans %}</legend>
+
+                        <div class="formRow">
+                            {% if error is defined %}
+                            <label class="error"><ul><li>Este valor no debería estar vacío</li></ul></label>
+                            {% endif %}
+                            <div class="large-12 columns">
+                                <label>{% trans %}label.name{% endtrans %}</label>
+                                <input type="text" id="name" name="name" required="required">
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+
+                        <h5>{% trans %}label.absenceTypes.points.by.institution{% endtrans %}</h5>
+                        <div class="table">
+                            <div class="row tableHeader">
+                                <div class="option_width" style="float: left; width: 300px;">{% trans %}label.institution{% endtrans %}</div>
+                                <div class="option_width" style="float: left; width: 100px;">{% trans %}label.points{% endtrans %}</div>
+                            </div>
+
+                            {% for institution in institutions %}
+                            <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}" style="border: 0px;">
+                                <div class="option_width" style="float: left; width: 300px;">{{ institution.name }}</div>
+                                <div class="option_width" style="float: left; width: 150px;">
+                                    <input id="institution_{{ institution.id }}" name="institution_{{ institution.id }}" class="institution" type="text">
+                                </div>
+                                <div class="clear"></div>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="formRow ">
+                            <div class="large-12 columns buttonsPanel">
+                                <a href="{{ path('_expediente_sysadmin_absenceType') }}"
+                                   class="button success-darker tiny"><span></span>{% trans %}label.cancelar{% endtrans %}</a>
+
+                                <input class="button success-darker tiny" style="margin-top: 0px;"
+                                       type="submit" name="save"
+                                       value="{% trans %}label.save{% endtrans %}"/>
+
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>
+{% endblock %}

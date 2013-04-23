@@ -36,6 +36,13 @@ class Institution
 
     private $students;
 
+    /**
+     * @var absenceTypePoints
+     *
+     * @ORM\OneToMany(targetEntity="AbsenceTypePoints", mappedBy="institution", cascade={"all"})
+     */
+    private $absenceTypePoints;
+
     public function __construct()
     {
 
@@ -82,5 +89,9 @@ class Institution
 
     public function getStudents(){
         return $this->students;
+    }
+
+    public function getAbsenceTypePoints(){
+        return $this->absenceTypePoints;
     }
 }

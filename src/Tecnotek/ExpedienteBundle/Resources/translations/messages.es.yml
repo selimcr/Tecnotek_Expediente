@@ -73,6 +73,13 @@ label.course.new: Nueva Materia
 messages.confirmation.course.delete: Esta seguro que desea eliminar la materia?
 label.course.show: Detalle de la materia
 
+label.absenceTypes.listar: Lista de Tipos de Ausencia
+label.absenceTypes.new: Nuevo Tipo de Ausencia
+messages.confirmation.absenceTypes.delete: Esta seguro que desea eliminar el tipo de ausencia?
+label.absenceTypes.show: Detalle del Tipo de Ausencia
+label.points: Puntos
+label.absenceTypes.points.by.institution: Puntos por Instituci&oacute;n
+
 messages.confirmation.absence.delete: Esta seguro que desea eliminar esta ausencia?
 message.ticket.confirm.delete: Esta seguro que desea eliminar esta boleta?
 label.period.admin: Administraci&oacute;n de Periodo
@@ -83,6 +90,7 @@ label.teacher.guide: Profesor Gu&iacute;a
 label.year: A&ntilde;o
 label.mantenimientos: Mantenimientos
 label.period: Periodo
+label.absenceTypes: Tipos de Ausencia
 label.grade: Grado
 label.course: Materia
 label.bus: Buseta
@@ -159,7 +167,7 @@ label.group: Grupo
 label.generate: Generar
 label.generate.by: Generar por
 label.report.students.title: Reporte de Estudiantes
-label.report.students.subtitle: Imprimir listado de estudiantes por grupo, nivel o institucion
+label.report.students.subtitle: Imprimir listado de estudiantes por grupo, nivel o Instituci&oacute;n
 label.report.clubs.title: Reporte de Clubes
 label.report.clubs.subtitle: Imprimir listado de clubes con informacion de estudiantes si es deseado.
 label.report.clubs.include.students: Incluir lista de estudiantes
@@ -199,7 +207,7 @@ label.pickUp: Recogen
 label.leaveTime: Dejan
 label.schedule: Horario
 label.zone: Zona
-label.institution: Institucion
+label.institution: Instituci&oacute;n
 label.telephone: Telefono
 label.motherPhone: Telefono de la madre
 label.fatherPhone: Telefono del padre
