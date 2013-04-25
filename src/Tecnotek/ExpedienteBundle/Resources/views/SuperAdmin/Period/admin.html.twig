@@ -193,6 +193,9 @@
                                         <div style="margin-bottom: 5px;">
                                             <label style="display: inline-block; width: 165px">{% trans %}label.teacher.default{% endtrans %}</label>
                                             <select id="courseFormTeacher" name="courseFormTeacher" style="width: 250px;">
+                                                {% for teacher in teachers %}
+                                                <option value="{{ teacher.id }}">{{teacher.firstname ~ " " ~ teacher.lastname}}</option>
+                                                {% endfor %}
                                             </select>
                                         </div>
 

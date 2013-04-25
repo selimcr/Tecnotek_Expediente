@@ -1674,11 +1674,48 @@ class StudentController extends Controller
     {
         $em = $this->getDoctrine()->getEntityManager();
         $ticket = $em->getRepository("TecnotekExpedienteBundle:Ticket")->find($id);
+
+        $currentPeriod = $em->getRepository("TecnotekExpedienteBundle:Period")->findOneBy(array('isActual' => true));
+        $currentPeriodId = 0;
+        if( isset($currentPeriod) ){
+            $currentPeriodId = $currentPeriod->getId();
+        }
+
+        $logger = $this->get('logger');
+
+        $studentYear = $em->getRepository("TecnotekExpedienteBundle:StudentYear")->findOneBy(
+            array('period' => $currentPeriodId, 'student' => $ticket->getStudent()->getId() ));
+
+        $header = "encabezadoDefault.png";
+        $text = "";
+        if(isset($studentYear)){
+            $institution = $studentYear->getGroup()->getInstitution();
+            if(isset($institution)){
+                //Find Properties
+                $property = $em->getRepository("TecnotekExpedienteBundle:InstitutionProperty")->findOneBy(
+                    array('institution' => $institution->getId(), 'code' => "TICKETS_IMAGE" ));
+
+                if(isset($property)){
+                    $header = $property->getValue();
+                }
+
+                $property = $em->getRepository("TecnotekExpedienteBundle:InstitutionProperty")->findOneBy(
+                    array('institution' => $institution->getId(), 'code' => "TICKETS_TEXT" ));
+
+                if(isset($property)){
+                    $text = $property->getValue();
+                }
+            }
+        }
+
+
+
         //$relatives = $em->getRepository("TecnotekExpedienteBundle:Relative")->findByStudent($id);
         //$contact = new \Tecnotek\ExpedienteBundle\Entity\Contact();
         //$form   = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\ContactFormType(), $contact);
 
-        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Ticket/show.html.twig', array('ticket' => $ticket));
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Ticket/show.html.twig',
+            array('ticket' => $ticket, 'header' => $header, 'text' => $text));
 
         //return $this->render('TecnotekExpedienteBundle:SuperAdmin:Student/show.html.twig', array('entity' => $entity,
           //  'form'   => $form->createView(), 'menuIndex' => 3, 'relatives' => $relatives));
