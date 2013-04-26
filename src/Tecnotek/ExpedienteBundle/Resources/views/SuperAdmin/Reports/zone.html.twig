@@ -57,7 +57,7 @@
             <div class="student_row">
                 <div style="float: left; width: 115px;">{{ student.carne }}</div>
                 <div style="float: left; width: 300px;">{{ student }}</div>
-                <div style="float: left; width: 115px;">&nbsp;</div>
+                <div style="float: left; width: 115px;">{{ student.groupyear }}</div>
                 <div style="float: left; width: 390px;">{{ student.address }}</div>
             </div>
             <div class="clear"></div>
@@ -66,10 +66,12 @@
                 Total de estudiantes por ruta: {{ route.students|length}}
                 {% set zoneCounter = zoneCounter + (route.students|length) %}
             </div>
+                <div class="pageBreak"> </div>
             {% endfor %}
             <div class="footer">
                 Total de estudiantes por zona: {{ zoneCounter }}
             </div>
+
             {% else %}
             <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
                 <div class="option_width" style="float: left; width: 375px;">{% trans %}results.not.found{% endtrans %}</div>
@@ -79,5 +81,10 @@
         </div>
     </div>
     <div class="clear"></div>
+    <div class="wrapper">
+        <div class="grid_24 padline">
+            <div class="lineH"></div>
+        </div>
+    </div>
 </div>
 {% endblock %}

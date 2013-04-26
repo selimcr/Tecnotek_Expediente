@@ -363,12 +363,22 @@ class StudentController extends Controller
                         . " AND std.id = stdy.student_id"
                         . " ORDER BY std.lastname, std.firstname";
                 } else {
-                    $sql = "SELECT std.id, std.lastname, std.firstname "
+                    /*$sql = "SELECT std.id, std.lastname, std.firstname "
                         . " FROM tek_students std, tek_students_year stdy"
                         . " LEFT JOIN tek_students_to_routes stdToRoute ON stdToRoute.student_id = std.id"
                         . " WHERE (std.firstname like '%" . $text . "%' OR std.lastname like '%" . $text . "%')"
                         . " AND (stdToRoute.id is null Or stdToRoute.route_id <> $routeId)"
                         . " AND std.id = stdy.student_id"
+                        . " ORDER BY std.lastname, std.firstname";*/
+                    $sql = "SELECT std.id, std.lastname, std.firstname "
+                        . " FROM tek_students std, tek_students_year stdy"
+                        . " WHERE (std.firstname like '%" . $text . "%' OR std.lastname like '%" . $text . "%')"
+                        . " AND NOT EXISTS"
+                        . " (SELECT  null"
+                        . " FROM    tek_students_to_routes stdToRoute"
+                        . " WHERE   stdToRoute.student_id = std.id and stdToRoute.route_id = $routeId)"
+                        . " AND std.id = stdy.student_id"
+                        . " AND std.groupyear != 'NULL'"
                         . " ORDER BY std.lastname, std.firstname";
                 }
                 $stmt = $em->getConnection()->prepare($sql);
@@ -933,7 +943,7 @@ class StudentController extends Controller
                     $sql = "SELECT e.id, e.lastname, e.firstname "
                         . " FROM tek_students e, tek_students_year stdy"
                         . " WHERE (e.firstname like '%" . $text . "%' OR e.lastname like '%" . $text . "%')"
-                        . " AND e.id = stdy.student_id"
+                        . " AND e.id = stdy.student_id AND e.groupyear != 'NULL'"
                         . " ORDER BY e.lastname, e.firstname";
                 }
 
