@@ -44,6 +44,7 @@
                     <div class="option_width" style="float: left; width: 200px;">{{ entity.username }}</div>
                     <div class="option_width" style="float: left; width: 250px;">{{ entity.email }}</div>
                     <div class="option_width" style="float: left; width: 200px;">{% if entity.active %}{% trans %}usuarios.estado.1{% endtrans %}{% else %} {% trans %}usuarios.estado.2{% endtrans %} {% endif %}</div>
+                    <div class="right imageButton viewButton"  title="{% trans %}label.view{% endtrans %}"  rel="{{ entity.id }}"></div>
                 </div>
                 {% set counter = counter + 1 %}
             {% endfor %}
