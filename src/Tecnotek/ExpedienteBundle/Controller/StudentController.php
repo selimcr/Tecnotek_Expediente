@@ -1295,6 +1295,11 @@ class StudentController extends Controller
 
         $penalties = $em->getRepository("TecnotekExpedienteBundle:Penalty")->findAll();
 
+        $currentPeriod = $em->getRepository("TecnotekExpedienteBundle:Period")->findOneBy(array('isActual' => true));        $currentPeriodId = 0;
+        if( isset($currentPeriod) ){
+            $currentPeriodId = $currentPeriod->getId();
+        }
+
         return $this->render('TecnotekExpedienteBundle:SuperAdmin:Penalty/index.html.twig', array('menuIndex' => 3,
             'entities' => $entities, 'dateFrom' => $start, "dateTo" => $end, 'student' => "",
             'period' => "-1", 'students' => $students, "penalties" => $penalties, "currentPeriod" => $currentPeriodId
@@ -1351,6 +1356,12 @@ class StudentController extends Controller
 
         $penalties = $em->getRepository("TecnotekExpedienteBundle:Penalty")->findAll();
 
+        $currentPeriod = $em->getRepository("TecnotekExpedienteBundle:Period")->findOneBy(array('isActual' => true));
+        $currentPeriodId = 0;
+        if( isset($currentPeriod) ){
+            $currentPeriodId = $currentPeriod->getId();
+        }
+
         return $this->render('TecnotekExpedienteBundle:SuperAdmin:Penalty/index.html.twig', array('menuIndex' => 3,
             'entities' => $entities, 'dateFrom' => $start, "dateTo" => $end, 'student' => $student,
             'period' => $period, 'students' => $students, "penalties" => $penalties, "currentPeriod" => $currentPeriodId
@@ -1369,6 +1380,7 @@ class StudentController extends Controller
                 $type = $request->get('type');
                 $comments = $request->get('comments');
                 $periodId = $request->get('periodId');
+                $pointsPenalty = $request->get('pointsPenalty');
 
                 $em = $this->getDoctrine()->getEntityManager();
 
@@ -1377,6 +1389,7 @@ class StudentController extends Controller
                 if( isset($studentYear) && $studentYear->getGroup()!= null ){
                     $entity  = new StudentPenalty();
                     $entity->setComments($comments);
+                    $entity->setPointsPenalty($pointsPenalty);
                     $entity->setDate(new \DateTime($date));
                     $entity->setStudentYear($studentYear);
                     $entity->setPenalty($em->getRepository("TecnotekExpedienteBundle:Penalty")->find($type));
@@ -1399,26 +1412,16 @@ class StudentController extends Controller
         {
             return new Response("<b>Not an ajax call!!!" . "</b>");
         }
+    }
 
-        $entity  = new Absence();
-        $request = $this->getRequest();
-        $form    = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\AbsenceFormType(), $entity);
-        $form->bindRequest($request);
-
+     public function penaltyDeleteAction($id){
         $em = $this->getDoctrine()->getEntityManager();
-        $entities = $em->getRepository("TecnotekExpedienteBundle:Absence")->findAll();
-
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getEntityManager();
-            $em->persist($entity);
+        $entity = $em->getRepository("TecnotekExpedienteBundle:StudentPenalty")->find( $id );
+        if ( isset($entity) ) {
+            $em->remove($entity);
             $em->flush();
-            return $this->redirect($this->generateUrl('_expediente_absences',
-                array('id' => $entity->getId())));
-        } else {
-            return $this->render('TecnotekExpedienteBundle:SuperAdmin:Penalty/index.html.twig', array('menuIndex' => 3,
-                'entities' => $entities, 'entity' => $entity, 'form'   => $form->createView(), 'student' => ""
-            ));
         }
+        return $this->redirect($this->generateUrl('_expediente_penalties'));
     }
 
     public function penaltiesEditAction($id)

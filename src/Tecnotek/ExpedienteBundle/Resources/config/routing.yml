@@ -551,8 +551,12 @@ _expediente_penalties_save:
     defaults: { _controller: TecnotekExpedienteBundle:Student:penaltiesSave }
 
 _delete_penalties:
-    pattern:  /ap/penalties/delete/{id}
-    defaults: { _controller: TecnotekExpedienteBundle:Student:penaltiesDelete }
+    pattern:  /penalties/delete/{id}
+    defaults: { _controller: TecnotekExpedienteBundle:Student:penaltyDelete }
+
+_delete_penalties_simple:
+    pattern:  /penalties/delete
+    defaults: { _controller: TecnotekExpedienteBundle:Student:penaltyDelete }
 
 _expediente_sysadmin_penalties_create:
     pattern:  /ap/penalties/create

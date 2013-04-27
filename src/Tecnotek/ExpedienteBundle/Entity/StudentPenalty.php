@@ -41,6 +41,12 @@ class StudentPenalty
     private $penalty;
 
     /**
+     * @ORM\Column(type="integer")
+     * @Assert\NotBlank()
+     */
+    private $pointsPenalty;
+
+    /**
      * @ManyToOne(targetEntity="StudentYear")
      * @JoinColumn(name="student_year_id", referencedColumnName="id", onDelete="CASCADE")
      */
@@ -146,5 +152,25 @@ class StudentPenalty
     public function getDate()
     {
         return $this->date;
+    }
+
+    /**
+     * Set pointsPenalty
+     *
+     * @param integer $pointsPenalty
+     */
+    public function setPointsPenalty($pointsPenalty)
+    {
+        $this->pointsPenalty = $pointsPenalty;
+    }
+
+    /**
+     * Get pointsPenalty
+     *
+     * @return integer
+     */
+    public function getPointsPenalty()
+    {
+        return $this->pointsPenalty;
     }
 }

@@ -643,6 +643,16 @@ var Tecnotek = {
                     $('#suggestions').fadeOut(); // Hide the suggestions box
                 });
                 //TODO Penalties
+                $(".deleteButton").click(function(event){
+                    event.preventDefault();
+                    Tecnotek.Penalties.delete($(this).attr("rel"));
+                });
+            },
+            delete : function(penaltyId){
+                //TODO delete Penalty
+                if (Tecnotek.showConfirmationQuestion(Tecnotek.UI.translates["confirmDelete"])){
+                    location.href = Tecnotek.UI.urls["deleteURL"] + "/" + penaltyId;
+                }
             },
             save : function(){
                 if(Tecnotek.UI.vars["currentPeriod"] == 0){
@@ -653,6 +663,7 @@ var Tecnotek = {
                 var $date = $("#date").val();
                 var $type = $("#penaltyType").val();
                 var $comments = $("#comments").val();
+                var $pointsPenalty = $("#pointsPenalty").val();
 
                 if($comments === ""){
                     Tecnotek.showErrorMessage("Debe incluir un comentario.",
@@ -663,6 +674,7 @@ var Tecnotek = {
                             date: $date,
                             type: $type,
                             comments: $comments,
+                            pointsPenalty: $pointsPenalty,
                             periodId: Tecnotek.UI.vars["currentPeriod"]
                         },
                         function(data){
@@ -674,7 +686,7 @@ var Tecnotek = {
                             }
                         },
                         function(jqXHR, textStatus){
-                            Tecnotek.showErrorMessage("Error saving absence: " + textStatus + ".",
+                            Tecnotek.showErrorMessage("Error saving penalty: " + textStatus + ".",
                                 true, "", false);
                         }, true);
                 }
