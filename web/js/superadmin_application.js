@@ -311,8 +311,10 @@ var Tecnotek = {
 			initComponents : function() {
 			},
 			initButtons : function() {
+                console.debug("AdministratorList :: initButtons");
                 $('.editButton').click(function(event){
                     event.preventDefault();
+                    console.debug("AdministratorList :: initButtons :: editButton Event");
                     location.href = Tecnotek.UI.urls["edit"] + "/" + $(this).attr("rel");
                 });
                 $('.viewButton').click(function(event){
