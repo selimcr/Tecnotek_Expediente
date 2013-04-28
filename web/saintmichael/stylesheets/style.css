@@ -241,3 +241,8 @@ a.desc {line-height: 32px; font-size: 15px; float: left; text-align: right; colo
 .reportContentHeader .reportContentLabel { font-weight: bold; width: 150px;}
 .reportContentHeader .reportContentText {}
 
+.courseTable table { page-break-inside:auto }
+.courseTable .courseTableRow   { page-break-inside:avoid; page-break-after:auto }
+.courseTable thead { display:table-header-group }
+.courseTable tfoot { display:table-footer-group }
+

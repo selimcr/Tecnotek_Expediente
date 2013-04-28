@@ -5480,3 +5480,8 @@ form span.postfix {
 .clearing-thumbs li {
   display: inline;
 }
+
+.courseTable table { page-break-inside:auto }
+.courseTable tr   { page-break-inside:avoid; page-break-after:auto }
+.courseTable thead { display:table-header-group }
+.courseTable tfoot { display:table-footer-group }
