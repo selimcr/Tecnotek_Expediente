@@ -535,6 +535,21 @@ _expediente_report_group_qualifications:
    pattern:  /reports/groupQualifications/
    defaults: { _controller: TecnotekExpedienteBundle:Report:loadGroupQualifications }
 
+_expediente_report_group_qualifications_by_rubro:
+   pattern:  /reports/groupQualificationsByRubro/
+   defaults: { _controller: TecnotekExpedienteBundle:Report:groupQualificationsByRubro }
+
+_expediente_report_load_group_qualifications_by_rubro:
+   pattern:  /reports/loadGroupQualificationsByRubro/
+   defaults: { _controller: TecnotekExpedienteBundle:Report:loadGroupQualificationsByRubro }
+
+_expediente_report_student_qualifications:
+   pattern:  /reports/studentQualifications/
+   defaults: { _controller: TecnotekExpedienteBundle:Report:studentQualifications }
+
+_expediente_report_load_student_qualifications:
+   pattern:  /reports/loadStudentQualifications/
+   defaults: { _controller: TecnotekExpedienteBundle:Report:loadStudentQualifications }
 #########################################
 
 ###########      PENALTIES      ###########

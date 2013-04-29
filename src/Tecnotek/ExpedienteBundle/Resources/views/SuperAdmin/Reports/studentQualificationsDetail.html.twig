@@ -1,0 +1,116 @@
+{% extends 'TecnotekExpedienteBundle::logged_layout.html.twig' %}
+
+{% block htmlTitle %}
+    Tecnotek :: Expediente :: Super Administrador
+{% endblock %}
+
+
+
+{% block extrajs %}
+<script type="text/javascript" src="{{ asset('js/jquery.printElement.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/tek_exp_studentQualifications.js') }}"></script>
+
+<script type="text/javascript">
+    Tecnotek.module = "studentQualificationsDetail";
+    Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
+
+    Tecnotek.UI.urls["loadGroupsOfPeriodURL"] = "{{ path('_expediente_sysadmin_load_groups_of_period_q')}}";
+    Tecnotek.UI.urls["loadStudentsGroupURL"] = "{{ path("_expediente_get_students_list_of_group") }}";
+
+    Tecnotek.UI.urls["loadQualificationsOfGroupURL"] = "{{ path("_expediente_report_load_student_qualifications") }}";
+    Tecnotek.UI.urls["viewPrintableVersionURL"] = "{{ path("_expediente_sysadmin_printable_group_qualifications") }}";
+
+    Tecnotek.UI.urls["getStudentsURL"] = "{{ path('_expediente_sysadmin_student_ajax_list')}}";
+    Tecnotek.StudentShow.translates["relative.not.selected"] = "{% trans %}message.relative.not.selected{% endtrans %}";
+</script>
+{% endblock %}
+
+{% block extracss %}
+<link rel="stylesheet" href="{{ asset('fancybox/jquery.fancybox.css') }}" type="text/css" media="all" />
+<link rel="stylesheet" href="{{ asset('fancybox/fancybox_style.css') }}" type="text/css" media="all" />
+<link rel="stylesheet" href="{{ asset('css/jquery-ui-timepicker-addon.css') }}" type="text/css" media="all" />
+<link rel="stylesheet" href="{{ asset('saintmichael//stylesheets/waitingBar.css') }}" type="text/css" media="all" />
+<link rel="stylesheet" href="{{ asset('saintmichael//stylesheets/qualificationsOfPeriod.css') }}" type="text/css" media="all" />
+
+<style type="text/css" type="text/css" media="all">
+    input {font-weight:bold;}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container_24">
+    <div class="grid_24">
+        <div style="line-height: 26px;">
+            <div class="left" style="width: 70px; font-weight: bold;">{%trans%}label.period{%endtrans%}</div>
+            <div id="labelPeriod" class="left">
+                <select id="period" name="period" style="width: 150px;">
+                    {% for period in periods %}
+                    <option value="{{ period.id }}">{{period}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div id="groupsContainer" class="left" style="margin-left: 50px;">
+                <div class="left" style="width: 65px; font-weight: bold;">{%trans%}label.groups{%endtrans%}</div>
+                <div class="left">
+                    <select id="groups" name="groups" style="width: 150px;">
+                    </select>
+                </div>
+            </div>
+
+            <div id="coursesContainer" class="left" style="margin-left: 40px;">
+                <div class="left" style="width: 95px; font-weight: bold;">{%trans%}label.student{%endtrans%}</div>
+                <div class="left">
+                    <select id="students" name="students" style="width: 150px;">
+                    </select>
+                </div>
+            </div>
+
+            <button style="margin-left: 15px; margin-top: 0px;" type="button" class="right button success-darker tiny" id="btnPrint" name="btnPrint" rel="Calificaciones"><span></span>{% trans %}label.print{% endtrans %}</button>
+            <div class="clear"></div>
+        </div>
+        <!-- Qualifications -->
+        <div>
+            <div class="left">
+                <h3>{% trans %}label.qualifications{% endtrans %}</h3>
+            </div>
+            <div class="left" style="line-height: 48px; margin-left: 25px;">
+                <span>Calificaciones de estudiante en detalle</span>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="clear"></div>
+
+        <div id="tableContainer" name="tableContainer" style="display: none;">
+            <div class="left qualificationTable" id="tablaCalificacion" name="tablaCalificacion">
+                <div class="center"><h3><img width="840" height="145" src="{{ asset('images/encabezados1.png') }}" alt="" class="image-hover"></h3></div>
+                <div  name="contentHeader" id="contentHeader"></div>
+                <div  name="contentBody" id="contentBody"></div>
+                <div class="clear"></div>
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div style="width: 100%; text-align: center;">
+            <div id="fountainG" >
+                <div id="fountainG_1" class="fountainG">
+                </div>
+                <div id="fountainG_2" class="fountainG">
+                </div>
+                <div id="fountainG_3" class="fountainG">
+                </div>
+                <div id="fountainG_4" class="fountainG">
+                </div>
+                <div id="fountainG_5" class="fountainG">
+                </div>
+                <div id="fountainG_6" class="fountainG">
+                </div>
+                <div id="fountainG_7" class="fountainG">
+                </div>
+                <div id="fountainG_8" class="fountainG">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

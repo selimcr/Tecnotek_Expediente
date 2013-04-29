@@ -658,4 +658,377 @@ class ReportController extends Controller
         }
     }
 
+    public function groupQualificationsByRubroAction(){
+        $em = $this->getDoctrine()->getEntityManager();
+        $periods = $em->getRepository("TecnotekExpedienteBundle:Period")->findAll();
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Reports/groupQualificationsByRubro.html.twig', array('menuIndex' => 4,
+            'periods' => $periods
+        ));
+    }
+
+    public function loadGroupQualificationsByRubroAction(){
+        $logger = $this->get('logger');
+        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
+        {
+            try {
+                $request = $this->get('request')->request;
+                $periodId = $request->get('periodId');
+                $groupId = $request->get('groupId');
+
+                $keywords = preg_split("/[\s-]+/", $groupId);
+                $groupId = $keywords[0];
+                $gradeId = $keywords[1];
+
+                $code = $request->get('code');
+
+                $translator = $this->get("translator");
+
+                if( isset($code) && isset($groupId) && isset($periodId)) {
+
+                    $html = $this->getGroupByRubroHTMLQualifications($periodId, $gradeId, $groupId, $code);
+
+                    return new Response(json_encode(array('error' => false, 'html' => $html)));
+                } else {
+                    return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
+                }
+            }
+            catch (Exception $e) {
+                $info = toString($e);
+                $logger->err('Teacher::loadEntriesByCourseAction [' . $info . "]");
+                return new Response(json_encode(array('error' => true, 'message' => $info)));
+            }
+        }// endif this is an ajax request
+        else {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+    }
+
+    public function getGroupByRubroHTMLQualifications($periodId, $gradeId, $groupId, $code){
+        $logger = $this->get('logger');
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $dql = "SELECT ce "
+            . " FROM TecnotekExpedienteBundle:Course c, TecnotekExpedienteBundle:CourseClass cc, TecnotekExpedienteBundle:CourseEntry ce "
+            . " WHERE cc.grade = " . $gradeId . " AND cc.course = c AND ce.courseClass = cc"
+            . " AND ce.code = '$code'"
+            . " ORDER BY c.name";
+
+        $query = $em->createQuery($dql);
+
+        $courseEntries = $query->getResult();
+
+        if(sizeof($courseEntries) == 0){
+            return "";
+        } else {
+            $headersRow =  '<thead>';
+            $headersRow .=  '    <tr style="height: 175px;">';
+            $headersRow .=  '        <th colspan=2 style="text-align: center;">NOMBREENTRY</th>';
+
+            $porcRow = '<tr style="background-color: black; background-color: rgb(201, 194, 194); font-weight: bold; font-size: 14px;">';
+            $porcRow .=  '        <td style="width: 75px; text-align: center;">Carne</td>';
+            $porcRow .=  '        <td style="width: 250px; text-align: center;">Estudiante</td>';
+
+            $studentRow = '';
+
+            $dql = "SELECT stdy FROM TecnotekExpedienteBundle:Student std, TecnotekExpedienteBundle:StudentYear stdy "
+                . " WHERE stdy.student = std AND stdy.group = " . $groupId . " AND stdy.period = " . $periodId
+                . " ORDER BY std.lastname, std.firstname";
+            $query = $em->createQuery($dql);
+            $students = $query->getResult();
+            $entryName  = "";
+            foreach( $courseEntries as $courseEntry )
+            {
+                $entryName = $courseEntry->getName();
+                $headersRow .=  '<th colspan=2 style="vertical-align: bottom; padding: 15px 30px;"><div class="verticalText">' .
+                    $courseEntry->getCourseClass()->getCourse()->getName() . ' ' . $courseEntry->getPercentage() . '%</div></th>';
+                $studentRow .= '<td>Nota_' . $courseEntry->getId() . '_</td>' . '<td style=" background-color: rgb(234, 241, 221);">Notap_' . $courseEntry->getId() . '_</td>';
+                $porcRow .= '<td>Nota</td><td style=" background-color: rgb(234, 241, 221);">% Gan</td>';
+
+            }
+
+            $headersRow .=  '    </tr>';
+            $headersRow .=  '</thead>';
+            $headersRow = str_replace("NOMBREENTRY", $entryName, $headersRow);
+
+            $porcRow .= "</tr>";
+            $html = '<table class="tableQualifications" cellSpacing="0" cellPadding="0">' . $headersRow . $porcRow;
+
+            $studentRowIndex = 0;
+
+            foreach($students as $stdy){
+                $this->calculateStudentYearQualification($periodId, $stdy->getId(), $stdy);
+
+                $html .=  '<tr class="rowNotas">';
+                $studentRowIndex++;
+                $html .=  '<td>' . $stdy->getStudent()->getCarne() . '</td>';
+                $html .=  '<td>' . $stdy->getStudent() . '</td>';
+
+                $row = $studentRow;
+                /***** Obtener Notas del Estudiante Inicio *****/
+                foreach( $courseEntries as $courseEntry )
+                {
+                    /*$notaFinal = $em->getRepository("TecnotekExpedienteBundle:StudentYearCourseQualification")->findOneBy(
+                        array('courseClass' => $courseEntry->getCourseClass()->getId(), 'studentYear' => $stdy->getId()));*/
+
+                    $dql = "SELECT stdQ FROM TecnotekExpedienteBundle:StudentQualification stdQ, TecnotekExpedienteBundle:SubCourseEntry subEntry "
+                        . " WHERE stdQ.studentYear = " . $stdy->getId() . " AND subEntry.parent = " . $courseEntry->getId()
+                        . " AND stdQ.subCourseEntry = subEntry"
+                        . " ";
+                       // . " ORDER BY std.lastname, std.firstname";
+                    $query = $em->createQuery($dql);
+                    $qualifications = $query->getResult();
+                    $notasCursos = array();
+                    foreach( $qualifications as $q )
+                    {
+                        $subEntry = $q->getSubCourseEntry();
+                        $n = $q->getQualification();
+                        $m = $subEntry->getMaxValue();
+                        $p = $subEntry->getPercentage();
+
+                        //Calcular porcentage ganado en la entrada
+                        $pg = $p * $n / $m;
+
+                        //Hack para cuando no se definen los porcentajes adecuados...
+                        //$courseEntry = $subEntry->getParent();
+
+                        if($subEntry->getParent()->getPercentage() == $subEntry->getPercentage()){
+                            $childrens = $em->getRepository("TecnotekExpedienteBundle:SubCourseEntry")->findBy(array('parent' => $courseEntry->getId(), 'group' => $stdy->getGroup()->getId()));
+                            $size = sizeof($childrens);
+                            if( $size > 0){
+                                $pg = $pg / $size;
+                            }
+                        }
+
+                        $pg = round( $pg, 2, PHP_ROUND_HALF_UP);
+
+                        //Revisar si ya existe la entrada del curso (CourseEntry)
+                        if( isset($notasCursos["p" . $courseEntry->getCourseClass()->getId()]) ){
+                            $pg = $notasCursos["p" . $courseEntry->getCourseClass()->getId()] + $pg;
+                        }
+                        if( isset($notasCursos["n" . $courseEntry->getCourseClass()->getId()]) ){
+                            $n = $notasCursos["n" . $courseEntry->getCourseClass()->getId()] + $n;
+                        }
+                        $notasCursos["p" . $courseEntry->getCourseClass()->getId()] = $pg;
+                        $notasCursos["n" . $courseEntry->getCourseClass()->getId()] = $n;
+                    }
+
+                    if( isset($notasCursos["n" . $courseEntry->getCourseClass()->getId()]) ){
+                        $row = str_replace("Nota_" . $courseEntry->getId() . "_", $notasCursos["n" . $courseEntry->getCourseClass()->getId()], $row);
+                        $row = str_replace("Notap_" . $courseEntry->getId() . "_", $notasCursos["p" . $courseEntry->getCourseClass()->getId()], $row);
+                    } else {
+                        $row = str_replace("Nota_" . $courseEntry->getId() . "_", "-", $row);
+                        $row = str_replace("Notap_" . $courseEntry->getId() . "_", "-", $row);
+                    }
+                }
+                /***** Obtener Notas del Estudiante Final *****/
+                $html .=  $row . "</tr>";
+            }
+
+            $html .= "</table>";
+
+            return $html;
+        }
+    }
+
+    public function studentQualificationsAction(){
+        $em = $this->getDoctrine()->getEntityManager();
+        $periods = $em->getRepository("TecnotekExpedienteBundle:Period")->findAll();
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Reports/studentQualificationsDetail.html.twig', array('menuIndex' => 4,
+            'periods' => $periods
+        ));
+    }
+
+    public function loadStudentQualificationsAction(){
+        $logger = $this->get('logger');
+        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
+        {
+            try {
+                $request = $this->get('request')->request;
+                $periodId = $request->get('periodId');
+                $groupId = $request->get('groupId');
+
+                $keywords = preg_split("/[\s-]+/", $groupId);
+                $groupId = $keywords[0];
+                $gradeId = $keywords[1];
+
+                $referenceId = $request->get('referenceId');
+
+                $translator = $this->get("translator");
+
+                if( isset($referenceId) && isset($groupId) && isset($periodId)) {
+                    if($referenceId == 0){
+                        $html = $this->getGroupHTMLQualifications($periodId, $gradeId, $groupId);
+                    } else {
+                        $html = $this->getStudentQualificationsDetailHTMLQualifications($periodId, $gradeId, $groupId, $referenceId);
+                    }
+
+                    return new Response(json_encode(array('error' => false, 'html' => $html)));
+                } else {
+                    return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
+                }
+            }
+            catch (Exception $e) {
+                $info = toString($e);
+                $logger->err('Teacher::loadEntriesByCourseAction [' . $info . "]");
+                return new Response(json_encode(array('error' => true, 'message' => $info)));
+            }
+        }// endif this is an ajax request
+        else {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+    }
+
+    public function getStudentQualificationsDetailHTMLQualifications($periodId, $gradeId, $groupId, $studentId){
+
+        $logger = $this->get('logger');
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $studentYear = $em->getRepository("TecnotekExpedienteBundle:StudentYear")->find($studentId);
+
+        $dql = "SELECT cc "
+            . " FROM TecnotekExpedienteBundle:Course c, TecnotekExpedienteBundle:CourseClass cc "
+            . " WHERE cc.grade = " . $gradeId . " AND cc.course = c"
+            . " ORDER BY c.name";
+
+        $query = $em->createQuery($dql);
+        $courses = $query->getResult();
+
+
+
+        $courseRow = '';
+
+        $this->calculateStudentYearQualification($periodId, $studentId, $studentYear);
+
+        //$html = '<table class="tableQualifications" cellSpacing="0" cellPadding="0">' . $headersRow;
+
+        $courseRow .=  '<tr class="rowNotas">';
+        $courseRow .= '<td>courseName</td>';
+        $courseRow .= '<td><div id="course_courseId_nota">-</div></td>';
+        $courseRow .=  "</tr>";
+
+
+        $html = '<table class="courseTable">';
+        foreach( $courses as $course )
+        {
+            //$headersRow =  '<thead>';
+            $headersRow =  '<tr style="height: 175px;">';
+            $headersRow .=  '<th rowspan="3" style="vertical-align: bottom; padding: 15px 30px; background-color: rgb(68, 192, 78);">' .
+                '<div class="verticalText" style="font-size: 14px; color: #fff;">' . $course->getCourse()->getName() . '</div></th>';
+
+            $porcRow = '<tr style="background-color: black; background-color: rgb(201, 194, 194); font-weight: bold; font-size: 14px;">';
+
+            $courseRow = '<tr style="background-color: black; background-color: rgb(201, 194, 194); font-weight: bold; font-size: 14px;">';
+            $dql = "SELECT ce "
+                . " FROM TecnotekExpedienteBundle:CourseEntry ce "
+                . " WHERE ce.courseClass = " . $course->getId()
+                . " ORDER BY ce.name";
+
+            $query = $em->createQuery($dql);
+            $courseEntries = $query->getResult();
+
+            if(sizeof($courseEntries) > 0 ){
+                foreach( $courseEntries as $courseEntry )
+                {
+                    $headersRow .=  '<th colspan=2 style="vertical-align: bottom; padding: 15px 30px;"><div class="verticalText">' .
+                        $courseEntry->getName() . ' ' . $courseEntry->getPercentage() . '%</div></th>';
+                    //$studentRow .= '<td>Nota_' . $courseEntry->getId() . '_</td>' . '<td style=" background-color: rgb(234, 241, 221);">Notap_' . $courseEntry->getId() . '_</td>';
+                    $porcRow .= '<td>Nota</td><td style=" background-color: rgb(234, 241, 221);">% Gan</td>';
+                    //$courseRow .= '<td>-</td><td style=" background-color: rgb(234, 241, 221);">-</td>';
+
+                    /*-----------------------------------------------------------------------------------*/
+                    $dql = "SELECT stdQ FROM TecnotekExpedienteBundle:StudentQualification stdQ, TecnotekExpedienteBundle:SubCourseEntry subEntry "
+                        . " WHERE stdQ.studentYear = " . $studentId . " AND subEntry.parent = " . $courseEntry->getId()
+                        . " AND stdQ.subCourseEntry = subEntry"
+                        . " ";
+                    // . " ORDER BY std.lastname, std.firstname";
+                    $query = $em->createQuery($dql);
+                    $qualifications = $query->getResult();
+                    $notasCursos = array();
+                    foreach( $qualifications as $q )
+                    {
+                        $subEntry = $q->getSubCourseEntry();
+                        $n = $q->getQualification();
+                        $m = $subEntry->getMaxValue();
+                        $p = $subEntry->getPercentage();
+
+                        //Calcular porcentage ganado en la entrada
+                        $pg = $p * $n / $m;
+
+                        //Hack para cuando no se definen los porcentajes adecuados...
+                        //$courseEntry = $subEntry->getParent();
+
+                        if($subEntry->getParent()->getPercentage() == $subEntry->getPercentage()){
+                            $childrens = $em->getRepository("TecnotekExpedienteBundle:SubCourseEntry")->findBy(array('parent' => $courseEntry->getId(), 'group' => $studentYear->getGroup()->getId()));
+                            $size = sizeof($childrens);
+                            if( $size > 0){
+                                $pg = $pg / $size;
+                            }
+                        }
+
+                        $pg = round( $pg, 2, PHP_ROUND_HALF_UP);
+
+                        //Revisar si ya existe la entrada del curso (CourseEntry)
+                        if( isset($notasCursos["p" . $courseEntry->getCourseClass()->getId()]) ){
+                            $pg = $notasCursos["p" . $courseEntry->getCourseClass()->getId()] + $pg;
+                        }
+                        if( isset($notasCursos["n" . $courseEntry->getCourseClass()->getId()]) ){
+                            $n = $notasCursos["n" . $courseEntry->getCourseClass()->getId()] + $n;
+                        }
+                        $notasCursos["p" . $courseEntry->getCourseClass()->getId()] = $pg;
+                        $notasCursos["n" . $courseEntry->getCourseClass()->getId()] = $n;
+                    }
+
+                    if( isset($notasCursos["n" . $courseEntry->getCourseClass()->getId()]) ){
+                        $courseRow .= '<td>' . $notasCursos["n" . $courseEntry->getCourseClass()->getId()]
+                            . '</td><td style=" background-color: rgb(234, 241, 221);">'
+                            . $notasCursos["p" . $courseEntry->getCourseClass()->getId()] . '</td>';
+                        /*$row = str_replace("Nota_" . $courseEntry->getId() . "_", $notasCursos["n" . $courseEntry->getCourseClass()->getId()], $row);
+                        $row = str_replace("Notap_" . $courseEntry->getId() . "_", $notasCursos["p" . $courseEntry->getCourseClass()->getId()], $row);*/
+                    } else {
+                        $courseRow .= '<td>-</td><td style=" background-color: rgb(234, 241, 221);">-</td>';
+                        /*$row = str_replace("Nota_" . $courseEntry->getId() . "_", "-", $row);
+                        $row = str_replace("Notap_" . $courseEntry->getId() . "_", "-", $row);*/
+                    }
+
+                }
+                /*$row = str_replace("courseName", $course->getCourse()->getName(), $courseRow);
+                $row = str_replace("courseId", $course->getId(), $row);
+
+                $notaFinal = $em->getRepository("TecnotekExpedienteBundle:StudentYearCourseQualification")->findOneBy(array('courseClass' => $course->getId(), 'studentYear' => $studentYear->getId()));
+                if(isset($notaFinal)){//Si existe
+                    $row = str_replace("-", $notaFinal->getQualification(), $row);
+                }*/
+
+                $porcRow .= '</tr>';
+                $courseRow .= '</tr>';
+                $headersRow .= "</tr>";
+                $courseTable = '<table class="tableQualifications" cellSpacing="0" cellPadding="0">'
+                    . $headersRow . $porcRow . $courseRow . '</table>';
+
+
+                //$html .=  '<tr class="courseTableRow"><td>' . $courseTable . '</td></tr>';
+
+                $html .=  $courseTable;
+            }
+
+        }
+        //$html .= '</table>';
+/*
+        $html = '<table border="1">';
+        $html .= '  <tr>';
+        $html .= '    <th rowspan="3">Month</th>';
+            $html .= '   <th>Savings</th>';
+        $html .= '    <th>Savings for holiday!</th>';
+            $html .= '  </tr>';
+       $html .= '   <tr>';
+        $html .= '    <td>January</td>';
+       $html .= '     <td>$100</td>';
+            $html .= '    </tr>';
+        $html .= '  <tr>';
+        $html .= '    <td>February</td>';
+       $html .= '     <td>$80</td>';
+            $html .= '  </tr>';
+        $html .= '</table>';*/
+        return $html;
+    }
 }

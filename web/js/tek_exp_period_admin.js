@@ -281,7 +281,7 @@ Tecnotek.AdminPeriod = {
                         $html = '<div id="groupRow_' + data.groups[i].id  + '" class="row userRow tableRowOdd">';
                         $html += '    <div id="groupNameField_' + data.groups[i].id + '" name="groupNameField_' + data.groups[i].id + '" class="option_width" style="float: left; width: 250px;">' + data.groups[i].name + '</div>';
                         $html += '    <div id="groupTeacherField_' + data.groups[i].id + '" name="groupTeacherField_' + data.groups[i].id + '" class="option_width" style="float: left; width: 250px;">' + data.groups[i].teacherName + '</div>';
-                        $html += '    <div id="groupInstitutionField_' + data.groups[i].id + '" name="groupInstitutionField_' + data.groups[i].id + '" class="option_width" style="float: left; width: 250px;">' + ((data.groups[i].institutionName == null)? "":data.groups[i].institutionName) + '</div>';
+                        $html += '    <div id="groupInstitutionField_' + data.groups[i].id + '" name="groupInstitutionField_' + data.groups[i].id + '" class="option_width" style="float: left; width: 200px;">' + ((data.groups[i].institutionName == null)? "":data.groups[i].institutionName) + '</div>';
 
                         $html += '    <div class="right imageButton deleteButton deleteGroup" style="height: 16px; width: 22px;" title="Eliminar"  rel="' + data.groups[i].id + '"></div>';
                         $html += '    <div class="right imageButton editButton editGroup"  title="Editar" style=" width: 22px;"  rel="' + data.groups[i].id + '" groupName="' + data.groups[i].name + '" teacher="' + data.groups[i].teacherId + '" institution="' + data.groups[i].institutionId + '"></div>';

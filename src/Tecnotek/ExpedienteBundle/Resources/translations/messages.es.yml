@@ -267,8 +267,11 @@ label.route.type.1: Normal
 label.route.type.2: Club
 
 label.current.period: Periodo Actual
+label.courseEntryCode: C&oacute;digo de Rubro
 
 menu.qualifications.report: Notas de Periodo
+menu.qualifications.of.group.by.rubro: Calificaciones de Grupo por Rubro
+menu.detail.student.qualifications: Notas detalladas de Estudiante
 
 results.not.found: No se han encontrado resultados.
 

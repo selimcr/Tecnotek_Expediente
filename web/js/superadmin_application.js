@@ -126,6 +126,12 @@ var Tecnotek = {
                 case "periodGroupQualifications":
                     Tecnotek.PeriodGroupQualifications.init();
                     break;
+                case "groupQualificationsByRubro":
+                    Tecnotek.GroupQualificationsByRubro.init();
+                    break;
+                case "studentQualificationsDetail":
+                    Tecnotek.StudentQualifications.init();
+                    break;
                 default:
 					break;
 				}
