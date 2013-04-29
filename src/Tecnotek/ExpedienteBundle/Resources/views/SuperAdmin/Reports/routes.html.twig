@@ -44,8 +44,9 @@
                 <div class="field" style="float: left; width: 115px;">{% trans %}label.code{% endtrans %}</div>
                 <div class="field" style="float: left; width: 300px;">{% trans %}label.description{% endtrans %}</div>
             </div>
-
-            {% for entity in entities %}
+            {% set counter = 0 %}
+            {% for entity in entities if entity.routeType == 1 %}
+                {% set counter = counter + 1 %}
             <div class="fields_row">
                 <div class="field_value" style="float: left; width: 115px;">{{ entity.code }}</div>
                 <div class="field_value" style="float: left; width: 800px;">{{ entity.description }}</div>
@@ -58,7 +59,7 @@
             </div>
             {% endfor %}
             <div class="footer">
-                Total de rutas: {{ entities|length }}
+                Total de rutas: {{ counter }}
             </div>
         </div>
 

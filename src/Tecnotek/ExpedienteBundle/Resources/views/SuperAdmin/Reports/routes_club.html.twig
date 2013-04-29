@@ -1,0 +1,74 @@
+{% extends 'TecnotekExpedienteBundle::logged_layout.html.twig' %}
+
+{% block htmlTitle %}
+    Tecnotek :: Expediente :: Super Administrador :: Rutas
+{% endblock %}
+
+{% block extrajs %}
+    <script type="text/javascript" src="{{ asset('js/jquery.printElement.min.js') }}"></script>
+    <script type="text/javascript">
+        Tecnotek.module = "reports";
+        Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
+        Tecnotek.StudentShow.translates["relative.not.selected"] = "{% trans %}message.relative.not.selected{% endtrans %}";
+        Tecnotek.StudentShow.translates["student.not.selected"] = "{% trans %}message.student.not.selected{% endtrans %}";
+        Tecnotek.StudentShow.translates["relative.not.exists"] = "{% trans %}message.relative.not.exists{% endtrans %}";
+    </script>
+{% endblock %}
+
+{% block content %}
+    <div class="container_24">
+        <div class="grid_24">
+            <div>
+                <div class="left">
+                    <h3>{% trans %}label.reports.routes.club{% endtrans %}</h3>
+                </div>
+                <button style="margin-left: 15px; margin-top: 0px;" type="button" class="right button success-darker tiny" id="btnPrint" name="btnPrint" rel="Cat&aacute;logo de Rutas"><span></span>{% trans %}label.print{% endtrans %}</button>
+                <div class="clear"></div>
+            </div>
+
+            <div id="report" style="margin-top: 25px; width: 950px;">
+
+                <div class="titles">
+                    <div class="left">Corporación Educativa Saint Michael S.A.</div>
+                    <div class="right">Control de Buses de Clubes Escuela.</div>
+                    <div class="clear"></div>
+
+                    <div class="left">{{ "now"|date("d/M/Y H:i:s") }}</div>
+                    <div class="clear"></div>
+
+                    <p style="text-align: center;">Cat&aacute;logo de Rutas de Club</p>
+
+                </div>
+
+                <div class="header_row">
+                    <div class="field" style="float: left; width: 115px;">{% trans %}label.code{% endtrans %}</div>
+                    <div class="field" style="float: left; width: 300px;">{% trans %}label.description{% endtrans %}</div>
+                </div>
+                {% set counter = 0 %}
+                {% for entity in entities if entity.routeType == 2 %}
+                    {% set counter = counter + 1 %}
+                    <div class="fields_row">
+                        <div class="field_value" style="float: left; width: 115px;">{{ entity.code }}</div>
+                        <div class="field_value" style="float: left; width: 800px;">{{ entity.description }}</div>
+                        <div class="clear"></div>
+                    </div>
+                {% else %}
+                    <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
+                        <div class="option_width" style="float: left; width: 375px;">{% trans %}results.not.found{% endtrans %}</div>
+                        <div class="clear"></div>
+                    </div>
+                {% endfor %}
+                <div class="footer">
+                    Total de rutas: {{ counter }}
+                </div>
+            </div>
+
+        </div>
+        <div class="clear"></div>
+        <div class="wrapper">
+            <div class="grid_24 padline">
+                <div class="lineH"></div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -716,14 +716,12 @@ class TeacherController extends Controller
                 if( isset($courseId) && isset($groupId) && isset($periodId)) {
                     $em = $this->getDoctrine()->getEntityManager();
 
-                    $dql = "SELECT ce FROM TecnotekExpedienteBundle:CourseEntry ce "
-                        . " JOIN ce.courseClass cc"
-                        . " WHERE ce.parent IS NULL AND cc.period = " . $periodId . " AND cc.grade = " . $gradeId
-                        . " AND cc.course = " . $courseId
-                        . " ORDER BY ce.sortOrder, ce.name";
+                    $dql = "SELECT cc FROM TecnotekExpedienteBundle:CourseClass cc "
+                        . " WHERE cc.period = " . $periodId . " AND cc.grade = " . $gradeId
+                        . " AND cc.course = " . $courseId ;
                     $query = $em->createQuery($dql);
-                    $entries = $query->getResult();
-                    $temp = new \Tecnotek\ExpedienteBundle\Entity\CourseEntry();
+                    $courseClass = $query->getResult();
+                    $temp = new \Tecnotek\ExpedienteBundle\Entity\CourseClass();
                     $html =  '<tr  style="height: 175px; line-height: 0px;"><td class="celesteOscuro headcolcarne" style="width: 75px; font-size: 10px; height: 175px;"></td>';
                     $html .=  '<td class="celesteClaro bold headcolnombre" style="width: 250px; font-size: 8px; height: 175px;"></td>';
                     $html .= '<td class="azul headcoltrim" style="vertical-align: bottom; padding: 0.5625em 0.625em; height: 175px; line-height: 220px;"><div class="verticalText" style="color: #fff;">Promedio Trimestral</div></td>';
@@ -783,16 +781,23 @@ class TeacherController extends Controller
                             $row = str_replace($indexVar, "" . ($studentRowIndex + (($i - 1) * $studentsCount)), $row);
                         }
 
+                        foreach($courseClass as $ccs){
+                            $row2 =  $ccs->getID();
+                        }
+
+
                         $dql = "SELECT obs FROM TecnotekExpedienteBundle:Observation obs"
-                            . " WHERE obs.studentYear = " . $stdy->getId();
+                            . " WHERE obs.studentYear = " . $stdy->getId()
+                            . " AND obs.courseClass = ".$row2;
                         $query = $em->createQuery($dql);
                         $observations = $query->getResult();
                         foreach($observations as $observation){
                             $row =  $observation->getDetail();
                         }
-                        $temprr = $stdy->getId();
+
+
                         $html .=  '<td id="total_trim_' . $stdy->getStudent()->getId() . '" class="azul headcoltrim" style="color: #fff;">-</td>';
-                        $html .=  '<td id="obser_' . $stdy->getStudent()->getId() . '"  style="color: #000; width: 1600px"><input  class="Large" size"255" maxlength="255"  std="stdId"  $stdyId="' . $stdy->getStudent()->getId() . '" value ="' . $row . '"></input></td></tr>';
+                        $html .=  '<td id="obser_' . $stdy->getStudent()->getId() . '"  style="color: #000; width: 1600px"><input  courseClass="' . $row2 . '" style="width: 540px" size"255" maxlength="255"  std="stdId"  $stdyId="' . $stdy->getStudent()->getId() . '" value ="' . $row . '"></input></td></tr>';
                     }
 
                     $html .= "</table>";
@@ -868,9 +873,9 @@ class TeacherController extends Controller
         {
             try {
                 $request = $this->get('request')->request;
-                $course_classId = $request->get('course_class_id');
+                $course_classId = $request->get('courseClass');
                 $studentYearId = $request->get('studentYearId');
-                $userId = $request->get('userId');
+                $userId = $request->get('userId'); //tomarlo
                 $groupId = $request->get('groupId');
                 $observation = $request->get('observation');
                 $translator = $this->get("translator");
@@ -891,6 +896,7 @@ class TeacherController extends Controller
                         $studentO->setStudentYear($em->getRepository("TecnotekExpedienteBundle:StudentYear")->find( $studentYearId ));
                         $studentO->setTeacher($em->getRepository("TecnotekExpedienteBundle:User")->find( $userId ));
                         $studentO->setGroup($em->getRepository("TecnotekExpedienteBundle:Group")->find( $groupId ));
+                        $studentO->setType(1);
                         $studentO->setDetail($observation);
                     }
                     $em->persist($studentO);

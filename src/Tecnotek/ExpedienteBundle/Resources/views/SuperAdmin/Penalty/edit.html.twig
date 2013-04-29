@@ -64,6 +64,12 @@
                             </div>
                         </div>
 
+                        <div class="formRow">
+                            <label class="error">{{ form_errors(form.pointsPenalty) }}</label>
+                            <div class="large-12 columns">
+                                <label>{% trans %}label.points{% endtrans %}</label>{{ form_widget(form.pointsPenalty) }}
+                            </div>
+                        </div>
 
                         <div class="formRow ">
                             <div class="large-12 columns buttonsPanel">

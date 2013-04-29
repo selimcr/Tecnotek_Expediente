@@ -13,8 +13,9 @@ class StudentPenaltyFormType extends AbstractType
             add('studentYear')->
             add('date', 'date', array('widget' => 'single_text', 'format' => 'dd/MM/yyyy', 'required' => false))->
             add('penalty')->
-            add('comments', 'text', array('trim' => true, 'required' => false))
-            ;
+            add('comments', 'text', array('trim' => true, 'required' => false))->
+            add('pointsPenalty', 'integer', array('required' => true))
+        ;
     }
 
     public function getName()
