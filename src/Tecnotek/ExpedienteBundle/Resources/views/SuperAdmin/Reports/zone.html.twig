@@ -42,7 +42,7 @@
                 <div class="field_value" style="text-align: center;">Zona {{ loop.index }}: {{ entity.name }}</div>
                 <div class="clear"></div>
             </div>
-            {% for route in entity.routes %}
+            {% for route in entity.routes if route.routeType == 1 %}
             <div class="fields_row route">
                 Ruta {{ loop.index }}: {{ route.code ~ " - " ~ route.description }}
             </div>

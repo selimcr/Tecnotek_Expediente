@@ -67,6 +67,14 @@ class ReportController extends Controller
         ));
     }
 
+    public function reportRouteClubAction(){
+        $em = $this->getDoctrine()->getEntityManager();
+        $entities = $em->getRepository("TecnotekExpedienteBundle:Route")->findAll();
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Reports/routes_club.html.twig', array('menuIndex' => 4,
+            'entities' => $entities
+        ));
+    }
+
     public function reportZonesAction(){
         $em = $this->getDoctrine()->getEntityManager();
         $entities = $em->getRepository("TecnotekExpedienteBundle:Zone")->findAll();

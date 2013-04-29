@@ -233,15 +233,19 @@ label.students.absences.by.route: Est. Ausentes por Ruta
 label.students.daily.by.route: Reporte Diario por Ruta
 label.students.absences: Estudiantes Ausentes
 label.students.precenses: Estudiantes Presentes
+label.routes.club: Rutas Club
 
 label.penalties: Sanciones
 label.penalties.title: Administracion de Sanciones
 label.penalties.message: Puede filtrar la informacion y consultar las sanciones deseadas.
 label.penalty.type: Tipo de falta:
+label.penalty.show: Mostrar Sancion
 
 label.reports.routes.by.zone: Reporte de Rutas por Zona
 label.reports.students.by.route: Reporte de Estudiantes por Ruta
 label.reports.absences.by.route: Reporte de Estudiantes Ausentes por Ruta
+
+label.reports.routes.club: Reporte de rutas de Clubes
 
 label.reports.bus: Reporte de Busetas
 label.reports.bus.message: Ingrese las opciones de filtrado deseadas y presione el boton de filtrar.

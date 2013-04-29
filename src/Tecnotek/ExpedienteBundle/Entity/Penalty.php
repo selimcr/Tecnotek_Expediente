@@ -40,10 +40,10 @@ class Penalty
     private $description;
 
     /**
-     * @ORM\Column(type="string", length=5)
+     * @ORM\Column(type="string", length=10)
      * @Assert\NotBlank()
-     * @Assert\MinLength(limit = 3)
-     * @Assert\MaxLength(limit = 5)
+     * @Assert\MinLength(limit = 1)
+     * @Assert\MaxLength(limit = 10)
      */
     private $code;
 
