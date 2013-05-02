@@ -846,7 +846,7 @@ var Tecnotek = {
                     event.preventDefault();
 
                     var url = Tecnotek.UI.urls["viewPrintableVersionURL"];
-                    var windowName = "Calificaciones de Grupo";
+                    var windowName = "Observaciones de Grupo";
                     //var windowSize = windowSizeArray[$(this).attr("rel")];
 
                     var periodId = $("#period").val();
@@ -1017,8 +1017,8 @@ var Tecnotek = {
                 $(".textField").blur(function(e){
                     e.preventDefault();
                     $this = $(this);
-                    $type = $this.attr('tipo');
-                    $max = $this.attr('max');
+                    //$type = $this.attr('tipo');
+                    //$max = $this.attr('max');
                     $observation = $this.val();
                     $stdId = $this.attr('std');
 

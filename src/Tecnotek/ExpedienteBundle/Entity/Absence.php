@@ -156,6 +156,16 @@ class Absence
     }
 
     /**
+     * Get studentYear
+     *
+     * @return \Tecnotek\ExpedienteBundle\Entity\StudentYear
+     */
+    public function getStudentYearId()
+    {
+        return $this->studentYear->getID();
+    }
+
+    /**
      * Set type
      *
      * @param \Tecnotek\ExpedienteBundle\Entity\AbsenceType $type
@@ -174,4 +184,15 @@ class Absence
     {
         return $this->type;
     }
+
+    /**
+     * Get type
+     *
+     * @return \Tecnotek\ExpedienteBundle\Entity\AbsenceType
+     */
+    public function getTypeId()
+    {
+        return $this->type->getID();
+    }
+
 }

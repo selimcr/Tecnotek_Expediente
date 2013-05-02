@@ -1189,25 +1189,122 @@ class StudentController extends Controller
     public function absenceUpdateAction(){
         $em = $this->getDoctrine()->getEntityManager();
         $request = $this->get('request')->request;
-        $entity = $em->getRepository("TecnotekExpedienteBundle:Absence")->find( $request->get('id'));
-        if ( isset($entity) ) {
-            $request = $this->getRequest();
-            $form    = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\AbsenceFormType(), $entity);
-            $form->bindRequest($request);
+        $mode = $request->get('selectMode');
+        $idForm = $request->get('id');
 
-            if ($form->isValid()) {
-                $em->persist($entity);
-                $em->flush();
-                return $this->redirect($this->generateUrl('_expediente_sysadmin_absence_show_simple') . "/" . $entity->getId());
+        if($mode == '1'){
+            $entity = $em->getRepository("TecnotekExpedienteBundle:Absence")->find( $request->get('id'));
+            if ( isset($entity) ) {
+                $request = $this->getRequest();
+                $form    = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\AbsenceFormType(), $entity);
+                $form->bindRequest($request);
+
+                if ($form->isValid()) {
+                    $em->persist($entity);
+                    $em->flush();
+                    return $this->redirect($this->generateUrl('_expediente_sysadmin_absence_show_simple') . "/" . $entity->getId());
+                } else {
+                    return $this->render('TecnotekExpedienteBundle:SuperAdmin:Absence/edit.html.twig', array(
+                        'entity' => $entity, 'form'   => $form->createView(), 'menuIndex' => 3
+                    ));
+                }
             } else {
-                return $this->render('TecnotekExpedienteBundle:SuperAdmin:Absence/edit.html.twig', array(
-                    'entity' => $entity, 'form'   => $form->createView(), 'menuIndex' => 3
-                ));
+                return $this->redirect($this->generateUrl('_expediente_absences'));
             }
-        } else {
-            return $this->redirect($this->generateUrl('_expediente_absences'));
+        }
+        if($mode == '2'){ /// ausencias del mismo dia y tipo
+
+            $em = $this->getDoctrine()->getEntityManager();
+            $dql = "SELECT ab FROM TecnotekExpedienteBundle:Absence ab"
+                . " WHERE ab.id = " . $request->get('id');
+            $query = $em->createQuery($dql);
+            $absence = $query->getResult();
+
+            foreach($absence as $absence1){
+                $idForm2 = $absence1->getId();
+                $mainStd =  $absence1->getStudentYearId();
+                $mainType =  $absence1->getTypeId();
+                $mainDate =  $absence1->getDate()->format('Y-m-d');
+
+            }
+
+            $dql = "SELECT abs FROM TecnotekExpedienteBundle:Absence abs"
+                . " WHERE abs.studentYear = " . $mainStd
+                . " AND abs.type = " . $mainType
+                . " AND abs.date = '".$mainDate."'";
+            $query = $em->createQuery($dql);
+            $absences = $query->getResult();
+            foreach($absences as $absence2){
+                $row =  $absence2->getId();
+
+                $entity = $em->getRepository("TecnotekExpedienteBundle:Absence")->find($row);
+                if ( isset($entity) ) {
+                    $request = $this->getRequest();
+                    $form    = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\AbsenceFormType(), $entity);
+                    $form->bindRequest($request);
+
+                    if ($form->isValid()) {
+                        $em->persist($entity);
+                        $em->flush();
+                        //return $this->redirect($this->generateUrl('_expediente_sysadmin_absence_show_simple') . "/" . $entity->getId());
+                    } /*else {
+                        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Absence/edit.html.twig', array(
+                            'entity' => $entity, 'form'   => $form->createView(), 'menuIndex' => 3
+                        ));
+                    }*/
+                }
+
+            }
+            return $this->redirect($this->generateUrl('_expediente_sysadmin_absence_show_simple') . "/" . $idForm2);
+            //return $this->redirect($this->generateUrl('_expediente_absences'));
         }
 
+        if($mode == '3'){ ///ausencias del mismo dia cualquier tipo
+
+            $em = $this->getDoctrine()->getEntityManager();
+            $dql = "SELECT ab FROM TecnotekExpedienteBundle:Absence ab"
+                . " WHERE ab.id = " . $request->get('id');
+            $query = $em->createQuery($dql);
+            $absence = $query->getResult();
+
+            foreach($absence as $absence1){
+                $idForm2 = $absence1->getId();
+                $mainStd =  $absence1->getStudentYearId();
+                $mainDate =  $absence1->getDate()->format('Y-m-d');
+            }
+
+
+            $dql = "SELECT abs FROM TecnotekExpedienteBundle:Absence abs"
+                . " WHERE abs.studentYear = " . $mainStd
+                . " AND abs.date = '".$mainDate."'";
+
+            $query = $em->createQuery($dql);
+            $absences = $query->getResult();
+            foreach($absences as $absence2){
+                $row =  $absence2->getId();
+
+                $entity = $em->getRepository("TecnotekExpedienteBundle:Absence")->find($row);
+                if ( isset($entity) ) {
+                    $request = $this->getRequest();
+                    $form    = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\AbsenceFormType(), $entity);
+                    $form->bindRequest($request);
+
+                    if ($form->isValid()) {
+                        $em->persist($entity);
+                        $em->flush();
+                        //return $this->redirect($this->generateUrl('_expediente_sysadmin_absence_show_simple') . "/" . $entity->getId());
+                    } /*else {
+                        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Absence/edit.html.twig', array(
+                            'entity' => $entity, 'form'   => $form->createView(), 'menuIndex' => 3
+                        ));
+                    }*/
+                }
+
+            }
+
+            return $this->redirect($this->generateUrl('_expediente_sysadmin_absence_show_simple') . "/" . $idForm2);
+            //return $this->redirect($this->generateUrl('_expediente_absences'));
+        }
     }
 
     public function enterAbsenceByGroupAction(){

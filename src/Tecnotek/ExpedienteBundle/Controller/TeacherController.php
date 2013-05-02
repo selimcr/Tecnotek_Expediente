@@ -789,6 +789,7 @@ class TeacherController extends Controller
                         $dql = "SELECT obs FROM TecnotekExpedienteBundle:Observation obs"
                             . " WHERE obs.studentYear = " . $stdy->getId()
                             . " AND obs.courseClass = ".$row2;
+                            //. " AND obs.teacher = ".$user_id; //falta capturar el id del profesor
                         $query = $em->createQuery($dql);
                         $observations = $query->getResult();
                         foreach($observations as $observation){
@@ -880,9 +881,7 @@ class TeacherController extends Controller
                 $observation = $request->get('observation');
                 $translator = $this->get("translator");
                 $logger->err('--> ' . $studentYearId . " :: " . $observation);
-                /*if( !isset($observation) || $observation == ""){
-                    $observation = -1;
-                }*/
+
                 if( isset($course_classId) || isset($studentYearId) ) {
                     $em = $this->getDoctrine()->getEntityManager();
 
