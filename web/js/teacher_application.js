@@ -990,12 +990,7 @@ var Tecnotek = {
                                 });
 
                                 Tecnotek.Observations.initializeTable();
-                                Tecnotek.UI.vars["forzeBlur"] = true;
-                                $(".textField").each(function(){
-                                    $(this).trigger("focus");
-                                    $(this).trigger("blur");
-                                });
-                                Tecnotek.UI.vars["forzeBlur"] = false;
+
                                 //$( "#spinner-modal" ).dialog( "close" );
                             }
                         },
@@ -1011,15 +1006,18 @@ var Tecnotek = {
                 $('#subentriesRows').empty();
                 $('#subentryFormParent').empty();
 
-                $(".textField").focus(function(e){
+                $(".observation").unbind();
+
+                $(".observation").focus(function(e){
                     Tecnotek.UI.vars["textFieldValue"] = $(this).val();
                 });
-                $(".textField").blur(function(e){
+                $(".observation").blur(function(e){
                     e.preventDefault();
                     $this = $(this);
-                    //$type = $this.attr('tipo');
-                    //$max = $this.attr('max');
-                    $observation = $this.val();
+
+                    window.alert("saliendo de una observacion que quedo con el value: " + $this.val());
+
+                    /*$observation = $this.val();
                     $stdId = $this.attr('std');
 
                     if(Tecnotek.UI.vars["textFieldValue"] === $observation) return;
@@ -1036,9 +1034,7 @@ var Tecnotek = {
                         },
                         function(jqXHR, textStatus){
                             Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
-                        }, false);
-
-
+                        }, false);*/
                 });
             }
         }
