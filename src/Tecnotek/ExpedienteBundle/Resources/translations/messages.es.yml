@@ -190,6 +190,8 @@ label.student: Estudiante
 label.relative: Familiar
 label.time: Hora
 label.comments: Comentarios
+label.tickets.title: Boletas de salida registradas
+label.tickets.message: Buscar boletas en el sistema
 
 label.kinship: Relación
 label.father: Padre

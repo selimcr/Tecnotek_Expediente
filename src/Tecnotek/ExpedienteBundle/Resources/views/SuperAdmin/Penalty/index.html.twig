@@ -165,9 +165,9 @@ $(function() {
 
         <div style="margin-bottom: 5px;">
             <label style="display: inline-block; width: 150px">{% trans %}label.penalty.type{% endtrans %}</label>
-            <select id="penaltyType" name="penaltyType" style="width: 250px">
+            <select id="penaltyType" name="penaltyType" style="width: 350px">
                 {% for penalty in penalties %}
-                <option value="{{ penalty.id }}">{{ penalty }}</option>
+                    <option insti="{{ penalty.institution.id }}" maxPenalty="{{ penalty.maxPenalty }}" minPenalty="{{ penalty.minPenalty }}" value="{{ penalty.id }}">({{ penalty.minPenalty}}-{{ penalty.maxPenalty}}){{ penalty.code}} - {{ penalty }}</option>
                 {% endfor %}
             </select>
         </div>
@@ -190,6 +190,7 @@ $(function() {
         <div class="left"><input class="button success-darker tiny cancelButton" style="margin-top: 0px;" type="button" value="{% trans %}label.cancelar{% endtrans %}"/></div>
         <div class="left" style="margin-left: 25px;"><input class="button success-darker tiny" style="margin-top: 0px;" type="submit" name="save" value="{% trans %}label.save{% endtrans %}"/></div>
         <div class="clear"></div>
+
     </form>
 </div>
 

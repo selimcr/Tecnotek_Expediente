@@ -107,6 +107,9 @@ var Tecnotek = {
                 case "ticketsIndex":
                     Tecnotek.Tickets.init();
                     break;
+                case "ticketsSearch":
+                    Tecnotek.TicketsSearch.init();
+                    break;
                 case "reports":
                     Tecnotek.Reports.init();
                     break;
@@ -615,9 +618,10 @@ var Tecnotek = {
                                     $data += '    <span class="category">Estudiantes</span>';
                                     for(i=0; i<data.students.length; i++) {
                                         $data += '    <a class="searchResult" rel="' + data.students[i].id + '" name="' +
-                                            data.students[i].firstname + ' ' + data.students[i].lastname + '">';
+                                            data.students[i].firstname + ' ' + data.students[i].lastname
+                                            + '" inst="'+data.students[i].group_id+'">';
                                         $data += '      <span class="searchheading">' + data.students[i].firstname
-                                            + ' ' + data.students[i].lastname +  '</span>';
+                                            + ' ' + data.students[i].lastname + ' ' +  '</span>';
                                         $data += '      <span>Incluir este estudiante.</span>';
                                         $data += '    </a>';
                                     }
@@ -629,8 +633,26 @@ var Tecnotek = {
                                     $('.searchResult').click(function(event){
                                         event.preventDefault();
                                         $("#studentId").val($(this).attr("rel"));
+                                        //$("#institucionID").val($(this).attr("inst"));
                                         $('#searchBox').val("");
                                         $('#newAbsence').trigger('click');
+
+                                        if($(this).attr("inst")<18){
+                                            $("select > option[insti*='3']").hide();
+                                            $("select > option[insti*='3']").removeAttr("selected");
+                                            $("select > option[insti*='2']").show();
+                                            $("select > option[insti*='2']").attr('selected','selected');
+                                        }
+
+                                        if($(this).attr("inst")>18){
+                                            $("select > option[insti*='2']").hide();
+                                            $("select > option[insti*='2']").removeAttr("selected");
+                                            $("select > option[insti*='3']").show();
+                                            $("select > option[insti*='3']").attr('selected','selected');
+                                        }
+
+
+
                                     });
                                 }
                             },
@@ -647,6 +669,7 @@ var Tecnotek = {
                     event.preventDefault();
                     $(this).val("");
                     $('#suggestions').fadeOut(); // Hide the suggestions box
+                    //$("#institucionID").val("0");
                 });
                 //TODO Penalties
                 $(".deleteButton").click(function(event){
@@ -670,11 +693,18 @@ var Tecnotek = {
                 var $type = $("#penaltyType").val();
                 var $comments = $("#comments").val();
                 var $pointsPenalty = $("#pointsPenalty").val();
+                var $maxP = $('option:selected', '#penaltyType').attr('maxPenalty');
+                var $minP = $('option:selected', '#penaltyType').attr('minPenalty');
 
+                //window.alert();
                 if($comments === ""){
                     Tecnotek.showErrorMessage("Debe incluir un comentario.",
                         true, "", false);
-                } else {
+                } else if(($pointsPenalty < $minP) || ($pointsPenalty > $maxP)){
+                    Tecnotek.showErrorMessage("Los puntos para esta sancion esta fuera del rango.",
+                        true, "", false);
+
+                } else{
                     Tecnotek.ajaxCall(Tecnotek.UI.urls["savePenaltyURL"],
                         {studentId: $studentId,
                             date: $date,
@@ -1763,3 +1793,5 @@ var Tecnotek = {
             }
         }
 	};
+
+

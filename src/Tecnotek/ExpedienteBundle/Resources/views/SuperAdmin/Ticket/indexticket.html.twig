@@ -1,0 +1,135 @@
+{% extends 'TecnotekExpedienteBundle::logged_layout.html.twig' %}
+
+{% block htmlTitle %}
+    Tecnotek :: Expediente :: Super Administrador
+{% endblock %}
+
+{% block extracss %}
+    <link rel="stylesheet" href="{{ asset('fancybox/jquery.fancybox.css') }}" type="text/css" media="all" />
+    <link rel="stylesheet" href="{{ asset('fancybox/fancybox_style.css') }}" type="text/css" media="all" />
+    <link rel="stylesheet" href="{{ asset('css/jquery-ui-timepicker-addon.css') }}" type="text/css" media="all" />
+{% endblock %}
+
+{% block extrajs %}
+    <script type="text/javascript" src="{{ asset('fancybox/jquery.fancybox.js?v=2.0.6') }}"></script>
+
+    <script type="text/javascript">
+        Tecnotek.module = "ticketsSearch";
+        Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
+
+        Tecnotek.UI.urls["show"] = "#";
+
+        Tecnotek.UI.vars["currentPeriod"] = {{ currentPeriod }};
+
+    </script>
+    <!-- basic fancybox setup -->
+    <script>
+        $(function() {
+            $( "#from" ).datepicker({
+                defaultDate: "0d",
+                changeMonth: true,
+                dateFormat: "yy-mm-dd",
+                showButtonPanel: true,
+                currentText: "Hoy",
+                numberOfMonths: 1,
+                onClose: function( selectedDate ) {
+                    $( "#to" ).datepicker( "option", "minDate", selectedDate );
+                }
+            });
+            $( "#to" ).datepicker({
+                defaultDate: "0d",
+                changeMonth: true,
+                dateFormat: "yy-mm-dd",
+                showButtonPanel: true,
+                currentText: "Hoy",
+                numberOfMonths: 1,
+                onClose: function( selectedDate ) {
+                    $( "#from" ).datepicker( "option", "maxDate", selectedDate );
+                }
+            });
+        });
+    </script>
+    <script type="text/javascript" src="{{ asset('js/tek_exp_tickets.js') }}"></script>
+    <script type="text/javascript">
+
+        $(function() {
+            $(".modalbox").fancybox();
+//$("#contact").submit(function() { return false; });
+        });
+    </script>
+{% endblock %}
+
+{% block content %}
+    <div class="container_24">
+        <div class="grid_24">
+            <div class="titleRow">
+                <div>
+                    <h3 class="left" style="margin: 0px;">{% trans %}label.tickets.title{% endtrans %}</h3>
+
+                    <div class="clear"></div>
+                </div>
+                <div class="clear"></div>
+                <span>{% trans %}label.tickets.message{% endtrans %}</span>
+                <div class="clear"></div>
+            </div>
+            <div class="clear"></div>
+            <div class="filter-search table" style="margin-top: 25px;">
+                <div class="internal">
+                    <form id="searchForm" action="{{ path('_expediente_tickets_search') }}" method="post">
+                        <div class="left" style="width: 50%;">
+                            <label>{%trans%}label.student{%endtrans%}</label><input type="text" id="student" name="student" value=" {{ student }}" style="margin-right: 5px;" {% if student == "" %}disabled="disabled"{% endif %}><input type="checkbox" id="searchByStudent" name="searchByStudent" class="check" rel="student" {% if student != "" %}checked="checked"{% endif %}>
+                        </div>
+                        <div class="left" style="width: 50%;">
+                            <label style="padding-left: 60px;">{%trans%}label.period{%endtrans%}</label>
+                            <select id="period" name="period" style="width: 290px;">
+                                <option value="-1" {% if period == '-1' %}selected="selected"{% endif %}>{%trans%}label.all{%endtrans%}</option>
+
+                            </select>
+                        </div>
+                        <div class="clear"></div>
+
+                        <div class="left" style="width: 50%;">
+                            <label for="from">Desde</label><input type="text" id="from" name="from" value="{{ dateFrom }}" />
+                        </div>
+                        <div class="left" style="width: 50%;">
+                            <label for="to" style="padding-left: 60px;">Hasta</label><input type="text" id="to" name="to" value="{{ dateTo }}" />
+                        </div>
+                        <div class="clear"></div>
+
+                        <button style="margin-right: 30px; margin-top: 0px;" type="submit" class="right button success-darker tiny" name="search"><span></span>{% trans %}label.filter{% endtrans %}</button>
+                        <div class="clear"></div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="search-results table" style="margin-top: 25px;">
+                <div class="row tableHeader" style="height: 32px; line-height: 32px;">
+                    <div class="option_width" style="float: left; width: 250px;">{% trans %}label.student{% endtrans %}</div>
+                    <div class="option_width" style="float: left; width: 150px;">{% trans %}label.date{% endtrans %}</div>
+                    <div class="option_width" style="float: left; width: 150px;">{% trans %}label.comments{% endtrans %}</div>
+                </div>
+
+                {% for entity in entities %}
+                    <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
+                        <div class="option_width" style="float: left; width: 250px;">{{ entity.student }}</div>
+                        <div class="option_width" style="float: left; width: 150px;">{% if entity.date != null %} {{ entity.date|date("d/M/y H:m:s") }} {% else %} &nbsp; {% endif %}</div>
+                        <div class="option_width" style="float: left; width: 150px;" title="{{ entity.comments }}">{{ entity.comments }}</div>
+
+                        <div class="clear"></div>
+                    </div>
+                {% else %}
+                    <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
+                        <div class="option_width" style="float: left; width: 375px;">{% trans %}results.not.found{% endtrans %}</div>
+                        <div class="clear"></div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="clear"></div>
+        <div class="wrapper">
+            <div class="grid_24 padline">
+                <div class="lineH"></div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

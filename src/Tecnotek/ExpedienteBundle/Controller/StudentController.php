@@ -934,13 +934,13 @@ class StudentController extends Controller
 
                 $em = $this->getDoctrine()->getEntityManager();
                 if( isset($searchType) && isset($groupId) && $searchType == 1 ){
-                    $sql = "SELECT stdy.id, CONCAT(e.lastname, ' ', e.firstname) as 'name'  "
+                    $sql = "SELECT stdy.id, CONCAT(e.lastname, ' ', e.firstname) as 'name'  , stdy.group_id"
                         . " FROM tek_students e, tek_students_year stdy"
                         . " WHERE stdy.group_id = $groupId AND stdy.student_id = e.id"
                         . " ORDER BY e.lastname, e.firstname";
 
                 } else {
-                    $sql = "SELECT e.id, e.lastname, e.firstname "
+                    $sql = "SELECT e.id, e.lastname, e.firstname , stdy.group_id"
                         . " FROM tek_students e, tek_students_year stdy"
                         . " WHERE (e.firstname like '%" . $text . "%' OR e.lastname like '%" . $text . "%')"
                         . " AND e.id = stdy.student_id AND e.groupyear != 'NULL'"
@@ -1866,4 +1866,113 @@ class StudentController extends Controller
             return new Response("<b>Not an ajax call!!!" . "</b>");
         }
     }
+
+    public function ticketsIndexAction(){
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $today = new \DateTime();
+        $start = $today->format('Y-m-d');
+        $end = $today->format('Y-m-d');
+
+        $logger = $this->get('logger');
+
+        $qb = $em->createQueryBuilder();
+        $qb->add('select', 'tickets')
+            ->add('from', 'TecnotekExpedienteBundle:Ticket tickets')
+            ->leftJoin("tickets.student", "std")
+            ->add('where', "tickets.date between :start and :end")
+            ->add('orderBy', 'std.lastname ASC')
+            ->setParameter('start', $start . " 00:00:00")
+            ->setParameter('end', $end . " 23:59:59");
+        $query = $qb->getQuery();
+
+        $entities = $query->getResult();
+
+        $currentPeriod = $em->getRepository("TecnotekExpedienteBundle:Period")->findOneBy(array('isActual' => true));
+        $currentPeriodId = 0;
+        if( isset($currentPeriod) ){
+            $currentPeriodId = $currentPeriod->getId();
+        }
+
+        $dql = "SELECT std FROM TecnotekExpedienteBundle:StudentYear stdY, TecnotekExpedienteBundle:Student std" .
+            " WHERE stdY.student = std.id AND stdY.period = $currentPeriodId AND stdY.student = std ORDER BY std.lastname, std.firstname";
+
+        $query = $em->createQuery($dql);
+
+        $students = $query->getResult();
+
+        $tickets = $em->getRepository("TecnotekExpedienteBundle:Ticket")->findAll();
+
+        $currentPeriod = $em->getRepository("TecnotekExpedienteBundle:Period")->findOneBy(array('isActual' => true));        $currentPeriodId = 0;
+        if( isset($currentPeriod) ){
+            $currentPeriodId = $currentPeriod->getId();
+        }
+
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Ticket/indexticket.html.twig', array('menuIndex' => 3,
+            'entities' => $entities, 'dateFrom' => $start, "dateTo" => $end, 'student' => "",
+            'period' => "-1", 'students' => $students, "tickets" => $tickets, "currentPeriod" => $currentPeriodId
+        ));
+    }
+
+    public function ticketsSearchAction(){
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $request = $this->getRequest();
+        $start = $request->get('from') ;
+        $end = $request->get('to');
+
+        $period = $request->get('period');
+        $periodQuery = "";
+        if($period != "-1")
+            $periodQuery = " AND tickets.justify = " . $period;
+
+        $logger = $this->get('logger');
+
+        $student = $request->get('student');
+        $studentQuery = "";
+        if( isset($student) && trim($student) != ""){
+            $student = trim($student);
+            $studentQuery = " AND (std.firstname like '%" . $student . "%' or std.lastname like '%" . $student . "%')";
+        } else {
+            $student = "";
+        }
+
+        $qb = $em->createQueryBuilder();
+        $qb->add('select', 'tickets')
+            ->add('from', 'TecnotekExpedienteBundle:Ticket tickets')
+            ->leftJoin("tickets.student", "std")
+            ->add('where', "tickets.date between :start and :end " . $periodQuery . $studentQuery)
+            ->add('orderBy', 'std.lastname ASC')
+            ->setParameter('start', $start . " 00:00:00")
+            ->setParameter('end', $end . " 23:59:59");
+        $query = $qb->getQuery();
+
+        $entities = $query->getResult();
+
+        $currentPeriod = $em->getRepository("TecnotekExpedienteBundle:Period")->findOneBy(array('isActual' => true));
+        $currentPeriodId = 0;
+        if( isset($currentPeriod) ){
+            $currentPeriodId = $currentPeriod->getId();
+        }
+
+        $dql = "SELECT std FROM TecnotekExpedienteBundle:StudentYear stdY, TecnotekExpedienteBundle:Student std" .
+            " WHERE stdY.student = std.id AND stdY.period = $currentPeriodId AND stdY.student = std ORDER BY std.lastname, std.firstname";
+
+        $query = $em->createQuery($dql);
+        $students = $query->getResult();
+
+        $tickets = $em->getRepository("TecnotekExpedienteBundle:Ticket")->findAll();
+
+        $currentPeriod = $em->getRepository("TecnotekExpedienteBundle:Period")->findOneBy(array('isActual' => true));
+        $currentPeriodId = 0;
+        if( isset($currentPeriod) ){
+            $currentPeriodId = $currentPeriod->getId();
+        }
+
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Ticket/indexticket.html.twig', array('menuIndex' => 3,
+            'entities' => $entities, 'dateFrom' => $start, "dateTo" => $end, 'student' => $student,
+            'period' => $period, 'students' => $students, "tickets" => $tickets, "currentPeriod" => $currentPeriodId
+        ));
+    }
+
 }

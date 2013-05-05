@@ -1,8 +1,24 @@
 var Tecnotek = Tecnotek || {};
 
+Tecnotek.TicketsSearch = {
+    translates : {},
+    init : function() {
+        $("#searchByStudent").change(function(){
+            $this = $(this);
+            if($this.is(':checked')){
+                $("#" + $this.attr("rel")).removeAttr("disabled");
+            } else {
+
+                $("#" + $this.attr("rel")).val("").attr("disabled",true);
+            }
+        });
+    }
+};
+
 Tecnotek.Tickets = {
     translates : {},
     init : function() {
+
         $('#generalTab').click(function(event){
             event.preventDefault();
             $('#relativesSection').hide();

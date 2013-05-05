@@ -243,6 +243,7 @@ var Tecnotek = {
             init : function() {
                 Tecnotek.UI.vars["fromEdit"] = false;
 
+
                 $('#entriesTab').click(function(event){
                     $("#subentriesSection").hide();
                     $('#entriesSection').show();
@@ -468,6 +469,22 @@ var Tecnotek = {
                     //console.debug("print!!!");
                     //$("#tableContainer").printElement({printMode:'iframe', pageTitle:$(this).attr('rel')});
                 });
+
+                /*$(document).ready(function() {
+                    //$('input:text:first').focus();
+
+                    $('input:text').bind("keydown", function(e) {
+                        var n = $("input:text").length;
+                        if (e.which == 13)
+                        { //Enter key
+                            e.preventDefault(); //to skip default behavior of the enter key
+                            var nextIndex = $('input:text').index(this) + 1;
+                            if(nextIndex < n)
+                                $('input:text')[nextIndex].focus();
+
+                        }
+                    });
+                });*/
 
                 $('#viewPrintable').click(function(event){
                     event.preventDefault();
@@ -1002,9 +1019,9 @@ var Tecnotek = {
             },
             initializeTable: function() {
                 $('.editEntry').unbind();
-                $('#entriesRows').empty();
-                $('#subentriesRows').empty();
-                $('#subentryFormParent').empty();
+                //$('#entriesRows').empty();
+                //$('#subentriesRows').empty();
+                //$('#subentryFormParent').empty();
 
                 $(".observation").unbind();
 
@@ -1015,9 +1032,9 @@ var Tecnotek = {
                     e.preventDefault();
                     $this = $(this);
 
-                    window.alert("saliendo de una observacion que quedo con el value: " + $this.val());
+                    //window.alert("saliendo de una observacion que quedo con el value: " + $("#teacherid").val());
 
-                    /*$observation = $this.val();
+                    $observation = $this.val();
                     $stdId = $this.attr('std');
 
                     if(Tecnotek.UI.vars["textFieldValue"] === $observation) return;
@@ -1025,6 +1042,7 @@ var Tecnotek = {
                         {   courseClass: $this.attr('courseClass'),
                             studentYearId: $this.attr('stdyid'),
                             groupId: $("#groups").val(),
+                            userId: $("#teacherid").val(),
                             observation: $observation},
                         function(data){
                             if(data.error === true) {
@@ -1034,7 +1052,7 @@ var Tecnotek = {
                         },
                         function(jqXHR, textStatus){
                             Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
-                        }, false);*/
+                        }, false);
                 });
             }
         }

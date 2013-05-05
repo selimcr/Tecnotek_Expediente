@@ -556,6 +556,15 @@ _expediente_report_load_student_qualifications:
    defaults: { _controller: TecnotekExpedienteBundle:Report:loadStudentQualifications }
 #########################################
 
+
+_expediente_tickets:
+    pattern:  /ap/tickets/
+    defaults: { _controller: TecnotekExpedienteBundle:Student:ticketsIndex }
+
+_expediente_tickets_search:
+    pattern:  /ap/tickets/search/
+    defaults: { _controller: TecnotekExpedienteBundle:Student:ticketsSearch }
+
 ###########      PENALTIES      ###########
 _expediente_penalties:
     pattern:  /ap/penalties/

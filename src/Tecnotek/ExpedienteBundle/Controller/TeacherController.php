@@ -798,7 +798,7 @@ class TeacherController extends Controller
 
 
                         $html .=  '<td id="total_trim_' . $stdy->getStudent()->getId() . '" class="azul headcoltrim" style="color: #fff;">-</td>';
-                        $html .=  '<td id="obser_' . $stdy->getStudent()->getId() . '"  style="color: #000; width: 1600px"><input class="observation" courseClass="' . $row2 . '" style="width: 540px" size"255" maxlength="255"  std="stdId"  $stdyId="' . $stdy->getStudent()->getId() . '" value ="' . $row . '"></input></td></tr>';
+                        $html .=  '<td id="obser_' . $stdy->getStudent()->getId() . '"  style="color: #000; width: 1600px"><input class="observation" courseClass="' . $row2 . '" style="width: 540px" size"255" maxlength="255"  std="stdId"  stdyId="' . $stdy->getId() . '" value ="' . $row . '"></input></td></tr>';
                     }
 
                     $html .= "</table>";
@@ -876,7 +876,7 @@ class TeacherController extends Controller
                 $request = $this->get('request')->request;
                 $course_classId = $request->get('courseClass');
                 $studentYearId = $request->get('studentYearId');
-                $userId = $request->get('userId'); //tomarlo
+                $userId = $request->get('userId');
                 $groupId = $request->get('groupId');
                 $observation = $request->get('observation');
                 $translator = $this->get("translator");
@@ -885,9 +885,9 @@ class TeacherController extends Controller
                 if( isset($course_classId) || isset($studentYearId) ) {
                     $em = $this->getDoctrine()->getEntityManager();
 
-                    $studentO = $em->getRepository("TecnotekExpedienteBundle:StudentObservation")->findOneBy(array('course_classId' => $course_classId, 'studentYear' => $studentYearId));
+                    $studentO = $em->getRepository("TecnotekExpedienteBundle:Observation")->findOneBy(array('courseClass' => $course_classId, 'studentYear' => $studentYearId));
 
-                    if ( isset($studentQ) ) {
+                    if ( isset($studentO) ) {
                         $studentO->setDetail($observation);
                     } else {
                         $studentO = new Observation();
