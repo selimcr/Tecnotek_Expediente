@@ -470,22 +470,6 @@ var Tecnotek = {
                     //$("#tableContainer").printElement({printMode:'iframe', pageTitle:$(this).attr('rel')});
                 });
 
-                /*$(document).ready(function() {
-                    //$('input:text:first').focus();
-
-                    $('input:text').bind("keydown", function(e) {
-                        var n = $("input:text").length;
-                        if (e.which == 13)
-                        { //Enter key
-                            e.preventDefault(); //to skip default behavior of the enter key
-                            var nextIndex = $('input:text').index(this) + 1;
-                            if(nextIndex < n)
-                                $('input:text')[nextIndex].focus();
-
-                        }
-                    });
-                });*/
-
                 $('#viewPrintable').click(function(event){
                     event.preventDefault();
 
@@ -658,6 +642,17 @@ var Tecnotek = {
                 $(".textField").focus(function(e){
                     Tecnotek.UI.vars["textFieldValue"] = $(this).val();
                 });
+
+                $('.textField').keyup(function(event) {
+                    event.preventDefault();
+                    if (event.which == 13) {//Enter key
+                        var tabindex = $(this).attr('tabindex');
+                        tabindex++; //increment tabindex
+                        $('[tabindex=' + tabindex + ']').focus();
+                    }
+                });
+
+
                 $(".textField").blur(function(e){
                     e.preventDefault();
                     $this = $(this);
@@ -671,6 +666,8 @@ var Tecnotek = {
                         $this.val("");
                         $nota = "";
                     }
+
+
                     if(Tecnotek.UI.vars["forzeBlur"] == true){
                         if($type == 1){
                             $percentage = $this.attr('perc');
