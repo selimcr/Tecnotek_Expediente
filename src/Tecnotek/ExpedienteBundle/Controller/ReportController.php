@@ -283,13 +283,48 @@ class ReportController extends Controller
                 $translator = $this->get("translator");
 
                 if( isset($referenceId) && isset($groupId) && isset($periodId)) {
+                    $em = $this->getDoctrine()->getEntityManager();
+
+                    //$period = $em->getRepository("TecnotekExpedienteBundle:Period")->find($periodId);
+
+                    $carne = "";
+                    $teacherGroup = "";
+                    $studentName = "";
+
+                    $group = $em->getRepository("TecnotekExpedienteBundle:Group")->find($groupId);
+                    $teacher = $group->getTeacher();
+                    $imgHeader = "encabezadoDefault.png";
+                    $teacherGroup = $teacher->getFirstname() . " " . $teacher->getLastname();
+
+                    $institution = $group->getInstitution();
+                    if(isset($institution)){
+                        //Find Properties
+                        $property = $em->getRepository("TecnotekExpedienteBundle:InstitutionProperty")->findOneBy(
+                            array('institution' => $institution->getId(), 'code' => "TICKETS_IMAGE" ));
+
+                        if(isset($property)){
+                            $imgHeader = $property->getValue();
+                        }
+
+                        /*$property = $em->getRepository("TecnotekExpedienteBundle:InstitutionProperty")->findOneBy(
+                            array('institution' => $institution->getId(), 'code' => "TICKETS_TEXT" ));
+
+                        if(isset($property)){
+                            $text = $property->getValue();
+                        }*/
+                    }
+
                     if($referenceId == 0){
                         $html = $this->getGroupHTMLQualifications($periodId, $gradeId, $groupId);
                     } else {
-                        $html = $this->getStudentByPeriodHTMLQualifications($periodId, $gradeId, $groupId, $referenceId);
+                        $studentYear = $em->getRepository("TecnotekExpedienteBundle:StudentYear")->find($referenceId);
+                        $student = $studentYear->getStudent();
+                        $carne = $student->getCarne();
+                        $studentName = "" . $student;
+                        $html = $this->getStudentByPeriodHTMLQualifications($periodId, $gradeId, $groupId, $referenceId, $studentYear);
                     }
 
-                    return new Response(json_encode(array('error' => false, 'html' => $html)));
+                    return new Response(json_encode(array('error' => false, 'html' => $html, 'carne' => $carne, 'teacherGroup' => $teacherGroup, "studentName" => $studentName, "imgHeader" => $imgHeader)));
                 } else {
                     return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
                 }
@@ -369,12 +404,10 @@ class ReportController extends Controller
         return $html;
     }
 
-    public function getStudentByPeriodHTMLQualifications($periodId, $gradeId, $groupId, $studentId){
+    public function getStudentByPeriodHTMLQualifications($periodId, $gradeId, $groupId, $studentId, $studentYear){
 
         $logger = $this->get('logger');
         $em = $this->getDoctrine()->getEntityManager();
-
-        $studentYear = $em->getRepository("TecnotekExpedienteBundle:StudentYear")->find($studentId);
 
         $dql = "SELECT cc "
             . " FROM TecnotekExpedienteBundle:Course c, TecnotekExpedienteBundle:CourseClass cc "
@@ -386,22 +419,40 @@ class ReportController extends Controller
 
         $headersRow =  '<thead>';
         $headersRow .=  '    <tr style="height: 30px;">';
-        $headersRow .=  '        <th style="width: 350px; text-align: center;">Materia</th>';
-        $headersRow .=  '        <th style="width: 150px; text-align: center;">Nota Final</th>';
+        $headersRow .=  '        <th style="width: 350px; text-align: left;">MATERIAS</th>';
+        $headersRow .=  '        <th style="width: 100px; text-align: center;">I TRIM.</th>';
+        $headersRow .=  '        <th style="width: 100px; text-align: center;">II TRIM.</th>';
+        $headersRow .=  '        <th style="width: 100px; text-align: center;">III TRIM</th>';
+        $headersRow .=  '        <th style="width: 150px; text-align: center;">PROMEDIO</th>';
         $headersRow .=  '    </tr>';
         $headersRow .=  '</thead>';
 
         $courseRow = '';
+
+        $promedioRow = '';
 
         $this->calculateStudentYearQualification($periodId, $studentId, $studentYear);
 
         $html = '<table class="tableQualifications" cellSpacing="0" cellPadding="0">' . $headersRow;
 
         $courseRow .=  '<tr class="rowNotas">';
-        $courseRow .= '<td>courseName</td>';
-        $courseRow .= '<td><div id="course_courseId_nota">-</div></td>';
+        $courseRow .= '<td style="text-align: left;">courseName</td>';
+        $courseRow .= '<td>__</td>';
+        $courseRow .= '<td>-----</td>';
+        $courseRow .= '<td>-----</td>';
+        $courseRow .= '<td>__</td>';
         $courseRow .=  "</tr>";
 
+        $promedioRow .=  '<tr class="rowNotas" style="background-color: rgb(189, 176, 176);">';
+        $promedioRow .= '<td style="text-align: left;">Promedio General</td>';
+        $promedioRow .= '<td>__</td>';
+        $promedioRow .= '<td>-----</td>';
+        $promedioRow .= '<td>-----</td>';
+        $promedioRow .= '<td>__</td>';
+        $promedioRow .=  "</tr>";
+
+        $total = 0;
+        $counter = 0;
         foreach( $courses as $course )
         {
             $row = str_replace("courseName", $course->getCourse()->getName(), $courseRow);
@@ -409,13 +460,22 @@ class ReportController extends Controller
 
             $notaFinal = $em->getRepository("TecnotekExpedienteBundle:StudentYearCourseQualification")->findOneBy(array('courseClass' => $course->getId(), 'studentYear' => $studentYear->getId()));
             if(isset($notaFinal)){//Si existe
-                $row = str_replace("-", $notaFinal->getQualification(), $row);
+                $row = str_replace("__", $notaFinal->getQualification(), $row);
+                $total += $notaFinal->getQualification();
+                $counter += 1;
             }
 
             $html .=  $row;
         }
 
-        $html .= "</table>";
+        $logger->err("-----> " . $total . " :: " . $counter);
+        if($counter == 0){
+            $promedioRow = str_replace("__", "-----", $promedioRow);
+        } else {
+            $promedioRow = str_replace("__", number_format($total / $counter, 2, '.', ''), $promedioRow);
+        }
+
+        $html .= "$promedioRow . </table>";
 
         return $html;
     }

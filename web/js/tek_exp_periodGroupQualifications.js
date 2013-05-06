@@ -2,6 +2,11 @@ var Tecnotek = Tecnotek || {};
 
 Tecnotek.PeriodGroupQualifications = {
     translates : {},
+    completeText: "",
+    studentsIndex: 0,
+    periodId: 0,
+    groupId: 0,
+    studentsLength: 0,
     init : function() {
 
 
@@ -66,7 +71,7 @@ Tecnotek.PeriodGroupQualifications = {
                     if(data.error === true) {
                         Tecnotek.showErrorMessage(data.message,true, "", false);
                     } else {
-                        $('#students').append('<option value="0">Todos</option>');
+                        //$('#students').append('<option value="0">Todos</option>');
                         for(i=0; i<data.students.length; i++) {
                             $('#students').append('<option value="' + data.students[i].id + '">' + data.students[i].lastname + ", " + data.students[i].firstname + '</option>');
                         }
@@ -86,34 +91,107 @@ Tecnotek.PeriodGroupQualifications = {
         } else {
             $('#tableContainer').hide();
             $('#fountainG').show();
-            Tecnotek.ajaxCall(Tecnotek.UI.urls["loadQualificationsOfGroupURL"],
-                {   periodId: $("#period").val(),
-                    referenceId: studentId,
-                    groupId: $("#groups").val()},
-                function(data){
-                    $('#fountainG').hide();
-                    if(data.error === true) {
-                        Tecnotek.showErrorMessage(data.message,true, "", false);
-                    } else {
-                        var tableHeader = "";
-                        if(studentId != 0){
-                            tableHeader += '<div class="reportContentHeader">';
-                            tableHeader += '<div class="left reportContentLabel">Periodo:</div><div class="left reportContentText">' + $("#period").find(":selected").text() + '</div><div class="clear"></div>';
-                            tableHeader += '<div class="left reportContentLabel">Grado y Grupo:</div><div class="left reportContentText">' + $("#groups").find(":selected").text() + '</div><div class="clear"></div>';
-                            tableHeader += '<div class="left reportContentLabel">Estudiante:</div><div class="left reportContentText">' + $("#students").find(":selected").text() + '</div><div class="clear"></div>';
-                            tableHeader += "</div>";
+            Tecnotek.PeriodGroupQualifications.periodId = $("#period").val();
+            Tecnotek.PeriodGroupQualifications.groupId = $("#groups").val();
+            if(studentId != 0){//Single student
+
+                Tecnotek.PeriodGroupQualifications.completeText = "";
+                Tecnotek.PeriodGroupQualifications.studentsIndex = $('#students option').length;
+                Tecnotek.PeriodGroupQualifications.studentsLength = Tecnotek.PeriodGroupQualifications.studentsIndex;
+                Tecnotek.PeriodGroupQualifications.loadStudentQualification(studentId);
+
+            } else {//All Students
+                Tecnotek.ajaxCall(Tecnotek.UI.urls["loadQualificationsOfGroupURL"],
+                    {   periodId: Tecnotek.PeriodGroupQualifications.periodId,
+                        referenceId: studentId,
+                        groupId: Tecnotek.PeriodGroupQualifications.groupId},
+                    function(data){
+                        //$('#fountainG').hide();
+                        if(data.error === true) {
+                            Tecnotek.showErrorMessage(data.message,true, "", false);
+                        } else {
+                            Tecnotek.PeriodGroupQualifications.completeText = '<div class="center"><h3><img width="840" height="145" src="/expediente/web/images/' + data.imgHeader + '" alt="" class="image-hover"></h3></div>'
+                                + data.html + '<div class="pageBreak"> </div>';
+                            Tecnotek.PeriodGroupQualifications.studentsIndex = 0;
+                            Tecnotek.PeriodGroupQualifications.studentsLength = $('#students option').length;
+                            Tecnotek.PeriodGroupQualifications.processStudentResponse("");
+                            //$('#contentHeader').html(tableHeader);
+                            //$('#contentBody').html(tableHeader + data.html);
+                            //$('#tableContainer').show();
                         }
-                        //
-                        $('#contentHeader').html(tableHeader);
-                        $('#contentBody').html(data.html);
-                        $('#tableContainer').show();
-                    }
-                },
-                function(jqXHR, textStatus){
-                    $('#fountainG').hide();
-                    $( "#spinner-modal" ).dialog( "close" );
-                    Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
-                }, false);
+                    },
+                    function(jqXHR, textStatus){
+                        $('#fountainG').hide();
+                        $( "#spinner-modal" ).dialog( "close" );
+                        Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
+                    }, false);
+            }
         }
+    },
+    loadAllStudentsQualifications: function() {
+        studentId = $('#students option:eq(' + Tecnotek.PeriodGroupQualifications.studentsIndex + ')').val();
+        Tecnotek.PeriodGroupQualifications.loadStudentQualification(studentId);
+    },
+    loadStudentQualification: function(studentId) {
+        var studentHtml = "";
+
+        Tecnotek.ajaxCall(Tecnotek.UI.urls["loadQualificationsOfGroupURL"],
+            {   periodId: Tecnotek.PeriodGroupQualifications.periodId,
+                referenceId: studentId,
+                groupId: Tecnotek.PeriodGroupQualifications.groupId},
+            function(data){
+                //$('#fountainG').hide();
+                if(data.error === true) {
+                    Tecnotek.showErrorMessage(data.message,true, "", false);
+                } else {
+                    studentHtml += '<div class="center"><h3><img width="840" height="145" src="/expediente/web/images/' + data.imgHeader + '" alt="" class="image-hover"></h3></div>';
+
+                    studentHtml += '<div class="reportContentHeader">';
+                    studentHtml += '<div class="left reportContentLabel" style="width: 450px;">Alumnno(a):&nbsp;&nbsp;' + data.studentName  + '</div>';
+                    studentHtml += '<div class="left reportContentLabel" style="width: 350px;">Secci&oacute;n:&nbsp;&nbsp;' + $("#groups").find(":selected").text() + '</div>';
+                    studentHtml += '<div class="clear"></div>';
+
+                    studentHtml += '<div class="left reportContentLabel" style="width: 450px;">Carn&eacute;:&nbsp;&nbsp;' + data.carne  + '</div>';
+                    studentHtml += '<div class="left reportContentLabel" style="width: 350px;">Trimestre:&nbsp;&nbsp;' + $("#period").find(":selected").text() + '</div>';
+                    studentHtml += '<div class="clear"></div>';
+
+                    studentHtml += '<div class="left reportContentLabel" style="width: 450px;">&nbsp;&nbsp;</div>';
+                    studentHtml += '<div class="left reportContentLabel" style="width: 350px;">Profesor:&nbsp;&nbsp;' + data.teacherGroup + '</div>';
+                    studentHtml += '<div class="clear"></div>';
+                    //studentHtml += '<div class="left reportContentLabel">Grado y Grupo:</div><div class="left reportContentText">' + $("#groups").find(":selected").text() + '</div><div class="clear"></div>';
+                   // studentHtml += '<div class="left reportContentLabel">Estudiante:</div><div class="left reportContentText">' + $("#students").find(":selected").text() + '</div><div class="clear"></div>';
+                    studentHtml += "</div>";
+                    studentHtml += data.html  + '<div class="pageBreak"> </div>';
+
+                    Tecnotek.PeriodGroupQualifications.processStudentResponse(studentHtml);
+                    //$('#contentBody').html(data.html);
+                    //$('#tableContainer').show();
+                }
+            },
+            function(jqXHR, textStatus){
+                $('#fountainG').hide();
+                $( "#spinner-modal" ).dialog( "close" );
+                Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
+            }, false);
+
+    },
+    processStudentResponse: function(html){
+
+        Tecnotek.PeriodGroupQualifications.completeText += html;
+        Tecnotek.PeriodGroupQualifications.studentsIndex++;
+        console.debug(Tecnotek.PeriodGroupQualifications.studentsIndex + " :: " + Tecnotek.PeriodGroupQualifications.studentsLength);
+        if(Tecnotek.PeriodGroupQualifications.studentsIndex < Tecnotek.PeriodGroupQualifications.studentsLength){
+            var studentId = $('#students option:eq(' + Tecnotek.PeriodGroupQualifications.studentsIndex + ')').val();
+            console.debug("get student: " + studentId);
+            Tecnotek.PeriodGroupQualifications.loadStudentQualification(studentId);
+        } else {
+            Tecnotek.PeriodGroupQualifications.terminateGetAllQualifications();
+        }
+    },
+    terminateGetAllQualifications: function(){
+        //console.debug(html);
+        $('#fountainG').hide();
+        $('#contentBody').html(Tecnotek.PeriodGroupQualifications.completeText);
+        $('#tableContainer').show();
     }
 };
