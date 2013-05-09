@@ -539,9 +539,17 @@ class ReportController extends Controller
             $notasCursos[$subEntry->getParent()->getCourseClass()->getId()] = $pg;
         }
 
+        $con = $em->getConnection();
+        $con->beginTransaction();
         foreach ($notasCursos as $i => $value) {
             //Guardar registro de nota final
-            $notaFinal = $em->getRepository("TecnotekExpedienteBundle:StudentYearCourseQualification")->findOneBy(array('courseClass' => $i, 'studentYear' => $studentYearId));
+            $sql = 'INSERT INTO tek_student_year_course_qualifications (course_class_id,student_year_id, qualification) VALUES (' . $i . ',' . $studentYearId . ', ' . $value . ')'.
+                    ' ON DUPLICATE KEY UPDATE qualification = ' . $value . ';';
+
+            $con->executeUpdate($sql);
+
+
+            /*$notaFinal = $em->getRepository("TecnotekExpedienteBundle:StudentYearCourseQualification")->findOneBy(array('courseClass' => $i, 'studentYear' => $studentYearId));
             if(!isset($notaFinal)){//Si no existe crea el registro
                 $notaFinal = new StudentYearCourseQualification();
                 $notaFinal->setStudentYear($studentYear);
@@ -549,8 +557,9 @@ class ReportController extends Controller
             }
             $notaFinal->setQualification($value);
             $em->persist($notaFinal);
-            $em->flush();
+            $em->flush();*/
         }
+        $con->commit();
     }
 
     public function loadGroupQualificationssssAction(){
