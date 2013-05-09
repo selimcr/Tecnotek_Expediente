@@ -356,7 +356,7 @@ class StudentController extends Controller
                 $route = $em->getRepository("TecnotekExpedienteBundle:Route")->find($routeId);
 
                 if($route->getRouteType() == 1){
-                    $sql = "SELECT std.id, std.lastname, std.firstname "
+                    $sql = "SELECT std.id, std.lastname, std.firstname, std.carne, std.groupyear "
                         . " FROM tek_students std, tek_students_year stdy"
                         . " WHERE (std.firstname like '%" . $text . "%' OR std.lastname like '%" . $text . "%')"
                         . " AND (std.route_id is null Or std.route_id <> $routeId)"
@@ -370,7 +370,7 @@ class StudentController extends Controller
                         . " AND (stdToRoute.id is null Or stdToRoute.route_id <> $routeId)"
                         . " AND std.id = stdy.student_id"
                         . " ORDER BY std.lastname, std.firstname";*/
-                    $sql = "SELECT std.id, std.lastname, std.firstname "
+                    $sql = "SELECT std.id, std.lastname, std.firstname, std.carne, std.groupyear "
                         . " FROM tek_students std, tek_students_year stdy"
                         . " WHERE (std.firstname like '%" . $text . "%' OR std.lastname like '%" . $text . "%')"
                         . " AND NOT EXISTS"
@@ -940,7 +940,7 @@ class StudentController extends Controller
                         . " ORDER BY e.lastname, e.firstname";
 
                 } else {
-                    $sql = "SELECT e.id, e.lastname, e.firstname , stdy.group_id"
+                    $sql = "SELECT e.id, e.lastname, e.firstname, e.carne, e.groupyear , stdy.group_id"
                         . " FROM tek_students e, tek_students_year stdy"
                         . " WHERE (e.firstname like '%" . $text . "%' OR e.lastname like '%" . $text . "%')"
                         . " AND e.id = stdy.student_id AND e.groupyear != 'NULL'"

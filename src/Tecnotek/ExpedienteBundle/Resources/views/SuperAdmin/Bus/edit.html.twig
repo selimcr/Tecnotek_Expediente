@@ -5,12 +5,53 @@
 {% endblock %}
 
 {% block extracss %}
+    <link rel="stylesheet" href="{{ asset('css/jquery-ui-timepicker-addon.css') }}" type="text/css" media="all" />
+    <link rel="stylesheet" href="{{ asset('fancybox/fancybox_style.css') }}" type="text/css" media="all" />
+    <link rel="stylesheet" href="{{ asset('fancybox/jquery.fancybox.css') }}" type="text/css" media="all" />
+
 {% endblock %}
 
 {% block extrajs %}
 <script type="text/javascript">
     Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
 </script>
+    <script>
+        $(function() {
+            $( "#tecnotek_expediente_busformtype_riteve" ).datepicker({
+                defaultDate: "0d",
+                changeMonth: true,
+                dateFormat: "dd/mm/yy",
+                showButtonPanel: true,
+                //currentText: "Hoy",
+                numberOfMonths: 1,
+                onClose: function( selectedDate ) {
+                    //$( "#to" ).datepicker( "option", "minDate", selectedDate );
+                }
+            });
+            $( "#tecnotek_expediente_busformtype_ins" ).datepicker({
+                defaultDate: "0d",
+                changeMonth: true,
+                dateFormat: "dd/mm/yy",
+                showButtonPanel: true,
+                //currentText: "Hoy",
+                numberOfMonths: 1,
+                onClose: function( selectedDate ) {
+                    //$( "#to" ).datepicker( "option", "maxDate", selectedDate );
+                }
+            });
+            $( "#tecnotek_expediente_busformtype_permission" ).datepicker({
+                defaultDate: "0d",
+                changeMonth: true,
+                dateFormat: "dd/mm/yy",
+                showButtonPanel: true,
+                //currentText: "Hoy",
+                numberOfMonths: 1,
+                onClose: function( selectedDate ) {
+                    //$( "#to" ).datepicker( "option", "maxDate", selectedDate );
+                }
+            });
+        });
+    </script>
 {% endblock %}
 
 {% block content %}
