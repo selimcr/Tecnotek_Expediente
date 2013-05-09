@@ -58,7 +58,7 @@ Tecnotek.StudentQualifications = {
         if(($groupId!==null)){
             $('#students').children().remove();
             $('#subentryFormParent').empty();
-            Tecnotek.StudentQualifications.loadQualificationsOfGroup(0);
+            //Tecnotek.StudentQualifications.loadQualificationsOfGroup(0);
             Tecnotek.ajaxCall(Tecnotek.UI.urls["loadStudentsGroupURL"],
                 {   groupId: $groupId.split("-")[0] },
                 function(data){
@@ -68,6 +68,7 @@ Tecnotek.StudentQualifications = {
                         //$('#students').append('<option value="0">Todos</option>');
                         for(i=0; i<data.students.length; i++) {
                             $('#students').append('<option value="' + data.students[i].id + '">' + data.students[i].lastname + ", " + data.students[i].firstname + '</option>');
+                            console.debug("-> Inserting student: " + data.students[i].firstname);
                         }
                         Tecnotek.StudentQualifications.loadQualificationsOfGroup($('#students').val());
                     }
@@ -79,6 +80,7 @@ Tecnotek.StudentQualifications = {
         }
     },
     loadQualificationsOfGroup: function(studentId) {
+        console.debug("--> 0.0 loadQualificationsOfGroup");
         $('.editEntry').unbind();
         $('#contentBody').empty();
         if(studentId === null){//Clean page

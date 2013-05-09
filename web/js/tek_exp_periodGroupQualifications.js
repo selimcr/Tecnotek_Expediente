@@ -144,15 +144,19 @@ Tecnotek.PeriodGroupQualifications = {
                 if(data.error === true) {
                     Tecnotek.showErrorMessage(data.message,true, "", false);
                 } else {
+                    $period = $("#period").find(":selected").text();
+                    $periodYear = $period.split("-")[1];
                     studentHtml += '<div class="center"><h3><img width="840" height="145" src="/expediente/web/images/' + data.imgHeader + '" alt="" class="image-hover"></h3></div>';
 
                     studentHtml += '<div class="reportContentHeader">';
+                    studentHtml += '<div class="left reportContentLabel" style="width: 100%; font-size: 18px; text-align: center;">TARJETA DE CALIFICACIONES</div>';
+                    studentHtml += '<div class="left reportContentLabel" style="width: 100%; font-size: 14px; text-align: center; margin-bottom: 15px;">' + $periodYear + '</div>';
                     studentHtml += '<div class="left reportContentLabel" style="width: 450px;">Alumnno(a):&nbsp;&nbsp;' + data.studentName  + '</div>';
                     studentHtml += '<div class="left reportContentLabel" style="width: 350px;">Secci&oacute;n:&nbsp;&nbsp;' + $("#groups").find(":selected").text() + '</div>';
                     studentHtml += '<div class="clear"></div>';
 
                     studentHtml += '<div class="left reportContentLabel" style="width: 450px;">Carn&eacute;:&nbsp;&nbsp;' + data.carne  + '</div>';
-                    studentHtml += '<div class="left reportContentLabel" style="width: 350px;">Trimestre:&nbsp;&nbsp;' + $("#period").find(":selected").text() + '</div>';
+                    studentHtml += '<div class="left reportContentLabel" style="width: 350px;">Trimestre:&nbsp;&nbsp;' + $period + '</div>';
                     studentHtml += '<div class="clear"></div>';
 
                     studentHtml += '<div class="left reportContentLabel" style="width: 450px;">&nbsp;&nbsp;</div>';

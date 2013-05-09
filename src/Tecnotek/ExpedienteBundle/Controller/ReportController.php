@@ -295,7 +295,7 @@ class ReportController extends Controller
                     $teacher = $group->getTeacher();
                     $imgHeader = "encabezadoDefault.png";
                     $teacherGroup = $teacher->getFirstname() . " " . $teacher->getLastname();
-
+                    $director = "Indefinido";
                     $institution = $group->getInstitution();
                     if(isset($institution)){
                         //Find Properties
@@ -304,6 +304,13 @@ class ReportController extends Controller
 
                         if(isset($property)){
                             $imgHeader = $property->getValue();
+                        }
+
+                        $property = $em->getRepository("TecnotekExpedienteBundle:InstitutionProperty")->findOneBy(
+                            array('institution' => $institution->getId(), 'code' => "DIRECTOR" ));
+
+                        if(isset($property)){
+                            $director = $property->getValue();
                         }
 
                         /*$property = $em->getRepository("TecnotekExpedienteBundle:InstitutionProperty")->findOneBy(
@@ -321,7 +328,7 @@ class ReportController extends Controller
                         $student = $studentYear->getStudent();
                         $carne = $student->getCarne();
                         $studentName = "" . $student;
-                        $html = $this->getStudentByPeriodHTMLQualifications($periodId, $gradeId, $groupId, $referenceId, $studentYear);
+                        $html = $this->getStudentByPeriodHTMLQualifications($periodId, $gradeId, $groupId, $referenceId, $studentYear, $director);
                     }
 
                     return new Response(json_encode(array('error' => false, 'html' => $html, 'carne' => $carne, 'teacherGroup' => $teacherGroup, "studentName" => $studentName, "imgHeader" => $imgHeader)));
@@ -404,7 +411,7 @@ class ReportController extends Controller
         return $html;
     }
 
-    public function getStudentByPeriodHTMLQualifications($periodId, $gradeId, $groupId, $studentId, $studentYear){
+    public function getStudentByPeriodHTMLQualifications($periodId, $gradeId, $groupId, $studentId, $studentYear, $director){
 
         $logger = $this->get('logger');
         $em = $this->getDoctrine()->getEntityManager();
@@ -468,7 +475,6 @@ class ReportController extends Controller
             $html .=  $row;
         }
 
-        $logger->err("-----> " . $total . " :: " . $counter);
         if($counter == 0){
             $promedioRow = str_replace("__", "-----", $promedioRow);
         } else {
@@ -476,7 +482,20 @@ class ReportController extends Controller
         }
 
         $html .= "$promedioRow . </table>";
+        $html .= '<div style="color: #000; font-size: 12px;">';
+        $html .= '<div style="margin-top: 25px; margin-bottom: 25px;">Desamparados, '. date('j \d\e F \d\e\l Y') . '</div>';
+        $html .= '<div class="left" style="width: 250px; text-align: center;"><div style="line-height: 25px;">______________________________</div><div>Profesor Gu&iacute;a</div></div>';
+        $html .= '<div class="left" style="width: 250px; text-align: center; margin-left: 300px;"><div style="line-height: 25px;">______________________________</div><div>' . $director . '</div><div>Director</div></div>';
+        $html .= '<div class="clear"></div>';
 
+        $html .= '<div style="margin-top: 15px;"><hr></div>';
+        $html .= '<div class="left" style="width: 100%; text-align: center;"><div style="line-height: 25px;">Autorizado y Reconocido por el MEP, Acuerdo C.S.E. N. 042-92</div>';
+        $html .= '<div style="line-height: 25px;">Afiliado a ANADEC</div><div style="line-height: 25px;">Tel&eacute;fono: 2270-2335&nbsp;&nbsp;&nbsp;Fax: 2250-0076&nbsp;&nbsp;&nbsp;Email: info@saintmichaelcr.com</div></div>';
+
+        $html .= '</div>';
+
+
+        $html .= '';
         return $html;
     }
 
