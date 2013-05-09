@@ -9,9 +9,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
 /**
  *
- * @ORM\Table(name="tek_student_year_course_qualifications")
+ * @ORM\Table(name="tek_student_year_course_qualifications",uniqueConstraints={@ORM\UniqueConstraint(name="unique_qualification_idx", columns={"course_class_id", "student_year_id"})})
  * @ORM\Entity()
  */
 class StudentYearCourseQualification
