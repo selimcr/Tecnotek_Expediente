@@ -22,6 +22,18 @@ class StudentYear
     private $id;
 
     /**
+     * @ORM\Column(type="float")
+     * @Assert\NotBlank()
+     */
+    private $conducta;
+
+    /**
+     * @ORM\Column(type="float")
+     * @Assert\NotBlank()
+     */
+    private $periodAverageScore;
+
+    /**
      * @ManyToOne(targetEntity="Student")
      * @JoinColumn(name="student_id", referencedColumnName="id", onDelete="CASCADE")
      */
@@ -56,6 +68,46 @@ class StudentYear
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set conducta
+     *
+     * @param double $conducta
+     */
+    public function setConducta($conducta)
+    {
+        $this->conducta = $conducta;
+    }
+
+    /**
+     * Get conducta
+     *
+     * @return double
+     */
+    public function getConducta()
+    {
+        return $this->conducta;
+    }
+
+    /**
+     * Set periodAverageScore
+     *
+     * @param double $periodAverageScore
+     */
+    public function setPeriodAverageScore($periodAverageScore)
+    {
+        $this->periodAverageScore = $periodAverageScore;
+    }
+
+    /**
+     * Get periodAverageScore
+     *
+     * @return double
+     */
+    public function getPeriodAverageScore()
+    {
+        return $this->periodAverageScore;
     }
 
     /**

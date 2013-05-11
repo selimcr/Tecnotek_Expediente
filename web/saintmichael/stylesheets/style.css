@@ -225,7 +225,7 @@ a.desc {line-height: 32px; font-size: 15px; float: left; text-align: right; colo
 #report .student_footer{font-size: 10px; color: #000; font-weight: bold;}
 #report .area_title{font-weight: bold; margin-top: 25px; text-decoration: underline; color: #000;}
 
-.pageBreak { page-break-after: always; }
+.pageBreak { display: block; page-break-before: always; }
 
 /****   loginPanel   ***/
 .loginPanel{margin: auto; background-color: #fff; width: 450px; padding: 15px;}
@@ -246,3 +246,4 @@ a.desc {line-height: 32px; font-size: 15px; float: left; text-align: right; colo
 .courseTable thead { display:table-header-group }
 .courseTable tfoot { display:table-footer-group }
 
+.notaHonor{font-family: 'Verdana, Geneva, sans-serif'; font-size: 20px; color: #000; font-weight: bold;}

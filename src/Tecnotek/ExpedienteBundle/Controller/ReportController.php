@@ -328,7 +328,7 @@ class ReportController extends Controller
                         $student = $studentYear->getStudent();
                         $carne = $student->getCarne();
                         $studentName = "" . $student;
-                        $html = $this->getStudentByPeriodHTMLQualifications($periodId, $gradeId, $groupId, $referenceId, $studentYear, $director);
+                        $html = $this->getStudentByPeriodHTMLQualifications($periodId, $gradeId, $groupId, $referenceId, $studentYear, $director, $institution);
                     }
 
                     return new Response(json_encode(array('error' => false, 'html' => $html, 'carne' => $carne, 'teacherGroup' => $teacherGroup, "studentName" => $studentName, "imgHeader" => $imgHeader)));
@@ -411,7 +411,7 @@ class ReportController extends Controller
         return $html;
     }
 
-    public function getStudentByPeriodHTMLQualifications($periodId, $gradeId, $groupId, $studentId, $studentYear, $director){
+    public function getStudentByPeriodHTMLQualifications($periodId, $gradeId, $groupId, $studentId, $studentYear, $director, $institution){
 
         $logger = $this->get('logger');
         $em = $this->getDoctrine()->getEntityManager();
@@ -475,13 +475,67 @@ class ReportController extends Controller
             $html .=  $row;
         }
 
+
+
+        //Revisar Ausencias y Calcular Nota de Conducta
+        $absenceRow = '';
+        $absenceRow .=  '<tr class="rowNotas">';
+        $absenceRow .= '<td style="text-align: left;">absenceTypeName</td>';
+        $absenceRow .= '<td>absenceTypeCount</td>';
+        $absenceRow .= '<td>&nbsp;</td>';
+        $absenceRow .= '<td>&nbsp;</td>';
+        $absenceRow .= '<td>&nbsp;</td>';
+        $absenceRow .=  "</tr>";
+
+        $sql = "select at.name, count(a.id) as 'total', sum(atp.points) as 'puntos'"
+            . " from tek_absences a "
+            . " join tek_absence_types at on at.id = a.type_id"
+            . " join tek_absence_types_points atp on at.id = atp.absence_type_id and atp.institution_id = " . $institution->getId()
+            . " where a.studentYear_id =  " . $studentYear->getId()
+            . " group by a.type_id;";
+
+        $htmlAbsence = "";
+        $absences = $em->getConnection()->executeQuery($sql);
+        $conducta = 100;
+        foreach($absences as $absenceType){
+            $row = str_replace("absenceTypeName", $absenceType["name"], $absenceRow);
+            $row = str_replace("absenceTypeCount", $absenceType["total"], $row);
+            $htmlAbsence .=  $row;
+            $conducta -= $absenceType["puntos"];
+        }
+
+        if($conducta < 0) {
+            $conducta = 0;
+        }
+
+        //Agregar nota de conducta
+        $row = str_replace("courseName", "CONDUCTA", $courseRow);
+        $row = str_replace("courseId", "0", $row);
+        $row = str_replace("__", $conducta, $row);
+        $total += $conducta;
+        $counter += 1;
+        $html .=  $row;
+
+        $promedioPeriodo = 0;
         if($counter == 0){
             $promedioRow = str_replace("__", "-----", $promedioRow);
         } else {
-            $promedioRow = str_replace("__", number_format($total / $counter, 2, '.', ''), $promedioRow);
+            $promedioPeriodo = $total / $counter;
+            $promedioRow = str_replace("__", number_format($promedioPeriodo, 2, '.', ''), $promedioRow);
         }
 
-        $html .= "$promedioRow . </table>";
+        $studentYear->setPeriodAverageScore($promedioPeriodo);
+        $studentYear->setConducta($conducta);
+        $em->persist($studentYear);
+        $em->flush();
+
+        $html .= $promedioRow . $htmlAbsence;
+
+        $html .= "</table>";
+        if($promedioPeriodo >= 90){
+            $html .= '<div class="notaHonor">CUADRO DE HONOR: ALUMNO DE EXCELENCIA ACADEMICA </div>';
+        }
+
         $html .= '<div style="color: #000; font-size: 12px;">';
         $html .= '<div style="margin-top: 25px; margin-bottom: 25px;">Desamparados, '. date('j \d\e F \d\e\l Y') . '</div>';
         $html .= '<div class="left" style="width: 250px; text-align: center;"><div style="line-height: 25px;">______________________________</div><div>Profesor Gu&iacute;a</div></div>';

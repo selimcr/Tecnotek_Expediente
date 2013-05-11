@@ -42,17 +42,13 @@ class Student
     private $firstname;
 
     /**
-     * @ORM\Column(type="string", length=150)
-     * @Assert\NotBlank()
-     * @Assert\MinLength(limit = 3)
+     * @ORM\Column(type="string", length=150, nullable=true))
      * @Assert\MaxLength(limit = 150)
      */
     private $lastname;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Assert\NotBlank()
-     * @Assert\MaxLength(limit = 255)
      */
     private $address;
 
