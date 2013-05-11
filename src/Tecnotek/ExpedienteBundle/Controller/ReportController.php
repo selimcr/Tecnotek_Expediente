@@ -488,22 +488,47 @@ class ReportController extends Controller
         $absenceRow .=  "</tr>";
 
         $sql = "select at.name, count(a.id) as 'total', sum(atp.points) as 'puntos'"
+                . " from tek_absence_types at"
+                . " join tek_absence_types_points atp on at.id = atp.absence_type_id and atp.institution_id = " . $institution->getId()
+                . " left join tek_absences a on a.type_id = at.id and a.studentYear_id = " . $studentYear->getId()
+                . " group by at.id;";
+        /*$sql = "select at.name, count(a.id) as 'total', sum(atp.points) as 'puntos'"
             . " from tek_absences a "
             . " join tek_absence_types at on at.id = a.type_id"
             . " join tek_absence_types_points atp on at.id = atp.absence_type_id and atp.institution_id = " . $institution->getId()
             . " where a.studentYear_id =  " . $studentYear->getId()
-            . " group by a.type_id;";
+            . " group by a.type_id;";*/
 
         $htmlAbsence = "";
         $absences = $em->getConnection()->executeQuery($sql);
         $conducta = 100;
+        $logger->err("-----> Arranca con 100");
         foreach($absences as $absenceType){
             $row = str_replace("absenceTypeName", $absenceType["name"], $absenceRow);
-            $row = str_replace("absenceTypeCount", $absenceType["total"], $row);
+            if($absenceType["total"] > 0) {
+                $row = str_replace("absenceTypeCount", $absenceType["total"] . "(" . number_format($absenceType["puntos"], 1, '.', '') . "pts)", $row);//3 (1.5pts)
+                $conducta -= $absenceType["puntos"];
+            } else {
+                $row = str_replace("absenceTypeCount", "0", $row);
+            }
             $htmlAbsence .=  $row;
-            $conducta -= $absenceType["puntos"];
         }
 
+        $sql = 'SELECT COUNT(id) as "total",SUM(pointsPenalty) as "puntos" FROM tek_student_penalties where student_year_id = ' . $studentYear->getId();
+        $puntosPorSancion = $em->getConnection()->executeQuery($sql);
+        foreach($puntosPorSancion as $pa){
+            $row = str_replace("absenceTypeName", "Puntos por Observaciones", $absenceRow);
+            if(isset($pa["puntos"]) && $pa["puntos"] != "null"){
+                $row = str_replace("absenceTypeCount", $pa["total"] . "(" . number_format($pa["puntos"], 1, '.', '') . "pts)", $row);
+                $conducta -= $pa["puntos"];
+                $logger->err("-----> Y queda: " . $conducta);
+            } else {
+                $row = str_replace("absenceTypeCount", "0", $row);
+            }
+            $htmlAbsence .=  $row;
+        }
+
+        $logger->err("-----> Y al final sera: " . $conducta);
         if($conducta < 0) {
             $conducta = 0;
         }
