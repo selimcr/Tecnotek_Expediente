@@ -554,6 +554,15 @@ _expediente_report_student_qualifications:
 _expediente_report_load_student_qualifications:
    pattern:  /reports/loadStudentQualifications/
    defaults: { _controller: TecnotekExpedienteBundle:Report:loadStudentQualifications }
+
+_expediente_report_penalty_students:
+   pattern:  /reports/penaltyStudentReport/
+   defaults: { _controller: TecnotekExpedienteBundle:Report:penaltiesOfPeriod }
+
+_expediente_report_load_student_penalties:
+   pattern:  /reports/loadStudentPenalties/
+   defaults: { _controller: TecnotekExpedienteBundle:Report:loadStudentPenalties }
+
 #########################################
 
 

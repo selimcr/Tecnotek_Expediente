@@ -135,6 +135,9 @@ var Tecnotek = {
                 case "studentQualificationsDetail":
                     Tecnotek.StudentQualifications.init();
                     break;
+                case "studentPenaltiesReport":
+                    Tecnotek.studentPenalties.init();
+                    break;
                 default:
 					break;
 				}
