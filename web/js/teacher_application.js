@@ -24,6 +24,7 @@ var Tecnotek = {
 		ftpCounter: 0,
         updateFail: false,
 		session : {},
+        updatedText: false,
         spinTarget: document.getElementById('spin'),
         spinner: new Spinner({
                     lines: 11, // The number of lines to draw
@@ -533,11 +534,11 @@ var Tecnotek = {
                 });
             },
             loadGroupsOfPeriod: function($periodId) {
+                $('#tableContainer').hide();
                 if(($periodId!==null)){
                     $('#groups').children().remove();
                     $('#courses').children().remove();
                     $('#subentryFormParent').empty();
-                    $('#tableContainer').hide();
                     Tecnotek.ajaxCall(Tecnotek.UI.urls["loadGroupsOfPeriodURL"],
                         {   periodId: $periodId },
                         function(data){
@@ -557,6 +558,7 @@ var Tecnotek = {
                 }
             },
             loadCoursesOfGroupByTeacher: function($groupId) {
+                $('#tableContainer').hide();
                 if(($groupId!==null)){
                     $('#courses').children().remove();
                     $('#subentryFormParent').empty();
@@ -567,10 +569,11 @@ var Tecnotek = {
                             if(data.error === true) {
                                 Tecnotek.showErrorMessage(data.message,true, "", false);
                             } else {
+                                $('#courses').append('<option value="-1"></option>');
                                 for(i=0; i<data.courses.length; i++) {
                                     $('#courses').append('<option value="' + data.courses[i].id + '">' + data.courses[i].name + '</option>');
                                 }
-                                Tecnotek.Qualifications.loadQualificationsOfGroup($('#courses').val());
+                                //Tecnotek.Qualifications.loadQualificationsOfGroup($('#courses').val());
                             }
                         },
                         function(jqXHR, textStatus){
@@ -580,14 +583,17 @@ var Tecnotek = {
                 }
             },
             loadQualificationsOfGroup: function(courseId) {
+                $('#tableContainer').hide();
                 $('.editEntry').unbind();
                 $('#entriesRows').empty();
                 $('#subentriesRows').empty();
                 $('#subentryFormParent').empty();
                 $('#contentBody').empty();
                 $('#studentsHeader').empty();
-                if(courseId == 0){//Clean page
+
+                if(courseId <= 0 ){//Clean page
                 } else {
+                    $('#fountainG').show();
                     Tecnotek.ajaxCall(Tecnotek.UI.urls["loadQualificationsOfGroupURL"],
                         {   periodId: $("#period").val(),
                             courseId: courseId,
@@ -596,19 +602,14 @@ var Tecnotek = {
                             if(data.error === true) {
                                 Tecnotek.showErrorMessage(data.message,true, "", false);
                             } else {
-                                console.debug("WIDHT----> " + data.codesCounter);
-
                                 $("#tableContainer").width(data.codesCounter * 46 + 280);
-
 
                                 $('#contentBody').html(data.html);
                                 $('#studentsHeader').html(data.studentsHeader);
-                                $('#tableContainer').show();
+
 
                                 var height = data.studentsCounter * 26.66 + 300;
                                 $("#studentsTableContainer").css("height", height + "px");
-
-
 
                                 $(".textField").each(function(){
                                     if($(this).attr("val") !== "-1" && $(this).attr("val").indexOf("val") !== 0){
@@ -624,6 +625,8 @@ var Tecnotek = {
                                     $(this).trigger("blur");
                                 });
                                 Tecnotek.UI.vars["forzeBlur"] = false;
+                                $('#fountainG').hide();
+                                $('#tableContainer').show();
                                 //$( "#spinner-modal" ).dialog( "close" );
                             }
                         },
@@ -640,6 +643,7 @@ var Tecnotek = {
                 $('#subentryFormParent').empty();
 
                 $(".textField").focus(function(e){
+                    Tecnotek.updatedText = false;
                     Tecnotek.UI.vars["textFieldValue"] = $(this).val();
                 });
 
@@ -648,7 +652,14 @@ var Tecnotek = {
                     if (event.which == 13) {//Enter key
                         var tabindex = $(this).attr('tabindex');
                         tabindex++; //increment tabindex
+                        $(this).blur();
                         $('[tabindex=' + tabindex + ']').focus();
+                    } else {
+                        if (event.which == 9) {//Tab key
+
+                        } else {
+                            Tecnotek.updatedText = true;
+                        }
                     }
                 });
 
@@ -673,18 +684,15 @@ var Tecnotek = {
                             $percentage = $this.attr('perc');
                             $max = $this.attr('max');
                             $totalField = $("#" + $this.attr('rel'));
-                            //console.debug("Type = " + $type + ", Nota: " + $nota + ", Perc = " + $percentage + " :: " + $totalField);
                             if($nota == "") {
                                 $totalField.html("-");
                             } else {
-                                //console.debug("Calcular total para " + $(this).attr('rel') + ", total = " + ($percentage * $nota / 100));
                                 $totalField.html("" + Tecnotek.roundTo(($percentage * $nota / $max)));
                             }
                         } else {
                             $childs = $this.attr('child');
                             $parent = $this.attr('parent');
 
-                            //console.debug("Type = " + $type + ", Nota: " + $nota + " :: childs = " + $childs + " :: $stdId = " + $stdId);
                             $sum = 0;
                             $sumaPorcentage = 0;
                             $counter = 0;
@@ -742,7 +750,7 @@ var Tecnotek = {
                             $("#total_trim_" + $stdId).html("" + Tecnotek.roundTo($sum));
                         }
                     } else {
-                        if(Tecnotek.UI.vars["textFieldValue"] === $nota) return;
+                        if(Tecnotek.updatedText === false) return;
                         Tecnotek.ajaxCall(Tecnotek.UI.urls["saveStudentQualificationURL"],
                             {   subentryId: $this.attr('entry'),
                                 studentYearId: $this.attr('stdyid'),
