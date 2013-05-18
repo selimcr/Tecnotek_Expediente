@@ -47,7 +47,7 @@ class SubCourseEntry
     private $maxValue;
 
     /**
-     * @ORM\Column(type="decimal", precision=2)
+     * @ORM\Column(type="decimal", precision=3)
      * @Assert\NotBlank()
      */
     private $percentage;

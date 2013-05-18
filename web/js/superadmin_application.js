@@ -642,7 +642,7 @@ var Tecnotek = {
                                         $('#searchBox').val("");
                                         $('#newAbsence').trigger('click');
 
-                                        if($(this).attr("inst")<18){
+                                        if($(this).attr("inst")<19){
                                             $("select > option[insti*='3']").hide();
                                             $("select > option[insti*='3']").removeAttr("selected");
                                             $("select > option[insti*='2']").show();
