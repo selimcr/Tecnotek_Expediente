@@ -9,7 +9,7 @@ Tecnotek.PrintQualifications = {
         });
 
         Tecnotek.Qualifications.initializeTable();
-        $(".noPrint").hide();
+        //$(".noPrint").hide();
         Tecnotek.UI.vars["forzeBlur"] = true;
         $(".textField").each(function(){
             var value = $(this).attr("val");

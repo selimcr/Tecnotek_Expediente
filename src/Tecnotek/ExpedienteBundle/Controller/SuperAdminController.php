@@ -1674,20 +1674,20 @@ class SuperAdminController extends Controller
                     $query = $em->createQuery($dql);
                     $entries = $query->getResult();
                     $temp = new \Tecnotek\ExpedienteBundle\Entity\CourseEntry();
-                    $html =  '<tr  style="height: 175px; line-height: 0px;"><td class="celesteOscuro" style="min-width: 75px; font-size: 12px; height: 175px;">Carne</td>';
-                    $html .=  '<td class="celesteClaro bold" style="min-width: 250px; font-size: 12px; height: 175px;">Estudiante</td>';
-                    $html .= '<td class="azul" style="vertical-align: bottom; padding: 1.5625em 0.625em; height: 175px;"><div class="verticalText" style="color: #fff;">Promedio Trimestral</div></td>';
+                    $html =  '<tr  style="height: 145px; line-height: 0px;"><td class="celesteOscuro" style="min-width: 75px; font-size: 12px; height: 175px;">Carne</td>';
+                    $html .=  '<td class="celesteClaro bold" style="min-width: 300px; font-size: 12px; height: 145px;">Estudiante</td>';
+                    $html .= '<td class="azul" style="vertical-align: bottom; padding: 1.5625em 0.625em; height: 145px;"><div class="verticalText" style="color: #fff;">Promedio Trimestral</div></td>';
 
                     $marginLeft = 48;
                     $marginLeftCode = 62;
-                    $htmlCodes =  '<tr  style="height: 30px;"><td class="celesteOscuro" style="width: 75px; font-size: 10px;"></td>';
-                    $htmlCodes .=  '<td class="celesteClaro bold" style="width: 250px; font-size: 8px;"></td>';
+                    $htmlCodes =  '<tr  style="height: 25px;"><td class="celesteOscuro" style="width: 75px; font-size: 10px;"></td>';
+                    $htmlCodes .=  '<td class="celesteClaro bold" style="width: 300px; font-size: 8px;"></td>';
                     $htmlCodes .= '<td class="azul" style="color: #fff;"></td>';
                     $jumpRight = 46;
                     $width = 44;
 
-                    $html3 =  '<tr style="height: 30px; line-height: 0px;" class="noPrint"><td class="celesteOscuro bold headcolcarne" style="min-width: 75px; font-size: 12px;">Carne</td>';
-                    $html3 .=  '<td class="celesteClaro bold headcolnombre" style="min-width: 250px; font-size: 12px;">Estudiante</td>';
+                    $html3 =  '<tr style="height: 25px; line-height: 0px;" class="noPrint"><td class="celesteOscuro bold headcolcarne" style="min-width: 75px; font-size: 12px;">Carne</td>';
+                    $html3 .=  '<td class="celesteClaro bold headcolnombre" style="min-width: 300px; font-size: 12px;">Estudiante</td>';
                     $html3 .= '<td class="azul headcoltrim" style="color: #fff;">TRIM</td>';
                     $studentRow = '';
                     $studentsHeader = '';
@@ -1747,7 +1747,7 @@ class SuperAdminController extends Controller
                                 $studentRow .= '<td id="total_' . $temp->getId() . '_stdId" class="morado bold nota_stdId">-</td>';
                                 $htmlCodes .= '<td class="morado bold">' . $temp->getCode() . '</td>';
                                 $specialCounter++;
-                                $html .= '<td class="morado"><div class="verticalText">' . $temp->getPercentage() . '% ' . $temp->getName() . '</div></td>';
+                                $html .= '<td class="morado" style="padding: 1.5625em 0.625em; vertical-align: bottom;"><div class="verticalText">' . $temp->getPercentage() . '% ' . $temp->getName() . '</div></td>';
                                 $marginLeft += $jumpRight; $marginLeftCode += 25;
 
                                 // $html3 .= '<div class="itemHeader2 itemNota" style="width: ' . (($width * (sizeof($subentries)+1)) + ((sizeof($subentries)) * 2) ) . 'px">' . $temp->getName() . '</div>';
@@ -1757,7 +1757,7 @@ class SuperAdminController extends Controller
                                     foreach( $subentries as $subentry )
                                     {
                                         //$studentRow .= '<td class=""><input tabIndex=tabIndexCol'. $colsCounter . 'x type="text" class="textField itemNota item_' . $temp->getId() . '_stdId" val="val_stdId_' . $subentry->getId() .  '_" tipo="1"  max="' . $subentry->getMaxValue() . '" child="' . $size . '" parent="' . $temp->getId() . '" rel="total_' . $temp->getId() . '_stdId" perc="' . $subentry->getPercentage() . '" std="stdId"  entry="' . $subentry->getId() . '"  stdyId="stdyIdd"></td>';
-                                        $studentRow .= '<td class="celesteClaro noPrint"><div><input disabled="disabled" tabIndex=tabIndexCol'. $colsCounter . 'x type="text" class="textField itemNota item_' . $temp->getId() . '_stdId" val="val_stdId_' . $subentry->getId() .  '_" tipo="1"  max="' . $subentry->getMaxValue() . '" child="' . $size . '" parent="' . $temp->getId() . '" rel="total_' . $temp->getId() . '_stdId" perc="' . $subentry->getPercentage() . '" std="stdId"  entry="' . $subentry->getId() . '"  stdyId="stdyIdd"></div></td>';
+                                        $studentRow .= '<td class="celesteClaro noPrint"><div style="height: 15px;"><input disabled="disabled" tabIndex=tabIndexCol'. $colsCounter . 'x type="text" class="textField itemNota item_' . $temp->getId() . '_stdId" val="val_stdId_' . $subentry->getId() .  '_" tipo="1"  max="' . $subentry->getMaxValue() . '" child="' . $size . '" parent="' . $temp->getId() . '" rel="total_' . $temp->getId() . '_stdId" perc="' . $subentry->getPercentage() . '" std="stdId"  entry="' . $subentry->getId() . '"  stdyId="stdyIdd"></div></td>';
                                         $colsCounter++;
                                         $htmlCodes .= '<td class="celesteClaro noPrint"></td>';
                                         $specialCounter++;
@@ -1769,7 +1769,7 @@ class SuperAdminController extends Controller
                                     $studentRow .= '<td id="total_' . $temp->getId() . '_stdId" class="morado bold nota_stdId">-</td>';
                                     $htmlCodes .= '<td class="morado bold">' . $temp->getCode() . '</td>';
                                     $specialCounter++;
-                                    $html .= '<td class="morado"><div class="verticalText">' . $temp->getPercentage() . '% ' . $temp->getName() . '</div></td>';
+                                    $html .= '<td class="morado"  style="padding: 1.5625em 0.625em; vertical-align: bottom;"><div class="verticalText">' . $temp->getPercentage() . '% ' . $temp->getName() . '</div></td>';
                                     $marginLeft += $jumpRight; $marginLeftCode += 25;
                                     $html3 .= '<td class="celesteClaro noPrint" colspan="' . (sizeof($subentries)+1) . '">' . $temp->getName() . '</td>';
                                 }
@@ -1785,10 +1785,10 @@ class SuperAdminController extends Controller
 
                     $studentRowIndex = 0;
                     foreach($students as $stdy){
-                        $html .=  '<tr style="height: 30px; line-height: 0px;">';
+                        $html .=  '<tr style="height: 25px; line-height: 0px;">';
                         $studentRowIndex++;
                         $html .=  '<td class="celesteOscuro headcolcarne" style="width: 75px; font-size: 10px;">' . $stdy->getStudent()->getCarne() . '</td>';
-                        $html .=  '<td class="celesteClaro bold headcolnombre" style="width: 250px; font-size: 12px;">' . $stdy->getStudent() . '</td>';
+                        $html .=  '<td class="celesteClaro bold headcolnombre" style="width: 300px; font-size: 12px;">' . $stdy->getStudent() . '</td>';
 
                         $row = str_replace("stdId", $stdy->getStudent()->getId(), $studentRow);
                         $row = str_replace("stdyIdd", $stdy->getId(), $row);

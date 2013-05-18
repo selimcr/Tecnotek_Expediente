@@ -11,7 +11,7 @@
 .tableQualifications {border: 1px;}
 .tableQualifications table, th, td { border: 1px solid black; font-size: 11px; color: #000;}
 
-.tableQualifications .rowNotas { height: 30px; font-size: 12px; font-weight: bold; color: #000;}
+.tableQualifications .rowNotas { height: 30px; font-size: 14px; font-weight: bold; color: #000;}
 
 .tableQualifications table tr td {color: #000;}
 

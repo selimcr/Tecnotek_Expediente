@@ -369,7 +369,7 @@ class ReportController extends Controller
         $courses = $query->getResult();
 
         $headersRow =  '<thead>';
-        $headersRow .=  '    <tr style="height: 175px;">';
+        $headersRow .=  '    <tr style="height: 145px;">';
         $headersRow .=  '        <th style="width: 75px; text-align: center;">Carne</th>';
         $headersRow .=  '        <th style="width: 250px; text-align: center;">Estudiante</th>';
 
@@ -395,7 +395,7 @@ class ReportController extends Controller
         foreach($students as $stdy){
             $this->calculateStudentYearQualification($periodId, $stdy->getId(), $stdy);
 
-            $html .=  '<tr class="rowNotas">';
+            $html .=  '<tr class="rowNotas" style="height: 25px;">';
             $studentRowIndex++;
             $html .=  '<td>' . $stdy->getStudent()->getCarne() . '</td>';
             $html .=  '<td>' . $stdy->getStudent() . '</td>';
@@ -406,7 +406,11 @@ class ReportController extends Controller
             {
                 $notaFinal = $em->getRepository("TecnotekExpedienteBundle:StudentYearCourseQualification")->findOneBy(array('courseClass' => $course->getId(), 'studentYear' => $stdy->getId()));
                 if(isset($notaFinal)){//Si existe
-                    $row = str_replace("Nota_" . $course->getId() . "_", $notaFinal->getQualification(), $row);
+                    if($notaFinal->getQualification() < 75){
+                        $row = str_replace("Nota_" . $course->getId() . "_", "* " .  $notaFinal->getQualification(), $row);
+                    } else {
+                        $row = str_replace("Nota_" . $course->getId() . "_", $notaFinal->getQualification(), $row);
+                    }
                 } else {
                     $row = str_replace("Nota_" . $course->getId() . "_", "-", $row);
                 }
@@ -476,7 +480,12 @@ class ReportController extends Controller
 
             $notaFinal = $em->getRepository("TecnotekExpedienteBundle:StudentYearCourseQualification")->findOneBy(array('courseClass' => $course->getId(), 'studentYear' => $studentYear->getId()));
             if(isset($notaFinal)){//Si existe
-                $row = str_replace("__", $notaFinal->getQualification(), $row);
+                if($notaFinal->getQualification() < 75){
+                    $row = str_replace("__", "* " . $notaFinal->getQualification(), $row);
+                } else {
+                    $row = str_replace("__", $notaFinal->getQualification(), $row);
+                }
+
                 $total += $notaFinal->getQualification();
                 $counter += 1;
             }
@@ -530,7 +539,6 @@ class ReportController extends Controller
             if(isset($pa["puntos"]) && $pa["puntos"] != "null"){
                 $row = str_replace("absenceTypeCount", $pa["total"] . "(" . number_format($pa["puntos"], 1, '.', '') . "pts)", $row);
                 $conducta -= $pa["puntos"];
-                $logger->err("-----> Y queda: " . $conducta);
             } else {
                 $row = str_replace("absenceTypeCount", "0", $row);
             }
@@ -635,17 +643,6 @@ class ReportController extends Controller
                     ' ON DUPLICATE KEY UPDATE qualification = ' . $value . ';';
 
             $con->executeUpdate($sql);
-
-
-            /*$notaFinal = $em->getRepository("TecnotekExpedienteBundle:StudentYearCourseQualification")->findOneBy(array('courseClass' => $i, 'studentYear' => $studentYearId));
-            if(!isset($notaFinal)){//Si no existe crea el registro
-                $notaFinal = new StudentYearCourseQualification();
-                $notaFinal->setStudentYear($studentYear);
-                $notaFinal->setCourseClass($em->getRepository("TecnotekExpedienteBundle:CourseClass")->find($i));
-            }
-            $notaFinal->setQualification($value);
-            $em->persist($notaFinal);
-            $em->flush();*/
         }
         $con->commit();
     }
