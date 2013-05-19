@@ -362,7 +362,7 @@ class ReportController extends Controller
 
         $dql = "SELECT cc "
             . " FROM TecnotekExpedienteBundle:Course c, TecnotekExpedienteBundle:CourseClass cc "
-            . " WHERE cc.grade = " . $gradeId . " AND cc.course = c"
+            . " WHERE cc.grade = " . $gradeId . " AND cc.course = c AND cc.period = " . $periodId
             . " ORDER BY c.name";
 
         $query = $em->createQuery($dql);
@@ -432,6 +432,7 @@ class ReportController extends Controller
         $dql = "SELECT cc "
             . " FROM TecnotekExpedienteBundle:Course c, TecnotekExpedienteBundle:CourseClass cc "
             . " WHERE cc.grade = " . $gradeId . " AND cc.course = c"
+            . " AND cc.period = " . $periodId . " "
             . " ORDER BY c.name";
 
         $query = $em->createQuery($dql);
