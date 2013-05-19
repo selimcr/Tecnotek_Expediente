@@ -506,10 +506,10 @@ class ReportController extends Controller
         $absenceRow .=  "</tr>";
 
         $sql = "select at.name, count(a.id) as 'total', sum(atp.points) as 'puntos'"
-                . " from tek_absence_types at"
-                . " join tek_absence_types_points atp on at.id = atp.absence_type_id and atp.institution_id = " . $institution->getId()
-                . " left join tek_absences a on a.type_id = at.id and a.studentYear_id = " . $studentYear->getId()
-                . " group by at.id;";
+            . " from tek_absence_types at"
+            . " join tek_absence_types_points atp on at.id = atp.absence_type_id and atp.institution_id = " . $institution->getId()
+            . " left join tek_absences a on a.type_id = at.id and a.studentYear_id = " . $studentYear->getId()
+            . " group by at.id;";
         /*$sql = "select at.name, count(a.id) as 'total', sum(atp.points) as 'puntos'"
             . " from tek_absences a "
             . " join tek_absence_types at on at.id = a.type_id"
@@ -576,6 +576,26 @@ class ReportController extends Controller
         $html .= "</table>";
         if($promedioPeriodo >= 90){
             $html .= '<div class="notaHonor">CUADRO DE HONOR: ALUMNO DE EXCELENCIA ACADEMICA </div>';
+        }
+
+        $sql = "SELECT obs FROM TecnotekExpedienteBundle:Observation obs"
+            . " WHERE obs.studentYear = " .  $studentYear->getId();
+            //. " AND obs.courseClass = ".$periodId;
+        $query = $em->createQuery($sql);
+        $observations = $query->getResult();
+        $counter2=0;
+        foreach($observations as $observation){
+            $row =  $observation->getDetail();
+            if($counter2 == 0){
+                $html .= '<div style="color: #000; font-size: 12px;">';
+                $html .= 'Observaciones:</br>';
+            }
+                $html .= '-'. $row  . '</br>';
+
+            $counter2++;
+        }
+        if($counter2 != 0){
+            $html .= '</div>';
         }
 
         $html .= '<div style="color: #000; font-size: 12px;">';
