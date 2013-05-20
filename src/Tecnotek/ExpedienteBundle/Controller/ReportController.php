@@ -457,26 +457,30 @@ class ReportController extends Controller
         $html = '<table class="tableQualifications" cellSpacing="0" cellPadding="0">' . $headersRow;
 
         $courseRow .=  '<tr class="rowNotas">';
-        $courseRow .= '<td style="text-align: left;">courseName</td>';
-        $courseRow .= '<td>__</td>';
-        $courseRow .= '<td>-----</td>';
-        $courseRow .= '<td>-----</td>';
-        $courseRow .= '<td>__</td>';
+        $courseRow .= '<td style="text-align: left; font-size:16px;">courseName</td>';
+        $courseRow .= '<td style="text-align: center; font-size:16px;">__</td>';
+        $courseRow .= '<td style="text-align: center; font-size:16px;">-----</td>';
+        $courseRow .= '<td style="text-align: center; font-size:16px;">-----</td>';
+        $courseRow .= '<td style="text-align: center; font-size:16px;">__</td>';
         $courseRow .=  "</tr>";
 
         $promedioRow .=  '<tr class="rowNotas" style="background-color: rgb(189, 176, 176);">';
-        $promedioRow .= '<td style="text-align: left;">Promedio General</td>';
-        $promedioRow .= '<td>__</td>';
-        $promedioRow .= '<td>-----</td>';
-        $promedioRow .= '<td>-----</td>';
-        $promedioRow .= '<td>__</td>';
+        $promedioRow .= '<td style="text-align: left; font-size:16px;">Promedio General</td>';
+        $promedioRow .= '<td  style="text-align: center; font-size:16px;">__</td>';
+        $promedioRow .= '<td style="text-align: center; font-size:16px;">-----</td>';
+        $promedioRow .= '<td style="text-align: center; font-size:16px;">-----</td>';
+        $promedioRow .= '<td style="text-align: center; font-size:16px;">__</td>';
         $promedioRow .=  "</tr>";
 
         $total = 0;
         $counter = 0;
         foreach( $courses as $course )
         {
-            $row = str_replace("courseName", $course->getCourse()->getName(), $courseRow);
+            $separator[0] = '/1./';
+            $separator[1] = '/2./';
+            $courseName = preg_replace($separator,"",$course->getCourse()->getName());
+
+            $row = str_replace("courseName", $courseName, $courseRow);
             $row = str_replace("courseId", $course->getId(), $row);
 
             $notaFinal = $em->getRepository("TecnotekExpedienteBundle:StudentYearCourseQualification")->findOneBy(array('courseClass' => $course->getId(), 'studentYear' => $studentYear->getId()));
@@ -499,11 +503,11 @@ class ReportController extends Controller
         //Revisar Ausencias y Calcular Nota de Conducta
         $absenceRow = '';
         $absenceRow .=  '<tr class="rowNotas">';
-        $absenceRow .= '<td style="text-align: left;">absenceTypeName</td>';
-        $absenceRow .= '<td>absenceTypeCount</td>';
-        $absenceRow .= '<td>&nbsp;</td>';
-        $absenceRow .= '<td>&nbsp;</td>';
-        $absenceRow .= '<td>&nbsp;</td>';
+        $absenceRow .= '<td style="text-align: left; font-size:16px;">absenceTypeName</td>';
+        $absenceRow .= '<td style="text-align: center; font-size:16px;">absenceTypeCount</td>';
+        $absenceRow .= '<td style="text-align: center; font-size:16px;">&nbsp;</td>';
+        $absenceRow .= '<td style="text-align: center; font-size:16px;">&nbsp;</td>';
+        $absenceRow .= '<td style="text-align: center; font-size:16px;">&nbsp;</td>';
         $absenceRow .=  "</tr>";
 
         $sql = "select at.name, count(a.id) as 'total', sum(atp.points) as 'puntos'"
