@@ -36,7 +36,7 @@
             <div class="center" style="float: left; width: 900px; font-size: 16px;">{% trans %}label.ticket3 {% endtrans %} {{ ticket.date|date("d-m-Y H:i:s") }}</div>
             </br></br>
 
-            <div class="center" style="float: left; width: 900px; font-size: 16px;">{% trans %}label.ticket1 {% endtrans %} {{ ticket.student }}</div>
+            <div class="center" style="float: left; width: 900px; font-size: 16px;">{% trans %}label.ticket1 {% endtrans %} {{ ticket.student }}, SECCION: {{ ticket.student.groupyear }}</div>
             </br></br>
 
             <div class="center" style="float: left; width: 900px; font-size: 16px;">{% trans %}label.ticket2 {% endtrans %} {{ ticket.relative.contact }}</div>
@@ -64,7 +64,7 @@
                 <div class="center" style="float: left; width: 900px; font-size: 16px;">{% trans %}label.ticket3 {% endtrans %} {{ ticket.date|date("d-m-Y H:i:s") }}</div>
                 </br></br>
 
-                <div class="center" style="float: left; width: 900px; font-size: 16px;">{% trans %}label.ticket1 {% endtrans %} {{ ticket.student }}</div>
+                <div class="center" style="float: left; width: 900px; font-size: 16px;">{% trans %}label.ticket1 {% endtrans %} {{ ticket.student }}, SECCION: {{ ticket.student.groupyear }}</div>
                 </br></br>
 
                 <div class="center" style="float: left; width: 900px; font-size: 16px;">{% trans %}label.ticket2 {% endtrans %} {{ ticket.relative.contact }}</div>

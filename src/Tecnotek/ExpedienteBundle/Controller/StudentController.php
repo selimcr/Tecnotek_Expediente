@@ -933,6 +933,10 @@ class StudentController extends Controller
                 $searchType = $request->get('searchType');
 
                 $em = $this->getDoctrine()->getEntityManager();
+
+                $currentPeriod = $em->getRepository("TecnotekExpedienteBundle:Period")->findOneBy(array('isActual' => true));
+                $currentPeriodId = $currentPeriod->getId();
+
                 if( isset($searchType) && isset($groupId) && $searchType == 1 ){
                     $sql = "SELECT stdy.id, CONCAT(e.lastname, ' ', e.firstname) as 'name'  , stdy.group_id"
                         . " FROM tek_students e, tek_students_year stdy"
@@ -943,7 +947,7 @@ class StudentController extends Controller
                     $sql = "SELECT e.id, e.lastname, e.firstname, e.carne, e.groupyear , stdy.group_id"
                         . " FROM tek_students e, tek_students_year stdy"
                         . " WHERE (e.firstname like '%" . $text . "%' OR e.lastname like '%" . $text . "%')"
-                        . " AND e.id = stdy.student_id AND e.groupyear != 'NULL'"
+                        . " AND e.id = stdy.student_id AND e.groupyear != 'NULL' AND stdy.period_Id =".$currentPeriodId
                         . " ORDER BY e.lastname, e.firstname";
                 }
 
@@ -1247,11 +1251,11 @@ class StudentController extends Controller
                         $em->persist($entity);
                         $em->flush();
                         //return $this->redirect($this->generateUrl('_expediente_sysadmin_absence_show_simple') . "/" . $entity->getId());
-                    } /*else {
+                    } else {
                         return $this->render('TecnotekExpedienteBundle:SuperAdmin:Absence/edit.html.twig', array(
                             'entity' => $entity, 'form'   => $form->createView(), 'menuIndex' => 3
                         ));
-                    }*/
+                    }
                 }
 
             }
@@ -1293,11 +1297,11 @@ class StudentController extends Controller
                         $em->persist($entity);
                         $em->flush();
                         //return $this->redirect($this->generateUrl('_expediente_sysadmin_absence_show_simple') . "/" . $entity->getId());
-                    } /*else {
+                    } else {
                         return $this->render('TecnotekExpedienteBundle:SuperAdmin:Absence/edit.html.twig', array(
                             'entity' => $entity, 'form'   => $form->createView(), 'menuIndex' => 3
                         ));
-                    }*/
+                    }
                 }
 
             }

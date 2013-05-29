@@ -41,7 +41,7 @@
         <div id="labelPeriod" class="left">
             <select id="period" name="period">
                 {% for period in periods %}
-                <option value="{{ period.id }}">{{period}}</option>
+                <option {% if period.isActual == '1' %} selected="selected" {% endif %} value="{{ period.id }}">{{period}}</option>
                 {% endfor %}
             </select>
         </div>

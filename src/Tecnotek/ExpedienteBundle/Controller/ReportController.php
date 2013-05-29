@@ -391,6 +391,8 @@ class ReportController extends Controller
         $headersRow .=  '</thead>';
         $html = '<table class="tableQualifications" cellSpacing="0" cellPadding="0">' . $headersRow;
 
+        $grupo = $em->getRepository("TecnotekExpedienteBundle:Group")->findOneBy(array('id' => $groupId));
+        $html .=  'Grupo: '.$grupo->getGrade().'-'. $grupo->getName();
         $studentRowIndex = 0;
         foreach($students as $stdy){
             $this->calculateStudentYearQualification($periodId, $stdy->getId(), $stdy);
@@ -404,16 +406,38 @@ class ReportController extends Controller
             /***** Obtener Notas del Estudiante Inicio *****/
             foreach( $courses as $course )
             {
+                $typeC = $course->getCourse()->getType();
+
                 $notaFinal = $em->getRepository("TecnotekExpedienteBundle:StudentYearCourseQualification")->findOneBy(array('courseClass' => $course->getId(), 'studentYear' => $stdy->getId()));
-                if(isset($notaFinal)){//Si existe
-                    if($notaFinal->getQualification() < 75){
-                        $row = str_replace("Nota_" . $course->getId() . "_", "* " .  $notaFinal->getQualification(), $row);
+
+                if( $typeC==1){
+
+
+                    if(isset($notaFinal)){//Si existe
+                        if($notaFinal->getQualification() < 75){
+                            $row = str_replace("Nota_" . $course->getId() . "_", "* " .  $notaFinal->getQualification(), $row);
+                        } else {
+                            $row = str_replace("Nota_" . $course->getId() . "_", $notaFinal->getQualification(), $row);
+                        }
                     } else {
-                        $row = str_replace("Nota_" . $course->getId() . "_", $notaFinal->getQualification(), $row);
+                        $row = str_replace("Nota_" . $course->getId() . "_", "-", $row);
                     }
-                } else {
-                    $row = str_replace("Nota_" . $course->getId() . "_", "-", $row);
                 }
+                else{
+                    if(isset($notaFinal)){//Si existe
+                        $valorNota =  $notaFinal->getQualification();
+                        if($valorNota == 99)
+                            $valorNota = "Exc";
+                        if($valorNota == 74)
+                            $valorNota = "V.Good";
+                        if($valorNota == 50)
+                            $valorNota = "Good";
+                        if($valorNota == 25)
+                            $valorNota = "N.I.";
+                        $row = str_replace("Nota_" . $course->getId() . "_", $valorNota, $row);
+                    }
+                }
+
             }
             /***** Obtener Notas del Estudiante Final *****/
             $html .=  $row . "</tr>";
@@ -474,25 +498,54 @@ class ReportController extends Controller
 
         $total = 0;
         $counter = 0;
+        $honor = true;
         foreach( $courses as $course )
         {
             $separator[0] = '/1./';
             $separator[1] = '/2./';
             $courseName = preg_replace($separator,"",$course->getCourse()->getName());
 
+            $typeC = $course->getCourse()->getType();
+
             $row = str_replace("courseName", $courseName, $courseRow);
             $row = str_replace("courseId", $course->getId(), $row);
 
             $notaFinal = $em->getRepository("TecnotekExpedienteBundle:StudentYearCourseQualification")->findOneBy(array('courseClass' => $course->getId(), 'studentYear' => $studentYear->getId()));
-            if(isset($notaFinal)){//Si existe
-                if($notaFinal->getQualification() < 75){
-                    $row = str_replace("__", "* " . $notaFinal->getQualification(), $row);
-                } else {
-                    $row = str_replace("__", $notaFinal->getQualification(), $row);
-                }
 
-                $total += $notaFinal->getQualification();
-                $counter += 1;
+            if( $typeC==1){
+
+                if(isset($notaFinal)){//Si existe
+                    if($notaFinal->getQualification() != 0){
+                        if($notaFinal->getQualification() < 90){
+                            $honor = false;
+                        }
+                        if($notaFinal->getQualification() < 75){
+                            $row = str_replace("__", "* " . $notaFinal->getQualification(), $row);
+                        } else {
+                            $row = str_replace("__", $notaFinal->getQualification(), $row);
+                        }
+
+                        $total += $notaFinal->getQualification();
+                        $counter += 1;
+                    }else{
+                        $row = str_replace("__", $notaFinal->getQualification(), $row);
+                    }
+
+                }
+            }
+            else{
+                if(isset($notaFinal)){//Si existe
+                    $valorNota =  $notaFinal->getQualification();
+                    if($valorNota == 99)
+                        $valorNota = "Exc";
+                    if($valorNota == 74)
+                        $valorNota = "V.Good";
+                    if($valorNota == 50)
+                        $valorNota = "Good";
+                    if($valorNota == 25)
+                        $valorNota = "N.I.";
+                    $row = str_replace("__", "" . $valorNota, $row);
+                }
             }
 
             $html .=  $row;
@@ -510,18 +563,21 @@ class ReportController extends Controller
         $absenceRow .= '<td style="text-align: center; font-size:16px;">&nbsp;</td>';
         $absenceRow .=  "</tr>";
 
-        $sql = "select at.name, count(a.id) as 'total', sum(atp.points) as 'puntos'"
-            . " from tek_absence_types at"
-            . " join tek_absence_types_points atp on at.id = atp.absence_type_id and atp.institution_id = " . $institution->getId()
-            . " left join tek_absences a on a.type_id = at.id and a.studentYear_id = " . $studentYear->getId()
-            . " group by at.id;";
-        /*$sql = "select at.name, count(a.id) as 'total', sum(atp.points) as 'puntos'"
-            . " from tek_absences a "
-            . " join tek_absence_types at on at.id = a.type_id"
-            . " join tek_absence_types_points atp on at.id = atp.absence_type_id and atp.institution_id = " . $institution->getId()
-            . " where a.studentYear_id =  " . $studentYear->getId()
-            . " group by a.type_id;";*/
-
+        if($institution->getId() == '3'){
+            $sql = "select at.name, count(a.id) as 'total', sum(atp.points) as 'puntos'"
+                . " from tek_absence_types at"
+                . " join tek_absence_types_points atp on at.id = atp.absence_type_id and atp.institution_id = " . $institution->getId()
+                . " left join tek_absences a on a.type_id = at.id and a.studentYear_id = " . $studentYear->getId()
+                . " group by at.id;";
+        }
+        if($institution->getId() == '2'){
+            $sql = "select at.name, count(a.id) as 'total', sum(atp.points) as 'puntos'"
+                . " from tek_absences a "
+                . " join tek_absence_types at on at.id = a.type_id"
+                . " join tek_absence_types_points atp on at.id = atp.absence_type_id and atp.institution_id = " . $institution->getId()
+                . " where a.studentYear_id =  " . $studentYear->getId()
+                . " group by a.type_id;";
+        }
         $htmlAbsence = "";
         $absences = $em->getConnection()->executeQuery($sql);
         $conducta = 100;
@@ -547,14 +603,18 @@ class ReportController extends Controller
             } else {
                 $row = str_replace("absenceTypeCount", "0", $row);
             }
-            $htmlAbsence .=  $row;
+            if($institution->getId() == '3'){
+                $htmlAbsence .=  $row;
+            }
         }
 
         $logger->err("-----> Y al final sera: " . $conducta);
         if($conducta < 0) {
             $conducta = 0;
         }
-
+        if($conducta < 90){
+            $honor = false;
+        }
         //Agregar nota de conducta
         $row = str_replace("courseName", "CONDUCTA", $courseRow);
         $row = str_replace("courseId", "0", $row);
@@ -579,30 +639,30 @@ class ReportController extends Controller
         $html .= $promedioRow . $htmlAbsence;
 
         $html .= "</table>";
-        if($promedioPeriodo >= 90){
+        if($honor){
             $html .= '<div class="notaHonor">CUADRO DE HONOR: ALUMNO DE EXCELENCIA ACADEMICA </div>';
         }
 
         $sql = "SELECT obs FROM TecnotekExpedienteBundle:Observation obs"
             . " WHERE obs.studentYear = " .  $studentYear->getId();
-            //. " AND obs.courseClass = ".$periodId;
+        //. " AND obs.courseClass = ".$periodId;
         $query = $em->createQuery($sql);
         $observations = $query->getResult();
         $counter2=0;
         foreach($observations as $observation){
             $row =  $observation->getDetail();
             if($counter2 == 0){
-                $html .= '<div style="color: #000; font-size: 12px;">';
+                $html .= '<div style="color: #000; font-size: 16px;">';
                 $html .= 'Observaciones:</br>';
             }
-                $html .= '-'. $row  . '</br>';
+            $html .= '-'. $row  . '</br>';
 
             $counter2++;
         }
         if($counter2 != 0){
             $html .= '</div>';
         }
-
+        $html .= '</br></br>';
         $html .= '<div style="color: #000; font-size: 12px;">';
         $html .= '<div style="margin-top: 25px; margin-bottom: 25px;">Desamparados, '. date('j \d\e F \d\e\l Y') . '</div>';
         $html .= '<div class="left" style="width: 250px; text-align: center;"><div style="line-height: 25px;">______________________________</div><div>Profesor Gu&iacute;a</div></div>';
@@ -1133,7 +1193,7 @@ class ReportController extends Controller
 
         $dql = "SELECT cc "
             . " FROM TecnotekExpedienteBundle:Course c, TecnotekExpedienteBundle:CourseClass cc "
-            . " WHERE cc.grade = " . $gradeId . " AND cc.course = c"
+            . " WHERE c.type = 1 AND cc.grade = " . $gradeId . " AND cc.course = c"
             . " ORDER BY c.name";
 
         $query = $em->createQuery($dql);
@@ -1208,10 +1268,12 @@ class ReportController extends Controller
                             $size = sizeof($childrens);
                             if( $size > 0){
                                 $pg = $pg / $size;
+                                $n = $n / $size;
                             }
                         }
 
                         $pg = round( $pg, 2, PHP_ROUND_HALF_UP);
+                        $n = round( $n, 2, PHP_ROUND_HALF_UP);
 
                         //Revisar si ya existe la entrada del curso (CourseEntry)
                         if( isset($notasCursos["p" . $courseEntry->getCourseClass()->getId()]) ){

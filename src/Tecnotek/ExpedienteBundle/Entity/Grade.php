@@ -37,6 +37,12 @@ class Grade
      */
     private $number;
 
+    /**
+     * @ORM\Column(type="integer")
+     * @Assert\NotBlank()
+     */
+    private $notaMin;
+
     private $students;
 
     public function __construct()
@@ -104,5 +110,25 @@ class Grade
 
     public function getStudents(){
         return $this->students;
+    }
+
+    /**
+     * Set notaMin
+     *
+     * @param integer $notaMin
+     */
+    public function setNotaMin($notaMin)
+    {
+        $this->notaMin = $notaMin;
+    }
+
+    /**
+     * Get notaMin
+     *
+     * @return integer
+     */
+    public function getNotaMin()
+    {
+        return $this->notaMin;
     }
 }
