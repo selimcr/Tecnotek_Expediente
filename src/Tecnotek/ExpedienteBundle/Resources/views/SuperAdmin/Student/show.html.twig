@@ -26,6 +26,8 @@
     Tecnotek.module = "showStudent";
     Tecnotek.UI.vars["studentId"] = {{ entity.id }};
 
+    Tecnotek.UI.urls["edit"] = "{{ path('_expediente_sysadmin_relatives_edit_simple')}}";
+
     Tecnotek.UI.urls["getContactsURL"] = "{{ path("_expediente_get_contacts_list") }}";
     Tecnotek.UI.urls["associateStudentsURL"] = "{{ path("_expediente_associate_student") }}";
 
@@ -147,9 +149,10 @@
                             {% for relative in relatives %}
                             <div id="relative_row_{{ relative.id }}" class="row" rel="{{ relative.id }}" style="padding: 0px; font-size: 10px;">
                                 <div class="" style="float: left; width: 325px;">{{ relative.contact }}</div>
-                                <div class="" style="float: left; width: 100px;">{{ relative.description }}</div>
+                                <div class="" style="float: left; width: 50px;">{{ relative.description }}</div>
                                 <div class="right imageButton deleteButton" style="height: 16px;"  title="{% trans %}label.delete{% endtrans %}"  rel="{{ relative.id }}"></div>
                                 <div class="right imageButton viewButton" style="height: 16px;"  title="{% trans %}label.view{% endtrans %}"  rel="{{ relative.id }}"></div>
+                                <div class="right imageButton editButton"  title="{% trans %}label.edit{% endtrans %}"  rel="{{ relative.contact.id }}"></div>
                                 <div class="clear"></div>
                             </div>
                             {% set counter = counter + 1 %}

@@ -82,19 +82,19 @@ class Contact
     private $zipcode;
 
     /**
-     * @ORM\Column(type="string", length=15, nullable=true)
+     * @ORM\Column(type="string", length=60, nullable=true)
      * @Assert\MaxLength(limit = 60)
      */
     private $workplace;
 
     /**
-     * @ORM\Column(type="string", length=15, nullable=true)
+     * @ORM\Column(type="string", length=60, nullable=true)
      * @Assert\MaxLength(limit = 60)
      */
     private $email;
 
     /**
-     * @ORM\Column(type="string", length=15, nullable=true)
+     * @ORM\Column(type="string", length=120, nullable=true)
      * @Assert\MaxLength(limit = 120)
      */
     private $adress;

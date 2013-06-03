@@ -129,6 +129,9 @@ var Tecnotek = {
                 case "periodGroupQualifications":
                     Tecnotek.PeriodGroupQualifications.init();
                     break;
+                case "periodGroupAverages":
+                    Tecnotek.PeriodGroupAverages.init();
+                    break;
                 case "groupQualificationsByRubro":
                     Tecnotek.GroupQualificationsByRubro.init();
                     break;
@@ -989,6 +992,12 @@ var Tecnotek = {
                     } else {
                         $('#otherDetail').hide();
                     }
+                });
+
+                $('.editButton').click(function(event){
+                    event.preventDefault();
+                    console.debug("AdministratorList :: initButtons :: editButton Event");
+                    location.href = Tecnotek.UI.urls["edit"] + "/" + $(this).attr("rel");
                 });
 
                 $('#asociateButton').click(function(event){

@@ -46,6 +46,28 @@ class StudentToRoute
         return $this->student . " in " . $this->route;
     }
 
+    public function getCarneStudent()
+    {
+        return $this->student->getCarne();
+    }
+
+    public function getNameStudent()
+    {
+        return $this->student->getLastname() . " " . $this->student->getFirstname();
+    }
+
+
+    public function getGroupyearStudent()
+    {
+        return $this->student->getGroupyear();
+    }
+
+
+    public function getAdressStudent()
+    {
+        return $this->student->getAddress();
+    }
+
     /**
      * Get id
      *
@@ -95,4 +117,7 @@ class StudentToRoute
     {
         return $this->route;
     }
+
+
+
 }

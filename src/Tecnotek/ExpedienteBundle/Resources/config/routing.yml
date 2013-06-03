@@ -480,6 +480,18 @@ _expediente_get_contacts_list:
     pattern:  /students/contact/list
     defaults: { _controller: TecnotekExpedienteBundle:Student:getContactList }
 
+_expediente_sysadmin_relatives_edit:
+    pattern:  /ap/student/editrelative/{id}
+    defaults: { _controller: TecnotekExpedienteBundle:Student:relativesEdit }
+
+_expediente_sysadmin_relatives_edit_simple:
+    pattern:  /ap/student/editrelative
+    defaults: { _controller: TecnotekExpedienteBundle:Student:relativesEdit }
+
+_expediente_sysadmin_relatives_update:
+    pattern:  /ap/student/updaterelative
+    defaults: { _controller: TecnotekExpedienteBundle:Student:relativesUpdate }
+
 #Administrador
 _expediente_admin:
     pattern:  /admin
@@ -515,6 +527,10 @@ _expediente_report_students_by_route:
     pattern:  /reports/studentsByRoute/
     defaults: { _controller: TecnotekExpedienteBundle:Report:reportStudentByRoute }
 
+_expediente_report_students_by_route_club:
+    pattern:  /reports/studentsByRouteClub/
+    defaults: { _controller: TecnotekExpedienteBundle:Report:reportStudentByRouteClub }
+
 _expediente_report_absences_by_route:
    pattern:  /reports/absencesByRoute/
    defaults: { _controller: TecnotekExpedienteBundle:Report:reportStudentAbsencesByRoute }
@@ -534,6 +550,10 @@ _expediente_report_clubs:
 _expediente_report_period_notes_by_group:
    pattern:  /reports/qualificationsOfPeriod/
    defaults: { _controller: TecnotekExpedienteBundle:Report:qualificationsOfPeriod }
+
+_expediente_report_best_averages_by_group:
+   pattern:  /reports/averagesOfPeriod/
+   defaults: { _controller: TecnotekExpedienteBundle:Report:averagesOfPeriod }
 
 _expediente_report_group_qualifications:
    pattern:  /reports/groupQualifications/

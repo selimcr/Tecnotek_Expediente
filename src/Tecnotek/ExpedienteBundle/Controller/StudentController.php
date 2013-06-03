@@ -354,13 +354,14 @@ class StudentController extends Controller
 
                 $em = $this->getDoctrine()->getEntityManager();
                 $route = $em->getRepository("TecnotekExpedienteBundle:Route")->find($routeId);
-
+                $currentPeriod = $em->getRepository("TecnotekExpedienteBundle:Period")->findOneBy(array('isActual' => true));
+                $currentPeriodId = $currentPeriod->getId();
                 if($route->getRouteType() == 1){
                     $sql = "SELECT std.id, std.lastname, std.firstname, std.carne, std.groupyear "
                         . " FROM tek_students std, tek_students_year stdy"
                         . " WHERE (std.firstname like '%" . $text . "%' OR std.lastname like '%" . $text . "%')"
                         . " AND (std.route_id is null Or std.route_id <> $routeId)"
-                        . " AND std.id = stdy.student_id"
+                        . " AND std.id = stdy.student_id AND stdy.period_Id =".$currentPeriodId
                         . " ORDER BY std.lastname, std.firstname";
                 } else {
                     /*$sql = "SELECT std.id, std.lastname, std.firstname "
@@ -378,7 +379,7 @@ class StudentController extends Controller
                         . " FROM    tek_students_to_routes stdToRoute"
                         . " WHERE   stdToRoute.student_id = std.id and stdToRoute.route_id = $routeId)"
                         . " AND std.id = stdy.student_id"
-                        . " AND std.groupyear != 'NULL'"
+                        . " AND std.groupyear != 'NULL' AND stdy.period_Id =".$currentPeriodId
                         . " ORDER BY std.lastname, std.firstname";
                 }
                 $stmt = $em->getConnection()->prepare($sql);
@@ -1012,7 +1013,45 @@ class StudentController extends Controller
     }
     /* Final de los metodos para CRUD de tickets*/
 
+/* Metodos para editar contactos de estudiante*/
 
+    public function relativesEditAction($id)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $entity = $em->getRepository("TecnotekExpedienteBundle:Contact")->find($id);
+        $form   = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\ContactFormType(), $entity);
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Student/editrelative.html.twig', array('entity' => $entity,
+            'form'   => $form->createView(), 'menuIndex' => 3));
+    }
+
+
+    public function relativesUpdateAction(){
+        $em = $this->getDoctrine()->getEntityManager();
+        $request = $this->get('request')->request;
+        $logger = $this->get('logger');
+
+        $entity = $em->getRepository("TecnotekExpedienteBundle:Contact")->find( $request->get('id'));
+        if ( isset($entity) ) {
+            $request = $this->getRequest();
+            $form    = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\ContactFormType(), $entity);
+            $form->bindRequest($request);
+            if ($form->isValid()) {
+                $em->persist($entity);
+                $em->flush();
+                //$student_id = $entity->getId()->;
+                return $this->redirect($this->generateUrl('_expediente_sysadmin_student'));
+            } else {
+                return $this->render('TecnotekExpedienteBundle:SuperAdmin:Student/editrelative.html.twig', array(
+                    'entity' => $entity, 'form'   => $form->createView(), 'menuIndex' => 3
+                ));
+            }
+        } else {
+            return $this->redirect($this->generateUrl('_expediente_sysadmin_student'));
+        }
+
+    }
+
+    /*Final metodos para editar contactos de estudiante*/
     /* Metodos para CRUD de Absences*/
     public function absencesIndexAction(){
         $em = $this->getDoctrine()->getEntityManager();

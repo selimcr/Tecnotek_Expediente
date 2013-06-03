@@ -127,6 +127,7 @@
                     <div class="fields_row student_title">
                         <div style="float: left; width: 50px;">{%trans%}label.carne{%endtrans%}</div>
                         <div style="float: left; width: 350px;">{%trans%}label.student.name{%endtrans%}</div>
+                        <div style="float: left; width: 50px;">{%trans%}label.section{%endtrans%}</div>
                         {% if age != null %}
                         <div style="float: left; width: 100px;">{%trans%}label.age{%endtrans%}</div>
                         {% endif %}
@@ -140,6 +141,7 @@
                     <div class="student_row">
                         <div style="float: left; width: 50px;">{{ student.carne }}</div>
                         <div style="float: left; width: 350px;">{{ student.lastname ~ ", " ~ student.firstname }}</div>
+                        <div style="float: left; width: 50px;">{{ student.groupyear }}</div>
                         {% if age != null %}
                         <div style="float: left; width: 100px;">{{ student.age }}</div>
                         {% endif %}

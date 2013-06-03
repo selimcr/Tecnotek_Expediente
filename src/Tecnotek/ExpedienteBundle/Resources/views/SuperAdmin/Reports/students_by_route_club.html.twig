@@ -37,7 +37,7 @@
                     <p style="text-align: center; padding-bottom: 0px;">Ordenados por Nombre</p>
                 </div>
 
-                {% for route in entities if route.routeType == 1 %}
+                {% for route in entities if route.routeType == 2 %}
                     <div class="fields_row route">
                         <p style="text-decoration: underline; padding-bottom: 0px;">Ruta {{ loop.index }}: {{ route.code ~ " - " ~ route.description }}</p>
                         {% if route.bus != "" %}
@@ -59,17 +59,17 @@
 
                         <div class="clear"></div>
                     </div>
-                    {% for student in route.students %}
+                    {% for student in route.studentsToRoute %}
                         <div class="student_row">
-                            <div style="float: left; width: 50px;">{{ student.carne }}</div>
-                            <div style="float: left; width: 200px;">{{ student }}</div>
-                            <div style="float: left; width: 60px;">&nbsp;</div>
-                            <div style="float: left; width: 315px;">{{ student.address }}</div>
+                            <div style="float: left; width: 50px;">{{ student.getCarneStudent() }}</div>
+                            <div style="float: left; width: 200px;">{{ student.getNameStudent() }}</div>
+                            <div style="float: left; width: 60px;">{{ student.getGroupyearStudent() }}</div>
+                            <div style="float: left; width: 315px;">{{ student.getAdressStudent() }}</div>
                             <div style="float: left; width: 50px;">&nbsp;</div>
-                            <div style="float: left; width: 55px;">{{ student.pickUp }}</div>
-                            <div style="float: left; width: 50px;">{{ student.leaveTime }}</div>
-                            <div style="float: left; width: 70px;">{{ student.fatherPhone }}</div>
-                            <div style="float: left; width: 70px;">{{ student.motherPhone }}</div>
+                            <div style="float: left; width: 55px;"></div>
+                            <div style="float: left; width: 50px;"></div>
+                            <div style="float: left; width: 70px;"></div>
+                            <div style="float: left; width: 70px;"></div>
                         </div>
                         <div class="clear"></div>
                     {% endfor %}

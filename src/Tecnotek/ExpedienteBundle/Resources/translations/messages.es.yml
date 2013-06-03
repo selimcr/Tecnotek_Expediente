@@ -102,7 +102,7 @@ label.students: Estudiantes
 label.tickets: Boletas de Salida
 label.reports: Reportes
 label.absences: Ausencias
-
+label.commets: Comentarios
 label.code: Codigo
 label.description: Descripcion
 
@@ -199,7 +199,7 @@ label.mother: Madre
 label.brother: Hermano
 label.sister: Hermana
 label.other: Otro
-label.students.quantity: Cantidad de Estudiantes
+label.students.quantity: Cantidad
 
 label.carne: Carne
 label.section: Seccion
@@ -236,6 +236,7 @@ label.students.daily.by.route: Reporte Diario por Ruta
 label.students.absences: Estudiantes Ausentes
 label.students.precenses: Estudiantes Presentes
 label.routes.club: Rutas Club
+label.students.by.route.club: Estudiantes por Ruta Clubes
 
 label.penalties: Sanciones
 label.penalties.title: Administracion de Sanciones
@@ -278,6 +279,7 @@ label.courseEntryCode: C&oacute;digo de Rubro
 menu.qualifications.report: Notas de Periodo
 menu.qualifications.of.group.by.rubro: Calificaciones de Grupo por Rubro
 menu.detail.student.qualifications: Notas detalladas de Estudiante
+menu.averages.report: Mejores Promedios
 
 results.not.found: No se han encontrado resultados.
 

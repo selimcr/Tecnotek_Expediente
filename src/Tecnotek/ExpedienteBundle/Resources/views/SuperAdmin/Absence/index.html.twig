@@ -90,28 +90,30 @@ $(function() {
         <div class="search-results table" style="margin-top: 25px;">
             <div class="row tableHeader" style="height: 32px; line-height: 32px;">
                 <div class="option_width" style="float: left; width: 350px;">{% trans %}label.student{% endtrans %}</div>
-                <div class="option_width" style="float: left; width: 150px;">{% trans %}label.date{% endtrans %}</div>
-                <div class="option_width" style="float: left; width: 150px;">{% trans %}label.type{% endtrans %}</div>
-                <div class="option_width" style="float: left; width: 100px;">{% trans %}label.status{% endtrans %}</div>
+                <div class="option_width" style="float: left; width: 100px;">{% trans %}label.date{% endtrans %}</div>
+                <div class="option_width" style="float: left; width: 100px;">{% trans %}label.type{% endtrans %}</div>
+                <div class="option_width" style="float: left; width: 75px;">{% trans %}label.status{% endtrans %}</div>
+                <div class="option_width" style="float: left; width: 150px;">{% trans %}label.commets{% endtrans %}</div>
             </div>
 
             {% for entity in entities %}
-            <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
-                <div class="option_width" style="float: left; width: 350px;">{{ entity.studentYear.student }}</div>
-                <div class="option_width" style="float: left; width: 150px;">{% if entity.date != null %} {{ entity.date|date("d/M/y") }} {% else %} &nbsp; {% endif %}</div>
-                <div class="option_width" style="float: left; width: 150px;">{{ entity.type }}</div>
-                <div class="option_width" style="float: left; width: 100px;" title="{{ entity.comments }}">{% if entity.justify %}{% trans %}label.justify{% endtrans %}{% else %} {% trans %}label.injustify{% endtrans %} {% endif %}</div>
+                <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
+                    <div class="option_width" style="float: left; width: 350px;">{{ entity.studentYear.student }}</div>
+                    <div class="option_width" style="float: left; width: 100px;">{% if entity.date != null %} {{ entity.date|date("d/M/y") }} {% else %} &nbsp; {% endif %}</div>
+                    <div class="option_width" style="float: left; width: 100px;">{{ entity.type }}</div>
+                    <div class="option_width" style="float: left; width: 75px;" title="{{ entity.comments }}">{% if entity.justify %}{% trans %}label.justify{% endtrans %}{% else %} {% trans %}label.injustify{% endtrans %} {% endif %}</div>
+                    <div class="option_width" style="float: left; width: 150px;">{{ entity.comments | slice(0, 40) }} </div>
 
-                <div class="right imageButton deleteButton" style="height: 16px;"  title="{% trans %}label.eliminar{% endtrans %}"  rel="{{ entity.id }}"></div>
-                <div class="right imageButton editButton"  title="{% trans %}label.edit{% endtrans %}"  rel="{{ entity.id }}"></div>
+                    <div class="right imageButton deleteButton" style="height: 16px;"  title="{% trans %}label.eliminar{% endtrans %}"  rel="{{ entity.id }}"></div>
+                    <div class="right imageButton editButton"  title="{% trans %}label.edit{% endtrans %}"  rel="{{ entity.id }}"></div>
 
-                <div class="clear"></div>
-            </div>
+                    <div class="clear"></div>
+                </div>
             {% else %}
-            <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
-                <div class="option_width" style="float: left; width: 375px;">{% trans %}results.not.found{% endtrans %}</div>
-                <div class="clear"></div>
-            </div>
+                <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
+                    <div class="option_width" style="float: left; width: 375px;">{% trans %}results.not.found{% endtrans %}</div>
+                    <div class="clear"></div>
+                </div>
             {% endfor %}
         </div>
     </div>
