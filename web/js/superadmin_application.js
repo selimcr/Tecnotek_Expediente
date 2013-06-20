@@ -299,6 +299,24 @@ var Tecnotek = {
                     $("#report").printElement({printMode:'popup', pageTitle:$(this).attr('rel')});
                 });
 
+                $('#btnSearch').click(function(event){
+                    event.preventDefault();
+                    var url = location.href;
+                    var text = $("#searchText").val();
+                    if( url.indexOf("?") > -1 ){
+                        if( url.indexOf("text=") > -1 ){
+                            url += "&q=1";
+                            url = url.replace(/(text=).*?(&)/,'$1' + text + '$2');
+                            url = url.replace("&q=1","");
+                        } else {
+                            url += "&text=" + text;
+                        }
+                    } else {
+                        url += "?text=" + text;
+                    }
+                    window.location.href= url;
+                });
+
             }
         },
         ReportClubs : {

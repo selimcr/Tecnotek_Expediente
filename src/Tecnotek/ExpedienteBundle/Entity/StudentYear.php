@@ -34,6 +34,11 @@ class StudentYear
     private $periodAverageScore;
 
     /**
+     * @ORM\Column(type="integer")
+     */
+    private $periodHonor;
+
+    /**
      * @ManyToOne(targetEntity="Student")
      * @JoinColumn(name="student_id", referencedColumnName="id", onDelete="CASCADE")
      */
@@ -108,6 +113,25 @@ class StudentYear
     public function getPeriodAverageScore()
     {
         return $this->periodAverageScore;
+    }
+
+    /**
+     * Set periodHonor
+     *
+     * @param int $periodHonor
+     */
+    public function setPeriodHonor($periodHonor)
+    {
+        $this->periodHonor = $periodHonor;
+    }
+
+    /**
+     * Get periodHonor
+     *
+     * @return int     */
+    public function getPeriodHonor()
+    {
+        return $this->periodHonor;
     }
 
     /**

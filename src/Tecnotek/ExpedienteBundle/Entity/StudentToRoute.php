@@ -68,6 +68,11 @@ class StudentToRoute
         return $this->student->getAddress();
     }
 
+    public function getDailyDescription()
+    {
+        return $this->student->getDailyDescription();
+    }
+
     /**
      * Get id
      *

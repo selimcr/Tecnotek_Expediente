@@ -217,12 +217,7 @@ Tecnotek.PeriodGroupAverages = {
             Tecnotek.PeriodGroupAverages.loadQualificationsOfGroup($(this).val());
         });
 
-        $("#students").change(function(event){
-            event.preventDefault();
-            Tecnotek.PeriodGroupAverages.loadQualificationsOfGroup($(this).val());
-        });
-
-        Tecnotek.PeriodGroupAverages.loadGroupsOfPeriod($('#period').val());
+        Tecnotek.PeriodGroupAverages.loadAveragesOfGroup($('#period').val());
         Tecnotek.PeriodGroupAverages.initButtons();
     },
     initButtons : function() {
@@ -255,32 +250,7 @@ Tecnotek.PeriodGroupAverages = {
                 }, true);
         }
     },
-    loadGroupStudents: function($groupId) {
-        if(($groupId!==null)){
-            $('#students').children().remove();
-            $('#subentryFormParent').empty();
-            Tecnotek.Qualifications.loadQualificationsOfGroup(0);
-            Tecnotek.ajaxCall(Tecnotek.UI.urls["loadStudentsGroupURL"],
-                {   groupId: $groupId.split("-")[0] },
-                function(data){
-                    if(data.error === true) {
-                        Tecnotek.showErrorMessage(data.message,true, "", false);
-                    } else {
-                        $('#students').append('<option value="-1"></option>');
-                        $('#students').append('<option value="0">Todos</option>');
-                        for(i=0; i<data.students.length; i++) {
-                            $('#students').append('<option value="' + data.students[i].id + '">' + data.students[i].lastname + ", " + data.students[i].firstname + '</option>');
-                        }
-                        Tecnotek.PeriodGroupAverages.loadQualificationsOfGroup($('#students').val());
-                    }
-                },
-                function(jqXHR, textStatus){
-                    Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
-                    $(this).val("");
-                }, false);
-        }
-    },
-    loadQualificationsOfGroup: function(studentId) {
+    loadAveragesOfGroup: function(studentId) {
         $('.editEntry').unbind();
         $('#contentBody').empty();
         $('#tableContainer').hide();

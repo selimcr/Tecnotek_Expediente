@@ -92,10 +92,26 @@ class ReportController extends Controller
     }
 
     public function reportStudentByRouteClubAction(){
+
         $em = $this->getDoctrine()->getEntityManager();
-        $entities = $em->getRepository("TecnotekExpedienteBundle:Route")->findAll();
+
+        $text = $this->get('request')->query->get('text');
+        $sqlText = "";
+        if(isset($text) && $text != "") {
+            $sqlText = " WHERE r.name like '%$text%'";
+        }
+
+        $dql = "SELECT r FROM TecnotekExpedienteBundle:Route r" . $sqlText;
+        $query = $em->createQuery($dql);
+
+        $entity = $query->getResult();
+        /*$entities = $em->getRepository("TecnotekExpedienteBundle:Route")->findAll();
         return $this->render('TecnotekExpedienteBundle:SuperAdmin:Reports/students_by_route_club.html.twig', array('menuIndex' => 4,
             'entities' => $entities
+        ));*/
+
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Reports/students_by_route_club.html.twig', array(
+            'menuIndex' => 4, 'text' => $text, 'entities' => $entity
         ));
     }
 
@@ -648,8 +664,15 @@ class ReportController extends Controller
             $promedioRow = str_replace("__", number_format($promedioPeriodo, 2, '.', ''), $promedioRow);
         }
 
+        if($honor){
+            $honorStdy = 1;
+        }else{
+            $honorStdy = 0;
+        }
+
         $studentYear->setPeriodAverageScore($promedioPeriodo);
         $studentYear->setConducta($conducta);
+        $studentYear->setPeriodHonor($honorStdy);
         $em->persist($studentYear);
         $em->flush();
 

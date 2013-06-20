@@ -5,84 +5,84 @@
 {% endblock %}
 
 {% block extrajs %}
-<script type="text/javascript">
-    Tecnotek.module = "ticketsIndex";
-    Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
-    Tecnotek.UI.urls["getStudentsURL"] = "{{ path('_expediente_sysadmin_student_ajax_list')}}";
-    Tecnotek.UI.urls["loadStudentRelativesURL"] = "{{ path('_expediente_sysadmin_relatives_list')}}";
-    Tecnotek.UI.urls["saveTicketURL"] = "{{ path('_expediente_sysadmin_ticket_save')}}";
-    Tecnotek.StudentShow.translates["relative.not.selected"] = "{% trans %}message.relative.not.selected{% endtrans %}";
-    Tecnotek.StudentShow.translates["student.not.selected"] = "{% trans %}message.student.not.selected{% endtrans %}";
-    Tecnotek.StudentShow.translates["relative.not.exists"] = "{% trans %}message.relative.not.exists{% endtrans %}";
-    Tecnotek.UI.translates["confirmDelete"] = "{% trans %}message.ticket.confirm.delete{% endtrans %}";
-    Tecnotek.UI.urls["show"] = "{{ path('_expediente_sysadmin_student_show_ticket_simple')}}";
-    Tecnotek.UI.urls["deleteTicketURL"] = "{{ path('_expediente_sysadmin_remove_ticket')}}";
-</script>
-<script type="text/javascript" src="{{ asset('js/tek_exp_tickets.js') }}"></script>
+    <script type="text/javascript">
+        Tecnotek.module = "ticketsIndex";
+        Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
+        Tecnotek.UI.urls["getStudentsURL"] = "{{ path('_expediente_sysadmin_student_ajax_list')}}";
+        Tecnotek.UI.urls["loadStudentRelativesURL"] = "{{ path('_expediente_sysadmin_relatives_list')}}";
+        Tecnotek.UI.urls["saveTicketURL"] = "{{ path('_expediente_sysadmin_ticket_save')}}";
+        Tecnotek.StudentShow.translates["relative.not.selected"] = "{% trans %}message.relative.not.selected{% endtrans %}";
+        Tecnotek.StudentShow.translates["student.not.selected"] = "{% trans %}message.student.not.selected{% endtrans %}";
+        Tecnotek.StudentShow.translates["relative.not.exists"] = "{% trans %}message.relative.not.exists{% endtrans %}";
+        Tecnotek.UI.translates["confirmDelete"] = "{% trans %}message.ticket.confirm.delete{% endtrans %}";
+        Tecnotek.UI.urls["show"] = "{{ path('_expediente_sysadmin_student_show_ticket_simple')}}";
+        Tecnotek.UI.urls["deleteTicketURL"] = "{{ path('_expediente_sysadmin_remove_ticket')}}";
+    </script>
+    <script type="text/javascript" src="{{ asset('js/tek_exp_tickets.js') }}"></script>
 {% endblock %}
 
 {% block content %}
-<div class="container_24">
-    <div class="grid_24">
-        <div class="left" style="width: 615px;" id="ticketsList" name="ticketsList">
-            <div>
-                <div class="left"><h3>{% trans %}label.ticket.today.list{% endtrans %}</h3></div>
-                <div class="clear"></div>
-            </div>
-
-            <div class="table">
-                <div class="row tableHeader" style="padding: 0;">
-                    <div class="option_width" style="float: left; width: 215px;">{% trans %}label.student{% endtrans %}</div>
-                    <div class="option_width" style="float: left; width: 25px;"></div>
-                    <div class="option_width" style="float: left; width: 220px;">{% trans %}label.relative{% endtrans %}</div>
-                    <div class="option_width" style="float: left; width: 135px;">{% trans %}label.time{% endtrans %}</div>
+    <div class="container_24">
+        <div class="grid_24">
+            <div class="left" style="width: 615px;" id="ticketsList" name="ticketsList">
+                <div>
+                    <div class="left"><h3>{% trans %}label.ticket.today.list{% endtrans %}</h3></div>
+                    <div class="clear"></div>
                 </div>
 
-                {% for ticket in tickets %}
-                    <div id="ticket_row_{{ ticket.id }}" name="ticket_row_{{ ticket.id }}" class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}" style="padding: 0px;" rel="{{ ticket.id }}">
-                        <div class="option_width" style="float: left; width: 215px; font-size: 10px;">{{ ticket.student | slice(0, 35)}}</div>
-                        <div class="option_width" style="float: left; width: 25px; font-size: 10px;">{{ ticket.student.groupyear }}</div>
-                        <div class="option_width" style="float: left; width: 220px; font-size: 10px;">{{ ticket.relative.contact | slice(0, 20)}}</div>
-                        <div class="option_width" style="float: left; width: 95px; font-size: 10px;">{{ ticket.date|date("d/M/y H:i:s") }}</div>
+                <div class="table">
+                    <div class="row tableHeader" style="padding: 0;">
+                        <div class="option_width" style="float: left; width: 215px;">{% trans %}label.student{% endtrans %}</div>
+                        <div class="option_width" style="float: left; width: 25px;"></div>
+                        <div class="option_width" style="float: left; width: 220px;">{% trans %}label.relative{% endtrans %}</div>
+                        <div class="option_width" style="float: left; width: 135px;">{% trans %}label.time{% endtrans %}</div>
+                    </div>
 
-                        <div class="right imageButton deleteButton"  title="{% trans %}label.delete{% endtrans %}"  rel="{{ ticket.id }}" style="margin-right: 0px; margin-top: 3px; width: 17px;"></div>
-                        <div class="right imageButton viewButton"  title="{% trans %}label.view{% endtrans %}"  rel="{{ ticket.id }}" style="margin-top: 3px;"></div>
+                    {% for ticket in tickets %}
+                        <div id="ticket_row_{{ ticket.id }}" name="ticket_row_{{ ticket.id }}" class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}" style="padding: 0px;" rel="{{ ticket.id }}">
+                            <div class="option_width" style="float: left; width: 215px; font-size: 10px;">{{ ticket.student | slice(0, 35)}}</div>
+                            <div class="option_width" style="float: left; width: 25px; font-size: 10px;">{{ ticket.student.groupyear }}</div>
+                            <div class="option_width" style="float: left; width: 220px; font-size: 10px;">{{ ticket.relative.contact | slice(0, 20)}}</div>
+                            <div class="option_width" style="float: left; width: 95px; font-size: 10px;">{{ ticket.date|date("d/M/y H:i:s") }}</div>
+
+                            <div class="right imageButton deleteButton"  title="{% trans %}label.delete{% endtrans %}"  rel="{{ ticket.id }}" style="margin-right: 0px; margin-top: 3px; width: 17px; max-height: 16px;"></div>
+                            <div class="right imageButton viewButton"  title="{% trans %}label.view{% endtrans %}"  rel="{{ ticket.id }}" style="margin-top: 3px; max-height: 16px;"></div>
+                            <div class="clear"></div>
+                        </div>
+                    {% else %}
+                        <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
+                            <div class="option_width" style="float: left; width: 375px;">{% trans %}tickets.not.found{% endtrans %}</div>
+                            <div class="clear"></div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+            </div>
+
+            <div class="right" style="width: 320px;">
+                <div class="left"><h3>{% trans %}label.ticket.new{% endtrans %}</h3></div>
+                <div class="clear"></div>
+                <div class="form-ticket table" style="background-color: #fff">
+                    <div class="internal custom">
+                        <div class="formRow" style="margin: 0; margin-bottom: 15px;">
+                            <div class="left" style="width: 85px;"><label>{% trans %}label.student{% endtrans %}</label></div><input id="student" name="student" rel="0" style="width: 270px;"><br/>
+                            <div id="suggestions" style="left: 85px;"></div>
+                        </div>
+
+                        <div class="formRow" style="margin: 0; margin-bottom: 15px;">
+                            <div class="left" style="width: 85px;"><label>{% trans %}label.relative{% endtrans %}</label></div><select id="relative" name="relative"></select><br/>
+                        </div>
+
+                        <div class="left" style="width: 85px;"><label style="line-height: 10px;">{% trans %}label.comments{% endtrans %}</label></div><textarea id="comments" name="comments" rows="10" cols="25"></textarea><br/>
+
+                        <button style="float: left; margin-top: 15px;" type="button" class="right button success-darker tiny" id="save" name="save"><span></span>{% trans %}label.save{% endtrans %}</button>
                         <div class="clear"></div>
                     </div>
-                {% else %}
-                <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
-                    <div class="option_width" style="float: left; width: 375px;">{% trans %}tickets.not.found{% endtrans %}</div>
-                    <div class="clear"></div>
+
                 </div>
-                {% endfor %}
             </div>
-
-        </div>
-
-        <div class="right" style="width: 320px;">
-            <div class="left"><h3>{% trans %}label.ticket.new{% endtrans %}</h3></div>
             <div class="clear"></div>
-            <div class="form-ticket table" style="background-color: #fff">
-                <div class="internal custom">
-                    <div class="formRow" style="margin: 0; margin-bottom: 15px;">
-                        <div class="left" style="width: 85px;"><label>{% trans %}label.student{% endtrans %}</label></div><input id="student" name="student" rel="0" style="width: 270px;"><br/>
-                        <div id="suggestions" style="left: 85px;"></div>
-                    </div>
-
-                    <div class="formRow" style="margin: 0; margin-bottom: 15px;">
-                        <div class="left" style="width: 85px;"><label>{% trans %}label.relative{% endtrans %}</label></div><select id="relative" name="relative"></select><br/>
-                    </div>
-
-                    <div class="left" style="width: 85px;"><label style="line-height: 10px;">{% trans %}label.comments{% endtrans %}</label></div><textarea id="comments" name="comments" rows="10" cols="25"></textarea><br/>
-
-                    <button style="float: left; margin-top: 15px;" type="button" class="right button success-darker tiny" id="save" name="save"><span></span>{% trans %}label.save{% endtrans %}</button>
-                    <div class="clear"></div>
-                </div>
-
-            </div>
         </div>
         <div class="clear"></div>
     </div>
-    <div class="clear"></div>
-</div>
 {% endblock %}

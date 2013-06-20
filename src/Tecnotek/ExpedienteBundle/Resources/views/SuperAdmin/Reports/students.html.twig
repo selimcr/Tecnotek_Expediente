@@ -5,242 +5,251 @@
 {% endblock %}
 
 {% block extracss %}
-<link rel="stylesheet" href="{{ asset('css/jquery-ui-timepicker-addon.css') }}" type="text/css" media="all" />
+    <link rel="stylesheet" href="{{ asset('css/jquery-ui-timepicker-addon.css') }}" type="text/css" media="all" />
 {% endblock %}
 
 {% block extrajs %}
-<script type="text/javascript" src="{{ asset('js/jquery.printElement.min.js') }}"></script>
-<script type="text/javascript">
-    Tecnotek.module = "reports";
-    Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
-    Tecnotek.UI.urls["saveAbsenceURL"] = "{{ path('_expediente_absences_save')}}";
-    Tecnotek.UI.urls["deleteURL"] = "{{ path("_delete_absence_simple") }}";
-    Tecnotek.UI.translates["confirmDelete"] = "{% trans %}messages.confirmation.absence.delete{% endtrans %}";
-</script>
+    <script type="text/javascript" src="{{ asset('js/jquery.printElement.min.js') }}"></script>
+    <script type="text/javascript">
+        Tecnotek.module = "reports";
+        Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
+        Tecnotek.UI.urls["saveAbsenceURL"] = "{{ path('_expediente_absences_save')}}";
+        Tecnotek.UI.urls["deleteURL"] = "{{ path("_delete_absence_simple") }}";
+        Tecnotek.UI.translates["confirmDelete"] = "{% trans %}messages.confirmation.absence.delete{% endtrans %}";
+    </script>
 {% endblock %}
 
 {% block content %}
-<div class="container_24">
+    <div class="container_24">
     <div class="grid_24">
-        <div>
-            <div class="left">
-                <h3>{% trans %}label.report.students.title{% endtrans %}</h3>
-            </div>
-            <div class="left" style="line-height: 48px; margin-left: 25px;">
-                <span>{% trans %}label.report.students.subtitle{% endtrans %}</span>
-            </div>
-            <div class="clear"></div>
+    <div>
+        <div class="left">
+            <h3>{% trans %}label.report.students.title{% endtrans %}</h3>
         </div>
-        <div class="filter-search table">
-            <div class="internal">
-                <form id="searchForm" action="{{ path('_expediente_report_students') }}" method="post">
-                    <div class="left">
-                        <label>{%trans%}label.generate.by{%endtrans%}:</label>
-                        <input type="radio" name="tipo" value="1" {% if tipo==1 or tipo==0 %}checked{% endif %} > {%trans%}label.group{%endtrans%}
-                        <select id="grade" name="grade" style="width: 100px">
-                            {% for group in groups %}
-                                <option value="{{ group.id }}">{{group}}</option>
-                            {% endfor %}
-                        </select>
-                        <input type="radio" name="tipo" value="2" {% if tipo==2 %}checked{% endif %}> {%trans%}label.grade{%endtrans%}
-                        <select id="grade" name="grade" style="width: 100px">
-                            {% for grade in grades %}
-                                <option value="{{ grade.id }}">{{grade}}</option>
-                            {% endfor %}
-                        </select>
-                        <input type="radio" name="tipo" value="3" {% if tipo==3 %}checked{% endif %}> {%trans%}label.institution{%endtrans%}
-                        <select id="institution" name="institution" style="width: 100px">
-                            {% for institution in institutions %}
-                                <option value="{{ institution.id }}">{{institution}}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <button style="margin-left: 15px; margin-top: 0px;" type="submit" class="right button success-darker tiny" name="search"><span></span>{% trans %}label.generate{% endtrans %}</button>
-                    <div class="clear"></div>
-                    <div>
-                        <label style="width: 126px;">{%trans%}label.include.in.report{%endtrans%}:</label>
-                        <input type="checkbox" class="check" id="gender" name="gender" {% if gender != null %}checked="checked"{% endif %}>{%trans%}label.gender{%endtrans%}
-                        <input type="checkbox" class="check" id="age" name="age" {% if age != null %}checked="checked"{% endif %}>{%trans%}label.age{%endtrans%}
-                    </div>
-                </form>
-            </div>
+        <div class="left" style="line-height: 48px; margin-left: 25px;">
+            <span>{% trans %}label.report.students.subtitle{% endtrans %}</span>
         </div>
-
-        {% if tipo != 0 %}
+        <div class="clear"></div>
+    </div>
+    <div class="filter-search table">
+        <div class="internal">
+            <form id="searchForm" action="{{ path('_expediente_report_students') }}" method="post">
+                <div class="left">
+                    <label>{%trans%}label.generate.by{%endtrans%}:</label>
+                    <input type="radio" name="tipo" value="1" {% if tipo==1 or tipo==0 %}checked{% endif %} > {%trans%}label.group{%endtrans%}
+                    <select id="grade" name="grade" style="width: 100px">
+                        {% for group in groups %}
+                            <option value="{{ group.id }}">{{group}}</option>
+                        {% endfor %}
+                    </select>
+                    <input type="radio" name="tipo" value="2" {% if tipo==2 %}checked{% endif %}> {%trans%}label.grade{%endtrans%}
+                    <select id="grade" name="grade" style="width: 100px">
+                        {% for grade in grades %}
+                            <option value="{{ grade.id }}">{{grade}}</option>
+                        {% endfor %}
+                    </select>
+                    <input type="radio" name="tipo" value="3" {% if tipo==3 %}checked{% endif %}> {%trans%}label.institution{%endtrans%}
+                    <select id="institution" name="institution" style="width: 100px">
+                        {% for institution in institutions %}
+                            <option value="{{ institution.id }}">{{institution}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button style="margin-left: 15px; margin-top: 0px;" type="submit" class="right button success-darker tiny" name="search"><span></span>{% trans %}label.generate{% endtrans %}</button>
+                <div class="clear"></div>
+                <div>
+                    <label style="width: 126px;">{%trans%}label.include.in.report{%endtrans%}:</label>
+                    <input type="checkbox" class="check" id="gender" name="gender" {% if gender != null %}checked="checked"{% endif %}>{%trans%}label.gender{%endtrans%}
+                    <input type="checkbox" class="check" id="age" name="age" {% if age != null %}checked="checked"{% endif %}>{%trans%}label.age{%endtrans%}
+                </div>
+            </form>
+        </div>
+    </div>
+    {% set counterM = 0 %}
+    {% set counterF = 0 %}
+    {% if tipo != 0 %}
         <div style="margin-top: 15px;">
             <button style="margin-left: 15px; margin-top: 0px;" type="button" class="right button success-darker tiny" id="btnPrint" name="btnPrint" rel="Reporte de Clubes"><span></span>{% trans %}label.print{% endtrans %}</button>
             <div class="clear"></div>
         </div>
         <div id="report" style="margin-top: 25px; width: 950px;">
             {% if groups != null %}
-            {% for group in groups %}
-            <div class="titles" style="font-size: 10px;">
-                <div class="left">Corporación Educativa Saint Michael S.A.</div>
-                <div class="right">Reporte de estudiantes.</div>
-                <div class="clear"></div>
+                {% for group in groups %}
+                    <div class="titles" style="font-size: 10px;">
+                        <div class="left">Corporaci贸n Educativa Saint Michael S.A.</div>
+                        <div class="right">Reporte de estudiantes. Curso Lectivo 2013</div>
+                        <div class="clear"></div>
 
-                <div class="left">{{ "now"|date("d/M/Y H:i:s") }}</div>
-                <div class="clear"></div>
+                        <div class="left">{{ "now"|date("d/M/Y H:i:s") }}</div>
+                        <div class="clear"></div>
 
-                <p style="text-align: center;padding-bottom: 0px;">Estudiantes por {{ typeLabel }}</p>
-                <p style="text-align: center; padding-bottom: 0px;">Ordenados por Nombre</p>
-            </div>
-            <div class="fields_row route">
-                <p style="text-decoration: underline; padding-bottom: 0px;">Nivel: {{ group.grade ~ " - " ~ group }}</p>
-            </div>
-            <div class="fields_row student_title">
-                <div style="float: left; width: 50px;">{%trans%}label.carne{%endtrans%}</div>
-                <div style="float: left; width: 350px;">{%trans%}label.student.name{%endtrans%}</div>
-                {% if age != null %}
-                <div style="float: left; width: 100px;">{%trans%}label.age{%endtrans%}</div>
-                {% endif %}
-                {% if gender != null %}
-                <div style="float: left; width: 150px;">{%trans%}label.gender{%endtrans%}</div>
-                {% endif %}
-                <div style="float: left; width: 60px;"></div>
-                <div class="clear"></div>
-            </div>
-            {% for student in group.students %}
-            <div class="student_row">
-                <div style="float: left; width: 50px;">{{ student.carne }}</div>
-                <div style="float: left; width: 350px;">{{ student.lastname ~ ", " ~ student.firstname }}</div>
-                {% if age != null %}
-                <div style="float: left; width: 100px;">{{ student.age }}</div>
-                {% endif %}
-                {% if gender != null %}
-                <div style="float: left; width: 150px;">{% if student.gender == 1%}{% trans %}label.male{% endtrans %}{% else %}{% trans %}label.female{% endtrans %}{% endif %}</div>
-                {% endif %}
-                <div style="float: left; width: 60px;">&nbsp;</div>
-            </div>
-            <div class="clear"></div>
-            {% endfor %}
-            <div class="student_footer">
-                Total de estudiantes en el nivel: {{ group.students|length }}
-            </div>
-            <div class="pageBreak"> </div>
+                        <p style="text-align: center;padding-bottom: 0px;">Estudiantes por {{ typeLabel }}</p>
+                        <p style="text-align: center; padding-bottom: 0px;">Ordenados por Nombre</p>
+                    </div>
+                    <div class="fields_row route">
+                        <p style="text-decoration: underline; padding-bottom: 0px;">Nivel: {{ group.grade ~ " - " ~ group }}</p>
+                    </div>
+                    <div class="fields_row student_title">
+                        <div style="float: left; width: 50px;">{%trans%}label.carne{%endtrans%}</div>
+                        <div style="float: left; width: 350px;">{%trans%}label.student.name{%endtrans%}</div>
+                        {% if age != null %}
+                            <div style="float: left; width: 100px;">{%trans%}label.age{%endtrans%}</div>
+                        {% endif %}
+                        {% if gender != null %}
+                            <div style="float: left; width: 150px;">{%trans%}label.gender{%endtrans%}</div>
+                        {% endif %}
+                        <div style="float: left; width: 60px;"></div>
+                        <div class="clear"></div>
+                    </div>
+                    {% set counterF = 0 %}
+                    {% set counterM = 0 %}
+                    {% for student in group.students %}
+                        <div class="student_row">
+                            <div style="float: left; width: 50px;">{{ student.carne }}</div>
+                            <div style="float: left; width: 350px;">{{ student.lastname ~ ", " ~ student.firstname }}</div>
+                            {% if age != null %}
+                                <div style="float: left; width: 100px;">{{ student.age }}</div>
+                            {% endif %}
+                            {% if gender != null %}
+                                <div style="float: left; width: 150px;">{% if student.gender == 1%}{% set counterM = counterM + 1 %}{% trans %}label.male{% endtrans %}{% else %}{% set counterF = counterF + 1 %}{% trans %}label.female{% endtrans %}{% endif %}</div>
+                            {% endif %}
+                            <div style="float: left; width: 60px;">&nbsp;</div>
+                        </div>
+                        <div class="clear"></div>
+                    {% endfor %}
+                    <div class="student_footer">
+                        Total de estudiantes en el nivel: {{ group.students|length }}
+                        Total de hombres:  {{ counterM }}
+                        Total de mujeres:  {{ counterF }}
+                    </div>
+                    <div class="pageBreak"> </div>
+                {% else %}
+                    <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
+                        <div class="option_width" style="float: left; width: 375px;">{% trans %}results.not.found{% endtrans %}</div>
+                        <div class="clear"></div>
+                    </div>
+                {% endfor %}
             {% else %}
-            <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
-                <div class="option_width" style="float: left; width: 375px;">{% trans %}results.not.found{% endtrans %}</div>
-                <div class="clear"></div>
-            </div>
-            {% endfor %}
-            {% else %}
-            {% if grades != null %}
-            {% for grade in grades %}
-            <div class="titles" style="font-size: 10px;">
-                <div class="left">Corporación Educativa Saint Michael S.A.</div>
-                <div class="right">Reporte de estudiantes.</div>
-                <div class="clear"></div>
+                {% if grades != null %}
+                    {% for grade in grades %}
+                        <div class="titles" style="font-size: 10px;">
+                            <div class="left">Corporaci贸n Educativa Saint Michael S.A.</div>
+                            <div class="right">Reporte de estudiantes. Curso Lectivo 2013</div>
+                            <div class="clear"></div>
 
-                <div class="left">{{ "now"|date("d/M/Y H:i:s") }}</div>
-                <div class="clear"></div>
+                            <div class="left">{{ "now"|date("d/M/Y H:i:s") }}</div>
+                            <div class="clear"></div>
 
-                <p style="text-align: center;padding-bottom: 0px;">Estudiantes por {{ typeLabel }}</p>
-                <p style="text-align: center; padding-bottom: 0px;">Ordenados por Nombre</p>
-            </div>
-            <div class="fields_row route">
-                <p style="text-decoration: underline; padding-bottom: 0px;">Grade: {{ grade }}</p>
-            </div>
-            <div class="fields_row student_title">
-                <div style="float: left; width: 50px;">{%trans%}label.carne{%endtrans%}</div>
-                <div style="float: left; width: 350px;">{%trans%}label.student.name{%endtrans%}</div>
-                {% if age != null %}
-                <div style="float: left; width: 100px;">{%trans%}label.age{%endtrans%}</div>
-                {% endif %}
-                {% if gender != null %}
-                <div style="float: left; width: 150px;">{%trans%}label.gender{%endtrans%}</div>
-                {% endif %}
-                <div style="float: left; width: 60px;"></div>
-                <div class="clear"></div>
-            </div>
-            {% for student in grade.students %}
-            <div class="student_row">
-                <div style="float: left; width: 50px;">{{ student.carne }}</div>
-                <div style="float: left; width: 350px;">{{ student.lastname ~ ", " ~ student.firstname }}</div>
-                {% if age != null %}
-                <div style="float: left; width: 100px;">{{ student.age }}</div>
-                {% endif %}
-                {% if gender != null %}
-                <div style="float: left; width: 150px;">{% if student.gender == 1%}{% trans %}label.male{% endtrans %}{% else %}{% trans %}label.female{% endtrans %}{% endif %}</div>
-                {% endif %}
-                <div style="float: left; width: 60px;">&nbsp;</div>
-            </div>
-            <div class="clear"></div>
-            {% endfor %}
-            <div class="student_footer">
-                Total de estudiantes en el grado: {{ grade.students|length }}
-            </div>
-            <div class="pageBreak"> </div>
-            {% else %}
-            <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
-                <div class="option_width" style="float: left; width: 375px;">{% trans %}results.not.found{% endtrans %}</div>
-                <div class="clear"></div>
-            </div>
-            {% endfor %}
-            {% else %}
-            {% for institution in institutions %}
-            <div class="titles" style="font-size: 10px;">
-                <div class="left">Corporación Educativa Saint Michael S.A.</div>
-                <div class="right">Reporte de estudiantes.</div>
-                <div class="clear"></div>
+                            <p style="text-align: center;padding-bottom: 0px;">Estudiantes por {{ typeLabel }}</p>
+                            <p style="text-align: center; padding-bottom: 0px;">Ordenados por Nombre</p>
+                        </div>
+                        <div class="fields_row route">
+                            <p style="text-decoration: underline; padding-bottom: 0px;">Grade: {{ grade }}</p>
+                        </div>
+                        <div class="fields_row student_title">
+                            <div style="float: left; width: 50px;">{%trans%}label.carne{%endtrans%}</div>
+                            <div style="float: left; width: 350px;">{%trans%}label.student.name{%endtrans%}</div>
+                            {% if age != null %}
+                                <div style="float: left; width: 100px;">{%trans%}label.age{%endtrans%}</div>
+                            {% endif %}
+                            {% if gender != null %}
+                                <div style="float: left; width: 150px;">{%trans%}label.gender{%endtrans%}</div>
+                            {% endif %}
+                            <div style="float: left; width: 60px;"></div>
+                            <div class="clear"></div>
+                        </div>
+                        {% set counterF = 0 %}
+                        {% set counterM = 0 %}
+                        {% for student in grade.students %}
+                            <div class="student_row">
+                                <div style="float: left; width: 50px;">{{ student.carne }}</div>
+                                <div style="float: left; width: 350px;">{{ student.lastname ~ ", " ~ student.firstname }}</div>
+                                {% if age != null %}
+                                    <div style="float: left; width: 100px;">{{ student.age }}</div>
+                                {% endif %}
+                                {% if gender != null %}
+                                    <div style="float: left; width: 150px;">{% if student.gender == 1%}{% set counterM = counterM + 1 %}{% trans %}label.male{% endtrans %}{% else %}{% set counterF = counterF + 1 %}{% trans %}label.female{% endtrans %}{% endif %}</div>
+                                {% endif %}
+                                <div style="float: left; width: 60px;">&nbsp;</div>
+                            </div>
+                            <div class="clear"></div>
+                        {% endfor %}
+                        <div class="student_footer">
+                            Total de estudiantes en el grado: {{ grade.students|length }}
+                            Total de hombres:  {{ counterM }}
+                            Total de mujeres:  {{ counterF }}
+                        </div>
+                        <div class="pageBreak"> </div>
+                    {% else %}
+                        <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
+                            <div class="option_width" style="float: left; width: 375px;">{% trans %}results.not.found{% endtrans %}</div>
+                            <div class="clear"></div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    {% for institution in institutions %}
+                        <div class="titles" style="font-size: 10px;">
+                            <div class="left">Corporaci贸n Educativa Saint Michael S.A.</div>
+                            <div class="right">Reporte de estudiantes. Curso Lectivo 2013</div>
+                            <div class="clear"></div>
 
-                <div class="left">{{ "now"|date("d/M/Y H:i:s") }}</div>
-                <div class="clear"></div>
+                            <div class="left">{{ "now"|date("d/M/Y H:i:s") }}</div>
+                            <div class="clear"></div>
 
-                <p style="text-align: center;padding-bottom: 0px;">Estudiantes por {{ typeLabel }}</p>
-                <p style="text-align: center; padding-bottom: 0px;">Ordenados por Nombre</p>
-            </div>
-            <div class="fields_row route">
-                <p style="text-decoration: underline; padding-bottom: 0px;">Instituci&oacute;n: {{ institution }}</p>
-            </div>
-            <div class="fields_row student_title">
-                <div style="float: left; width: 50px;">{%trans%}label.carne{%endtrans%}</div>
-                <div style="float: left; width: 350px;">{%trans%}label.student.name{%endtrans%}</div>
-                {% if age != null %}
-                <div style="float: left; width: 100px;">{%trans%}label.age{%endtrans%}</div>
+                            <p style="text-align: center;padding-bottom: 0px;">Estudiantes por {{ typeLabel }}</p>
+                            <p style="text-align: center; padding-bottom: 0px;">Ordenados por Nombre</p>
+                        </div>
+                        <div class="fields_row route">
+                            <p style="text-decoration: underline; padding-bottom: 0px;">Instituci&oacute;n: {{ institution }}</p>
+                        </div>
+                        <div class="fields_row student_title">
+                            <div style="float: left; width: 50px;">{%trans%}label.carne{%endtrans%}</div>
+                            <div style="float: left; width: 350px;">{%trans%}label.student.name{%endtrans%}</div>
+                            {% if age != null %}
+                                <div style="float: left; width: 100px;">{%trans%}label.age{%endtrans%}</div>
+                            {% endif %}
+                            {% if gender != null %}
+                                <div style="float: left; width: 150px;">{%trans%}label.gender{%endtrans%}</div>
+                            {% endif %}
+                            <div style="float: left; width: 60px;"></div>
+                            <div class="clear"></div>
+                        </div>
+                        {% for student in institution.students %}
+                            <div class="student_row">
+                                <div style="float: left; width: 50px;">{{ student.carne }}</div>
+                                <div style="float: left; width: 350px;">{{ student.lastname ~ ", " ~ student.firstname }}</div>
+                                {% if age != null %}
+                                    <div style="float: left; width: 100px;">{{ student.age }}</div>
+                                {% endif %}
+                                {% if gender != null %}
+                                    <div style="float: left; width: 150px;">{% if student.gender == 1%}{% trans %}label.male{% endtrans %}{% else %}{% trans %}label.female{% endtrans %}{% endif %}</div>
+                                {% endif %}
+                                <div style="float: left; width: 60px;">&nbsp;</div>
+                            </div>
+                            <div class="clear"></div>
+                        {% endfor %}
+                        <div class="student_footer">
+                            Total de estudiantes en la instituci&oacute;n: {{ institution.students|length }}
+                        </div>
+                        <div class="pageBreak"> </div>
+                    {% else %}
+                        <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
+                            <div class="option_width" style="float: left; width: 375px;">{% trans %}results.not.found{% endtrans %}</div>
+                            <div class="clear"></div>
+                        </div>
+                    {% endfor %}
                 {% endif %}
-                {% if gender != null %}
-                <div style="float: left; width: 150px;">{%trans%}label.gender{%endtrans%}</div>
-                {% endif %}
-                <div style="float: left; width: 60px;"></div>
-                <div class="clear"></div>
-            </div>
-            {% for student in institution.students %}
-            <div class="student_row">
-                <div style="float: left; width: 50px;">{{ student.carne }}</div>
-                <div style="float: left; width: 350px;">{{ student.lastname ~ ", " ~ student.firstname }}</div>
-                {% if age != null %}
-                <div style="float: left; width: 100px;">{{ student.age }}</div>
-                {% endif %}
-                {% if gender != null %}
-                <div style="float: left; width: 150px;">{% if student.gender == 1%}{% trans %}label.male{% endtrans %}{% else %}{% trans %}label.female{% endtrans %}{% endif %}</div>
-                {% endif %}
-                <div style="float: left; width: 60px;">&nbsp;</div>
-            </div>
-            <div class="clear"></div>
-            {% endfor %}
-            <div class="student_footer">
-                Total de estudiantes en la instituci&oacute;n: {{ institution.students|length }}
-            </div>
-            <div class="pageBreak"> </div>
-            {% else %}
-            <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
-                <div class="option_width" style="float: left; width: 375px;">{% trans %}results.not.found{% endtrans %}</div>
-                <div class="clear"></div>
-            </div>
-            {% endfor %}
-            {% endif %}
             {% endif %}
         </div>
 
-        {% endif %}
+    {% endif %}
 
     </div>
     <div class="clear"></div>
     <div class="wrapper">
-            <div class="grid_24 padline">
-                    <div class="lineH"></div>
-            </div>
+        <div class="grid_24 padline">
+            <div class="lineH"></div>
+        </div>
     </div>
-</div>
+    </div>
 {% endblock %}
