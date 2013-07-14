@@ -55,6 +55,13 @@
                             </div>
                         </div>
 
+                        <div class="formRow">
+                            <label class="error">{{ form_errors(form.editable) }}</label>
+                            <div class="large-12 columns">
+                                <label>{% trans %}label.editable{% endtrans %}</label>{{ form_widget(form.editable) }}
+                            </div>
+                        </div>
+
                         <div class="formRow ">
                             <div class="large-12 columns buttonsPanel">
                                 <a href="{{ path('_expediente_sysadmin_period_show', {'id': entity.id}) }}" class="button success-darker tiny"><span></span>{% trans %}label.cancelar{% endtrans %}</a>

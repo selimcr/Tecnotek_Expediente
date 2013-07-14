@@ -44,6 +44,11 @@
                         <span id="labelActual">{% if entity.actual %}{% trans %}label.yes{% endtrans %}{% else %} {% trans %}label.no{% endtrans %} {% endif %}</span>
                     </div>
 
+                    <div>
+                        <label>{%trans%}label.editable{%endtrans%}</label>
+                        <span id="labelEditable">{% if entity.editable %}{% trans %}label.yes{% endtrans %}{% else %} {% trans %}label.no{% endtrans %} {% endif %}</span>
+                    </div>
+
                     <div id="buttonsContainer" style="margin-top: 25px;">
                         <a href="{{ path('_expediente_sysadmin_period_edit', {'id': entity.id}) }}" class="left button success-darker tiny"><span></span>{% trans %}label.edit{% endtrans %}</a>
                         <div class="left button success-darker tiny" id="btnEliminar" style="margin-left: 25px;"><span></span>{% trans %}label.eliminar{% endtrans %}</div>

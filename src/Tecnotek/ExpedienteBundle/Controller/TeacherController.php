@@ -54,19 +54,23 @@ class TeacherController extends Controller
                     $em = $this->getDoctrine()->getEntityManager();
                     $user=$this->get('security.context')->getToken()->getUser();
 
-                    //Get Groups
-                    $sql = "SELECT CONCAT(g.id,'-',grade.id) as 'id', CONCAT(grade.name, ' :: ', g.name) as 'name'" .
-                        " FROM tek_groups g, tek_assigned_teachers tat, tek_grades grade" .
-                        " WHERE g.period_id = " . $periodId . " AND tat.group_id = g.id AND grade.id = g.grade_id AND tat.user_id = "  . $user->getId() .
-                        " GROUP BY g.id" .
-                        " ORDER BY g.name";
-                    $stmt = $em->getConnection()->prepare($sql);
-                    $stmt->execute();
-                    $groups = $stmt->fetchAll();
+                    $period = $em->getRepository("TecnotekExpedienteBundle:Period")->find( $periodId );
+                    if ( isset($period) ) {
+                        //Get Groups
+                        $sql = "SELECT CONCAT(g.id,'-',grade.id) as 'id', CONCAT(grade.name, ' :: ', g.name) as 'name'" .
+                            " FROM tek_groups g, tek_assigned_teachers tat, tek_grades grade" .
+                            " WHERE g.period_id = " . $periodId . " AND tat.group_id = g.id AND grade.id = g.grade_id AND tat.user_id = "  . $user->getId() .
+                            " GROUP BY g.id" .
+                            " ORDER BY g.name";
+                        $stmt = $em->getConnection()->prepare($sql);
+                        $stmt->execute();
+                        $groups = $stmt->fetchAll();
 
-                    //$groups = $em->getRepository("TecnotekExpedienteBundle:Group")->findBy(array('period' => $periodId));
-
-                    return new Response(json_encode(array('error' => false, 'groups' => $groups)));
+                        return new Response(json_encode(array('error' => false, 'groups' => $groups,
+                            'isEditable' => $period->isEditable())));
+                    } else {
+                        return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
+                    }
                 } else {
                     return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
                 }

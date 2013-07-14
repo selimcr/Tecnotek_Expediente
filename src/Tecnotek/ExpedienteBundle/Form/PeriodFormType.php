@@ -15,6 +15,10 @@ class PeriodFormType extends AbstractType
             add('actual', 'checkbox', array(
                 'label'     => 'Periodo Actual',
                 'required'  => false,
+            ))->
+            add('editable', 'checkbox', array(
+                'label'     => 'Editable',
+                'required'  => false,
             ));
     }
 

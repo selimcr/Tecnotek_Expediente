@@ -15,7 +15,7 @@
     <div class="grid_24" style="width: 100%;">
         <div class="panelRow" id="doc-forms">
             <div class="large-12 columns">
-                <form class="custom" id="createForm" action="{{ path('_expediente_sysadmin_period_save') }}" method="post" {{ form_enctype(form) }}>
+                <form id="createForm" action="{{ path('_expediente_sysadmin_period_save') }}" method="post" {{ form_enctype(form) }}>
                     {{ form_errors(form) }}
 
                     {{ form_widget(form._token) }}
@@ -41,6 +41,13 @@
                             <label class="error">{{ form_errors(form.actual) }}</label>
                             <div class="large-12 columns">
                                 <label>{% trans %}label.current.period{% endtrans %}</label>{{ form_widget(form.actual) }}
+                            </div>
+                        </div>
+
+                        <div class="formRow">
+                            <label class="error">{{ form_errors(form.editable) }}</label>
+                            <div class="large-12 columns">
+                                <label>{% trans %}label.editable{% endtrans %}</label>{{ form_widget(form.editable) }}
                             </div>
                         </div>
 

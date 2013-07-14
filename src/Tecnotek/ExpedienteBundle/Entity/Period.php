@@ -40,9 +40,15 @@ class Period
      */
     private $isActual;
 
+    /**
+     * @ORM\Column(name="is_editable", type="boolean")
+     */
+    private $isEditable;
+
     public function __construct()
     {
         $this->isActual = false;
+        $this->isEditable = false;
     }
 
     public function __toString()
@@ -114,5 +120,21 @@ class Period
     public function setActual($value)
     {
         return $this->isActual = $value;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isEditable()
+    {
+        return $this->isEditable;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setEditable($value)
+    {
+        return $this->isEditable = $value;
     }
 }
