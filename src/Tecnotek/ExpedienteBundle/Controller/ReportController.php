@@ -763,10 +763,34 @@ class ReportController extends Controller
 
         $con = $em->getConnection();
         $con->beginTransaction();
+
+        $group = $studentYear->getGroup();
+        $grade = $group->getGrade();
+        $gradeId = $grade->getId();
+        $notaMin = $em->getRepository("TecnotekExpedienteBundle:Grade")->findOneBy(array('id' => $gradeId));
+
         foreach ($notasCursos as $i => $value) {
             //Guardar registro de nota final
+
+
+            $valuetemp = $value;
+            $stexpoints = $em->getRepository("TecnotekExpedienteBundle:StudentExtraPoints")->findBy(array('studentYear' => $studentYearId));
+
+           foreach($stexpoints as $ex){
+            //if ( isset($stexpoints) ){//si esta en la lista
+                if($value >= $notaMin->getNotaMin()){
+
+                    $extraPoints = $ex->getPoints();
+                    $valuetemp = $valuetemp + $extraPoints;
+
+                    if ($valuetemp > 100){
+                       $valuetemp = 100;
+                    }
+                }
+            }
+
             $sql = 'INSERT INTO tek_student_year_course_qualifications (course_class_id,student_year_id, qualification) VALUES (' . $i . ',' . $studentYearId . ', ' . $value . ')'.
-                    ' ON DUPLICATE KEY UPDATE qualification = ' . $value . ';';
+                    ' ON DUPLICATE KEY UPDATE qualification = ' . $valuetemp . ';';
 
             $con->executeUpdate($sql);
         }
