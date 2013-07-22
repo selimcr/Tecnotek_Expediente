@@ -392,11 +392,14 @@ class ReportController extends Controller
     public function getGroupHTMLQualifications($periodId, $gradeId, $groupId){
         $logger = $this->get('logger');
         $em = $this->getDoctrine()->getEntityManager();
-
+///aca voy
         $dql = "SELECT cc "
             . " FROM TecnotekExpedienteBundle:Course c, TecnotekExpedienteBundle:CourseClass cc "
             . " WHERE cc.grade = " . $gradeId . " AND cc.course = c AND cc.period = " . $periodId
             . " ORDER BY c.name";
+
+        $group = $em->getRepository("TecnotekExpedienteBundle:Group")->find($groupId);
+        $institution = $group->getInstitution();
 
         $query = $em->createQuery($dql);
         $courses = $query->getResult();
@@ -414,11 +417,17 @@ class ReportController extends Controller
         $query = $em->createQuery($dql);
         $students = $query->getResult();
 
+        $headersRow .=  '        <th style="vertical-align: bottom; padding: 0.5625em 0.625em;">P</th>';
+        $headersRow .=  '        <th style="vertical-align: bottom; padding: 0.5625em 0.625em;">C</th>';
+
+
+
         foreach( $courses as $course )
         {
             $headersRow .=  '<th style="vertical-align: bottom; padding: 0.5625em 0.625em;"><div class="verticalText">' . $course->getCourse()->getName() . '</div></th>';
             $studentRow .= '<td>Nota_' . $course->getId() . '_</td>';
         }
+
 
         $headersRow .=  '    </tr>';
         $headersRow .=  '</thead>';
@@ -429,6 +438,10 @@ class ReportController extends Controller
         $studentRowIndex = 0;
         foreach($students as $stdy){
             $this->calculateStudentYearQualification($periodId, $stdy->getId(), $stdy);
+
+
+            $total = 0;
+            $counter = 0;
 
             $html .=  '<tr class="rowNotas" style="height: 25px;">';
             $studentRowIndex++;
@@ -444,7 +457,18 @@ class ReportController extends Controller
 
                 $typeC = $course->getCourse()->getType();
                 if( $typeC==1){
+
+
+
                     if(isset($notaFinal)){//Si existe
+
+                        //// nuevo
+                        if($notaFinal->getQualification() != '0'){
+                            $total += $notaFinal->getQualification();
+                            $counter += 1;
+                        }
+                        //// nuevo
+
                         if($notaFinal->getQualification() < $notaMin->getNotaMin()){
                             $row = str_replace("Nota_" . $course->getId() . "_", "* " .  $notaFinal->getQualification(), $row);
                         } else {
@@ -453,6 +477,7 @@ class ReportController extends Controller
                     } else {
                         $row = str_replace("Nota_" . $course->getId() . "_", "-", $row);
                     }
+
                 }
                 else{
                     if(isset($notaFinal)){//Si existe
@@ -469,6 +494,53 @@ class ReportController extends Controller
                     }
                 }
             }
+
+            //Revisar Ausencias y Calcular Nota de Conducta
+
+            if($institution->getId() == '3'){
+                $sql = "select at.name, count(a.id) as 'total', sum(atp.points) as 'puntos'"
+                    . " from tek_absence_types at"
+                    . " join tek_absence_types_points atp on at.id = atp.absence_type_id and atp.institution_id = " . $institution->getId()
+                    . " left join tek_absences a on a.type_id = at.id and a.justify = 0 and a.studentYear_id = " . $stdy->getId()
+                    . " group by at.id;";
+            }
+            if($institution->getId() == '2'){
+                $sql = "select at.name, count(a.id) as 'total', sum(atp.points) as 'puntos'"
+                    . " from tek_absences a "
+                    . " join tek_absence_types at on at.id = a.type_id"
+                    . " join tek_absence_types_points atp on at.id = atp.absence_type_id and atp.institution_id = " . $institution->getId()
+                    . " where a.studentYear_id =  " . $stdy->getId()." AND a.justify = 0"
+                    . " group by a.type_id;";
+            }
+
+            $absences = $em->getConnection()->executeQuery($sql);
+            $conducta = 100;
+            $logger->err("-----> Arranca con 100");
+            foreach($absences as $absenceType){
+                if($absenceType["total"] > 0) {
+                    $conducta -= $absenceType["puntos"];
+                }
+            }
+
+            $sql = 'SELECT COUNT(id) as "total",SUM(pointsPenalty) as "puntos" FROM tek_student_penalties where student_year_id = ' . 	$stdy->getId();
+            $puntosPorSancion = $em->getConnection()->executeQuery($sql);
+            foreach($puntosPorSancion as $pa){
+                if(isset($pa["puntos"]) && $pa["puntos"] != "null"){
+                    $conducta -= $pa["puntos"];
+                }
+            }
+
+            if($conducta < 0) {
+                $conducta = 0;
+            }
+            $total += $conducta;
+            $counter += 1;
+
+            $promedioPeriodo = 0;
+            $promedioPeriodo = $total / $counter;
+
+            $html .=  '<td>'.number_format($promedioPeriodo, 2, '.', '').'</td>';
+            $html .=  '<td>'.number_format($conducta, 2, '.', '').'</td>';
             /***** Obtener Notas del Estudiante Final *****/
             $html .=  $row . "</tr>";
         }
@@ -1040,7 +1112,7 @@ class ReportController extends Controller
 
         $dql = "SELECT ce "
             . " FROM TecnotekExpedienteBundle:Course c, TecnotekExpedienteBundle:CourseClass cc, TecnotekExpedienteBundle:CourseEntry ce "
-            . " WHERE cc.grade = " . $gradeId . " AND cc.course = c AND ce.courseClass = cc"
+            . " WHERE cc.period = " . $periodId . " AND cc.grade = " . $gradeId . " AND cc.course = c AND ce.courseClass = cc"
             . " AND ce.code = '$code'"
             . " ORDER BY c.name";
 
@@ -1258,7 +1330,7 @@ class ReportController extends Controller
 
         $dql = "SELECT cc "
             . " FROM TecnotekExpedienteBundle:Course c, TecnotekExpedienteBundle:CourseClass cc "
-            . " WHERE c.type = 1 AND cc.grade = " . $gradeId . " AND cc.course = c"
+            . " WHERE cc.period = " . $periodId . " AND c.type = 1 AND cc.grade = " . $gradeId . " AND cc.course = c"
             . " ORDER BY c.name";
 
         $query = $em->createQuery($dql);

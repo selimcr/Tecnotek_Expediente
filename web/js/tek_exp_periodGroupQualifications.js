@@ -68,8 +68,9 @@ Tecnotek.PeriodGroupQualifications = {
                     if(data.error === true) {
                         Tecnotek.showErrorMessage(data.message,true, "", false);
                     } else {
-                        $('#students').append('<option value="-1"></option>');
-                        $('#students').append('<option value="0">Todos</option>');
+                        $('#students').append('<option value="-2"></option>');
+                        $('#students').append('<option value="-1">Solo Hoja</option>');
+                        $('#students').append('<option value="0">Todo</option>');
                         for(i=0; i<data.students.length; i++) {
                             $('#students').append('<option value="' + data.students[i].id + '">' + data.students[i].lastname + ", " + data.students[i].firstname + '</option>');
                         }
@@ -86,8 +87,21 @@ Tecnotek.PeriodGroupQualifications = {
         $('.editEntry').unbind();
         $('#contentBody').empty();
         $('#tableContainer').hide();
-        if(studentId === null || studentId == -1){//Clean page
-        } else {
+        if(studentId === null || studentId == -2){//Clean page
+        } else { if(studentId == -1){
+
+            $('#fountainG').show();
+            Tecnotek.PeriodGroupQualifications.periodId = $("#period").val();
+            Tecnotek.PeriodGroupQualifications.groupId = $("#groups").val();
+            
+            studentId = 0;
+            Tecnotek.PeriodGroupQualifications.completeText = "";
+            Tecnotek.PeriodGroupQualifications.studentsIndex = $('#students option').length;
+            Tecnotek.PeriodGroupQualifications.studentsLength = Tecnotek.PeriodGroupQualifications.studentsIndex;
+            Tecnotek.PeriodGroupQualifications.loadStudentQualification(studentId);
+
+
+        }else {
             $('#fountainG').show();
             Tecnotek.PeriodGroupQualifications.periodId = $("#period").val();
             Tecnotek.PeriodGroupQualifications.groupId = $("#groups").val();
@@ -110,7 +124,7 @@ Tecnotek.PeriodGroupQualifications = {
                         } else {
                             Tecnotek.PeriodGroupQualifications.completeText = '<div class="center"><h3><img width="840" height="145" src="/expediente/web/images/' + data.imgHeader + '" alt="" class="image-hover"></h3></div>'
                                 + data.html + '<div class="pageBreak"> </div>';
-                            Tecnotek.PeriodGroupQualifications.studentsIndex = 1;
+                            Tecnotek.PeriodGroupQualifications.studentsIndex = 2;
                             Tecnotek.PeriodGroupQualifications.studentsLength = $('#students option').length;
                             Tecnotek.PeriodGroupQualifications.processStudentResponse("");
                             //$('#contentHeader').html(tableHeader);
@@ -124,6 +138,7 @@ Tecnotek.PeriodGroupQualifications = {
                         Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
                     }, false);
             }
+        }
         }
     },
     loadAllStudentsQualifications: function() {
