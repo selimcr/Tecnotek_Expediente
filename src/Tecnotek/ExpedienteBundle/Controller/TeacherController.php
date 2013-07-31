@@ -87,6 +87,53 @@ class TeacherController extends Controller
         }
     }
 
+    public function loadEntriesOfCourseAction(){
+        $logger = $this->get('logger');
+        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
+        {
+            try {
+                $request = $this->get('request')->request;
+                $courseId = $request->get('courseId');
+                $translator = $this->get("translator");
+
+                if( isset($periodId) ) {
+                    $em = $this->getDoctrine()->getEntityManager();
+                    $user=$this->get('security.context')->getToken()->getUser();
+
+                    $course = $em->getRepository("TecnotekExpedienteBundle:Course")->find( $courseId );
+                    if ( isset($course) ) {
+                        //Get Entries
+                        /*$sql = "SELECT CONCAT(g.id,'-',grade.id) as 'id', CONCAT(grade.name, ' :: ', g.name) as 'name'" .
+                            " FROM tek_groups g, tek_assigned_teachers tat, tek_grades grade" .
+                            " WHERE g.period_id = " . $periodId . " AND tat.group_id = g.id AND grade.id = g.grade_id AND tat.user_id = "  . $user->getId() .
+                            " GROUP BY g.id" .
+                            " ORDER BY g.name";
+                        $stmt = $em->getConnection()->prepare($sql);
+                        $stmt->execute();
+                        $groups = $stmt->fetchAll();*/
+
+                        $entries = new \Doctrine\Common\Collections\ArrayCollection();
+
+                        return new Response(json_encode(array('error' => false, 'entries' => $entries)));
+                    } else {
+                        return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
+                    }
+                } else {
+                    return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
+                }
+            }
+            catch (Exception $e) {
+                $info = toString($e);
+                $logger->err('Teacher::loadGroupsOfPeriodAction [' . $info . "]");
+                return new Response(json_encode(array('error' => true, 'message' => $info)));
+            }
+        }// endif this is an ajax request
+        else
+        {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+    }
+
     public function loadCourseOfGroupByTeacherAction(){
         $logger = $this->get('logger');
         if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
@@ -544,6 +591,15 @@ class TeacherController extends Controller
                         . " ORDER BY ce.sortOrder";
                     $query = $em->createQuery($dql);
                     $entries = $query->getResult();
+
+                    $dql = "SELECT ce.id, ce.name FROM TecnotekExpedienteBundle:CourseEntry ce "
+                        . " JOIN ce.courseClass cc"
+                        . " WHERE ce.parent IS NULL AND cc.period = " . $periodId . " AND cc.grade = " . $gradeId
+                        . " AND cc.course = " . $courseId
+                        . " ORDER BY ce.sortOrder";
+                    $query = $em->createQuery($dql);
+                    $courseEntries = $query->getResult();
+
                     $temp = new \Tecnotek\ExpedienteBundle\Entity\CourseEntry();
                     $html =  '<tr  style="height: 175px; line-height: 0px;"><td class="celesteOscuro headcolcarne" style="width: 75px; font-size: 10px; height: 175px;"></td>';
                     $html .=  '<td class="celesteClaro bold headcolnombre" style="width: 250px; font-size: 8px; height: 175px;"></td>';
@@ -553,7 +609,7 @@ class TeacherController extends Controller
                     $marginLeftCode = 62;
                     $htmlCodes =  '<tr  style="height: 30px;"><td class="celesteOscuro headcolcarne" style="width: 75px; font-size: 10px;"></td>';
                     $htmlCodes .=  '<td class="celesteClaro bold headcolnombre" style="width: 250px; font-size: 8px;"></td>';
-                    $htmlCodes .= '<td class="azul headcoltrim" style="color: #fff;">SCIE</td>';
+                    $htmlCodes .= '<td class="azul headcoltrim" style="color: #fff;">&nbsp;</td>';
                     $jumpRight = 46;
                     $width = 44;
 
@@ -581,6 +637,8 @@ class TeacherController extends Controller
 
                     foreach( $entries as $entry )
                     {
+                        //$courseEntries->add(array('id'=>$entry->getId(), 'name'=>$entry->getName()));
+                        //$courseEntries->add($entry->getName());
                         $temp = $entry;
                         $childrens = $temp->getChildrens();
                         $size = sizeof($childrens);
@@ -599,50 +657,50 @@ class TeacherController extends Controller
                                 {
 
                                     //$studentRow .= '<td class=""><input tabIndex=tabIndexCol'. $colsCounter . 'x type="text" class="textField itemNota item_' . $temp->getId() . '_stdId" val="val_stdId_' . $subentry->getId() .  '_" tipo="2" child="' . $size . '" parent="' . $temp->getId() . '" rel="total_' . $temp->getId() . '_stdId" max="' . $subentry->getMaxValue() . '" perc="' . $subentry->getPercentage() . '" std="stdId"  entry="' . $subentry->getId() . '"  stdyId="stdyIdd"></td>';
-                                    $studentRow .= '<td class="celesteClaro"><div><input tabIndex=tabIndexCol'. $colsCounter . 'x type="text" class="textField itemNota item_' . $temp->getId() . '_stdId" val="val_stdId_' . $subentry->getId() .  '_" tipo="2" child="' . $size . '" parent="' . $temp->getId() . '" rel="total_' . $temp->getId() . '_stdId" max="' . $subentry->getMaxValue() . '" perc="' . $subentry->getPercentage() . '" std="stdId"  entry="' . $subentry->getId() . '"  stdyId="stdyIdd"></input></div></td>';
+                                    $studentRow .= '<td class="celesteClaro' . ' entryBase entryB_' . $entry->getId() . '_' . '"><div><input tabIndex=tabIndexCol'. $colsCounter . 'x type="text" class="textField itemNota item_' . $temp->getId() . '_stdId" val="val_stdId_' . $subentry->getId() .  '_" tipo="2" child="' . $size . '" parent="' . $temp->getId() . '" rel="total_' . $temp->getId() . '_stdId" max="' . $subentry->getMaxValue() . '" perc="' . $subentry->getPercentage() . '" std="stdId"  entry="' . $subentry->getId() . '"  stdyId="stdyIdd"></input></div></td>';
                                     $colsCounter++;
-                                    $htmlCodes .= '<td class="celesteClaro"></td>';
+                                    $htmlCodes .= '<td class="celesteClaro' . ' entryBase entryB_' . $entry->getId() . '_' . '"></td>';
                                     $specialCounter++;
-                                    $html .= '<td class="celesteClaro" style="vertical-align: bottom; padding: 0.5625em 0.625em;"><div class="verticalText">' . $subentry->getName() . '</div></td>';
+                                    $html .= '<td class="celesteClaro' . ' entryBase entryB_' . $entry->getId() . '_' . '" style="vertical-align: bottom; padding: 0.5625em 0.625em;"><div class="verticalText">' . $subentry->getName() . '</div></td>';
                                     $marginLeft += $jumpRight; $marginLeftCode += 25;
                                 }
 
                                 //$studentRow .= '<td class="itemHeaderCode itemPromedio" id="prom_' . $temp->getId() . '_stdId" perc="' . $temp->getPercentage() . '">-</td>';
-                                $studentRow .= '<td class="celesteOscuro" id="prom_' . $temp->getId() . '_stdId" perc="' . $temp->getPercentage() . '">-</td>';
-                                $htmlCodes .= '<td class="celesteOscuro"></td>';
+                                $studentRow .= '<td class="celesteOscuro' . ' entryBase entryB_' . $entry->getId() . '_' . '" id="prom_' . $temp->getId() . '_stdId" perc="' . $temp->getPercentage() . '">-</td>';
+                                $htmlCodes .= '<td class="celesteOscuro' . ' entryBase entryB_' . $entry->getId() . '_' . '"></td>';
                                 $specialCounter++;
-                                $html .= '<td class="celesteOscuro" style="vertical-align: bottom; padding: 0.5625em 0.625em;"><div class="verticalText">Promedio ' . $temp->getName() . ' </div></td>';
+                                $html .= '<td class="celesteOscuro' . ' entryBase entryB_' . $entry->getId() . '_' . '" style="vertical-align: bottom; padding: 0.5625em 0.625em;"><div class="verticalText">Promedio ' . $temp->getName() . ' </div></td>';
                                 $marginLeft += $jumpRight; $marginLeftCode += 25;
 
                                 //$studentRow .= '<td id="total_' . $temp->getId() . '_stdId" class="itemHeaderCode itemPorcentage nota_stdId">-</td>';
-                                $studentRow .= '<td id="total_' . $temp->getId() . '_stdId" class="morado bold nota_stdId">-</td>';
-                                $htmlCodes .= '<td class="morado bold">' . $temp->getCode() . '</td>';
+                                $studentRow .= '<td id="total_' . $temp->getId() . '_stdId" class="morado bold nota_stdId' . ' entryBase entryB_' . $entry->getId() . '_' . '">-</td>';
+                                $htmlCodes .= '<td class="morado bold' . ' entryBase entryB_' . $entry->getId() . '_' . '">' . $temp->getCode() . '</td>';
                                 $specialCounter++;
-                                $html .= '<td class="morado" style="vertical-align: bottom; padding: 0.5625em 0.625em;"><div class="verticalText">' . $temp->getPercentage() . '% ' . $temp->getName() . '</div></td>';
+                                $html .= '<td class="morado' . ' entryBase entryB_' . $entry->getId() . '_' . '" style="vertical-align: bottom; padding: 0.5625em 0.625em;"><div class="verticalText">' . $temp->getPercentage() . '% ' . $temp->getName() . '</div></td>';
                                 $marginLeft += $jumpRight; $marginLeftCode += 25;
 
                                 // $html3 .= '<div class="itemHeader2 itemNota" style="width: ' . (($width * (sizeof($subentries)+1)) + ((sizeof($subentries)) * 2) ) . 'px">' . $temp->getName() . '</div>';
-                                $html3 .= '<td class="celesteClaro" colspan="' . (sizeof($subentries)+2) . '">' . $temp->getName() . '</td>';
+                                $html3 .= '<td class="celesteClaro' . ' entryBase entryB_' . $entry->getId() . '_' . '" colspan="' . (sizeof($subentries)+2) . '">' . $temp->getName() . '</td>';
                             } else {
                                 if($size == 1){
                                     foreach( $subentries as $subentry )
                                     {
                                         //$studentRow .= '<td class=""><input tabIndex=tabIndexCol'. $colsCounter . 'x type="text" class="textField itemNota item_' . $temp->getId() . '_stdId" val="val_stdId_' . $subentry->getId() .  '_" tipo="1"  max="' . $subentry->getMaxValue() . '" child="' . $size . '" parent="' . $temp->getId() . '" rel="total_' . $temp->getId() . '_stdId" perc="' . $subentry->getPercentage() . '" std="stdId"  entry="' . $subentry->getId() . '"  stdyId="stdyIdd"></td>';
-                                        $studentRow .= '<td class="celesteClaro"><div><input tabIndex=tabIndexCol'. $colsCounter . 'x type="text" class="textField itemNota item_' . $temp->getId() . '_stdId" val="val_stdId_' . $subentry->getId() .  '_" tipo="1"  max="' . $subentry->getMaxValue() . '" child="' . $size . '" parent="' . $temp->getId() . '" rel="total_' . $temp->getId() . '_stdId" perc="' . $subentry->getPercentage() . '" std="stdId"  entry="' . $subentry->getId() . '"  stdyId="stdyIdd"></input></div></td>';
+                                        $studentRow .= '<td class="celesteClaro' . ' entryBase entryB_' . $entry->getId() . '_' . '"><div><input tabIndex=tabIndexCol'. $colsCounter . 'x type="text" class="textField itemNota item_' . $temp->getId() . '_stdId" val="val_stdId_' . $subentry->getId() .  '_" tipo="1"  max="' . $subentry->getMaxValue() . '" child="' . $size . '" parent="' . $temp->getId() . '" rel="total_' . $temp->getId() . '_stdId" perc="' . $subentry->getPercentage() . '" std="stdId"  entry="' . $subentry->getId() . '"  stdyId="stdyIdd"></input></div></td>';
                                         $colsCounter++;
-                                        $htmlCodes .= '<td class="celesteClaro"></td>';
+                                        $htmlCodes .= '<td class="celesteClaro' . ' entryBase entryB_' . $entry->getId() . '_' . '"></td>';
                                         $specialCounter++;
-                                        $html .= '<td class="celesteClaro" style="vertical-align: bottom; padding: 0.5625em 0.625em;"><div class="verticalText">' . $subentry->getName() . '</div></td>';
+                                        $html .= '<td class="celesteClaro' . ' entryBase entryB_' . $entry->getId() . '_' . '" style="vertical-align: bottom; padding: 0.5625em 0.625em;"><div class="verticalText">' . $subentry->getName() . '</div></td>';
                                         $marginLeft += $jumpRight; $marginLeftCode += 25;
                                     }
 
                                     //$studentRow .= '<td id="total_' . $temp->getId() . '_stdId" class="itemHeaderCode itemPorcentage nota_stdId">-</td>';
-                                    $studentRow .= '<td id="total_' . $temp->getId() . '_stdId" class="morado bold nota_stdId">-</td>';
-                                    $htmlCodes .= '<td class="morado bold">' . $temp->getCode() . '</td>';
+                                    $studentRow .= '<td id="total_' . $temp->getId() . '_stdId" class="morado bold nota_stdId' . ' entryBase entryB_' . $entry->getId() . '_' . '">-</td>';
+                                    $htmlCodes .= '<td class="morado bold' . ' entryBase entryB_' . $entry->getId() . '_' . '">' . $temp->getCode() . '</td>';
                                     $specialCounter++;
-                                    $html .= '<td class="morado" style="vertical-align: bottom; padding: 0.5625em 0.625em;"><div class="verticalText">' . $temp->getPercentage() . '% ' . $temp->getName() . '</div></td>';
+                                    $html .= '<td class="morado' . ' entryBase entryB_' . $entry->getId() . '_' . '" style="vertical-align: bottom; padding: 0.5625em 0.625em;"><div class="verticalText">' . $temp->getPercentage() . '% ' . $temp->getName() . '</div></td>';
                                     $marginLeft += $jumpRight; $marginLeftCode += 25;
-                                    $html3 .= '<td class="celesteClaro" colspan="' . (sizeof($subentries)+1) . '">' . $temp->getName() . '</td>';
+                                    $html3 .= '<td class="celesteClaro' . ' entryBase entryB_' . $entry->getId() . '_' . '" colspan="' . (sizeof($subentries)+1) . '">' . $temp->getName() . '</td>';
                                 }
                             }
 
@@ -684,7 +742,8 @@ class TeacherController extends Controller
 
                     $html .= "</table>";
 
-                    return new Response(json_encode(array('error' => false, 'html' => $html, "studentsCounter" => $studentsCount, "codesCounter" => $specialCounter)));
+                    $logger->err("courseEntries: " . sizeof($courseEntries) . " ---> " . json_encode($courseEntries));
+                    return new Response(json_encode(array('error' => false, 'html' => $html, "studentsCounter" => $studentsCount, "codesCounter" => $specialCounter, "entries" => $courseEntries)));
                 } else {
                     return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
                 }

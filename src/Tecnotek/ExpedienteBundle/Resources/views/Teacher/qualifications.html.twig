@@ -17,7 +17,7 @@ Tecnotek :: Expediente :: Super Administrador
     Tecnotek.UI.urls["loadCoursesOfGroupByTeacherURL"] = "{{ path("_expediente_teacher_load_courses_of_group_by_teacher") }}";
     Tecnotek.UI.urls["loadQualificationsOfGroupURL"] = "{{ path("_expediente_teacher_load_group_qualifications") }}";
     Tecnotek.UI.urls["saveStudentQualificationURL"] = "{{ path("_expediente_teacher_save_student_qualification") }}";
-
+    Tecnotek.UI.urls["loadEntriesOfCourseURL"] = "{{ path("_expediente_teacher_load_entries_of_course") }}";
     Tecnotek.UI.urls["viewPrintableVersionURL"] = "{{ path("_expediente_sysadmin_printable_group_qualifications") }}";
 </script>
 {% endblock %}
@@ -81,26 +81,37 @@ Tecnotek :: Expediente :: Super Administrador
                 </select>
             </div>
 
-            <div id="groupsContainer" class="left" style="margin-left: 50px;">
-                <div class="left" style="width: 65px; font-weight: bold;">{%trans%}label.groups{%endtrans%}</div>
+            <div id="groupsContainer" class="left" style="margin-left: 25px;">
+                <div class="left" style="width: 60px; font-weight: bold;">{%trans%}label.groups{%endtrans%}</div>
                 <div class="left">
                     <select id="groups" name="groups" style="width: 150px;">
                     </select>
                 </div>
             </div>
 
-            <div id="coursesContainer" class="left" style="margin-left: 50px;">
-                <div class="left" style="width: 75px; font-weight: bold;">{%trans%}label.courses{%endtrans%}</div>
+            <div id="coursesContainer" class="left" style="margin-left: 25px;">
+                <div class="left" style="width: 65px; font-weight: bold;">{%trans%}label.courses{%endtrans%}</div>
                 <div class="left">
                     <select id="courses" name="courses" style="width: 150px;">
                     </select>
                 </div>
             </div>
 
-            <div class="left" style="margin-left: 15px;"><a href="#" class="button success-darker tiny" id="viewPrintable" name="viewPrintable"><span></span>Versi&oacute;n Imprimible</a></div>
+            <div id="entriesContainer" class="left" style="margin-left: 25px;">
+                <div class="left" style="width: 60px; font-weight: bold;">{%trans%}label.usuarios.courseEntry{%endtrans%}</div>
+                <div class="left">
+                    <select id="entries" name="entries" style="width: 150px;">
+                    </select>
+                </div>
+            </div>
+
+            <div class="clear"></div>
+
+            <div class="right" style="padding-right: 20px;"><a href="#" class="button success-darker tiny" id="viewPrintable" name="viewPrintable"><span></span>Versi&oacute;n Imprimible</a></div>
 
             <div class="clear"></div>
         </div>
+
         <!-- Qualifications -->
         <div>
             <div class="left">

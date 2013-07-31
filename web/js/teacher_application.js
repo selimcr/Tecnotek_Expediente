@@ -534,7 +534,18 @@ var Tecnotek = {
 
                 $("#courses").change(function(event){
                     event.preventDefault();
+                    //Tecnotek.Qualifications.loadEntriesOfCourse($(this).val());
                     Tecnotek.Qualifications.loadQualificationsOfGroup($(this).val());
+                });
+
+                $("#entries").change(function(event){
+                    event.preventDefault();
+                    if($(this).val() === "0"){
+                        $(".entryBase").show();
+                    } else {
+                        $(".entryBase").hide();
+                        $(".entryB_" + $(this).val() + "_").show();
+                    }
                 });
 
                 Tecnotek.Qualifications.loadGroupsOfPeriod($('#period').val());
@@ -551,6 +562,7 @@ var Tecnotek = {
                 if(($periodId!==null)){
                     $('#groups').children().remove();
                     $('#courses').children().remove();
+                    $('#entries').children().remove();
                     $('#subentryFormParent').empty();
                     Tecnotek.ajaxCall(Tecnotek.UI.urls["loadGroupsOfPeriodURL"],
                         {   periodId: $periodId },
@@ -571,10 +583,36 @@ var Tecnotek = {
                         }, true);
                 }
             },
+            loadEntriesOfCourse: function($courseId) {
+                $('#tableContainer').hide();
+                if(($courseId!==null)){
+                    $('#entries').children().remove();
+                    $('#subentryFormParent').empty();
+                    Tecnotek.ajaxCall(Tecnotek.UI.urls["loadEntriesOfCourseURL"],
+                        {   courseId: $courseId },
+                        function(data){
+                            if(data.error === true) {
+                                Tecnotek.showErrorMessage(data.message,true, "", false);
+                            } else {
+                                console.debug("Cargando rubros!!!");
+                                /*for(i=0; i<data.groups.length; i++) {
+                                    $('#groups').append('<option value="' + data.groups[i].id + '">' + data.groups[i].name + '</option>');
+                                }
+                                Tecnotek.isPeriodEditable = data.isEditable;
+                                Tecnotek.Qualifications.loadCoursesOfGroupByTeacher($('#groups').val());*/
+                            }
+                        },
+                        function(jqXHR, textStatus){
+                            Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
+                            $(this).val("");
+                        }, true);
+                }
+            },
             loadCoursesOfGroupByTeacher: function($groupId) {
                 $('#tableContainer').hide();
                 if(($groupId!==null)){
                     $('#courses').children().remove();
+                    $('#entries').children().remove();
                     $('#subentryFormParent').empty();
                     Tecnotek.Qualifications.loadQualificationsOfGroup(0);
                     Tecnotek.ajaxCall(Tecnotek.UI.urls["loadCoursesOfGroupByTeacherURL"],
@@ -604,7 +642,7 @@ var Tecnotek = {
                 $('#subentryFormParent').empty();
                 $('#contentBody').empty();
                 $('#studentsHeader').empty();
-
+                $('#entries').children().remove();
                 if(courseId <= 0 ){//Clean page
                 } else {
                     $('#fountainG').show();
@@ -631,6 +669,13 @@ var Tecnotek = {
                                     }
                                     $(this).trigger("blur");
                                 });
+
+                                $('#entries').append('<option value="0">Todos</option>');
+                                for(i=0; i<data.entries.length; i++) {
+                                    //console.debug("%o", data.entries[i]);
+                                    //console.debug("--> " + data.entries[i].id + " :: " + data.entries[i]);
+                                    $('#entries').append('<option value="' + data.entries[i].id + '">' + data.entries[i].name + '</option>');
+                                }
 
                                 Tecnotek.Qualifications.initializeTable();
                                 Tecnotek.UI.vars["forzeBlur"] = true;

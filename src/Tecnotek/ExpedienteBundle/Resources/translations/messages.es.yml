@@ -105,6 +105,7 @@ label.absences: Ausencias
 label.commets: Comentarios
 label.code: Codigo
 label.description: Descripcion
+label.enter.by.rubro: Ingresar notas por rubro
 
 label.password.cambiar: Cambiar Password
 label.usuarios.admin: Administradores
