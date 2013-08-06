@@ -555,15 +555,6 @@ class ReportController extends Controller
         $logger = $this->get('logger');
         $em = $this->getDoctrine()->getEntityManager();
 
-        $dql = "SELECT cc "
-            . " FROM TecnotekExpedienteBundle:Course c, TecnotekExpedienteBundle:CourseClass cc "
-            . " WHERE cc.grade = " . $gradeId . " AND cc.course = c"
-            . " AND cc.period = " . $periodId . " "
-            . " ORDER BY c.name";
-
-        $query = $em->createQuery($dql);
-        $courses = $query->getResult();
-
         $headersRow =  '<thead>';
         $headersRow .=  '    <tr style="height: 30px;">';
         $headersRow .=  '        <th style="width: 350px; text-align: left;">MATERIAS</th>';
@@ -574,186 +565,319 @@ class ReportController extends Controller
         $headersRow .=  '    </tr>';
         $headersRow .=  '</thead>';
 
-        $courseRow = '';
-
-        $promedioRow = '';
-
         $this->calculateStudentYearQualification($periodId, $studentId, $studentYear);
 
         $html = '<table class="tableQualifications" cellSpacing="0" cellPadding="0">' . $headersRow;
 
+        $courseRow = '';
         $courseRow .=  '<tr class="rowNotas">';
         $courseRow .= '<td style="text-align: left; font-size:16px;">courseName</td>';
-        $courseRow .= '<td style="text-align: center; font-size:16px;">__</td>';
-        $courseRow .= '<td style="text-align: center; font-size:16px;">-----</td>';
-        $courseRow .= '<td style="text-align: center; font-size:16px;">-----</td>';
-        $courseRow .= '<td style="text-align: center; font-size:16px;">__</td>';
+        $courseRow .= '<td style="text-align: center; font-size:16px;">courseRowNota1</td>';
+        $courseRow .= '<td style="text-align: center; font-size:16px;">courseRowNota2</td>';
+        $courseRow .= '<td style="text-align: center; font-size:16px;">courseRowNota3</td>';
+        $courseRow .= '<td style="text-align: center; font-size:16px;">courseRowNotaProm</td>';
         $courseRow .=  "</tr>";
 
+        $promedioRow = '';
         $promedioRow .=  '<tr class="rowNotas" style="background-color: rgb(189, 176, 176);">';
         $promedioRow .= '<td style="text-align: left; font-size:16px;">Promedio General</td>';
-        $promedioRow .= '<td  style="text-align: center; font-size:16px;">__</td>';
-        $promedioRow .= '<td style="text-align: center; font-size:16px;">-----</td>';
-        $promedioRow .= '<td style="text-align: center; font-size:16px;">-----</td>';
-        $promedioRow .= '<td style="text-align: center; font-size:16px;">__</td>';
+        $promedioRow .= '<td  style="text-align: center; font-size:16px;">promedio1</td>';
+        $promedioRow .= '<td style="text-align: center; font-size:16px;">promedio2</td>';
+        $promedioRow .= '<td style="text-align: center; font-size:16px;">promedio3</td>';
+        $promedioRow .= '<td style="text-align: center; font-size:16px;">promedioGeneral</td>';
         $promedioRow .=  "</tr>";
-
-        $total = 0;
-        $counter = 0;
-        $honor = true;
-        foreach( $courses as $course )
-        {
-            $separator[0] = '/1./';
-            $separator[1] = '/2./';
-            $courseName = preg_replace($separator,"",$course->getCourse()->getName());
-
-            $row = str_replace("courseName", $courseName, $courseRow);
-            $row = str_replace("courseId", $course->getId(), $row);
-
-
-            $notaMin = $em->getRepository("TecnotekExpedienteBundle:Grade")->findOneBy(array('id' => $gradeId));
-            $notaFinal = $em->getRepository("TecnotekExpedienteBundle:StudentYearCourseQualification")->findOneBy(array('courseClass' => $course->getId(), 'studentYear' => $studentYear->getId()));
-
-            $typeC = $course->getCourse()->getType();
-
-
-            if(isset($notaFinal)){//Si existe
-
-
-                if( $typeC==1){
-                    if($notaFinal->getQualification() != 0){
-                        if($notaFinal->getQualification() < 90){
-                            $honor = false;
-                        }
-                        if($notaFinal->getQualification() < $notaMin->getNotaMin()){
-                            $row = str_replace("__", "* " . $notaFinal->getQualification(), $row);
-                        } else {
-                            $row = str_replace("__", $notaFinal->getQualification(), $row);
-                        }
-
-                        $total += $notaFinal->getQualification();
-                        $counter += 1;
-                    }else{
-                        $row = str_replace("__", $notaFinal->getQualification(), $row);
-                    }
-                }
-                else{
-                    $valorNota =  $notaFinal->getQualification();
-                    if($valorNota == 99)
-                        $valorNota = "Exc";
-                    if($valorNota == 74)
-                        $valorNota = "V.Good";
-                    if($valorNota == 50)
-                        $valorNota = "Good";
-                    if($valorNota == 25)
-                        $valorNota = "N.I.";
-                    $row = str_replace("__", "" . $valorNota, $row);
-                }
-            }
-
-            $html .=  $row;
-        }
-
-
 
         //Revisar Ausencias y Calcular Nota de Conducta
         $absenceRow = '';
         $absenceRow .=  '<tr class="rowNotas">';
         $absenceRow .= '<td style="text-align: left; font-size:16px;">absenceTypeName</td>';
-        $absenceRow .= '<td style="text-align: center; font-size:16px;">absenceTypeCount</td>';
-        $absenceRow .= '<td style="text-align: center; font-size:16px;">&nbsp;</td>';
-        $absenceRow .= '<td style="text-align: center; font-size:16px;">&nbsp;</td>';
+        $absenceRow .= '<td style="text-align: center; font-size:16px;">absenceTypeCount1</td>';
+        $absenceRow .= '<td style="text-align: center; font-size:16px;">absenceTypeCount2</td>';
+        $absenceRow .= '<td style="text-align: center; font-size:16px;">absenceTypeCount3</td>';
         $absenceRow .= '<td style="text-align: center; font-size:16px;">&nbsp;</td>';
         $absenceRow .=  "</tr>";
 
-        if($institution->getId() == '3'){
-            $sql = "select at.name, count(a.id) as 'total', sum(atp.points) as 'puntos'"
-                . " from tek_absence_types at"
-                . " join tek_absence_types_points atp on at.id = atp.absence_type_id and atp.institution_id = " . $institution->getId()
-                . " left join tek_absences a on a.type_id = at.id and a.justify = 0 and a.studentYear_id = " . $studentYear->getId()
-                . " group by at.id;";
-        }
-        if($institution->getId() == '2'){
-            $sql = "select at.name, count(a.id) as 'total', sum(atp.points) as 'puntos'"
-                . " from tek_absences a "
-                . " join tek_absence_types at on at.id = a.type_id"
-                . " join tek_absence_types_points atp on at.id = atp.absence_type_id and atp.institution_id = " . $institution->getId()
-                . " where a.studentYear_id =  " . $studentYear->getId()." AND a.justify = 0"
-                . " group by a.type_id;";
-        }
+        $notaMin = $em->getRepository("TecnotekExpedienteBundle:Grade")->findOneBy(array('id' => $gradeId));
 
-        $htmlAbsence = "";
-        $absences = $em->getConnection()->executeQuery($sql);
-        $conducta = 100;
-        $logger->err("-----> Arranca con 100");
-        foreach($absences as $absenceType){
-            $row = str_replace("absenceTypeName", $absenceType["name"], $absenceRow);
-            if($absenceType["total"] > 0) {
-                $row = str_replace("absenceTypeCount", $absenceType["total"] . "(" . number_format($absenceType["puntos"], 1, '.', '') . "pts)", $row);//3 (1.5pts)
-                $conducta -= $absenceType["puntos"];
-            } else {
-                $row = str_replace("absenceTypeCount", "0", $row);
-            }
-            $htmlAbsence .=  $row;
-        }
+        //Get Period entity
+        $period = $em->getRepository("TecnotekExpedienteBundle:Period")->find($periodId);
 
-        $sql = 'SELECT COUNT(id) as "total",SUM(pointsPenalty) as "puntos" FROM tek_student_penalties where student_year_id = ' . $studentYear->getId();
-        $puntosPorSancion = $em->getConnection()->executeQuery($sql);
-        foreach($puntosPorSancion as $pa){
-            $row = str_replace("absenceTypeName", "Puntos por Observaciones", $absenceRow);
-            if(isset($pa["puntos"]) && $pa["puntos"] != "null"){
-                $row = str_replace("absenceTypeCount", $pa["total"] . "(" . number_format($pa["puntos"], 1, '.', '') . "pts)", $row);
-                $conducta -= $pa["puntos"];
-            } else {
-                $row = str_replace("absenceTypeCount", "0", $row);
+        //Get Periods of the Year order by the field orderInYear
+        $dql = "SELECT p "
+            . " FROM TecnotekExpedienteBundle:Period p "
+            . " WHERE p.year = " . $period->getYear()
+            . " AND p.orderInYear <= " . $period->getOrderInYear()
+            . " ORDER BY p.orderInYear";
+
+        $query = $em->createQuery($dql);
+        $periods = $query->getResult();
+
+        $total = 0;
+        $counter = 0;
+        $honor = true;
+
+        $stdQualifications = array();
+        $absencesArray = array();
+        $notasParteFinal = "";
+
+        foreach( $periods as $period )
+        {
+            $logger->err("-> Period: " . $period);
+
+            //Get Student Year of the Period related to the student
+            $stdYear = $em->getRepository("TecnotekExpedienteBundle:StudentYear")->findOneBy(array('student' => $studentYear->getStudent()->getId(), 'period' => $period->getId()));
+
+            /*****************/
+            $dql = "SELECT cc "
+                . " FROM TecnotekExpedienteBundle:Course c, TecnotekExpedienteBundle:CourseClass cc "
+                . " WHERE cc.grade = " . $gradeId . " AND cc.course = c"
+                . " AND cc.period = " . $period->getId() . " "
+                . " ORDER BY c.name";
+
+            $query = $em->createQuery($dql);
+            $courses = $query->getResult();
+
+            foreach( $courses as $courseClass )
+            {
+                if (!array_key_exists("" . $courseClass->getCourse()->getName(), $stdQualifications)) {
+                    $courseQ = array();
+                    $courseQ["courseClass"] = $courseClass;
+                    $stdQualifications["" . $courseClass->getCourse()->getName()] = $courseQ;
+                    $logger->err("Agregando courso: " . $courseClass->getCourse()->getName());
+                }
             }
+
+            $qualifications = $em->getRepository("TecnotekExpedienteBundle:StudentYearCourseQualification")->findBy(array('studentYear' => $stdYear->getId()));
+
+            foreach( $qualifications as $q )
+            {
+                if (array_key_exists("" . $q->getCourseClass()->getCourse()->getName(), $stdQualifications)) {
+                    $courseQ = $stdQualifications["" . $q->getCourseClass()->getCourse()->getName()];
+                    $courseQ["nota" . $period->getOrderInYear()] = $q;
+                    $stdQualifications["" . $q->getCourseClass()->getCourse()->getName()] = $courseQ;
+                    $logger->err("Actualizando courso: " . $q->getCourseClass()->getCourse()->getName() . " con dato: " . "nota" . $period->getOrderInYear());
+                } else {
+                    $courseQ = array();
+                    $courseQ["courseClass"] = $q->getCourseClass();
+                    $courseQ["nota" . $period->getOrderInYear()] = $q;
+                    $stdQualifications["" . $q->getCourseClass()->getCourse()->getName()] = $courseQ;
+                    $logger->err("Agregando courso: " . $q->getCourseClass()->getCourse()->getName() . " con dato: " . "nota" . $period->getOrderInYear());
+                }
+            }
+
+            //Get Absences Detail
             if($institution->getId() == '3'){
-                $htmlAbsence .=  $row;
+                $sql = "select at.name, count(a.id) as 'total', sum(atp.points) as 'puntos'"
+                    . " from tek_absence_types at"
+                    . " join tek_absence_types_points atp on at.id = atp.absence_type_id and atp.institution_id = " . $institution->getId()
+                    . " left join tek_absences a on a.type_id = at.id and a.justify = 0 and a.studentYear_id = " . $stdYear->getId()
+                    . " group by at.id;";
+            }
+            if($institution->getId() == '2'){
+                $sql = "select at.name, count(a.id) as 'total', sum(atp.points) as 'puntos'"
+                    . " from tek_absences a "
+                    . " join tek_absence_types at on at.id = a.type_id"
+                    . " join tek_absence_types_points atp on at.id = atp.absence_type_id and atp.institution_id = " . $institution->getId()
+                    . " where a.studentYear_id =  " . $stdYear->getId()." AND a.justify = 0"
+                    . " group by a.type_id;";
+            }
+
+            $htmlAbsence = "";
+            $absences = $em->getConnection()->executeQuery($sql);
+            $conducta = 100;
+            foreach($absences as $absenceType){
+                if($absenceType["total"] > 0) {
+                    $absencePoints = $absenceType["total"] . "(" . number_format($absenceType["puntos"], 1, '.', '') . "pts)";
+                } else {
+                    $absencePoints = "0";
+                }
+
+                if (!array_key_exists($absenceType["name"], $absencesArray)) {
+                    $absenceDetail = array();
+                    $absenceDetail["absence" . $period->getOrderInYear()] = $absencePoints;
+                    $absenceDetail["puntos" . $period->getOrderInYear()] = $absenceType["puntos"];
+                    $absencesArray[$absenceType["name"]] = $absenceDetail;
+                } else {
+                    $absenceDetail = $absencesArray[$absenceType["name"]];
+                    $absenceDetail["absence" . $period->getOrderInYear()] = $absencePoints;
+                    $absenceDetail["puntos" . $period->getOrderInYear()] = $absenceType["puntos"];
+                    $absencesArray[$absenceType["name"]] = $absenceDetail;
+                }
+            }
+
+            $sql = 'SELECT COUNT(id) as "total",SUM(pointsPenalty) as "puntos" FROM tek_student_penalties where student_year_id = ' . $stdYear->getId();
+            $puntosPorSancion = $em->getConnection()->executeQuery($sql);
+            foreach($puntosPorSancion as $pa){
+                if($institution->getId() == '3'){
+                    $absenceDetail = array();
+                    $absencePoints = $pa["total"] . "(" . number_format($pa["puntos"], 1, '.', '') . "pts)";
+                    $absenceDetail["absence" . $period->getOrderInYear()] = $absencePoints;
+                    $absenceDetail["puntos" . $period->getOrderInYear()] = $pa["puntos"];
+                    $absencesArray["Puntos por Observaciones"] = $absenceDetail;
+                }
             }
         }
 
-        $logger->err("-----> Y al final sera: " . $conducta);
-        if($conducta < 0) {
-            $conducta = 0;
-        }
-        if($conducta < 90){
-            $honor = false;
+        $separator[0] = '/1./';
+        $separator[1] = '/2./';
+
+        $totales = array();
+        $totales[1] = 0;
+        $totales[2] = 0;
+        $totales[3] = 0;
+
+        $counters = array();
+        $counters[1] = 0;
+        $counters[2] = 0;
+        $counters[3] = 0;
+
+        $honor = false;
+        foreach ($stdQualifications as $csq => $courseStdQ) {
+
+            $courseClass = $courseStdQ["courseClass"];
+
+            $courseName = preg_replace($separator,"",$courseClass->getCourse()->getName());
+
+            $row = str_replace("courseName", $courseName, $courseRow);
+            $row = str_replace("courseId", $courseClass->getId(), $row);
+
+            $typeC = $courseClass->getCourse()->getType();
+            $totalForAverage = 0;
+            $counterForAverage = 0;
+
+            for($i = 1; $i < 4; $i++){
+                if (array_key_exists("nota" . $i, $courseStdQ)) {
+                    $notaFinal = $courseStdQ["nota" . $i];
+                    if( $typeC==1){
+                        $totalForAverage += $notaFinal->getQualification();
+                        $counterForAverage++;
+
+                        if($notaFinal->getQualification() != 0){
+                            if($notaFinal->getQualification() < $notaMin->getNotaMin()){
+                                $row = str_replace("courseRowNota" . $i, "* " . $notaFinal->getQualification(), $row);
+                            } else {
+                                $row = str_replace("courseRowNota" . $i, $notaFinal->getQualification(), $row);
+                            }
+                            $counters[$i] += 1;
+                            $totales[$i] += $notaFinal->getQualification();
+                        }else{
+                            $row = str_replace("courseRowNota" . $i, $notaFinal->getQualification(), $row);
+                        }
+                    }
+                    else{
+                        $valorNota =  $notaFinal->getQualification();
+                        if($valorNota == 99)
+                            $valorNota = "Exc";
+                        if($valorNota == 74)
+                            $valorNota = "V.Good";
+                        if($valorNota == 50)
+                            $valorNota = "Good";
+                        if($valorNota == 25)
+                            $valorNota = "N.I.";
+                        $row = str_replace("__", "" . $valorNota, $row);
+                    }
+                } else {
+                    $row = str_replace("courseRowNota" . $i, "-----", $row);
+                }
+            }
+            if($counterForAverage != 0){
+                $row = str_replace("courseRowNotaProm",number_format( ($totalForAverage/$counterForAverage), 2, '.', ''), $row);
+            } else {
+                $row = str_replace("courseRowNotaProm", "-----", $row);
+            }
+
+            $row = str_replace("courseRowNotaProm", "-----", $row);
+            $html .=  $row;
         }
 
-        //Agregar nota de conducta
+        $totalesConductaMod = array();
+        $totalesConductaMod[1] = false;
+        $totalesConductaMod[2] = false;
+        $totalesConductaMod[3] = false;
+
+        $totalesConducta = array();
+        $totalesConducta[1] = 100;
+        $totalesConducta[2] = 100;
+        $totalesConducta[3] = 100;
+
+        $absencesHtml = "";
+        foreach ($absencesArray as $i => $absenceDetail) {
+            $row = str_replace("absenceTypeName", $i, $absenceRow);
+            for($i = 1; $i < 4; $i++){
+                if (array_key_exists("absence" . $i, $absenceDetail)) {
+                    $row = str_replace("absenceTypeCount" . $i, $absenceDetail["absence" . $i], $row);
+                    $totalesConducta[$i] -= $absenceDetail["puntos" . $i];
+                    $totalesConductaMod[$i] = true;
+                } else {
+                    $row = str_replace("absenceTypeCount" . $i, "-----", $row);
+                }
+            }
+            $absencesHtml .=  $row;
+        }
+
         $row = str_replace("courseName", "CONDUCTA", $courseRow);
-        $row = str_replace("courseId", "0", $row);
-        $row = str_replace("__", $conducta, $row);
-        $total += $conducta;
-        $counter += 1;
-        $html .=  $row;
+        $row = str_replace("courseId", 0, $row);
+        $totalConducta = 0;
+        for($i = 1; $i <= $period->getOrderInYear(); $i++){
+            $conducta = $totalesConducta[$i];
+            if($conducta < 0) {
+                $conducta = 0;
+            }
+            $totalConducta += $conducta;
+            if($i == $period->getOrderInYear()){
+                $studentYear->setConducta($conducta);
+            }
+            $row = str_replace("courseRowNota" . $i, $conducta, $row);
+        }
+        $row = str_replace("courseRowNotaProm", number_format($totalConducta/$period->getOrderInYear(), 2, '.', ''), $row);
+        $row = str_replace("courseRowNota1", "-----", $row);
+        $row = str_replace("courseRowNota2", "-----", $row);
+        $row = str_replace("courseRowNota3", "-----", $row);
 
-        $promedioPeriodo = 0;
+        $promedioGeneral = 0;
+        $counter = 0;
+        for($i = 1; $i < 4; $i++){
+
+            $promedioPeriodo = 0;
+            if($counters[$i] == 0){
+                $promedioRow = str_replace("promedio" . $i, "-----", $promedioRow);
+            } else {
+                if($totalesConductaMod[$i]){
+                    $totales[$i] += $totalesConducta[$i];
+                    $counters[$i]++;
+                }
+                $promedioPeriodo = $totales[$i] / $counters[$i];
+                $promedioRow = str_replace("promedio" . $i, number_format($promedioPeriodo, 2, '.', ''), $promedioRow);
+                if($i == $period->getOrderInYear()){
+                    if($promedioPeriodo >= 90){
+                        $honor = true;
+                    }
+                    $studentYear->setPeriodAverageScore($promedioPeriodo);
+                }
+
+                $promedioGeneral += $promedioPeriodo;
+                $counter++;
+            }
+        }
+
         if($counter == 0){
-            $promedioRow = str_replace("__", "-----", $promedioRow);
-        } else {
-            $promedioPeriodo = $total / $counter;
-            $promedioRow = str_replace("__", number_format($promedioPeriodo, 2, '.', ''), $promedioRow);
+            $promedioRow = str_replace("promedioGeneral", "-----", $promedioRow);
+        }else {
+            $promedioRow = str_replace("promedioGeneral", number_format($promedioGeneral/$counter, 2, '.', ''), $promedioRow);
         }
 
-        if($honor){
-            $honorStdy = 1;
-        }else{
-            $honorStdy = 0;
-        }
-
-        $studentYear->setPeriodAverageScore($promedioPeriodo);
-        $studentYear->setConducta($conducta);
-        $studentYear->setPeriodHonor($honorStdy);
-        $em->persist($studentYear);
-        $em->flush();
-
-        $html .= $promedioRow . $htmlAbsence;
+        $html .= $row . $promedioRow . $absencesHtml;
 
         $html .= "</table>";
         if($honor){
+            $studentYear->setPeriodHonor(1);
             $html .= '<div class="notaHonor">CUADRO DE HONOR: ALUMNO DE EXCELENCIA ACADEMICA </div>';
+        } else {
+            $studentYear->setPeriodHonor(0);
         }
+
+        $em->persist($studentYear);
+        $em->flush();
 
         $sql = "SELECT obs FROM TecnotekExpedienteBundle:Observation obs"
             . " WHERE obs.studentYear = " .  $studentYear->getId();

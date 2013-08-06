@@ -36,6 +36,12 @@ class Period
     private $year;
 
     /**
+     * @ORM\Column(type="integer")
+     * @Assert\NotBlank()
+     */
+    private $orderInYear;
+
+    /**
      * @ORM\Column(name="is_actual", type="boolean")
      */
     private $isActual;
@@ -49,6 +55,7 @@ class Period
     {
         $this->isActual = false;
         $this->isEditable = false;
+        $this->orderInYear = 1;
     }
 
     public function __toString()
@@ -104,6 +111,26 @@ class Period
     public function getYear()
     {
         return $this->year;
+    }
+
+    /**
+     * Set orderInYear
+     *
+     * @param integer $orderInYear
+     */
+    public function setOrderInYear($orderInYear)
+    {
+        $this->orderInYear = $orderInYear;
+    }
+
+    /**
+     * Get orderInYear
+     *
+     * @return integer
+     */
+    public function getOrderInYear()
+    {
+        return $this->orderInYear;
     }
 
     /**
