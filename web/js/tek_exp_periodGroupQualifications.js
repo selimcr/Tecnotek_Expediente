@@ -93,7 +93,7 @@ Tecnotek.PeriodGroupQualifications = {
             $('#fountainG').show();
             Tecnotek.PeriodGroupQualifications.periodId = $("#period").val();
             Tecnotek.PeriodGroupQualifications.groupId = $("#groups").val();
-            
+
             studentId = 0;
             Tecnotek.PeriodGroupQualifications.completeText = "";
             Tecnotek.PeriodGroupQualifications.studentsIndex = $('#students option').length;

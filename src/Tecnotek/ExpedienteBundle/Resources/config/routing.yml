@@ -531,6 +531,10 @@ _expediente_report_students_by_route_club:
     pattern:  /reports/studentsByRouteClub/
     defaults: { _controller: TecnotekExpedienteBundle:Report:reportStudentByRouteClub }
 
+_expediente_report_students_routes:
+    pattern:  /reports/studentsRoutes/
+    defaults: { _controller: TecnotekExpedienteBundle:Report:reportStudentRoutes }
+
 _expediente_report_absences_by_route:
    pattern:  /reports/absencesByRoute/
    defaults: { _controller: TecnotekExpedienteBundle:Report:reportStudentAbsencesByRoute }

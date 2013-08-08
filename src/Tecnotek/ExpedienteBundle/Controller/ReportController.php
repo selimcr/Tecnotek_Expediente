@@ -115,6 +115,28 @@ class ReportController extends Controller
         ));
     }
 
+    public function reportStudentRoutesAction(){
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $text = $this->get('request')->query->get('text');
+        $text2 = $this->get('request')->query->get('text2');
+        $sqlText = "";
+        if((isset($text) && $text != "")||(isset($text2) && $text2 != "")) {
+            $sqlText = " AND s.lastname like '%$text2%' AND s.firstname like '%$text%'";
+            //$sqlText = " AND concat(s.firstname,' ', s.lastname) like '%$text%'";
+            //$sqlText = " AND (s.lastname like '%$text2%' AND s.firstname like '%$text%)";
+        }
+
+        $dql = "SELECT s FROM TecnotekExpedienteBundle:Student s where s.route != 'NULL'" . $sqlText ."ORDER BY s.lastname";
+        $query = $em->createQuery($dql);
+
+        $entity = $query->getResult();
+
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Reports/students_routes.html.twig', array(
+            'menuIndex' => 4, 'text' => $text, 'text2' => $text2, 'entities' => $entity
+        ));
+    }
+
     public function reportStudentAbsencesByRouteAction(){
         $em = $this->getDoctrine()->getEntityManager();
         $logger = $this->get('logger');
@@ -139,6 +161,20 @@ class ReportController extends Controller
 
     public function reportStudentDailyByRouteAction(){
         $em = $this->getDoctrine()->getEntityManager();
+
+        $logger = $this->get('logger');
+        $errorMessage = "";
+        try{
+            $stmt = $em->getConnection()->prepare("CALL setStudentsDailyStatus()");
+            $stmt->execute();
+        } catch (\Exception $e) {
+            $errorMessage = $e->getMessage();
+            $logger->err('Report::reportStudentAbsencesByRouteAction [Error runing sp: ' . $errorMessage . "]");
+        } catch (PDOException $e) {
+            $errorMessage = $e->getMessage();
+            $logger->err('Report::reportStudentAbsencesByRouteAction [Error runing sp: ' . $errorMessage . "]");
+        }
+
         $entities = $em->getRepository("TecnotekExpedienteBundle:Route")->findAll();
 
         $html = "";
@@ -163,6 +199,11 @@ class ReportController extends Controller
         $groups = null;
         $grades = null;
         $institutions = null;
+
+        $groupsT = null;
+        $gradesT = null;
+        $institutionsT = null;
+
         if( !isset($tipo)){
             $tipo = 0;
         } else {
@@ -174,6 +215,19 @@ class ReportController extends Controller
                 foreach($groups as $group){
                     $group->setStudents($groupRepo->findAllStudentsByLastname($group->getId()));
                 }
+
+                $dql = "SELECT g FROM TecnotekExpedienteBundle:Group g JOIN g.grade grade WHERE g.period = " . $currentPeriod->getId() . " ORDER BY grade.number";
+                $query = $em->createQuery($dql);
+                $groupsT = $query->getResult();
+
+                $dql = "SELECT grade FROM TecnotekExpedienteBundle:Grade grade ORDER BY grade.number";
+                $query = $em->createQuery($dql);
+                $gradesT = $query->getResult();
+
+                $dql = "SELECT institution FROM TecnotekExpedienteBundle:Institution institution ORDER BY institution.id";
+                $query = $em->createQuery($dql);
+                $institutionsT = $query->getResult();
+
             } else {
                 if($tipo == 2){
                     $dql = "SELECT grade FROM TecnotekExpedienteBundle:Grade grade ORDER BY grade.number";
@@ -183,6 +237,19 @@ class ReportController extends Controller
                     foreach($grades as $grade){
                         $grade->setStudents($gradeRepo->findAllStudentsByLastname($grade->getId(), $currentPeriod->getId()));
                     }
+
+                    $dql = "SELECT g FROM TecnotekExpedienteBundle:Group g JOIN g.grade grade WHERE g.period = " . $currentPeriod->getId() . " ORDER BY grade.number";
+                    $query = $em->createQuery($dql);
+                    $groupsT = $query->getResult();
+
+                    $dql = "SELECT grade FROM TecnotekExpedienteBundle:Grade grade ORDER BY grade.number";
+                    $query = $em->createQuery($dql);
+                    $gradesT = $query->getResult();
+
+                    $dql = "SELECT institution FROM TecnotekExpedienteBundle:Institution institution ORDER BY institution.id";
+                    $query = $em->createQuery($dql);
+                    $institutionsT = $query->getResult();
+
                 } else {
                     $dql = "SELECT institution FROM TecnotekExpedienteBundle:Institution institution ORDER BY institution.id";
                     $query = $em->createQuery($dql);
@@ -191,6 +258,19 @@ class ReportController extends Controller
                     foreach($institutions as $institution){
                         $institution->setStudents($repo->findAllStudentsByLastname($institution->getId(), $currentPeriod->getId()));
                     }
+
+                    $dql = "SELECT g FROM TecnotekExpedienteBundle:Group g JOIN g.grade grade WHERE g.period = " . $currentPeriod->getId() . " ORDER BY grade.number";
+                    $query = $em->createQuery($dql);
+                    $groupsT = $query->getResult();
+
+                    $dql = "SELECT grade FROM TecnotekExpedienteBundle:Grade grade ORDER BY grade.number";
+                    $query = $em->createQuery($dql);
+                    $gradesT = $query->getResult();
+
+                    $dql = "SELECT institution FROM TecnotekExpedienteBundle:Institution institution ORDER BY institution.id";
+                    $query = $em->createQuery($dql);
+                    $institutionsT = $query->getResult();
+
                 }
             }
 
@@ -208,7 +288,8 @@ class ReportController extends Controller
         return $this->render('TecnotekExpedienteBundle:SuperAdmin:Reports/students.html.twig', array('menuIndex' => 4,
             'tipo' => $tipo, 'typeLabel' => $typeLabel, 'groups' => $groups,
             'grades' => $grades, 'institutions' => $institutions,
-            'age' => $age, 'gender' => $gender
+            'age' => $age, 'gender' => $gender,
+            'groupsT' => $groupsT, 'institutionsT' => $institutionsT,'gradesT' => $gradesT
         ));
     }
 
@@ -774,7 +855,7 @@ class ReportController extends Controller
                             $valorNota = "Good";
                         if($valorNota == 25)
                             $valorNota = "N.I.";
-                        $row = str_replace("__", "" . $valorNota, $row);
+                        $row = str_replace("courseRowNota" . $i, "" . $valorNota, $row);
                     }
                 } else {
                     $row = str_replace("courseRowNota" . $i, "-----", $row);

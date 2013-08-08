@@ -238,6 +238,7 @@ label.students.absences: Estudiantes Ausentes
 label.students.precenses: Estudiantes Presentes
 label.routes.club: Rutas Club
 label.students.by.route.club: Estudiantes por Ruta Clubes
+label.student.route: Transporte
 
 label.penalties: Sanciones
 label.penalties.title: Administracion de Sanciones

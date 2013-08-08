@@ -317,12 +317,72 @@ var Tecnotek = {
                     window.location.href= url;
                 });
 
+                $('#btnPrintTransporte').click(function(event){
+                    $("#report").printElement({printMode:'popup', pageTitle:$(this).attr('rel')});
+                });
+
+                $('#btnSearchTransporte').click(function(event){
+                    event.preventDefault();
+                    var url = location.href;
+                    var text = $("#searchText").val();
+                    var text2 = $("#searchText2").val();
+                    if( url.indexOf("?") > -1 ){
+                        if(( url.indexOf("text=") > -1 )&&(url.indexOf("text2=") > -1)){
+                            url += "&q=1";
+                            url = url.replace(/(text=).*?(&)/,'$1' + text + '$2');
+                            url = url.replace(/(text2=).*?(&)/,'$1' + text2 + '$2');
+                            url = url.replace("&q=1","");
+                        } else {
+                            url += "&text=" + text +"&text2=" + text2;
+                        }
+                    } else {
+                        url += "?text=" + text+"&text2=" + text2;
+                    }
+                    window.location.href= url;
+                });
+                $("#routesList").change(function(event){
+                    event.preventDefault();
+                    $('#subentryFormParent').empty();
+                    Tecnotek.Reports.loadRoute($(this).val());
+                });
+                $("#routesListClub").change(function(event){
+                    event.preventDefault();
+                    $('#subentryFormParent').empty();
+                    Tecnotek.Reports.loadRouteClub($(this).val());
+                });
+
+            },
+            loadRoute : function($routeId) {
+                if(($routeId!==null && $routeId!=='0')){
+                    //$('#report').empty();
+
+
+                    $('.routeContainer').hide();
+                    $('.route_' + $routeId).show();
+                }else {
+                    $('.routeContainer').show();
+                }
+            },
+            loadRouteClub : function($routeId) {
+                if(($routeId!==null && $routeId!=='0')){
+
+                    $('.routeContainerClub').hide();
+                    $('.route_' + $routeId).show();
+                }else {
+                    $('.routeContainerClub').show();
+                }
             }
         },
         ReportClubs : {
             init : function() {
                 Tecnotek.ReportClubs.initComponents();
                 Tecnotek.ReportClubs.initButtons();
+
+                $("#ListClub").change(function(event){
+                    event.preventDefault();
+                    $('#subentryFormParent').empty();
+                    Tecnotek.ReportClubs.loadListClub($(this).val());
+                });
             },
             initComponents : function() {
                 $('#withStudents').change(function(event){
@@ -334,6 +394,16 @@ var Tecnotek = {
                 });
             },
             initButtons : function() {
+            },
+            loadListClub : function($routeId) {
+
+                if(($routeId!==null && $routeId!=='0')){
+
+                    $('.ContainerClub').hide();
+                    $('.club_' + $routeId).show();
+                }else {
+                    $('.ContainerClub').show();
+                }
             }
         },
 		AdministratorList : {

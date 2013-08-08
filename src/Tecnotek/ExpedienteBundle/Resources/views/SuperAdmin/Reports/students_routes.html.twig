@@ -1,0 +1,79 @@
+{% extends 'TecnotekExpedienteBundle::logged_layout.html.twig' %}
+
+{% block htmlTitle %}
+    Tecnotek :: Expediente :: Super Administrador :: Reportes
+{% endblock %}
+
+{% block extrajs %}
+    <script type="text/javascript" src="{{ asset('js/jquery.printElement.min.js') }}"></script>
+    <script type="text/javascript">
+        Tecnotek.module = "reports";
+        Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
+
+    </script>
+{% endblock %}
+
+{% block content %}
+    <div class="container_24">
+        <div class="grid_24">
+            <div>
+
+                <div class="left">
+                    <h3>{% trans %}label.reports.students.by.route{% endtrans %}</h3>
+                </div>
+                <div class="right" style="margin-top: -2px;"><a style="margin: 4px 0px 0px 0px;" href="#" class="button success-darker tiny" id="btnSearchTransporte" name="btnSearchTransporte"><span></span>{% trans %}label.search{% endtrans %}</a></div>
+
+                <div class="right" >
+                    Apellidos<input id="searchText2" name="searchText2"  value="{{ text2 }}">
+                </div>
+                <div class="right" >
+                    Nombre<input id="searchText" name="searchText"  value="{{ text }}">
+                </div>
+                <div class="clear"></div>
+                <button style="margin-left: 15px; margin-top: 0px;" type="button" class="right button success-darker tiny" id="btnPrintTransporte" name="btnPrintTransporte" rel="Rutas por Zona"><span></span>{% trans %}label.print{% endtrans %}</button>
+                <div class="clear"></div>
+
+            </div>
+
+            <div id="report" style="margin-top: 25px;">
+
+                <div class="titles" style="font-size: 10px;">
+                    <div class="left">Corporación Educativa Saint Michael S.A.</div>
+                    <div class="right">Control de Buses Escuela.</div>
+                    <div class="clear"></div>
+
+                    <div class="left">{{ "now"|date("d/M/Y H:i:s") }}</div>
+                    <div class="clear"></div>
+
+                    <p style="text-align: center;padding-bottom: 0px;">Estudiantes por Ruta</p>
+                    <p style="text-align: center; padding-bottom: 0px;">Ordenados por Nombre</p>
+                </div>
+                <div class="fields_row student_title">
+                    <div style="float: left; width: 50px;">{%trans%}label.carne{%endtrans%}</div>
+                    <div style="float: left; width: 250px;">{%trans%}label.student.name{%endtrans%}</div>
+                    <div style="float: left; width: 60px;">{%trans%}label.section{%endtrans%}</div>
+                    <div style="float: left; width: 250px;">{%trans%}label.route{%endtrans%}</div>
+
+                    <div class="clear"></div>
+                </div>
+                {% for student in entities %}
+
+                    <div class="student_row">
+                        <div style="float: left; width: 50px;">{{ student.carne }}</div>
+                        <div style="float: left; width: 250px;">{{ student }}</div>
+                        <div style="float: left; width: 60px;">{{ student.groupyear }}</div>
+                        <div style="float: left; width: 250px;">{{ student.route }}</div>
+
+                    </div>
+                    <div class="clear"></div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="clear"></div>
+        <div class="wrapper">
+            <div class="grid_24 padline">
+                <div class="lineH"></div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
