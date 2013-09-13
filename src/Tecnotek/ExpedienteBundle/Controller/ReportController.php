@@ -95,6 +95,19 @@ class ReportController extends Controller
 
         $em = $this->getDoctrine()->getEntityManager();
 
+        $logger = $this->get('logger');
+        $errorMessage = "";
+        try{
+            $stmt = $em->getConnection()->prepare("CALL setStudentsDailyStatus()");
+            $stmt->execute();
+        } catch (\Exception $e) {
+            $errorMessage = $e->getMessage();
+            $logger->err('Report::reportStudentAbsencesByRouteAction [Error runing sp: ' . $errorMessage . "]");
+        } catch (PDOException $e) {
+            $errorMessage = $e->getMessage();
+            $logger->err('Report::reportStudentAbsencesByRouteAction [Error runing sp: ' . $errorMessage . "]");
+        }
+
         $text = $this->get('request')->query->get('text');
         $sqlText = "";
         if(isset($text) && $text != "") {
@@ -724,7 +737,6 @@ class ReportController extends Controller
                     $courseQ = array();
                     $courseQ["courseClass"] = $courseClass;
                     $stdQualifications["" . $courseClass->getCourse()->getName()] = $courseQ;
-                    $logger->err("Agregando courso: " . $courseClass->getCourse()->getName());
                 }
             }
 
@@ -736,23 +748,29 @@ class ReportController extends Controller
                     $courseQ = $stdQualifications["" . $q->getCourseClass()->getCourse()->getName()];
                     $courseQ["nota" . $period->getOrderInYear()] = $q;
                     $stdQualifications["" . $q->getCourseClass()->getCourse()->getName()] = $courseQ;
-                    $logger->err("Actualizando courso: " . $q->getCourseClass()->getCourse()->getName() . " con dato: " . "nota" . $period->getOrderInYear());
                 } else {
                     $courseQ = array();
                     $courseQ["courseClass"] = $q->getCourseClass();
                     $courseQ["nota" . $period->getOrderInYear()] = $q;
                     $stdQualifications["" . $q->getCourseClass()->getCourse()->getName()] = $courseQ;
-                    $logger->err("Agregando courso: " . $q->getCourseClass()->getCourse()->getName() . " con dato: " . "nota" . $period->getOrderInYear());
                 }
             }
 
             //Get Absences Detail
             if($institution->getId() == '3'){
-                $sql = "select at.name, count(a.id) as 'total', sum(atp.points) as 'puntos'"
+                $sql = "select at.name, count(a.id) as 'total', (count(a.id) * atp.points) as 'puntos'"
                     . " from tek_absence_types at"
                     . " join tek_absence_types_points atp on at.id = atp.absence_type_id and atp.institution_id = " . $institution->getId()
                     . " left join tek_absences a on a.type_id = at.id and a.justify = 0 and a.studentYear_id = " . $stdYear->getId()
                     . " group by at.id;";
+
+                /*$sql = "select at.name, count(a.id) as 'total', sum(atp.points) as 'puntos'"
+                    . " from tek_absences a "
+                    . " join tek_absence_types at on at.id = a.type_id"
+                    . " join tek_absence_types_points atp on at.id = atp.absence_type_id and atp.institution_id = " . $institution->getId()
+                    . " where a.studentYear_id =  " . $stdYear->getId()." AND a.justify = 0"
+                    . " group by a.type_id;";*/
+
             }
             if($institution->getId() == '2'){
                 $sql = "select at.name, count(a.id) as 'total', sum(atp.points) as 'puntos'"
@@ -789,8 +807,21 @@ class ReportController extends Controller
             $sql = 'SELECT COUNT(id) as "total",SUM(pointsPenalty) as "puntos" FROM tek_student_penalties where student_year_id = ' . $stdYear->getId();
             $puntosPorSancion = $em->getConnection()->executeQuery($sql);
             foreach($puntosPorSancion as $pa){
-                if($institution->getId() == '3'){
+                //if($institution->getId() == '3'){
+                //$absenceDetail = array();
+                //$absencePoints = $pa["total"] . "(" . number_format($pa["puntos"], 1, '.', '') . "pts)";
+                //$absenceDetail["absence" . $period->getOrderInYear()] = $absencePoints;
+                //$absenceDetail["puntos" . $period->getOrderInYear()] = $pa["puntos"];
+                //$absencesArray["Puntos por Observaciones"] = $absenceDetail;
+                //}
+                if (!array_key_exists("Puntos por Observaciones", $absencesArray)) {
                     $absenceDetail = array();
+                    $absencePoints = $pa["total"] . "(" . number_format($pa["puntos"], 1, '.', '') . "pts)";
+                    $absenceDetail["absence" . $period->getOrderInYear()] = $absencePoints;
+                    $absenceDetail["puntos" . $period->getOrderInYear()] = $pa["puntos"];
+                    $absencesArray["Puntos por Observaciones"] = $absenceDetail;
+                } else {
+                    $absenceDetail = $absencesArray["Puntos por Observaciones"];
                     $absencePoints = $pa["total"] . "(" . number_format($pa["puntos"], 1, '.', '') . "pts)";
                     $absenceDetail["absence" . $period->getOrderInYear()] = $absencePoints;
                     $absenceDetail["puntos" . $period->getOrderInYear()] = $pa["puntos"];
@@ -812,7 +843,7 @@ class ReportController extends Controller
         $counters[2] = 0;
         $counters[3] = 0;
 
-        $honor = false;
+        $honor = true;
         foreach ($stdQualifications as $csq => $courseStdQ) {
 
             $courseClass = $courseStdQ["courseClass"];
@@ -844,6 +875,10 @@ class ReportController extends Controller
                         }else{
                             $row = str_replace("courseRowNota" . $i, $notaFinal->getQualification(), $row);
                         }
+                        if($notaFinal->getQualification()<90){
+                            $honor = false;
+                        }
+
                     }
                     else{
                         $valorNota =  $notaFinal->getQualification();
@@ -881,13 +916,16 @@ class ReportController extends Controller
         $totalesConducta[2] = 100;
         $totalesConducta[3] = 100;
 
+        $logger->err("La nota inicial es de: " . $totalesConducta[2] );
         $absencesHtml = "";
         foreach ($absencesArray as $i => $absenceDetail) {
             $row = str_replace("absenceTypeName", $i, $absenceRow);
             for($i = 1; $i < 4; $i++){
                 if (array_key_exists("absence" . $i, $absenceDetail)) {
                     $row = str_replace("absenceTypeCount" . $i, $absenceDetail["absence" . $i], $row);
-                    $totalesConducta[$i] -= $absenceDetail["puntos" . $i];
+                    //$logger->err($i . " - La nota es de: " . $totalesConducta[$i] . " y debe rebajar " .  floatval($absenceDetail["puntos" . $i]));
+                    $totalesConducta[$i] = $totalesConducta[$i] - floatval($absenceDetail["puntos" . $i]);
+                    //$logger->err($i . " - La nota es ahora de: " . $totalesConducta[$i]);
                     $totalesConductaMod[$i] = true;
                 } else {
                     $row = str_replace("absenceTypeCount" . $i, "-----", $row);
@@ -931,7 +969,7 @@ class ReportController extends Controller
                 $promedioRow = str_replace("promedio" . $i, number_format($promedioPeriodo, 2, '.', ''), $promedioRow);
                 if($i == $period->getOrderInYear()){
                     if($promedioPeriodo >= 90){
-                        $honor = true;
+                        //$honor = true;
                     }
                     $studentYear->setPeriodAverageScore($promedioPeriodo);
                 }
@@ -950,6 +988,12 @@ class ReportController extends Controller
         $html .= $row . $promedioRow . $absencesHtml;
 
         $html .= "</table>";
+
+
+        if($conducta<90){
+            $honor = false;
+        }
+
         if($honor){
             $studentYear->setPeriodHonor(1);
             $html .= '<div class="notaHonor">CUADRO DE HONOR: ALUMNO DE EXCELENCIA ACADEMICA </div>';
@@ -1053,21 +1097,21 @@ class ReportController extends Controller
             $valuetemp = $value;
             $stexpoints = $em->getRepository("TecnotekExpedienteBundle:StudentExtraPoints")->findBy(array('studentYear' => $studentYearId));
 
-           foreach($stexpoints as $ex){
-            //if ( isset($stexpoints) ){//si esta en la lista
-                if($value >= $notaMin->getNotaMin()){
+            foreach($stexpoints as $ex){
+                //if ( isset($stexpoints) ){//si esta en la lista
+                if(round($value, 0, PHP_ROUND_HALF_UP) >= $notaMin->getNotaMin()){
 
                     $extraPoints = $ex->getPoints();
                     $valuetemp = $valuetemp + $extraPoints;
 
                     if ($valuetemp > 100){
-                       $valuetemp = 100;
+                        $valuetemp = 100;
                     }
                 }
             }
 
             $sql = 'INSERT INTO tek_student_year_course_qualifications (course_class_id,student_year_id, qualification) VALUES (' . $i . ',' . $studentYearId . ', ' . $value . ')'.
-                    ' ON DUPLICATE KEY UPDATE qualification = ' . $valuetemp . ';';
+                ' ON DUPLICATE KEY UPDATE qualification = ' . $valuetemp . ';';
 
             $con->executeUpdate($sql);
         }
@@ -1382,7 +1426,7 @@ class ReportController extends Controller
                         . " WHERE stdQ.studentYear = " . $stdy->getId() . " AND subEntry.parent = " . $courseEntry->getId()
                         . " AND stdQ.subCourseEntry = subEntry"
                         . " ";
-                       // . " ORDER BY std.lastname, std.firstname";
+                    // . " ORDER BY std.lastname, std.firstname";
                     $query = $em->createQuery($dql);
                     $qualifications = $query->getResult();
                     $notasCursos = array();
@@ -1663,22 +1707,22 @@ class ReportController extends Controller
 
         }
         //$html .= '</table>';
-/*
-        $html = '<table border="1">';
-        $html .= '  <tr>';
-        $html .= '    <th rowspan="3">Month</th>';
-            $html .= '   <th>Savings</th>';
-        $html .= '    <th>Savings for holiday!</th>';
-            $html .= '  </tr>';
-       $html .= '   <tr>';
-        $html .= '    <td>January</td>';
-       $html .= '     <td>$100</td>';
-            $html .= '    </tr>';
-        $html .= '  <tr>';
-        $html .= '    <td>February</td>';
-       $html .= '     <td>$80</td>';
-            $html .= '  </tr>';
-        $html .= '</table>';*/
+        /*
+      $html = '<table border="1">';
+      $html .= '  <tr>';
+      $html .= '    <th rowspan="3">Month</th>';
+          $html .= '   <th>Savings</th>';
+      $html .= '    <th>Savings for holiday!</th>';
+          $html .= '  </tr>';
+     $html .= '   <tr>';
+      $html .= '    <td>January</td>';
+     $html .= '     <td>$100</td>';
+          $html .= '    </tr>';
+      $html .= '  <tr>';
+      $html .= '    <td>February</td>';
+     $html .= '     <td>$80</td>';
+          $html .= '  </tr>';
+      $html .= '</table>';*/
         return $html;
     }
 
