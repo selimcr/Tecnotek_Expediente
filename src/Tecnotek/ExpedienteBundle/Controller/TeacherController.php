@@ -913,7 +913,11 @@ class TeacherController extends Controller
                     }
                     $em->persist($studentQ);
                     $em->flush();
-                    return new Response(json_encode(array('error' => false)));
+
+                    return new Response(json_encode(array('error' => false, 'elementId' => $request->get('elementId'), 'elementPerc' => $request->get('elementPerc'),
+                        'elementMax' => $request->get('elementMax'), 'elementRel' => $request->get('elementRel'), 'elementChild' => $request->get('elementChild'),
+                        'qualification' => $request->get('qualification'),
+                        'elementParent' => $request->get('elementParent'), 'elementStdId' => $request->get('elementStdId'),'elementType' => $request->get('elementType'))));
                 } else {
                     return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
                 }

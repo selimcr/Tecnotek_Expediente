@@ -478,6 +478,8 @@ var Tecnotek = {
         },
         Qualifications : {
             translates : {},
+            counter: 0,
+            waitingTimeout: null,
             init : function() {
                 $('#btnPrint').click(function(event){
                     //console.debug("print!!!");
@@ -739,8 +741,8 @@ var Tecnotek = {
                         Tecnotek.showInfoMessage("El valor maximo permitido es " + $max,true, "", false);
                         $this.val("");
                         $nota = "";
+                        return;
                     }
-
 
                     if(Tecnotek.UI.vars["forzeBlur"] == true){
                         if($type == 1){
@@ -814,7 +816,11 @@ var Tecnotek = {
                         }
                     } else {
                             if(Tecnotek.updatedText === false) return;
-                            Tecnotek.ajaxCall(Tecnotek.UI.urls["saveStudentQualificationURL"],
+
+                            var vSubEntryid = $this.attr('entry');
+                            var vStudentYearId = $this.attr('stdyid');
+                            /////--------------------------------
+                            /*Tecnotek.ajaxCall(Tecnotek.UI.urls["saveStudentQualificationURL"],
                                 {   subentryId: $this.attr('entry'),
                                     studentYearId: $this.attr('stdyid'),
                                     qualification: $nota},
@@ -834,23 +840,6 @@ var Tecnotek = {
                                                 //console.debug("Calcular total para " + $(this).attr('rel') + ", total = " + ($percentage * $nota / 100));
                                                 $totalField.html("" + Tecnotek.roundTo(($percentage * $nota / $max)));
                                             }
-                                            /*$sum = 0;
-                                             $counter = 0;
-                                             $('.nota_' + $stdId).each(function() {
-                                             $temp = $(this).html();
-                                             if($temp != "-"){
-                                             $temp = $temp.slice(0, -1);
-                                             $sum += parseFloat( $temp );
-                                             $counter++;
-                                             }
-                                             });
-                                             if($counter == 0){
-                                             $("#total_trim_" + $stdId).html("-");
-                                             } else {
-                                             $("#total_trim_" + $stdId).html("" + $sum);
-                                             }*/
-                                            //p / 100 = x / nota
-                                            //p * nota / 100;
                                         } else {
                                             $childs = $this.attr('child');
                                             $parent = $this.attr('parent');
@@ -913,10 +902,167 @@ var Tecnotek = {
                                 },
                                 function(jqXHR, textStatus){
                                     Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
-                                }, false);
+                                }, false);*/
+
+                        Tecnotek.Qualifications.cantidadPendientes++;
+                        $("#pendientes").html(Tecnotek.Qualifications.cantidadPendientes + " Pendientes").show();
+
+                        Tecnotek.Qualifications.ajaxQueue({
+                            url: Tecnotek.UI.urls["saveStudentQualificationURL"],
+                            data: {
+                                subentryId: vSubEntryid,
+                                studentYearId: vStudentYearId,
+                                qualification: $nota,
+                                elementId: $(this).attr("id"),
+                                elementPerc: $this.attr('perc'),
+                                elementMax: $this.attr('max'),
+                                elementRel: $this.attr('rel'),
+                                elementChild: $this.attr('child'),
+                                elementParent: $this.attr('parent'),
+                                elementStdId: $this.attr('std'),
+                                elementType: $type
+                            },
+                            type: "POST",
+                            dataType: "json",
+                            success: function( data ) {
+                                /*console.debug("Data = [error: " + data['error']
+                                    + ", elementId: " + data['elementId']
+                                    + ", elementPerc: " + data['elementPerc']
+                                    + ", elementMax: " + data.elementMax
+                                    + ", elementRel: " + data.elementRel
+                                    + ", elementChild: " + data.elementChild
+                                    + ", qualification: " + data.qualification
+                                    + ", elementParent: " + data.elementParent
+                                    + ", elementStdId: " + data.elementStdId
+                                    + ", elementType: " + data.elementType + "]");*/
+
+                                if(data.error === true) {
+                                    Tecnotek.showErrorMessage(data.message,true, "", false);
+                                    $("#" + data.elementId).val("");
+                                } else {
+                                    if(data.elementType == "1"){
+                                        $percentage = data.elementPerc;
+                                        $max = data.elementMax;
+                                        $totalField = $("#" + data.elementRel);
+
+                                        //console.debug("Type = " + $type + ", Nota: " + $nota + ", Perc = " + $percentage + " :: " + $totalField);
+                                        if(data.qualification == "") {
+                                            $totalField.html("-");
+                                        } else {
+                                            //console.debug("Calcular total para " + $(this).attr('rel') + ", total = " + ($percentage * $nota / 100));
+                                            $totalField.html("" + Tecnotek.roundTo(($percentage * data.qualification / $max)));
+                                        }
+                                    } else {
+                                        $childs = data.elementChild;
+                                        $parent = data.elementParent;
+
+                                        //console.debug("Type = " + $type + ", Nota: " + $nota + " :: childs = " + $childs + " :: $stdId = " + $stdId);
+                                        $sum = 0;
+                                        $counter = 0;
+                                        $sumaPorcentage = 0;
+                                        $sumaPorcentagesAsignados = 0;
+                                        $('.item_' + $parent + "_" + data.elementStdId).each(function() {
+                                            $notaDigitada = $(this).val();
+                                            $valorMax = $(this).attr("max");
+                                            $porcentageAsignado = parseFloat($(this).attr("perc"));
+                                            $sumaPorcentagesAsignados += $porcentageAsignado;
+                                            if($notaDigitada != ""){
+                                                //100/valor max * nota digitada * %asignado
+                                                $sumaPorcentage += (100 / parseFloat($valorMax) * parseFloat($notaDigitada) * ($porcentageAsignado / 100));
+                                                $sum += parseFloat( $notaDigitada );
+                                                $counter++;
+                                            }
+
+                                        });
+
+                                        if($counter == 0){
+                                            $("#prom_" + $parent + "_" + data.elementStdId).html("-");
+                                            $totalField = $("#" + data.elementRel);
+                                            $("#total_" + $parent + "_" + data.elementStdId).html("-");
+                                        } else {
+                                            $percentage =  $("#prom_" + $parent + "_" + data.elementStdId).attr('perc');
+                                            $max =  $("#prom_" + $parent + "_" + data.elementStdId).attr('max');
+                                            $("#prom_" + $parent + "_" + data.elementStdId).html("" + Tecnotek.roundTo(($sum/$childs)));
+
+                                            $porcentageRubro = $("#prom_" + $parent + "_" + data.elementStdId).attr("perc");
+                                            if($sumaPorcentagesAsignados == $porcentageRubro){
+                                                $("#total_" + $parent + "_" + data.elementStdId).html("" + Tecnotek.roundTo($sumaPorcentage));
+                                            } else {
+                                                $("#total_" + $parent + "_" + data.elementStdId).html("" + Tecnotek.roundTo($sumaPorcentage / $counter));
+                                            }
+                                        }
+                                    }
+
+                                    $sum = 0;
+                                    $counter = 0;
+                                    $('.nota_' + data.elementStdId).each(function() {
+                                        $temp = $(this).html();
+                                        if($temp != "-"){
+                                            //$temp = $temp.slice(0, -1);
+                                            $sum += parseFloat( $temp );
+                                            $counter++;
+                                        }
+                                    });
+                                    if($counter == 0){
+                                        $("#total_trim_" + data.elementStdId).html("-");
+                                    } else {
+                                        $("#total_trim_" + data.elementStdId).html("" + Tecnotek.roundTo($sum));
+                                    }
+                                }
+
+                                //Termino de procesar una.
+                                Tecnotek.Qualifications.cantidadPendientes--;
+                                if(Tecnotek.Qualifications.cantidadPendientes == 0){
+                                    $("#pendientes").html(Tecnotek.Qualifications.cantidadPendientes + " Pendientes");
+                                    $("#pendientes").hide();
+                                } else {
+                                    //console.debug("Quedan pendientes: " + Tecnotek.Qualifications.cantidadPendientes);
+                                    $("#pendientes").html(Tecnotek.Qualifications.cantidadPendientes + " Pendientes");
+                                    $("#pendientes").show();
+                                }
+                            }
+                        });
+                        /////--------------------------------
                     }
 
                 });
+            },
+            cantidadPendientes: 0,
+            requestsQueue : $({}),
+            ajaxQueue : function ( ajaxOpts ){
+                // Hold the original complete function.
+                var oldComplete = ajaxOpts.complete;
+
+                // Queue our ajax request.
+                Tecnotek.Qualifications.requestsQueue.queue(function( next ) {
+                    // Create a complete callback to fire the next event in the queue.
+                    ajaxOpts.complete = function() {
+                        // Fire the original complete if it was there.
+                        if ( oldComplete ) {
+                            oldComplete.apply( this, arguments );
+                        }
+                        // Run the next query in the queue.
+                        next();
+                    };
+
+                    // Run the query.
+                    //console.debug("Making an ajax request: " + ajaxOpts.data.subentryId);
+                    $.ajax( ajaxOpts );
+                });
+            },
+            enqueueUpdate : function(){
+                $(document).queue('myqueue',function(next){
+                    Tecnotek.Qualifications.counter+=1;
+                    //counter+=1
+                    //$('<div />').hide().html(counter).appendTo('#display').fadeIn(1000,next);
+                    console.debug("Counter: " + Tecnotek.Qualifications.counter);
+                });
+            },
+            noMoreUpdates : function(){
+                $(document).dequeue('myqueue');
+            },
+            processUpdate : function() {
+
             }
         },
         Observations : {
