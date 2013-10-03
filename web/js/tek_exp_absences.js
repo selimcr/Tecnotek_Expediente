@@ -105,6 +105,10 @@ Tecnotek.Absences = {
             event.preventDefault();
             Tecnotek.Absences.delete($(this).attr("rel"));
         });
+
+        $('#btnPrint').click(function(event){
+            $("#report").printElement({printMode:'popup', pageTitle:$(this).attr('rel')});
+        });
     },
     delete : function(absenceId){
         //TODO delete Absence

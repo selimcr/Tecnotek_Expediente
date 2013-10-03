@@ -945,10 +945,11 @@ class StudentController extends Controller
                         . " ORDER BY e.lastname, e.firstname";
 
                 } else {
-                    $sql = "SELECT e.id, e.lastname, e.firstname, e.carne, e.groupyear , stdy.group_id"
-                        . " FROM tek_students e, tek_students_year stdy"
+                    $sql = "SELECT e.id, e.lastname, e.firstname, e.carne, e.groupyear , stdy.group_id, g.institution_id"
+                        . " FROM tek_students e, tek_students_year stdy, tek_groups g"
                         . " WHERE (e.firstname like '%" . $text . "%' OR e.lastname like '%" . $text . "%')"
                         . " AND e.id = stdy.student_id AND e.groupyear != 'NULL' AND stdy.period_Id =".$currentPeriodId
+                        . " AND stdy.group_id = g.id"
                         . " ORDER BY e.lastname, e.firstname";
                 }
 
@@ -1117,7 +1118,7 @@ class StudentController extends Controller
             ->leftJoin("absences.studentYear", "stdY")
             ->leftJoin("stdY.student", "std")
             ->add('where', "absences.date between :start and :end " . $statusQuery . $studentQuery)
-            ->add('orderBy', 'std.lastname ASC, std.firstname ASC')
+            ->add('orderBy', 'std.lastname ASC, std.firstname ASC, absences.date')
             ->setParameter('start', $start . " 00:00:00")
             ->setParameter('end', $end . " 23:59:59");
 

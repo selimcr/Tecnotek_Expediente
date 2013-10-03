@@ -713,7 +713,7 @@ var Tecnotek = {
                                     for(i=0; i<data.students.length; i++) {
                                         $data += '    <a class="searchResult" rel="' + data.students[i].id + '" name="' +
                                             data.students[i].firstname + ' ' + data.students[i].lastname
-                                            + '" inst="'+data.students[i].group_id+'">';
+                                            + '" inst="'+data.students[i].institution_id+'">';
                                         $data += '      <span class="searchheading">' + data.students[i].carne
                                             + ' ' + data.students[i].firstname
                                             + ' ' + data.students[i].lastname + ' ' + data.students[i].groupyear
@@ -733,14 +733,16 @@ var Tecnotek = {
                                         $('#searchBox').val("");
                                         $('#newAbsence').trigger('click');
 
-                                        if($(this).attr("inst")<19){
+                                        //if(($(this).attr("inst")<19)||(($(this).attr("inst")>33)&&($(this).attr("inst")<52))){
+                                        if($(this).attr("inst")==2){
                                             $("select > option[insti*='3']").hide();
                                             $("select > option[insti*='3']").removeAttr("selected");
                                             $("select > option[insti*='2']").show();
                                             $("select > option[insti*='2']").attr('selected','selected');
                                         }
 
-                                        if($(this).attr("inst")>18){
+                                        //if((($(this).attr("inst")>18)&&($(this).attr("inst")<34))||($(this).attr("inst")>51)){
+                                        if($(this).attr("inst")==3){
                                             $("select > option[insti*='2']").hide();
                                             $("select > option[insti*='2']").removeAttr("selected");
                                             $("select > option[insti*='3']").show();
@@ -784,19 +786,25 @@ var Tecnotek = {
                     Tecnotek.showErrorMessage("Es necesario definir un periodo como actual antes de guardar.",true, "", false);
                     return;
                 }
+
+
+                var $maxP = 0;
+                var $minP = 0;
+                var $pointsPenalty = 0;
+
                 var $studentId = $("#studentId").val();
                 var $date = $("#date").val();
                 var $type = $("#penaltyType").val();
                 var $comments = $("#comments").val();
                 var $pointsPenalty = $("#pointsPenalty").val();
-                var $maxP = $('option:selected', '#penaltyType').attr('maxPenalty');
-                var $minP = $('option:selected', '#penaltyType').attr('minPenalty');
+                $maxP = $('option:selected', '#penaltyType').attr('maxPenalty');
+                $minP = $('option:selected', '#penaltyType').attr('minPenalty');
 
                 //window.alert();
                 if($comments === ""){
                     Tecnotek.showErrorMessage("Debe incluir un comentario.",
                         true, "", false);
-                } else if(($pointsPenalty < $minP) || ($pointsPenalty > $maxP)){
+                } else if(($pointsPenalty*1 < $minP*1) || ($pointsPenalty*1 > $maxP*1)){
                     Tecnotek.showErrorMessage("Los puntos para esta sancion esta fuera del rango.",
                         true, "", false);
 

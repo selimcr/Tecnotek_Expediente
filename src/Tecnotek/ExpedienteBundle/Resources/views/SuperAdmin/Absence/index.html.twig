@@ -5,136 +5,143 @@
 {% endblock %}
 
 {% block extracss %}
-<link rel="stylesheet" href="{{ asset('fancybox/jquery.fancybox.css') }}" type="text/css" media="all" />
-<link rel="stylesheet" href="{{ asset('fancybox/fancybox_style.css') }}" type="text/css" media="all" />
-<link rel="stylesheet" href="{{ asset('css/jquery-ui-timepicker-addon.css') }}" type="text/css" media="all" />
+    <link rel="stylesheet" href="{{ asset('fancybox/jquery.fancybox.css') }}" type="text/css" media="all" />
+    <link rel="stylesheet" href="{{ asset('fancybox/fancybox_style.css') }}" type="text/css" media="all" />
+    <link rel="stylesheet" href="{{ asset('css/jquery-ui-timepicker-addon.css') }}" type="text/css" media="all" />
 {% endblock %}
 
 {% block extrajs %}
-<script type="text/javascript" src="{{ asset('fancybox/jquery.fancybox.js?v=2.0.6') }}"></script>
-<script type="text/javascript" src="{{ asset('js/tek_exp_absences.js') }}"></script>
-<script type="text/javascript">
-    Tecnotek.module = "absences";
-    Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
-    Tecnotek.UI.urls["saveAbsenceURL"] = "{{ path('_expediente_absences_save')}}";
+    <script type="text/javascript" src="{{ asset('fancybox/jquery.fancybox.js?v=2.0.6') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/tek_exp_absences.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/jquery.printElement.min.js') }}"></script>
+    <script type="text/javascript">
+        Tecnotek.module = "absences";
+        Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
+        Tecnotek.UI.urls["saveAbsenceURL"] = "{{ path('_expediente_absences_save')}}";
 
-    Tecnotek.UI.urls["getStudentsURL"] = "{{ path('_expediente_sysadmin_student_ajax_list')}}";
-    Tecnotek.UI.urls["loadStudentRelativesURL"] = "{{ path('_expediente_sysadmin_relatives_list')}}";
+        Tecnotek.UI.urls["getStudentsURL"] = "{{ path('_expediente_sysadmin_student_ajax_list')}}";
+        Tecnotek.UI.urls["loadStudentRelativesURL"] = "{{ path('_expediente_sysadmin_relatives_list')}}";
 
-    Tecnotek.UI.urls["show"] = "{{ path('_expediente_sysadmin_absence_show_simple')}}";
-    Tecnotek.UI.urls["edit"] = "{{ path('_expediente_sysadmin_absence_edit_simple')}}";
+        Tecnotek.UI.urls["show"] = "{{ path('_expediente_sysadmin_absence_show_simple')}}";
+        Tecnotek.UI.urls["edit"] = "{{ path('_expediente_sysadmin_absence_edit_simple')}}";
 
-    Tecnotek.StudentShow.translates["relative.not.selected"] = "{% trans %}message.relative.not.selected{% endtrans %}";
-    Tecnotek.StudentShow.translates["student.not.selected"] = "{% trans %}message.student.not.selected{% endtrans %}";
-    Tecnotek.StudentShow.translates["relative.not.exists"] = "{% trans %}message.relative.not.exists{% endtrans %}";
+        Tecnotek.StudentShow.translates["relative.not.selected"] = "{% trans %}message.relative.not.selected{% endtrans %}";
+        Tecnotek.StudentShow.translates["student.not.selected"] = "{% trans %}message.student.not.selected{% endtrans %}";
+        Tecnotek.StudentShow.translates["relative.not.exists"] = "{% trans %}message.relative.not.exists{% endtrans %}";
 
-    Tecnotek.UI.vars["currentPeriod"] = {{ currentPeriod }};
-    Tecnotek.UI.urls["deleteURL"] = "{{ path("_delete_absence_simple") }}";
-    Tecnotek.UI.translates["confirmDelete"] = "{% trans %}messages.confirmation.absence.delete{% endtrans %}";
-</script>
-<!-- basic fancybox setup -->
-<script type="text/javascript">
+        Tecnotek.UI.vars["currentPeriod"] = {{ currentPeriod }};
+        Tecnotek.UI.urls["deleteURL"] = "{{ path("_delete_absence_simple") }}";
+        Tecnotek.UI.translates["confirmDelete"] = "{% trans %}messages.confirmation.absence.delete{% endtrans %}";
+    </script>
+    <!-- basic fancybox setup -->
+    <script type="text/javascript">
 
-$(function() {
-    $(".modalbox").fancybox();
+        $(function() {
+            $(".modalbox").fancybox();
 //$("#contact").submit(function() { return false; });
-});
-</script>
+        });
+    </script>
 {% endblock %}
 
 {% block content %}
-<div class="container_24">
-    <div class="grid_24">
-        <div class="titleRow">
-            <div>
-                <h3 class="left" style="margin: 0px;">{% trans %}label.absences.title{% endtrans %}</h3>
-                <a id="newAbsence"  class="modalbox right button success-darker tiny" href="#inline">{% trans %}label.new{% endtrans %}</a>
-                <a class="right button success-darker tiny" style="margin-right: 15px;" href="{{ path('_expediente_sysadmin_absence_enter_by_group')}}">{% trans %}label.enter.by.group{% endtrans %}</a>
+    <div class="container_24">
+        <div class="grid_24">
+            <div class="titleRow">
+                <div>
+                    <h3 class="left" style="margin: 0px;">{% trans %}label.absences.title{% endtrans %}</h3>
+                    <a id="newAbsence"  class="modalbox right button success-darker tiny" href="#inline">{% trans %}label.new{% endtrans %}</a>
+                    <a class="right button success-darker tiny" style="margin-right: 15px;" href="{{ path('_expediente_sysadmin_absence_enter_by_group')}}">{% trans %}label.enter.by.group{% endtrans %}</a>
+                    <div class="clear"></div>
+
+                </div>
+                <div class="clear"></div>
+                <span>{% trans %}label.absences.message{% endtrans %}</span>
                 <div class="clear"></div>
             </div>
             <div class="clear"></div>
-            <span>{% trans %}label.absences.message{% endtrans %}</span>
-            <div class="clear"></div>
+
+            <div class="filter-search table" style="margin-top: 25px;">
+                <div class="internal">
+                    <form id="searchForm" action="{{ path('_expediente_absences_search') }}" method="post">
+                        <div class="left" style="width: 50%;">
+                            <label>{%trans%}label.student{%endtrans%}</label><input type="text" id="student" name="student" value="{{ student }}" style="margin-right: 5px;" {% if student == "" %}disabled="disabled"{% endif %}><input type="checkbox" id="searchByStudent" name="searchByStudent" class="check" rel="student" {% if student != "" %}checked="checked"{% endif %}>
+                        </div>
+                        <div class="left" style="width: 50%;">
+                            <label style="padding-left: 60px;">{%trans%}label.status{%endtrans%}</label>
+                            <select id="status" name="status" style="width: 290px;">
+                                <option value="-1" {% if status == '-1' %}selected="selected"{% endif %}>{%trans%}label.all{%endtrans%}</option>
+                                <option value="1" {% if status == '1' %}selected="selected"{% endif %}>{%trans%}label.justify{%endtrans%}</option>
+                                <option value="0" {% if status == '0' %}selected="selected"{% endif %}>{%trans%}label.injustify{%endtrans%}</option>
+                            </select>
+                        </div>
+                        <div class="clear"></div>
+
+                        <div class="left" style="width: 50%;">
+                            <label for="from">Desde</label><input type="text" id="from" name="from" value="{{ dateFrom }}" />
+                        </div>
+                        <div class="left" style="width: 50%;">
+                            <label for="to" style="padding-left: 60px;">Hasta</label><input type="text" id="to" name="to" value="{{ dateTo }}" />
+                        </div>
+                        <div class="clear"></div>
+
+                        <button style="margin-right: 30px; margin-top: 0px;" type="submit" class="right button success-darker tiny" name="search"><span></span>{% trans %}label.filter{% endtrans %}</button>
+                        <div class="clear"></div>
+                        <button style="margin-left: 15px; margin-top: 0px;" type="button" class="right button success-darker tiny" id="btnPrint" name="btnPrint" rel="Rutas por Zona"><span></span>{% trans %}label.print{% endtrans %}</button>
+                        <div class="clear"></div>
+                    </form>
+                </div>
+            </div>
+            <div  id="report"  style="width: 900px; margin-left: 25px; margin-right: 0px;">
+                <div class="search-results table" style="margin-top: 25px; margin-left: 0px; margin-right: 0px;">
+                    <div class="row tableHeader" style="height: 32px; line-height: 32px;">
+                        <div class="option_width" style="float: left; width: 350px;">{% trans %}label.student{% endtrans %}</div>
+                        <div class="option_width" style="float: left; width: 75px;">{% trans %}label.date{% endtrans %}</div>
+                        <div class="option_width" style="float: left; width: 100px;">{% trans %}label.type{% endtrans %}</div>
+                        <div class="option_width" style="float: left; width: 75px;">{% trans %}label.status{% endtrans %}</div>
+                        <div class="option_width" style="float: left; width: 125px;">{% trans %}label.commets{% endtrans %}</div>
+                    </div>
+
+                    {% for entity in entities %}
+                        <div  class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %} ">
+                            <div class="option_width" style="float: left; width: 350px;">{{ entity.studentYear.student }}</div>
+                            <div class="option_width" style="float: left; width: 75px;">{% if entity.date != null %} {{ entity.date|date("d/M/y") }} {% else %} &nbsp; {% endif %}</div>
+                            <div class="option_width" style="float: left; width: 100px;">{{ entity.type }}</div>
+                            <div class="option_width" style="float: left; width: 75px;" title="{{ entity.comments }}">{% if entity.justify %}{% trans %}label.justify{% endtrans %}{% else %} {% trans %}label.injustify{% endtrans %} {% endif %}</div>
+                            <div class="option_width" style="float: left; width: 125px;">{{ entity.comments | slice(0, 40) }} </div>
+
+                            <div class="right imageButton deleteButton" style="height: 16px;"  title="{% trans %}label.eliminar{% endtrans %}"  rel="{{ entity.id }}"></div>
+                            <div class="right imageButton editButton"  title="{% trans %}label.edit{% endtrans %}"  rel="{{ entity.id }}"></div>
+
+                            <div class="clear"></div>
+                        </div>
+                    {% else %}
+                        <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
+                            <div class="option_width" style="float: left; width: 375px;">{% trans %}results.not.found{% endtrans %}</div>
+                            <div class="clear"></div>
+                        </div>
+                    {% endfor %}
+
+                </div>
+            </div>
         </div>
         <div class="clear"></div>
-        <div class="filter-search table" style="margin-top: 25px;">
-            <div class="internal">
-                <form id="searchForm" action="{{ path('_expediente_absences_search') }}" method="post">
-                    <div class="left" style="width: 50%;">
-                        <label>{%trans%}label.student{%endtrans%}</label><input type="text" id="student" name="student" value="{{ student }}" style="margin-right: 5px;" {% if student == "" %}disabled="disabled"{% endif %}><input type="checkbox" id="searchByStudent" name="searchByStudent" class="check" rel="student" {% if student != "" %}checked="checked"{% endif %}>
-                    </div>
-                    <div class="left" style="width: 50%;">
-                        <label style="padding-left: 60px;">{%trans%}label.status{%endtrans%}</label>
-                        <select id="status" name="status" style="width: 290px;">
-                            <option value="-1" {% if status == '-1' %}selected="selected"{% endif %}>{%trans%}label.all{%endtrans%}</option>
-                            <option value="1" {% if status == '1' %}selected="selected"{% endif %}>{%trans%}label.justify{%endtrans%}</option>
-                            <option value="0" {% if status == '0' %}selected="selected"{% endif %}>{%trans%}label.injustify{%endtrans%}</option>
-                        </select>
-                    </div>
-                    <div class="clear"></div>
-
-                    <div class="left" style="width: 50%;">
-                        <label for="from">Desde</label><input type="text" id="from" name="from" value="{{ dateFrom }}" />
-                    </div>
-                    <div class="left" style="width: 50%;">
-                        <label for="to" style="padding-left: 60px;">Hasta</label><input type="text" id="to" name="to" value="{{ dateTo }}" />
-                    </div>
-                    <div class="clear"></div>
-
-                    <button style="margin-right: 30px; margin-top: 0px;" type="submit" class="right button success-darker tiny" name="search"><span></span>{% trans %}label.filter{% endtrans %}</button>
-                    <div class="clear"></div>
-                </form>
-            </div>
-        </div>
-
-        <div class="search-results table" style="margin-top: 25px;">
-            <div class="row tableHeader" style="height: 32px; line-height: 32px;">
-                <div class="option_width" style="float: left; width: 350px;">{% trans %}label.student{% endtrans %}</div>
-                <div class="option_width" style="float: left; width: 100px;">{% trans %}label.date{% endtrans %}</div>
-                <div class="option_width" style="float: left; width: 100px;">{% trans %}label.type{% endtrans %}</div>
-                <div class="option_width" style="float: left; width: 75px;">{% trans %}label.status{% endtrans %}</div>
-                <div class="option_width" style="float: left; width: 150px;">{% trans %}label.commets{% endtrans %}</div>
-            </div>
-
-            {% for entity in entities %}
-                <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
-                    <div class="option_width" style="float: left; width: 350px;">{{ entity.studentYear.student }}</div>
-                    <div class="option_width" style="float: left; width: 100px;">{% if entity.date != null %} {{ entity.date|date("d/M/y") }} {% else %} &nbsp; {% endif %}</div>
-                    <div class="option_width" style="float: left; width: 100px;">{{ entity.type }}</div>
-                    <div class="option_width" style="float: left; width: 75px;" title="{{ entity.comments }}">{% if entity.justify %}{% trans %}label.justify{% endtrans %}{% else %} {% trans %}label.injustify{% endtrans %} {% endif %}</div>
-                    <div class="option_width" style="float: left; width: 150px;">{{ entity.comments | slice(0, 40) }} </div>
-
-                    <div class="right imageButton deleteButton" style="height: 16px;"  title="{% trans %}label.eliminar{% endtrans %}"  rel="{{ entity.id }}"></div>
-                    <div class="right imageButton editButton"  title="{% trans %}label.edit{% endtrans %}"  rel="{{ entity.id }}"></div>
-
-                    <div class="clear"></div>
-                </div>
-            {% else %}
-                <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
-                    <div class="option_width" style="float: left; width: 375px;">{% trans %}results.not.found{% endtrans %}</div>
-                    <div class="clear"></div>
-                </div>
-            {% endfor %}
-        </div>
-    </div>
-    <div class="clear"></div>
-    <div class="wrapper">
+        <div class="wrapper">
             <div class="grid_24 padline">
-                    <div class="lineH"></div>
+                <div class="lineH"></div>
             </div>
+        </div>
     </div>
-</div>
-<!-- hidden inline form -->
-<div id="inline" style="width: 550px;">
-    <h3>Registrar nueva ausencia</h3>
+    <!-- hidden inline form -->
+    <div id="inline" style="width: 550px;">
+        <h3>Registrar nueva ausencia</h3>
 
-    <form class="customForm" id="createAbsenceForm" name="createAbsenceForm" action="#" method="post" }}>
+        <form class="customForm" id="createAbsenceForm" name="createAbsenceForm" action="#" method="post" }}>
 
         <div class="left" style="margin-right: 10px;">
             <label style="display: inline-block; width: 150px">{% trans %}label.student{% endtrans %}</label>
             <select id="studentId" name="studentId" style="width: 250px">
                 {% for student in students %}
-                <option value="{{ student.id }}">{{ student }}</option>
+                    <option value="{{ student.id }}">{{ student }}</option>
                 {% endfor %}
             </select>
         </div>
@@ -147,7 +154,7 @@ $(function() {
             <label style="display: inline-block; width: 150px">{% trans %}label.type{% endtrans %}</label>
             <select id="typeId" name="typeId" style="width: 250px">
                 {% for type in absenceTypes %}
-                <option value="{{ type.id }}">{{ type }}</option>
+                    <option value="{{ type.id }}">{{ type }}</option>
                 {% endfor %}
             </select>
         </div>
@@ -170,23 +177,23 @@ $(function() {
         <div class="left"><input class="button success-darker tiny cancelButton" style="margin-top: 0px;" type="button" value="{% trans %}label.cancelar{% endtrans %}"/></div>
         <div class="left" style="margin-left: 25px;"><input class="button success-darker tiny" style="margin-top: 0px;" type="submit" name="save" value="{% trans %}label.save{% endtrans %}"/></div>
         <div class="clear"></div>
-    </form>
-</div>
-
-<!-- hidden inline form -->
-<div id="searchStudentWindow" name="searchStudentWindow" style="display: none;">
-    <h3>Buscar estudiante</h3>
-    <div style="line-height: 10px; vertical-align: middle;">
-        <div class="left">
-            <div>
-                <div style="font-size: 10px;">{% trans %}club.include.help{%endtrans%}</div>
-                <input type="text" size="30" value="" id="searchBox"/>
-            </div>
-            <div id="suggestions"></div>
-        </div>
-        <div class="clear"></div>
+        </form>
     </div>
 
-    <div class="left"><input class="button success-darker tiny cancelButton" style="margin-top: 0px;" type="button" value="{% trans %}label.cancelar{% endtrans %}"/></div>
-</div>
+    <!-- hidden inline form -->
+    <div id="searchStudentWindow" name="searchStudentWindow" style="display: none;">
+        <h3>Buscar estudiante</h3>
+        <div style="line-height: 10px; vertical-align: middle;">
+            <div class="left">
+                <div>
+                    <div style="font-size: 10px;">{% trans %}club.include.help{%endtrans%}</div>
+                    <input type="text" size="30" value="" id="searchBox"/>
+                </div>
+                <div id="suggestions"></div>
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="left"><input class="button success-darker tiny cancelButton" style="margin-top: 0px;" type="button" value="{% trans %}label.cancelar{% endtrans %}"/></div>
+    </div>
 {% endblock %}
