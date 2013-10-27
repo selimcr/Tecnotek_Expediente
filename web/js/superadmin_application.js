@@ -126,8 +126,11 @@ var Tecnotek = {
                 case "printQualifications":
                     Tecnotek.PrintQualifications.init();
                     break;
-                case "periodGroupQualifications":
+                    case "periodGroupQualifications":
                     Tecnotek.PeriodGroupQualifications.init();
+                    break;
+                case "groupCourseQualifications":
+                    Tecnotek.GroupCourseQualifications.init();
                     break;
                 case "periodGroupAverages":
                     Tecnotek.PeriodGroupAverages.init();
@@ -141,6 +144,7 @@ var Tecnotek = {
                 case "studentPenaltiesReport":
                     Tecnotek.studentPenalties.init();
                     break;
+
                 default:
 					break;
 				}

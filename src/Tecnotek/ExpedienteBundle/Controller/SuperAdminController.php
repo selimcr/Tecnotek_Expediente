@@ -2314,4 +2314,84 @@ class SuperAdminController extends Controller
         $response->headers->set('Cache-Control', 'maxage=1');
         return $response;*/
     }
+
+    public function loadGroupsOfYearAction(){
+        $logger = $this->get('logger');
+        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
+        {
+            try {
+                $request = $this->get('request')->request;
+                $year = $request->get('year');
+                $translator = $this->get("translator");
+
+                if( isset($year) ) {
+                    $em = $this->getDoctrine()->getEntityManager();
+
+                    //Get Groups
+                    $sql = "SELECT CONCAT(g.id,'-',grade.id) as 'id', CONCAT(grade.name, ' :: ', g.name) as 'name'" .
+                        " FROM tek_groups g, tek_periods p, tek_grades grade" .
+                        " WHERE g.period_id = p.id AND p.year = " .  $year . " AND g.grade_id = grade.id" .
+                        " GROUP BY CONCAT(grade.name, ' :: ', g.name)" .
+                        " ORDER BY g.id";
+                    $stmt = $em->getConnection()->prepare($sql);
+                    $stmt->execute();
+                    $groups = $stmt->fetchAll();
+
+                    return new Response(json_encode(array('error' => false, 'groups' => $groups)));
+                } else {
+                    return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
+                }
+            }
+            catch (Exception $e) {
+                $info = toString($e);
+                $logger->err('Admin::loadGroupsOfYearAction [' . $info . "]");
+                return new Response(json_encode(array('error' => true, 'message' => $info)));
+            }
+        }// endif this is an ajax request
+        else
+        {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+    }
+
+    public function loadCoursesOfGroupAction(){
+        $logger = $this->get('logger');
+        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
+        {
+            try {
+                $request = $this->get('request')->request;
+                $keywords = preg_split("/[\s-]+/", $request->get('groupId'));
+                $groupId = $keywords[0];
+
+                $translator = $this->get("translator");
+
+                if( isset($groupId) ) {
+                    $em = $this->getDoctrine()->getEntityManager();
+
+                    //Get Courses
+                    $sql = "SELECT course.id, course.name " .
+                        " FROM tek_assigned_teachers tat, tek_course_class tcc, tek_courses course " .
+                        " WHERE tat.group_id = " . $groupId . " AND tat.course_class_id =  tcc.id AND tcc.course_id = course.id" .
+                        " ORDER BY course.name ";
+
+                    $stmt = $em->getConnection()->prepare($sql);
+                    $stmt->execute();
+                    $courses = $stmt->fetchAll();
+
+                    return new Response(json_encode(array('error' => false, 'courses' => $courses)));
+                } else {
+                    return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
+                }
+            }
+            catch (Exception $e) {
+                $info = toString($e);
+                $logger->err('Admin::loadGroupsOfPeriodAction [' . $info . "]");
+                return new Response(json_encode(array('error' => true, 'message' => $info)));
+            }
+        }// endif this is an ajax request
+        else
+        {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+    }
 }

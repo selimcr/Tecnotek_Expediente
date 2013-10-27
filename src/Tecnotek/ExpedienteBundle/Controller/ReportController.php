@@ -1916,4 +1916,214 @@ class ReportController extends Controller
         return $html;
     }
 
+    public function groupByCourseAction(){
+        $em = $this->getDoctrine()->getEntityManager();
+        $periods = $em->getRepository("TecnotekExpedienteBundle:Period")->findAll();
+        $years = array();
+
+        foreach($periods as $period){
+            if (!array_key_exists($period->getYear(), $years)) {
+                $years[$period->getYear()] = $period->getYear();
+            }
+        }
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Reports/groupCourseQualifications.html.twig', array('menuIndex' => 4,
+            'years' => $years
+        ));
+    }
+
+    public function loadGroupQualificationsByCourseAction(){
+        $logger = $this->get('logger');
+        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
+        {
+            try {
+                $request = $this->get('request')->request;
+                $year = $request->get('year');
+                $groupId = $request->get('groupId');
+                $courseId = $request->get('courseId');
+
+                $keywords = preg_split("/[\s-]+/", $groupId);
+                $groupId = $keywords[0];
+                $gradeId = $keywords[1];
+
+                $translator = $this->get("translator");
+
+                if( isset($year) && isset($groupId) && isset($courseId)) {
+                    $em = $this->getDoctrine()->getEntityManager();
+
+                    $carne = "";
+                    $teacherGroup = "";
+                    $studentName = "";
+                    $logger->err("Obtener estudiantes del grupo: " . $groupId);
+                    $group = $em->getRepository("TecnotekExpedienteBundle:Group")->find($groupId);
+                    $teacher = $group->getTeacher();
+                    $imgHeader = "encabezadoDefault.png";
+                    $teacherGroup = $teacher->getFirstname() . " " . $teacher->getLastname();
+                    $director = "Indefinido";
+                    $institution = $group->getInstitution();
+                    if(isset($institution)){
+                        //Find Properties
+                        $property = $em->getRepository("TecnotekExpedienteBundle:InstitutionProperty")->findOneBy(
+                            array('institution' => $institution->getId(), 'code' => "TICKETS_IMAGE" ));
+
+                        if(isset($property)){
+                            $imgHeader = $property->getValue();
+                        }
+
+                        $property = $em->getRepository("TecnotekExpedienteBundle:InstitutionProperty")->findOneBy(
+                            array('institution' => $institution->getId(), 'code' => "DIRECTOR" ));
+
+                        if(isset($property)){
+                            $director = $property->getValue();
+                        }
+                    }
+
+                    $html = $this->getGroupHTMLQualificationsByCourse($group, $courseId);
+
+                    return new Response(json_encode(array('error' => false, 'html' => $html, 'teacherGroup' => $teacherGroup, "imgHeader" => $imgHeader)));
+                } else {
+                    return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
+                }
+            }
+            catch (Exception $e) {
+                $info = toString($e);
+                $logger->err('Teacher::loadEntriesByCourseAction [' . $info . "]");
+                return new Response(json_encode(array('error' => true, 'message' => $info)));
+            }
+        }// endif this is an ajax request
+        else {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+    }
+
+    public function getGroupHTMLQualificationsByCourse($group, $courseId){
+        $logger = $this->get('logger');
+        $em = $this->getDoctrine()->getEntityManager();
+        $myCourse = $em->getRepository("TecnotekExpedienteBundle:Course")->find($courseId);
+
+        $dql = "SELECT cc "
+            . " FROM TecnotekExpedienteBundle:CourseClass cc "
+            . " JOIN cc.period p  "
+            . " WHERE cc.course = " . $courseId . " AND cc.grade = " . $group->getGrade()->getId()
+            . " ORDER BY p.orderInYear";
+        $query = $em->createQuery($dql);
+        $courses = $query->getResult();
+
+
+
+        $dql = "SELECT stdy FROM TecnotekExpedienteBundle:Student std, TecnotekExpedienteBundle:StudentYear stdy "
+            . " WHERE stdy.student = std AND stdy.group = " . $group->getId()
+            . " ORDER BY std.lastname, std.firstname";
+        $query = $em->createQuery($dql);
+        $students = $query->getResult();
+
+        //Agregar los 3 periodos y el promedio
+        $headersRow =  '<thead>';
+        $headersRow .=  '    <tr style="height: 145px;">';
+        $headersRow .=  '        <th style="width: 75px; text-align: center;">Carne</th>';
+        $headersRow .=  '        <th style="width: 250px; text-align: center;">Estudiante</th>';
+        $headersRow .=  '<th style="vertical-align: bottom; padding: 0.5625em 0.625em;"><div class="verticalText">Trimestre I</div></th>';
+        $headersRow .=  '<th style="vertical-align: bottom; padding: 0.5625em 0.625em;"><div class="verticalText">Trimestre II</div></th>';
+        $headersRow .=  '<th style="vertical-align: bottom; padding: 0.5625em 0.625em;"><div class="verticalText">Trimestre III</div></th>';
+        $headersRow .=  '<th style="vertical-align: bottom; padding: 0.5625em 0.625em;"><div class="verticalText">Promedio</div></th>';
+        $headersRow .=  '    </tr>';
+        $headersRow .=  '</thead>';
+
+        $studentRow = '';
+        $studentRow .= '<td>Nota_Period_1</td>';
+        $studentRow .= '<td>Nota_Period_2</td>';
+        $studentRow .= '<td>Nota_Period_3</td>';
+        $studentRow .= '<td>Nota_Promedio</td>';
+
+        $html =  '<b>Grupo: '.$group->getGrade().'-'. $group->getName() . ", Materia: " . $myCourse->getName() . "</b><br/>";
+
+        $html .= '<table class="tableQualifications" cellSpacing="0" cellPadding="0">' . $headersRow;
+
+
+        $studentRowIndex = 0;
+
+        $periods = array();
+        $periods[1] = $em->getRepository("TecnotekExpedienteBundle:Period")->findOneBy(array('year' => $group->getPeriod()->getYear(), 'orderInYear' => 1));
+        $periods[2] = $em->getRepository("TecnotekExpedienteBundle:Period")->findOneBy(array('year' => $group->getPeriod()->getYear(), 'orderInYear' => 2));
+        $periods[3] = $em->getRepository("TecnotekExpedienteBundle:Period")->findOneBy(array('year' => $group->getPeriod()->getYear(), 'orderInYear' => 3));
+
+        $notaMin = $em->getRepository("TecnotekExpedienteBundle:Grade")->findOneBy(array('id' => $group->getGrade()->getId()));
+
+        foreach($students as $stdy){
+            $total = 0;
+            $counter = 0;
+
+            $html .=  '<tr class="rowNotas" style="height: 25px;">';
+            $studentRowIndex++;
+            $html .=  '<td>' . $stdy->getStudent()->getCarne() . '</td>';
+            $html .=  '<td>' . $stdy->getStudent() . '</td>';
+
+            $row = $studentRow;
+
+            //Recorrer Todos los Periodos
+            for($i = 1; $i < 4; $i++){
+                $currentPeriod = $periods[$i];
+                if(isset($currentPeriod)){
+                    $currentSTDY = $em->getRepository("TecnotekExpedienteBundle:StudentYear")->findOneBy(array('student' => $stdy->getStudent()->getId(), 'period' => $currentPeriod->getId()));
+                    if($currentPeriod->isEditable()){
+                        $this->calculateStudentYearQualification($currentPeriod->getId(), $currentSTDY->getId(), $currentSTDY);
+                    }
+                    foreach( $courses as $course )
+                    {
+                        if($course->getPeriod()->getId() == $currentPeriod->getId()){
+                            $notaFinal = $em->getRepository("TecnotekExpedienteBundle:StudentYearCourseQualification")->findOneBy(array('courseClass' => $course->getId(), 'studentYear' => $currentSTDY->getId()));
+
+                            $typeC = $course->getCourse()->getType();
+                            if( $typeC==1){
+                                if(isset($notaFinal)){//Si existe
+                                    //// nuevo
+                                    if($notaFinal->getQualification() != '0'){
+                                        $total += $notaFinal->getQualification();
+                                        $counter += 1;
+                                    }
+                                    //// nuevo
+                                    if($notaFinal->getQualification() < $notaMin->getNotaMin()){
+                                        $row = str_replace("Nota_Period_" . $i, "* " .  $notaFinal->getQualification(), $row);
+                                    } else {
+                                        $row = str_replace("Nota_Period_" . $i, $notaFinal->getQualification(), $row);
+                                    }
+                                } else {
+                                    $row = str_replace("Nota_Period_" . $i, "-", $row);
+                                }
+
+                            }
+                            else{
+                                if(isset($notaFinal)){//Si existe
+                                    $valorNota =  $notaFinal->getQualification();
+                                    if($valorNota == 99)
+                                        $valorNota = "Exc";
+                                    if($valorNota == 74)
+                                        $valorNota = "V.Good";
+                                    if($valorNota == 50)
+                                        $valorNota = "Good";
+                                    if($valorNota == 25)
+                                        $valorNota = "N.I.";
+                                    $row = str_replace("Nota_Period_" . $i, $valorNota, $row);
+                                }
+                            }
+                        }
+
+                    }//Fin del foreach de courses
+
+                }  else {//El periodo no existe
+                    $row = str_replace("Nota_Period_" . $i, "-*-", $row);
+                }
+            }
+            /***** Obtener Notas del Estudiante Inicio *****/
+            if($counter > 0){
+                $row = str_replace("Nota_Promedio", number_format($total/$counter, 2, '.', ''), $row);
+            } else {
+                $row = str_replace("Nota_Promedio", "-", $row);
+            }
+            $html .=  $row . "</tr>";
+        }
+
+        $html .= "</table>";
+
+        return $html;
+    }
 }
