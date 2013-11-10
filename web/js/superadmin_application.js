@@ -132,6 +132,9 @@ var Tecnotek = {
                 case "groupCourseQualifications":
                     Tecnotek.GroupCourseQualifications.init();
                     break;
+                case "enterConvocatorias":
+                    Tecnotek.EnterConvocatorias.init();
+                    break;
                 case "periodGroupAverages":
                     Tecnotek.PeriodGroupAverages.init();
                     break;

@@ -1,0 +1,116 @@
+{% extends 'TecnotekExpedienteBundle::logged_layout.html.twig' %}
+
+{% block htmlTitle %}
+    Tecnotek :: Expediente :: Super Administrador
+{% endblock %}
+
+{% block extracss %}
+<link rel="stylesheet" href="{{ asset('fancybox/jquery.fancybox.css') }}" type="text/css" media="all" />
+<link rel="stylesheet" href="{{ asset('fancybox/fancybox_style.css') }}" type="text/css" media="all" />
+<link rel="stylesheet" href="{{ asset('css/jquery-ui-timepicker-addon.css') }}" type="text/css" media="all" />
+{% endblock %}
+
+{% block extrajs %}
+<script type="text/javascript" src="{{ asset('fancybox/jquery.fancybox.js?v=2.0.6') }}"></script>
+<script type="text/javascript" src="{{ asset('js/tek_exp_enterConvocatorias.js') }}"></script>
+
+<script type="text/javascript">
+    Tecnotek.module = "enterConvocatorias";
+    Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
+
+    Tecnotek.UI.urls["loadGroupsOfYearURL"] = "{{ path('_expediente_sysadmin_load_groups_of_year')}}";
+    Tecnotek.UI.urls["loadCoursesOfGroupURL"] = "{{ path("_expediente_sysadmin_load_courses_of_group") }}";
+    Tecnotek.UI.urls["getStudentsURL"] = "{{ path('_expediente_sysadmin_students_ajax_list_with_convocatorias')}}";
+
+    Tecnotek.UI.urls["saveNotaConvotariaURL"] = "{{ path('_expediente_sysadmin_save_nota_convocatoria')}}";
+
+
+
+    Tecnotek.UI.urls["loadQualificationsOfGroupByCourseURL"] = "{{ path("_expediente_report_group_qualifications_by_course") }}";
+    Tecnotek.UI.urls["viewPrintableVersionURL"] = "{{ path("_expediente_sysadmin_printable_group_qualifications") }}";
+
+    Tecnotek.UI.urls["saveAbsenceURL"] = "{{ path('_expediente_absences_save')}}";
+    Tecnotek.UI.urls["loadStudentRelativesURL"] = "{{ path('_expediente_sysadmin_relatives_list')}}";
+
+    Tecnotek.StudentShow.translates["relative.not.selected"] = "{% trans %}message.relative.not.selected{% endtrans %}";
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="container_24">
+    <div class="grid_24">
+        <div>
+            <div class="left">
+                <h3>{% trans %}label.convocatorias.by.group.title{% endtrans %}</h3>
+                <span>{% trans %}label.convocatorias.by.group.help{% endtrans %}</span>
+            </div>
+           <div class="clear"></div>
+        </div>
+        <br/>
+        <div style="line-height: 26px;">
+            <div class="left" style="width: 70px; font-weight: bold;">{%trans%}label.year{%endtrans%}</div>
+            <div id="labelPeriod" class="left">
+                <select id="year" name="year" style="width: 150px;">
+                    {% for year in years %}
+                    <option value="{{year}}">{{year}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div id="groupsContainer" class="left" style="margin-left: 50px;">
+                <div class="left" style="width: 65px; font-weight: bold;">{%trans%}label.groups{%endtrans%}</div>
+                <div class="left">
+                    <select id="groups" name="groups" style="width: 150px;">
+                    </select>
+                </div>
+            </div>
+
+            <div id="coursesContainer" class="left" style="margin-left: 40px;">
+                <div class="left" style="width: 95px; font-weight: bold;">{%trans%}label.course{%endtrans%}</div>
+                <div class="left">
+                    <select id="courses" name="courses" style="width: 150px;">
+                    </select>
+                </div>
+            </div>
+
+            <div class="clear"></div>
+        </div>
+
+        <div class="search-results table" style="margin-top:15px;">
+            <div class="row tableHeader" style="height: 32px; line-height: 32px; padding: 0px 0px;">
+                <div class="option_width" style="float: left; width: 25px;"></div>
+                <div class="option_width" style="float: left; width: 300px;">{% trans %}label.student{% endtrans %}</div>
+                <div class="option_width" style="float: left; width: 250px;">{% trans %}label.convocatoria{% endtrans %} I</div>
+                <div class="option_width" style="float: left; width: 250px;">{% trans %}label.convocatoria{% endtrans %} II</div>
+            </div>
+            <form action="{{ path("_expediente_sysadmin_save_group_absences") }}" method="post" id="absencesForm">
+                <input type="hidden" id="studentsIds" name="studentsIds" value=" ">
+                <input type="hidden" id="absencesDate" name="absencesDate" value=" ">
+                <div id="studentsRows" name="studentsRows">
+
+                </div>
+
+                <div class="clear"></div>
+            </form>
+
+            <div class="row userRow tableRowOdd tableRow" id="stdRow_STDYID" name="stdRow_STDYID" style="height: 30px; line-height: 30px; display: none; padding: 0px 0px;">
+                <div class="option_width" style="float: left; width: 300px;">STDNAME</div>
+                <div class="option_width" style="float: left; width: 25px;">
+                    <input type="checkbox" class="cbConvocatoria1" rel="STDYID" STATUSCBNOTA1>
+                </div>
+                <div class="option_width" style="float: left; width: 225px;">
+                    <input type="text" id="nota_convocatoria_1_STDYID" name="nota_convocatoria_1_STDYID" class="nota" num="1" rel="STDYID" required="required" style="width:145px; height: 26px;" STATUSNOTA1>
+                </div>
+                <div class="option_width" style="float: left; width: 25px;">
+                    <input type="checkbox" class="cbConvocatoria2" id="cb_convocatoria_2_STDYID" name="cb_convocatoria_2_STDYID" rel="STDYID" STATUSCBNOTA2>
+                </div>
+                <div class="option_width" style="float: left; width: 225px;">
+                    <input type="text" id="nota_convocatoria_2_STDYID" name="nota_convocatoria_2_STDYID" class="nota" num="2" rel="STDYID" required="required" style="width: 145px; height: 26px;" STATUSNOTA2>
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+    </div>
+    <div class="clear"></div>
+</div>
+{% endblock %}

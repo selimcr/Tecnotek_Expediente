@@ -4,6 +4,7 @@ namespace Tecnotek\ExpedienteBundle\Controller;
 
 use Tecnotek\ExpedienteBundle\Entity\Absence;
 use Tecnotek\ExpedienteBundle\Entity\Contact;
+use Tecnotek\ExpedienteBundle\Entity\StudentExtraTest;
 use Tecnotek\ExpedienteBundle\Entity\Club as Club;
 use Tecnotek\ExpedienteBundle\Entity\Relative as Relative;
 use Tecnotek\ExpedienteBundle\Entity\Student;
@@ -2019,4 +2020,127 @@ class StudentController extends Controller
         ));
     }
 
+    public function enterConvocatoriasAction()
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $periods = $em->getRepository("TecnotekExpedienteBundle:Period")->findAll();
+        $years = array();
+
+        foreach($periods as $period){
+            if (!array_key_exists($period->getYear(), $years)) {
+                $years[$period->getYear()] = $period->getYear();
+            }
+        }
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Student/enterConvocatorias.html.twig', array('menuIndex' => 3,
+            'years' => $years
+        ));
+    }
+
+    public function getStudentsListWithConvocatoriasAction(){
+        $logger = $this->get('logger');
+        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
+        {
+            $translator = $this->get("translator");
+            try {
+                $request = $this->get('request')->request;
+                $year = $request->get('year');
+                $groupId = $request->get('groupId');
+                $courseId = $request->get('courseId');
+
+                $em = $this->getDoctrine()->getEntityManager();
+
+                //$currentPeriod = $em->getRepository("TecnotekExpedienteBundle:Period")->findOneBy(array('isActual' => true));
+                //$currentPeriodId = $currentPeriod->getId();
+
+                if( isset($courseId) && isset($groupId) ){
+
+                    $keywords = preg_split("/[\s-]+/", $groupId);
+                    $groupId = $keywords[0];
+                    $gradeId = $keywords[1];
+
+                    $sql = "SELECT stdy.id, CONCAT(e.lastname, ' ', e.firstname) as 'name'  , stdy.group_id,"
+                        . "(select et.qualification from tek_student_extra_tests et where et.student_year_id = stdy.id and et.number = 1) as nota1,"
+                        . "(select et.qualification from tek_student_extra_tests et where et.student_year_id = stdy.id and et.number = 2) as nota2"
+                        . " FROM tek_students e, tek_students_year stdy"
+                        . " WHERE stdy.group_id = $groupId AND stdy.student_id = e.id"
+                        . " ORDER BY e.lastname, e.firstname";
+                    $logger->err("--> " . $sql);
+                    $stmt = $em->getConnection()->prepare($sql);
+                    $stmt->execute();
+                    $students = $stmt->fetchAll();
+
+                    if ( isset($students) ) {
+                        return new Response(json_encode(array('error' => false, 'students' => $students)));
+                    } else {
+                        return new Response(json_encode(array('error' => true, 'message' => "Data not found.")));
+                    }
+                } else {
+                    return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
+                }
+            }
+            catch (Exception $e) {
+                $info = toString($e);
+                $logger->err('Student::getStudentListAction [' . $info . "]");
+                return new Response(json_encode(array('error' => true, 'message' => $info)));
+            }
+        }// endif this is an ajax request
+        else
+        {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+    }
+
+    public function saveConvocatoriaAction(){
+        $logger = $this->get('logger');
+        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
+        {
+            $translator = $this->get("translator");
+            try {
+                $request = $this->get('request')->request;
+                $stdYear = $request->get('stdYear');
+                $course = $request->get('course');
+                $number = $request->get('number');
+                $nota = $request->get('nota');
+
+                $em = $this->getDoctrine()->getEntityManager();
+
+                if( isset($stdYear) && isset($number) && isset($nota) && isset($course) ){
+
+                    $studentExtraTest = $em->getRepository("TecnotekExpedienteBundle:StudentExtraTest")->findOneBy(
+                        array('studentYear' => $stdYear, 'course' => $course, 'number' => $number));
+
+                    if( isset($studentExtraTest) ){
+                        if($nota != -1){
+                            $studentExtraTest->setQualification($nota);
+                        } else {
+                            $em->remove($studentExtraTest);
+                        }
+                    } else {
+                        if($nota != -1){
+                            $studentExtraTest = new StudentExtraTest();
+                            $studentExtraTest->setCourse($em->getRepository("TecnotekExpedienteBundle:Course")->find($course));
+                            $studentExtraTest->setNumber($number);
+                            $studentExtraTest->setQualification($nota);
+                            $studentExtraTest->setStudentYear($em->getRepository("TecnotekExpedienteBundle:StudentYear")->find($stdYear));
+                            $em->persist($studentExtraTest);
+                        }
+                    }
+                    $em->flush();
+
+                    return new Response(json_encode(array('error' => false)));
+                } else {
+                    return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
+                }
+            }
+            catch (Exception $e) {
+                $info = toString($e);
+                $logger->err('Student::getStudentListAction [' . $info . "]");
+                return new Response(json_encode(array('error' => true, 'message' => $info)));
+            }
+        }// endif this is an ajax request
+        else
+        {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+    }
 }

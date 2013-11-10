@@ -106,6 +106,7 @@ label.commets: Comentarios
 label.code: Codigo
 label.description: Descripcion
 label.enter.by.rubro: Ingresar notas por rubro
+label.enter.convocatorias: Ingresar Convocatorias
 
 label.password.cambiar: Cambiar Password
 label.usuarios.admin: Administradores
@@ -160,6 +161,10 @@ label.absences.title: Administracion de Ausencias
 label.absences.message: Puede filtrar la informacion y consultar las ausencias deseadas.
 label.absences.by.group.title: Ingreso de Ausencias por Grupo
 label.absences.by.group: Ausencias por Grupo
+
+label.convocatorias.by.group.title: Definici&oacute;n de Convocatorias por Grupo
+label.convocatorias.by.group.help: Marque las convocatorias por estudiante e ingresa la nota obtenida
+label.convocatoria: Convocatoria
 
 label.schedule: Horario
 label.gender: Genero

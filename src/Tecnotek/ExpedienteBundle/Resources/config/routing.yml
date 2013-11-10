@@ -492,6 +492,18 @@ _expediente_sysadmin_relatives_update:
     pattern:  /ap/student/updaterelative
     defaults: { _controller: TecnotekExpedienteBundle:Student:relativesUpdate }
 
+_expediente_sysadmin_convocatorias:
+    pattern:  /ap/students/convocatorias
+    defaults: { _controller: TecnotekExpedienteBundle:Student:enterConvocatorias }
+
+_expediente_sysadmin_students_ajax_list_with_convocatorias:
+    pattern:  /ap/students/convocatorias/ajaxList
+    defaults: { _controller: TecnotekExpedienteBundle:Student:getStudentsListWithConvocatorias }
+
+_expediente_sysadmin_save_nota_convocatoria:
+    pattern:  /ap/students/convocatorias/save
+    defaults: { _controller: TecnotekExpedienteBundle:Student:saveConvocatoria }
+
 #Administrador
 _expediente_admin:
     pattern:  /admin

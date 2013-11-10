@@ -2330,7 +2330,7 @@ class SuperAdminController extends Controller
                     //Get Groups
                     $sql = "SELECT CONCAT(g.id,'-',grade.id) as 'id', CONCAT(grade.name, ' :: ', g.name) as 'name'" .
                         " FROM tek_groups g, tek_periods p, tek_grades grade" .
-                        " WHERE g.period_id = p.id AND p.year = " .  $year . " AND g.grade_id = grade.id" .
+                        " WHERE p.orderInYear = 3 AND g.period_id = p.id AND p.year = " .  $year . " AND g.grade_id = grade.id" .
                         " GROUP BY CONCAT(grade.name, ' :: ', g.name)" .
                         " ORDER BY g.id";
                     $stmt = $em->getConnection()->prepare($sql);

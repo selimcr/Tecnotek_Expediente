@@ -36,10 +36,10 @@ class StudentExtraTest
     private $number;
 
     /**
-     * @ManyToOne(targetEntity="CourseClass")
-     * @JoinColumn(name="course_class_id", referencedColumnName="id")
+     * @ManyToOne(targetEntity="Course")
+     * @JoinColumn(name="course_id", referencedColumnName="id")
      */
-    private $courseClass;
+    private $course;
 
     /**
      * @ManyToOne(targetEntity="StudentYear")
@@ -130,23 +130,23 @@ class StudentExtraTest
     }
 
     /**
-     * Set courseClass
+     * Set course
      *
-     * @param \Tecnotek\ExpedienteBundle\Entity\CourseClass $courseClass
+     * @param \Tecnotek\ExpedienteBundle\Entity\Course $course
      */
-    public function setCourseClass(\Tecnotek\ExpedienteBundle\Entity\CourseClass $courseClass)
+    public function setCourse(\Tecnotek\ExpedienteBundle\Entity\Course $course)
     {
-        $this->courseClass = $courseClass;
+        $this->course = $course;
     }
 
     /**
-     * Get $courseClass
+     * Get $course
      *
-     * @return \Tecnotek\ExpedienteBundle\Entity\CourseClass
+     * @return \Tecnotek\ExpedienteBundle\Entity\Course
      */
-    public function getCourseClass()
+    public function getCourse()
     {
-        return $this->courseClass;
+        return $this->course;
     }
 
 }
