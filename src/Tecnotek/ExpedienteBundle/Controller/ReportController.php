@@ -681,6 +681,12 @@ class ReportController extends Controller
         $promedioRow .= '<td style="text-align: center; font-size:16px;">promedioGeneral</td>';
         $promedioRow .=  "</tr>";
 
+        $condicionRow = '';
+        $condicionRow .=  '<tr class="rowNotas" style="background-color: rgb(78, 76, 76);">';
+        $condicionRow .= '<td style="text-align: left; font-size:16px; color: white;">Condici&oacute;n:</td>';
+        $condicionRow .= '<td  style="text-align: center; font-size:16px; color: white;" colspan="4">changeCondicion</td>';
+        $condicionRow .=  "</tr>";
+
         //Revisar Ausencias y Calcular Nota de Conducta
         $absenceRow = '';
         $absenceRow .=  '<tr class="rowNotas">';
@@ -713,11 +719,10 @@ class ReportController extends Controller
         $stdQualifications = array();
         $absencesArray = array();
         $notasParteFinal = "";
+        $numberOfLossCourses = 0;
 
         foreach( $periods as $period )
         {
-            $logger->err("-> Period: " . $period);
-
             //Get Student Year of the Period related to the student
             $stdYear = $em->getRepository("TecnotekExpedienteBundle:StudentYear")->findOneBy(array('student' => $studentYear->getStudent()->getId(), 'period' => $period->getId()));
 
@@ -898,6 +903,10 @@ class ReportController extends Controller
             }
             if($counterForAverage != 0){
                 $row = str_replace("courseRowNotaProm",number_format( ($totalForAverage/$counterForAverage), 2, '.', ''), $row);
+                if($totalForAverage != 0 && $totalForAverage/$counterForAverage < $notaMin->getNotaMin()){//Si se pierde curso igual suma...
+                    $numberOfLossCourses = $numberOfLossCourses + 1;
+                    //$logger->err("--> se perdio un curso: " . $courseName );
+                }
             } else {
                 $row = str_replace("courseRowNotaProm", "-----", $row);
             }
@@ -916,7 +925,6 @@ class ReportController extends Controller
         $totalesConducta[2] = 100;
         $totalesConducta[3] = 100;
 
-        $logger->err("La nota inicial es de: " . $totalesConducta[2] );
         $absencesHtml = "";
         foreach ($absencesArray as $i => $absenceDetail) {
             $row = str_replace("absenceTypeName", $i, $absenceRow);
@@ -947,6 +955,10 @@ class ReportController extends Controller
                 $studentYear->setConducta($conducta);
             }
             $row = str_replace("courseRowNota" . $i, $conducta, $row);
+        }
+        if($totalConducta/$period->getOrderInYear() < $notaMin->getNotaMin()){//Si se pierde conducta igual suma...
+            $numberOfLossCourses = $numberOfLossCourses + 1;
+            //$logger->err("--> se perdio un curso: " . "Conducta" );
         }
         $row = str_replace("courseRowNotaProm", number_format($totalConducta/$period->getOrderInYear(), 2, '.', ''), $row);
         $row = str_replace("courseRowNota1", "-----", $row);
@@ -986,6 +998,19 @@ class ReportController extends Controller
         }
 
         $html .= $row . $promedioRow . $absencesHtml;
+
+        if($period->getOrderInYear() == 3){
+            if($numberOfLossCourses == 0){//Aprobado
+                $condicionRow = str_replace("changeCondicion", "APROBADO", $condicionRow);
+            } else if ($numberOfLossCourses > 3){//Reprobado
+                $condicionRow = str_replace("changeCondicion", "REPROBADO", $condicionRow);
+            } else {//Aplazado
+                $condicionRow = str_replace("changeCondicion", "APLAZADO", $condicionRow);
+            }
+
+            $html .= $condicionRow;
+        }
+
 
         $html .= "</table>";
 
