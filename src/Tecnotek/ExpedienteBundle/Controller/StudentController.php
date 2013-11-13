@@ -2059,8 +2059,8 @@ class StudentController extends Controller
                     $gradeId = $keywords[1];
 
                     $sql = "SELECT stdy.id, CONCAT(e.lastname, ' ', e.firstname) as 'name'  , stdy.group_id,"
-                        . "(select et.qualification from tek_student_extra_tests et where et.student_year_id = stdy.id and et.number = 1) as nota1,"
-                        . "(select et.qualification from tek_student_extra_tests et where et.student_year_id = stdy.id and et.number = 2) as nota2"
+                        . "(select et.qualification from tek_student_extra_tests et where et.student_year_id = stdy.id and et.course_id = $courseId and et.number = 1) as nota1,"
+                        . "(select et.qualification from tek_student_extra_tests et where et.student_year_id = stdy.id and et.course_id = $courseId and et.number = 2) as nota2"
                         . " FROM tek_students e, tek_students_year stdy"
                         . " WHERE stdy.group_id = $groupId AND stdy.student_id = e.id"
                         . " ORDER BY e.lastname, e.firstname";
