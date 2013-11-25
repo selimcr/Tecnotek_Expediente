@@ -1,4 +1,9 @@
 parameters:
+    corpo_name: 'Corporación Educativa Saint Michael S.A.'
+    corpo_phone:  '2270-2335'
+    corpo_fax:  '2250-0076'
+    corpo_email:  'info@saintmichaelcr.com'
+    style_for_pages:  'saintmichael'
     database_driver: pdo_mysql
     database_host: localhost
     database_port: '3306'

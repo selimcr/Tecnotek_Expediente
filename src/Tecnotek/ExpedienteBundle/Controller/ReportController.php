@@ -1058,7 +1058,10 @@ class ReportController extends Controller
 
         $html .= '<div style="margin-top: 15px;"><hr></div>';
         $html .= '<div class="left" style="width: 100%; text-align: center;"><div style="line-height: 25px;">Autorizado y Reconocido por el MEP, Acuerdo C.S.E. N. 042-92</div>';
-        $html .= '<div style="line-height: 25px;">Afiliado a ANADEC</div><div style="line-height: 25px;">Tel&eacute;fono: 2270-2335&nbsp;&nbsp;&nbsp;Fax: 2250-0076&nbsp;&nbsp;&nbsp;Email: info@saintmichaelcr.com</div></div>';
+        $html .= '<div style="line-height: 25px;">Afiliado a ANADEC</div><div style="line-height: 25px;">Tel&eacute;fono: ' .
+            $this->container->getParameter('corpo_phone') . '&nbsp;&nbsp;&nbsp;Fax: ' .
+            $this->container->getParameter('corpo_fax') . '&nbsp;&nbsp;&nbsp;Email: ' .
+            $this->container->getParameter('corpo_email') . '</div></div>';
 
         $html .= '</div>';
 
