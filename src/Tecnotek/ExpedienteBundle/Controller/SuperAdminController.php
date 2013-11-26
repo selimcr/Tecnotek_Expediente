@@ -1641,187 +1641,187 @@ class SuperAdminController extends Controller
         $logger = $this->get('logger');
         $translator = $this->get("translator");
 
-            try {
-                $request = $this->get('request');
-                $periodId = $request->get('periodId');
-                $groupId = $request->get('groupId');
-                $courseId = $request->get('courseId');
+        try {
+            $request = $this->get('request');
+            $periodId = $request->get('periodId');
+            $groupId = $request->get('groupId');
+            $courseId = $request->get('courseId');
 
-                if( !isset($courseId) || !isset($groupId) || !isset($periodId)) {
-                    return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
-                }
+            if( !isset($courseId) || !isset($groupId) || !isset($periodId)) {
+                return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
+            }
 
-                $keywords = preg_split("/[\s-]+/", $groupId);
-                $groupId = $keywords[0];
-                $gradeId = $keywords[1];
-
-
+            $keywords = preg_split("/[\s-]+/", $groupId);
+            $groupId = $keywords[0];
+            $gradeId = $keywords[1];
 
 
-                if( isset($courseId) && isset($groupId) && isset($periodId)) {
-                    $em = $this->getDoctrine()->getEntityManager();
 
-                    $group = $em->getRepository("TecnotekExpedienteBundle:Group")->find( $groupId );
-                    $course = $em->getRepository("TecnotekExpedienteBundle:Course")->find( $courseId );
 
-                    $title = "Calificaciones del grupo: " . $group->getGrade() . "-" . $group . " en la materia: " . $course;
+            if( isset($courseId) && isset($groupId) && isset($periodId)) {
+                $em = $this->getDoctrine()->getEntityManager();
 
-                    $dql = "SELECT ce FROM TecnotekExpedienteBundle:CourseEntry ce "
-                        . " JOIN ce.courseClass cc"
-                        . " WHERE ce.parent IS NULL AND cc.period = " . $periodId . " AND cc.grade = " . $gradeId
-                        . " AND cc.course = " . $courseId
-                        . " ORDER BY ce.sortOrder";
-                    $query = $em->createQuery($dql);
-                    $entries = $query->getResult();
-                    $temp = new \Tecnotek\ExpedienteBundle\Entity\CourseEntry();
-                    $html =  '<tr  style="height: 145px; line-height: 0px;"><td class="celesteOscuro" style="min-width: 75px; font-size: 12px; height: 175px;">Carne</td>';
-                    $html .=  '<td class="celesteClaro bold" style="min-width: 300px; font-size: 12px; height: 145px;">Estudiante</td>';
-                    $html .= '<td class="azul" style="vertical-align: bottom; padding: 1.5625em 0.625em; height: 145px;"><div class="verticalText" style="color: #fff;">Promedio Trimestral</div></td>';
+                $group = $em->getRepository("TecnotekExpedienteBundle:Group")->find( $groupId );
+                $course = $em->getRepository("TecnotekExpedienteBundle:Course")->find( $courseId );
 
-                    $marginLeft = 48;
-                    $marginLeftCode = 62;
-                    $htmlCodes =  '<tr  style="height: 25px;"><td class="celesteOscuro" style="width: 75px; font-size: 10px;"></td>';
-                    $htmlCodes .=  '<td class="celesteClaro bold" style="width: 300px; font-size: 8px;"></td>';
-                    $htmlCodes .= '<td class="azul" style="color: #fff;"></td>';
-                    $jumpRight = 46;
-                    $width = 44;
+                $title = "Calificaciones del grupo: " . $group->getGrade() . "-" . $group . " en la materia: " . $course. " en el Periodo: " . $periodId;
 
-                    $html3 =  '<tr style="height: 25px; line-height: 0px;" class="noPrint"><td class="celesteOscuro bold headcolcarne" style="min-width: 75px; font-size: 12px;">Carne</td>';
-                    $html3 .=  '<td class="celesteClaro bold headcolnombre" style="min-width: 300px; font-size: 12px;">Estudiante</td>';
-                    $html3 .= '<td class="azul headcoltrim" style="color: #fff;">TRIM</td>';
-                    $studentRow = '';
-                    $studentsHeader = '';
-                    $colors = array(
-                        "one" => "#38255c",
-                        "two" => "#04D0E6"
-                    );
+                $dql = "SELECT ce FROM TecnotekExpedienteBundle:CourseEntry ce "
+                    . " JOIN ce.courseClass cc"
+                    . " WHERE ce.parent IS NULL AND cc.period = " . $periodId . " AND cc.grade = " . $gradeId
+                    . " AND cc.course = " . $courseId
+                    . " ORDER BY ce.sortOrder";
+                $query = $em->createQuery($dql);
+                $entries = $query->getResult();
+                $temp = new \Tecnotek\ExpedienteBundle\Entity\CourseEntry();
+                $html =  '<tr  style="height: 75px; line-height: 0px;"><td class="celesteOscuro" style="min-width: 75px; font-size: 12px; height: 75px;">Carne</td>';
+                $html .=  '<td class="celesteClaro bold" style="min-width: 300px; font-size: 12px; height: 75px;">Estudiante</td>';
+                $html .= '<td class="azul" style="vertical-align: bottom; padding: 1.5625em 0.625em; height: 75px;"><div class="verticalText" style="color: #000;">Promedio</div></td>';
 
-                    $dql = "SELECT stdy FROM TecnotekExpedienteBundle:Student std, TecnotekExpedienteBundle:StudentYear stdy "
-                        . " WHERE stdy.student = std AND stdy.group = " . $groupId . " AND stdy.period = " . $periodId
-                        . " ORDER BY std.lastname, std.firstname";
-                    $query = $em->createQuery($dql);
-                    $students = $query->getResult();
+                $marginLeft = 48;
+                $marginLeftCode = 62;
+                $htmlCodes =  '<tr  style="height: 25px;"><td class="celesteOscuro" style="width: 75px; font-size: 10px;"></td>';
+                $htmlCodes .=  '<td class="celesteClaro bold" style="width: 300px; font-size: 8px;"></td>';
+                $htmlCodes .= '<td class="azul" style="color: #000;"></td>';
+                $jumpRight = 46;
+                $width = 44;
 
-                    $studentsCount = sizeof($students);
-                    $rowIndex = 1;
-                    $colsCounter = 1;
+                $html3 =  '<tr style="height: 25px; line-height: 0px;" class="noPrint"><td class="celesteOscuro bold headcolcarne" style="min-width: 75px; font-size: 12px;">Carne</td>';
+                $html3 .=  '<td class="celesteClaro bold headcolnombre" style="min-width: 300px; font-size: 12px;">Estudiante</td>';
+                $html3 .= '<td class="azul headcoltrim" style="color: #000;">TRIM1111</td>';
+                $studentRow = '';
+                $studentsHeader = '';
+                $colors = array(
+                    "one" => "#38255c",
+                    "two" => "#04D0E6"
+                );
 
-                    $specialCounter = 1;
+                $dql = "SELECT stdy FROM TecnotekExpedienteBundle:Student std, TecnotekExpedienteBundle:StudentYear stdy "
+                    . " WHERE stdy.student = std AND stdy.group = " . $groupId . " AND stdy.period = " . $periodId
+                    . " ORDER BY std.lastname, std.firstname";
+                $query = $em->createQuery($dql);
+                $students = $query->getResult();
 
-                    foreach( $entries as $entry )
-                    {
-                        $temp = $entry;
-                        $childrens = $temp->getChildrens();
-                        $size = sizeof($childrens);
-                        if($size == 0){//No child
-                            //Find SubEntries
-                            $dql = "SELECT ce FROM TecnotekExpedienteBundle:SubCourseEntry ce "
-                                . " WHERE ce.parent = " . $temp->getId()  . " AND ce.group = " . $groupId
-                                . " ORDER BY ce.sortOrder";
-                            $query = $em->createQuery($dql);
-                            $subentries = $query->getResult();
+                $studentsCount = sizeof($students);
+                $rowIndex = 1;
+                $colsCounter = 1;
 
-                            $size = sizeof($subentries);
+                $specialCounter = 1;
 
-                            if($size > 1){
+                foreach( $entries as $entry )
+                {
+                    $temp = $entry;
+                    $childrens = $temp->getChildrens();
+                    $size = sizeof($childrens);
+                    if($size == 0){//No child
+                        //Find SubEntries
+                        $dql = "SELECT ce FROM TecnotekExpedienteBundle:SubCourseEntry ce "
+                            . " WHERE ce.parent = " . $temp->getId()  . " AND ce.group = " . $groupId
+                            . " ORDER BY ce.sortOrder";
+                        $query = $em->createQuery($dql);
+                        $subentries = $query->getResult();
+
+                        $size = sizeof($subentries);
+
+                        if($size > 1){
+                            foreach( $subentries as $subentry )
+                            {
+
+                                //$studentRow .= '<td class=""><input tabIndex=tabIndexCol'. $colsCounter . 'x type="text" class="textField itemNota item_' . $temp->getId() . '_stdId" val="val_stdId_' . $subentry->getId() .  '_" tipo="2" child="' . $size . '" parent="' . $temp->getId() . '" rel="total_' . $temp->getId() . '_stdId" max="' . $subentry->getMaxValue() . '" perc="' . $subentry->getPercentage() . '" std="stdId"  entry="' . $subentry->getId() . '"  stdyId="stdyIdd"></td>';
+                                $studentRow .= '<td class="celesteClaro noPrint"><div><input disabled="disabled" tabIndex=tabIndexCol'. $colsCounter . 'x type="text" class="textField itemNota item_' . $temp->getId() . '_stdId" val="val_stdId_' . $subentry->getId() .  '_" tipo="2" child="' . $size . '" parent="' . $temp->getId() . '" rel="total_' . $temp->getId() . '_stdId" max="' . $subentry->getMaxValue() . '" perc="' . $subentry->getPercentage() . '" std="stdId"  entry="' . $subentry->getId() . '"  stdyId="stdyIdd"></div></td>';
+                                $colsCounter++;
+                                $htmlCodes .= '<td class="celesteClaro noPrint"></td>';
+                                $specialCounter++;
+                                $html .= '<td class="celesteClaro noPrint"><div class="verticalText">' . $subentry->getCode() . '</div></td>';
+                                $marginLeft += $jumpRight; $marginLeftCode += 25;
+                            }
+
+                            //$studentRow .= '<td class="itemHeaderCode itemPromedio" id="prom_' . $temp->getId() . '_stdId" perc="' . $temp->getPercentage() . '">-</td>';
+                            $studentRow .= '<td class="celesteOscuro noPrint" id="prom_' . $temp->getId() . '_stdId" perc="' . $temp->getPercentage() . '">-</td>';
+                            $htmlCodes .= '<td class="celesteOscuro noPrint"></td>';
+                            $specialCounter++;
+                            $html .= '<td class="celesteOscuro noPrint"><div class="verticalText">Promedio ' . $temp->getCode() . ' </div></td>';
+                            $marginLeft += $jumpRight; $marginLeftCode += 25;
+
+                            //$studentRow .= '<td id="total_' . $temp->getId() . '_stdId" class="itemHeaderCode itemPorcentage nota_stdId">-</td>';
+                            $studentRow .= '<td id="total_' . $temp->getId() . '_stdId" class="morado bold nota_stdId">-</td>';
+                            $htmlCodes .= '<td class="morado bold">' . $temp->getCode() . '</td>';
+                            $specialCounter++;
+                            $html .= '<td class="morado" style="padding: 1.5625em 0.625em; vertical-align: bottom;"><div class="verticalText">' . $temp->getPercentage() . '% ' . $temp->getCode() . '</div></td>';
+                            $marginLeft += $jumpRight; $marginLeftCode += 25;
+
+                            // $html3 .= '<div class="itemHeader2 itemNota" style="width: ' . (($width * (sizeof($subentries)+1)) + ((sizeof($subentries)) * 2) ) . 'px">' . $temp->getCode() . '</div>';
+                            $html3 .= '<td class="celesteClaro noPrint" colspan="' . (sizeof($subentries)+2) . '">' . $temp->getCode() . '</td>';
+                        } else {
+                            if($size == 1){
                                 foreach( $subentries as $subentry )
                                 {
-
-                                    //$studentRow .= '<td class=""><input tabIndex=tabIndexCol'. $colsCounter . 'x type="text" class="textField itemNota item_' . $temp->getId() . '_stdId" val="val_stdId_' . $subentry->getId() .  '_" tipo="2" child="' . $size . '" parent="' . $temp->getId() . '" rel="total_' . $temp->getId() . '_stdId" max="' . $subentry->getMaxValue() . '" perc="' . $subentry->getPercentage() . '" std="stdId"  entry="' . $subentry->getId() . '"  stdyId="stdyIdd"></td>';
-                                    $studentRow .= '<td class="celesteClaro noPrint"><div><input disabled="disabled" tabIndex=tabIndexCol'. $colsCounter . 'x type="text" class="textField itemNota item_' . $temp->getId() . '_stdId" val="val_stdId_' . $subentry->getId() .  '_" tipo="2" child="' . $size . '" parent="' . $temp->getId() . '" rel="total_' . $temp->getId() . '_stdId" max="' . $subentry->getMaxValue() . '" perc="' . $subentry->getPercentage() . '" std="stdId"  entry="' . $subentry->getId() . '"  stdyId="stdyIdd"></div></td>';
+                                    //$studentRow .= '<td class=""><input tabIndex=tabIndexCol'. $colsCounter . 'x type="text" class="textField itemNota item_' . $temp->getId() . '_stdId" val="val_stdId_' . $subentry->getId() .  '_" tipo="1"  max="' . $subentry->getMaxValue() . '" child="' . $size . '" parent="' . $temp->getId() . '" rel="total_' . $temp->getId() . '_stdId" perc="' . $subentry->getPercentage() . '" std="stdId"  entry="' . $subentry->getId() . '"  stdyId="stdyIdd"></td>';
+                                    $studentRow .= '<td class="celesteClaro noPrint"><div style="height: 15px;"><input disabled="disabled" tabIndex=tabIndexCol'. $colsCounter . 'x type="text" class="textField itemNota item_' . $temp->getId() . '_stdId" val="val_stdId_' . $subentry->getId() .  '_" tipo="1"  max="' . $subentry->getMaxValue() . '" child="' . $size . '" parent="' . $temp->getId() . '" rel="total_' . $temp->getId() . '_stdId" perc="' . $subentry->getPercentage() . '" std="stdId"  entry="' . $subentry->getId() . '"  stdyId="stdyIdd"></div></td>';
                                     $colsCounter++;
                                     $htmlCodes .= '<td class="celesteClaro noPrint"></td>';
                                     $specialCounter++;
-                                    $html .= '<td class="celesteClaro noPrint"><div class="verticalText">' . $subentry->getName() . '</div></td>';
+                                    $html .= '<td class="celesteClaro noPrint"><div class="verticalText">' . $subentry->getCode() . '</div></td>';
                                     $marginLeft += $jumpRight; $marginLeftCode += 25;
                                 }
-
-                                //$studentRow .= '<td class="itemHeaderCode itemPromedio" id="prom_' . $temp->getId() . '_stdId" perc="' . $temp->getPercentage() . '">-</td>';
-                                $studentRow .= '<td class="celesteOscuro noPrint" id="prom_' . $temp->getId() . '_stdId" perc="' . $temp->getPercentage() . '">-</td>';
-                                $htmlCodes .= '<td class="celesteOscuro noPrint"></td>';
-                                $specialCounter++;
-                                $html .= '<td class="celesteOscuro noPrint"><div class="verticalText">Promedio ' . $temp->getName() . ' </div></td>';
-                                $marginLeft += $jumpRight; $marginLeftCode += 25;
 
                                 //$studentRow .= '<td id="total_' . $temp->getId() . '_stdId" class="itemHeaderCode itemPorcentage nota_stdId">-</td>';
                                 $studentRow .= '<td id="total_' . $temp->getId() . '_stdId" class="morado bold nota_stdId">-</td>';
                                 $htmlCodes .= '<td class="morado bold">' . $temp->getCode() . '</td>';
                                 $specialCounter++;
-                                $html .= '<td class="morado" style="padding: 1.5625em 0.625em; vertical-align: bottom;"><div class="verticalText">' . $temp->getPercentage() . '% ' . $temp->getName() . '</div></td>';
+                                $html .= '<td class="morado"  style="padding: 1.5625em 0.625em; vertical-align: bottom;"><div class="verticalText">' . $temp->getPercentage() . '% ' . $temp->getCode() . '</div></td>';
                                 $marginLeft += $jumpRight; $marginLeftCode += 25;
-
-                                // $html3 .= '<div class="itemHeader2 itemNota" style="width: ' . (($width * (sizeof($subentries)+1)) + ((sizeof($subentries)) * 2) ) . 'px">' . $temp->getName() . '</div>';
-                                $html3 .= '<td class="celesteClaro noPrint" colspan="' . (sizeof($subentries)+2) . '">' . $temp->getName() . '</td>';
-                            } else {
-                                if($size == 1){
-                                    foreach( $subentries as $subentry )
-                                    {
-                                        //$studentRow .= '<td class=""><input tabIndex=tabIndexCol'. $colsCounter . 'x type="text" class="textField itemNota item_' . $temp->getId() . '_stdId" val="val_stdId_' . $subentry->getId() .  '_" tipo="1"  max="' . $subentry->getMaxValue() . '" child="' . $size . '" parent="' . $temp->getId() . '" rel="total_' . $temp->getId() . '_stdId" perc="' . $subentry->getPercentage() . '" std="stdId"  entry="' . $subentry->getId() . '"  stdyId="stdyIdd"></td>';
-                                        $studentRow .= '<td class="celesteClaro noPrint"><div style="height: 15px;"><input disabled="disabled" tabIndex=tabIndexCol'. $colsCounter . 'x type="text" class="textField itemNota item_' . $temp->getId() . '_stdId" val="val_stdId_' . $subentry->getId() .  '_" tipo="1"  max="' . $subentry->getMaxValue() . '" child="' . $size . '" parent="' . $temp->getId() . '" rel="total_' . $temp->getId() . '_stdId" perc="' . $subentry->getPercentage() . '" std="stdId"  entry="' . $subentry->getId() . '"  stdyId="stdyIdd"></div></td>';
-                                        $colsCounter++;
-                                        $htmlCodes .= '<td class="celesteClaro noPrint"></td>';
-                                        $specialCounter++;
-                                        $html .= '<td class="celesteClaro noPrint"><div class="verticalText">' . $subentry->getName() . '</div></td>';
-                                        $marginLeft += $jumpRight; $marginLeftCode += 25;
-                                    }
-
-                                    //$studentRow .= '<td id="total_' . $temp->getId() . '_stdId" class="itemHeaderCode itemPorcentage nota_stdId">-</td>';
-                                    $studentRow .= '<td id="total_' . $temp->getId() . '_stdId" class="morado bold nota_stdId">-</td>';
-                                    $htmlCodes .= '<td class="morado bold">' . $temp->getCode() . '</td>';
-                                    $specialCounter++;
-                                    $html .= '<td class="morado"  style="padding: 1.5625em 0.625em; vertical-align: bottom;"><div class="verticalText">' . $temp->getPercentage() . '% ' . $temp->getName() . '</div></td>';
-                                    $marginLeft += $jumpRight; $marginLeftCode += 25;
-                                    $html3 .= '<td class="celesteClaro noPrint" colspan="' . (sizeof($subentries)+1) . '">' . $temp->getName() . '</td>';
-                                }
+                                $html3 .= '<td class="celesteClaro noPrint" colspan="' . (sizeof($subentries)+1) . '">' . $temp->getName() . '</td>';
                             }
-                        } else {
                         }
+                    } else {
                     }
-
-                    $htmlCodes .= "</tr>";
-                    $html .= "</tr>";
-                    $html3 .= "</tr>";
-                    $html = '<table class="tableQualifications" style="border-spacing: 0px; border-collapse: collapse;">' . $htmlCodes . $html;
-
-                    $studentRowIndex = 0;
-                    foreach($students as $stdy){
-                        $html .=  '<tr style="height: 25px; line-height: 0px;">';
-                        $studentRowIndex++;
-                        $html .=  '<td class="celesteOscuro headcolcarne" style="width: 75px; font-size: 10px;">' . $stdy->getStudent()->getCarne() . '</td>';
-                        $html .=  '<td class="celesteClaro bold headcolnombre" style="width: 300px; font-size: 12px;">' . $stdy->getStudent() . '</td>';
-
-                        $row = str_replace("stdId", $stdy->getStudent()->getId(), $studentRow);
-                        $row = str_replace("stdyIdd", $stdy->getId(), $row);
-
-                        //tabIndexColXx
-                        for ($i = 1; $i <= $colsCounter; $i++) {
-                            $indexVar = "tabIndexCol" . $i . "x";
-                            $row = str_replace($indexVar, "" . ($studentRowIndex + (($i - 1) * $studentsCount)), $row);
-                        }
-
-                        $dql = "SELECT qua FROM TecnotekExpedienteBundle:StudentQualification qua"
-                            . " WHERE qua.studentYear = " . $stdy->getId();
-                        $query = $em->createQuery($dql);
-                        $qualifications = $query->getResult();
-                        foreach($qualifications as $qualification){
-                            $row = str_replace("val_" . $stdy->getStudent()->getId() . "_" . $qualification->getSubCourseEntry()->getId() . "_", "" . $qualification->getQualification(), $row);
-                        }
-                        $html .=  '<td id="total_trim_' . $stdy->getStudent()->getId() . '" class="azul headcoltrim" style="color: #fff;">-</td>' . $row . "</tr>";
-                    }
-
-                    $html .= "</table>";
-
-                    return $this->render('TecnotekExpedienteBundle:SuperAdmin:Qualification/courseGroupQualification.html.twig', array('table' => $html,
-                        'studentsCounter' => $studentsCount, "codesCounter" => $specialCounter, 'menuIndex' => 5, 'title' => $title));
-                } else {
-                    return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
                 }
+
+                $htmlCodes .= "</tr>";
+                $html .= "</tr>";
+                $html3 .= "</tr>";
+                $html = '<table class="tableQualifications" style="border-spacing: 0px; border-collapse: collapse;">' . $htmlCodes . $html;
+
+                $studentRowIndex = 0;
+                foreach($students as $stdy){
+                    $html .=  '<tr style="height: 25px; line-height: 0px;">';
+                    $studentRowIndex++;
+                    $html .=  '<td class="celesteOscuro headcolcarne" style="width: 75px; font-size: 10px;">' . $stdy->getStudent()->getCarne() . '</td>';
+                    $html .=  '<td class="celesteClaro bold headcolnombre" style="width: 300px; font-size: 12px;">' . $stdy->getStudent() . '</td>';
+
+                    $row = str_replace("stdId", $stdy->getStudent()->getId(), $studentRow);
+                    $row = str_replace("stdyIdd", $stdy->getId(), $row);
+
+                    //tabIndexColXx
+                    for ($i = 1; $i <= $colsCounter; $i++) {
+                        $indexVar = "tabIndexCol" . $i . "x";
+                        $row = str_replace($indexVar, "" . ($studentRowIndex + (($i - 1) * $studentsCount)), $row);
+                    }
+
+                    $dql = "SELECT qua FROM TecnotekExpedienteBundle:StudentQualification qua"
+                        . " WHERE qua.studentYear = " . $stdy->getId();
+                    $query = $em->createQuery($dql);
+                    $qualifications = $query->getResult();
+                    foreach($qualifications as $qualification){
+                        $row = str_replace("val_" . $stdy->getStudent()->getId() . "_" . $qualification->getSubCourseEntry()->getId() . "_", "" . $qualification->getQualification(), $row);
+                    }
+                    $html .=  '<td id="total_trim_' . $stdy->getStudent()->getId() . '" class="azul headcoltrim" style="color: #000;">-</td>' . $row . "</tr>";
+                }
+
+                $html .= "</table>";
+
+                return $this->render('TecnotekExpedienteBundle:SuperAdmin:Qualification/courseGroupQualification.html.twig', array('table' => $html,
+                    'studentsCounter' => $studentsCount, "codesCounter" => $specialCounter, 'menuIndex' => 5, 'title' => $title));
+            } else {
+                return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
             }
-            catch (Exception $e) {
-                $info = toString($e);
-                $logger->err('Teacher::loadEntriesByCourseAction [' . $info . "]");
-                return new Response(json_encode(array('error' => true, 'message' => $info)));
-            }
+        }
+        catch (Exception $e) {
+            $info = toString($e);
+            $logger->err('Teacher::loadEntriesByCourseAction [' . $info . "]");
+            return new Response(json_encode(array('error' => true, 'message' => $info)));
+        }
     }
 
     public function loadGroupQualificationsAction(){

@@ -208,6 +208,9 @@ class ReportController extends Controller
 
         $gender = $request->get('gender');
         $age = $request->get('age');
+        $address = $request->get('address');
+        $birthday = $request->get('birthday');
+        $identification = $request->get('identification');
 
         $groups = null;
         $grades = null;
@@ -301,7 +304,7 @@ class ReportController extends Controller
         return $this->render('TecnotekExpedienteBundle:SuperAdmin:Reports/students.html.twig', array('menuIndex' => 4,
             'tipo' => $tipo, 'typeLabel' => $typeLabel, 'groups' => $groups,
             'grades' => $grades, 'institutions' => $institutions,
-            'age' => $age, 'gender' => $gender,
+            'age' => $age, 'gender' => $gender, 'address' => $address, 'identification' => $identification,'birthday' => $birthday,
             'groupsT' => $groupsT, 'institutionsT' => $institutionsT,'gradesT' => $gradesT
         ));
     }

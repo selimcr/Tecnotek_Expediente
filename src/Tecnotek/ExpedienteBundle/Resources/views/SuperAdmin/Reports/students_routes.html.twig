@@ -50,7 +50,7 @@
                 </div>
                 <div class="fields_row student_title">
                     <div style="float: left; width: 50px;">{%trans%}label.carne{%endtrans%}</div>
-                    <div style="float: left; width: 250px;">{%trans%}label.student.name{%endtrans%}</div>
+                    <div style="float: left; width: 300px;">{%trans%}label.student.name{%endtrans%}</div>
                     <div style="float: left; width: 60px;">{%trans%}label.section{%endtrans%}</div>
                     <div style="float: left; width: 250px;">{%trans%}label.route{%endtrans%}</div>
 
@@ -60,13 +60,14 @@
 
                     <div class="student_row">
                         <div style="float: left; width: 50px;">{{ student.carne }}</div>
-                        <div style="float: left; width: 250px;">{{ student }}</div>
-                        <div style="float: left; width: 60px;">{{ student.groupyear }}</div>
-                        <div style="float: left; width: 250px;">{{ student.route }}</div>
+                        <div style="float: left; width: 300px;">{{ student }}</div>
+                        <div style="float: left; width: 60px;">&nbsp{{ student.groupyear }}</div>
+                        <div style="float: left; width: 250px;">&nbsp{{ student.route }}</div>
 
                     </div>
                     <div class="clear"></div>
                 {% endfor %}
+                Total de estudiantes: {{ entities|length }}
             </div>
         </div>
         <div class="clear"></div>

@@ -357,6 +357,22 @@ var Tecnotek = {
                     $('#subentryFormParent').empty();
                     Tecnotek.Reports.loadRouteClub($(this).val());
                 });
+                $("#institution").change(function(event){
+                    event.preventDefault();
+                    $('#subentryFormParent').empty();
+                    Tecnotek.Reports.loadGroupInstitution($(this).val());
+                });
+                $("#grade").change(function(event){
+                    event.preventDefault();
+                    $('#subentryFormParent').empty();
+                    Tecnotek.Reports.loadGroupGrade($(this).val());
+                });
+
+                $("#groupSelect").change(function(event){
+                    event.preventDefault();
+                    $('#subentryFormParent').empty();
+                    Tecnotek.Reports.loadGroupGroup($(this).val());
+                });
 
             },
             loadRoute : function($routeId) {
@@ -377,6 +393,36 @@ var Tecnotek = {
                     $('.route_' + $routeId).show();
                 }else {
                     $('.routeContainerClub').show();
+                }
+            },
+            loadGroupInstitution : function($institutionId) {
+                if(($institutionId!==null && $institutionId!=='0')){
+                    //$('#report').empty();
+                    $('.groupContainer').hide();
+                    $('.inst_' + $institutionId).show();
+                    //alert('.inst_' + $institutionId);
+                }else {
+                    $('.groupContainer').show();
+                }
+            },
+
+            loadGroupGrade : function($gradeId) {
+                if(($gradeId!==null && $gradeId!=='0')){
+
+                    $('.groupContainer').hide();
+                    $('.niv_' + $gradeId).show();
+                }else {
+                    $('.groupContainer').show();
+                }
+            },
+
+            loadGroupGroup : function($groupId) {
+                if(($groupId!==null && $groupId!=='0')){
+
+                    $('.groupContainer').hide();
+                    $('.groupS_' + $groupId).show();
+                }else {
+                    $('.groupContainer').show();
                 }
             }
         },
