@@ -20,6 +20,12 @@ framework:
 twig:
     debug:            %kernel.debug%
     strict_variables: %kernel.debug%
+    globals:
+        style:        %style_for_pages%
+        corpo_name:   %corpo_name%
+        corpo_phone:  %corpo_phone%
+        corpo_fax:    %corpo_fax%
+        corpo_email:  %corpo_email%
 
 # Assetic Configuration
 assetic:

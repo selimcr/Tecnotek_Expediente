@@ -89,6 +89,7 @@
         <div class="lineH"></div>
     </div>
 
+    {% if style == "saintmichael" %}
     <div class="large-12 columns">
         <div class="grid_8" style="text-align: center;">
             <h2>Kinder</h2>
@@ -109,5 +110,11 @@
             <a href="" target="_blank" class="button tiny">Ir al Sitio</a>
         </div>
     </div>
+    {% else %}
+    <div class="large-12 columns">
+
+    </div>
+    {% endif %}
+
 </div>
 {% endblock %}

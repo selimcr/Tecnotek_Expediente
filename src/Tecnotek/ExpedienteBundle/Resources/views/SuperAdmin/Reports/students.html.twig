@@ -108,7 +108,7 @@
             {% for group in groups %}
                 <div class="groupContainer group_{{ group.id }} inst_{{ group.institution.id }} niv_{{ group.grade.id }}">
                     <div class="titles" style="font-size: 10px;">
-                        <div class="left">Corporaci?n Educativa Saint Michael S.A.</div>
+                        <div class="left">{{corpo_name}}</div>
                         <div class="right">Reporte de estudiantes. Curso Lectivo 2013</div>
                         <div class="clear"></div>
 
@@ -187,7 +187,7 @@
                 {% for grade in grades %}
                     <div class="groupContainer niv_{{ grade.id }}">
                         <div class="titles" style="font-size: 10px;">
-                            <div class="left">Corporaci?n Educativa Saint Michael S.A.</div>
+                            <div class="left">{{corpo_name}}</div>
                             <div class="right">Reporte de estudiantes. Curso Lectivo 2013</div>
                             <div class="clear"></div>
 
@@ -263,7 +263,7 @@
                 {% for institution in institutions %}
                     <div class="groupContainer inst_{{ institution.id }}">
                         <div class="titles" style="font-size: 10px;">
-                            <div class="left">Corporaci?n Educativa Saint Michael S.A.</div>
+                            <div class="left">{{corpo_name}}</div>
                             <div class="right">Reporte de estudiantes. Curso Lectivo 2013</div>
                             <div class="clear"></div>
 

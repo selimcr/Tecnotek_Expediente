@@ -78,7 +78,7 @@ tiny" id="btnPrint" name="btnPrint" rel="Listado de Estudiantes"><span></span>{%
                 <div id="report" style="margin-top: 25px; width: 950px;">
                     {% if withStudents == null %}
                         <div class="titles" style="font-size: 10px;">
-                            <div class="left">Corporación Educativa Saint Michael S.A.</div>
+                            <div class="left">{{corpo_name}}</div>
                             <div class="right">Reporte de estudiantes.</div>
                             <div class="clear"></div>
 
@@ -136,7 +136,7 @@ tiny" id="btnPrint" name="btnPrint" rel="Listado de Estudiantes"><span></span>{%
                         {% for club in clubs %}
                             <div class="ContainerClub club_{{ club.id }}">
                                 <div class="titles" style="font-size: 10px;">
-                                    <div class="left">Corporación Educativa Saint Michael S.A.</div>
+                                    <div class="left">{{corpo_name}}</div>
                                     <div class="right">Reporte de estudiantes.</div>
                                     <div class="clear"></div>
 
