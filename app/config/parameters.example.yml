@@ -1,9 +1,9 @@
 parameters:
     corpo_name: 'Corporación Educativa Saint Michael S.A.'
-    corpo_phone:  '2270-2335'
-    corpo_fax:  '2250-0076'
-    corpo_email:  'info@saintmichaelcr.com'
-    style_for_pages:  'saintmichael'
+    corpo_phone: '2270-2335'
+    corpo_fax: '2250-0076'
+    corpo_email: 'info@saintmichaelcr.com'
+    style_for_pages: 'saintmichael'
     database_driver: pdo_mysql
     database_host: localhost
     database_port: '3306'
@@ -16,7 +16,7 @@ parameters:
     mailer_password: null
     locale: es
     secret: 3e551a721eab3d69c4868a15f4f4200c3378296f
-    
+        
     environment: Development
     loggly_key: 1b6c8c7f-85b9-44da-9b1a-f19c5986cd30
     simulation.games.api: http://ci.local/student/teams/webapi/

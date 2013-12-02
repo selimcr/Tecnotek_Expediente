@@ -686,8 +686,7 @@ class ReportController extends Controller
 
         $condicionRow = '';
         $condicionRow .=  '<tr class="rowNotas" style="background-color: rgb(78, 76, 76);">';
-        $condicionRow .= '<td style="text-align: left; font-size:16px; color: white;">Condici&oacute;n:</td>';
-        $condicionRow .= '<td  style="text-align: center; font-size:16px; color: white;" colspan="4">changeCondicion</td>';
+        $condicionRow .= '<td style="text-align: left; font-size:16px; color: white;" colspan="5">Condici&oacute;n: changeCondicion</td>';
         $condicionRow .=  "</tr>";
 
         //Revisar Ausencias y Calcular Nota de Conducta
@@ -1051,9 +1050,39 @@ class ReportController extends Controller
         if($counter2 != 0){
             $html .= '</div>';
         }
+
+
+        $dia=date("l");
+
+        if ($dia=="Monday") $dia="Lunes";
+        if ($dia=="Tuesday") $dia="Martes";
+        if ($dia=="Wednesday") $dia="Miércoles";
+        if ($dia=="Thursday") $dia="Jueves";
+        if ($dia=="Friday") $dia="Viernes";
+        if ($dia=="Saturday") $dia="Sabado";
+        if ($dia=="Sunday") $dia="Domingo";
+
+        $mes=date("F");
+
+        if ($mes=="January") $mes="Enero";
+        if ($mes=="February") $mes="Febrero";
+        if ($mes=="March") $mes="Marzo";
+        if ($mes=="April") $mes="Abril";
+        if ($mes=="May") $mes="Mayo";
+        if ($mes=="June") $mes="Junio";
+        if ($mes=="July") $mes="Julio";
+        if ($mes=="August") $mes="Agosto";
+        if ($mes=="September") $mes="Setiembre";
+        if ($mes=="October") $mes="Octubre";
+        if ($mes=="November") $mes="Noviembre";
+        if ($mes=="December") $mes="Diciembre";
+
+        $ano=date("Y");
+        $dia2=date("d");
+
         $html .= '</br></br>';
         $html .= '<div style="color: #000; font-size: 12px;">';
-        $html .= '<div style="margin-top: 25px; margin-bottom: 25px;">Desamparados, '. date('j \d\e F \d\e\l Y') . '</br></br></div>';
+        $html .= '<div style="margin-top: 25px; margin-bottom: 25px;">Desamparados, '. $dia.' '. $dia2 .' de '. $mes .' del '. $ano . '</br></br></div>';
 
         $html .= '<div class="left" style="width: 250px; text-align: center;"><div style="line-height: 25px;">______________________________</div><div>Profesor Gu&iacute;a</div></div>';
         $html .= '<div class="left" style="width: 250px; text-align: center; margin-left: 300px;"><div style="line-height: 25px;">______________________________</div><div>' . $director . '</div><div>Director</div></div>';

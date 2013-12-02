@@ -92,22 +92,28 @@
             </div>
 
             <div class="header_row">
-                <div class="field" style="float: left; width: 115px;">{% trans %}label.licensePlate{% endtrans %}</div>
-                <div class="field" style="float: left; width: 300px;">{% trans %}label.driver{% endtrans %}</div>
-                <div class="field" style="float: left; width: 110px;">{% trans %}label.color{% endtrans %}</div>
-                <div class="field" style="float: left; width: 110px;">{% trans %}label.telephone{% endtrans %}</div>
-                <div class="field" style="float: left; width: 110px;">{% trans %}label.capacity{% endtrans %}</div>
+                <div class="field" style="float: left; width: 100px;">{% trans %}label.licensePlate{% endtrans %}</div>
+                <div class="field" style="float: left; width: 275px;">{% trans %}label.driver{% endtrans %}</div>
+                <div class="field" style="float: left; width: 90px;">{% trans %}label.color{% endtrans %}</div>
+                <div class="field" style="float: left; width: 85px;">{% trans %}label.telephone{% endtrans %}</div>
+                <div class="field" style="float: left; width: 100px;">{% trans %}label.capacity{% endtrans %}</div>
+                <div class="field" style="float: left; width: 90px;">{% trans %}RITEVE{% endtrans %}</div>
+                <div class="field" style="float: left; width: 90px;">{% trans %}INS{% endtrans %}</div>
+                <div class="field" style="float: left; width: 90px;">{% trans %}PERMISO{% endtrans %}</div>
             </div>
 
             {% for entity in entities %}
-            <div class="fields_row">
-                <div class="field_value" style="float: left; width: 115px;">{{ entity.licensePlate }}</div>
-                <div class="field_value" style="float: left; width: 300px;">{{ entity.driver }}</div>
-                <div class="field_value" style="float: left; width: 110px;">{{ entity.color }}</div>
-                <div class="field_value" style="float: left; width: 110px;">{{ entity.telephone }}</div>
-                <div class="field_value" style="float: left; width: 110px;">{{ entity.capacity }}</div>
-                <div class="clear"></div>
-            </div>
+                <div class="fields_row">
+                    <div class="field_value" style="float: left; width: 100px;">{{ entity.licensePlate }}</div>
+                    <div class="field_value" style="float: left; width: 275px;">{{ entity.driver }}</div>
+                    <div class="field_value" style="float: left; width: 100px;">{{ entity.color }}</div>
+                    <div class="field_value" style="float: left; width: 100px;">{{ entity.telephone }}</div>
+                    <div class="field_value" style="float: left; width: 75px;">{{ entity.capacity }}</div>
+                    <div class="field_value" style="float: left; width: 90px;">{{ entity.riteve|date("d/m/Y") }}</div>
+                    <div class="field_value" style="float: left; width: 90px;">{{ entity.ins|date("d/m/Y") }}</div>
+                    <div class="field_value" style="float: left; width: 90px;">{{ entity.permission|date("d/m/Y") }}</div>
+                    <div class="clear"></div>
+                </div>
             {% else %}
             <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
                 <div class="option_width" style="float: left; width: 375px;">{% trans %}results.not.found{% endtrans %}</div>
