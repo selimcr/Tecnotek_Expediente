@@ -412,6 +412,7 @@ class ReportController extends Controller
                 $request = $this->get('request')->request;
                 $periodId = $request->get('periodId');
                 $groupId = $request->get('groupId');
+                $convocatoria = $request->get('conv');
 
                 $keywords = preg_split("/[\s-]+/", $groupId);
                 $groupId = $keywords[0];
@@ -467,7 +468,7 @@ class ReportController extends Controller
                         $student = $studentYear->getStudent();
                         $carne = $student->getCarne();
                         $studentName = "" . $student;
-                        $html = $this->getStudentByPeriodHTMLQualifications($periodId, $gradeId, $groupId, $referenceId, $studentYear, $director, $institution);
+                        $html = $this->getStudentByPeriodHTMLQualifications($periodId, $gradeId, $groupId, $referenceId, $studentYear, $director, $institution, $convocatoria);
                     }
 
                     return new Response(json_encode(array('error' => false, 'html' => $html, 'carne' => $carne, 'teacherGroup' => $teacherGroup, "studentName" => $studentName, "imgHeader" => $imgHeader)));
@@ -647,7 +648,16 @@ class ReportController extends Controller
         return $html;
     }
 
-    public function getStudentByPeriodHTMLQualifications($periodId, $gradeId, $groupId, $studentId, $studentYear, $director, $institution){
+    public function getStudentByPeriodHTMLQualifications($periodId, $gradeId, $groupId, $studentId, $studentYear, $director, $institution, $convocatoria){
+
+
+        $numCols = 5;
+        if($convocatoria == 1){
+            $numCols = 6;
+        }
+        if($convocatoria == 2){
+            $numCols = 7;
+        }
 
         $logger = $this->get('logger');
         $em = $this->getDoctrine()->getEntityManager();
@@ -658,6 +668,9 @@ class ReportController extends Controller
         $headersRow .=  '        <th style="width: 100px; text-align: center;">I TRIM.</th>';
         $headersRow .=  '        <th style="width: 100px; text-align: center;">II TRIM.</th>';
         $headersRow .=  '        <th style="width: 100px; text-align: center;">III TRIM</th>';
+        if($convocatoria != 0){
+            $headersRow .= '<th style="width: 100px; text-align: center;">CONV I</th>';
+        }
         $headersRow .=  '        <th style="width: 150px; text-align: center;">PROMEDIO</th>';
         $headersRow .=  '    </tr>';
         $headersRow .=  '</thead>';
@@ -672,6 +685,9 @@ class ReportController extends Controller
         $courseRow .= '<td style="text-align: center; font-size:16px;">courseRowNota1</td>';
         $courseRow .= '<td style="text-align: center; font-size:16px;">courseRowNota2</td>';
         $courseRow .= '<td style="text-align: center; font-size:16px;">courseRowNota3</td>';
+        if($convocatoria != 0){
+            $courseRow .= '<td style="text-align: center; font-size:16px;">convo1</td>';
+        }
         $courseRow .= '<td style="text-align: center; font-size:16px;">courseRowNotaProm</td>';
         $courseRow .=  "</tr>";
 
@@ -681,12 +697,15 @@ class ReportController extends Controller
         $promedioRow .= '<td  style="text-align: center; font-size:16px;">promedio1</td>';
         $promedioRow .= '<td style="text-align: center; font-size:16px;">promedio2</td>';
         $promedioRow .= '<td style="text-align: center; font-size:16px;">promedio3</td>';
+        if($convocatoria != 0){
+            $promedioRow .= '<td style="text-align: center; font-size:16px;">&nbsp;</td>';
+        }
         $promedioRow .= '<td style="text-align: center; font-size:16px;">promedioGeneral</td>';
         $promedioRow .=  "</tr>";
 
         $condicionRow = '';
         $condicionRow .=  '<tr class="rowNotas" style="background-color: rgb(78, 76, 76);">';
-        $condicionRow .= '<td style="text-align: left; font-size:16px; color: white;" colspan="5">Condici&oacute;n: changeCondicion</td>';
+        $condicionRow .= '<td style="text-align: left; font-size:16px; color: white;" colspan="'.$numCols.'">Condici&oacute;n: changeCondicion</td>';
         $condicionRow .=  "</tr>";
 
         //Revisar Ausencias y Calcular Nota de Conducta
@@ -696,6 +715,9 @@ class ReportController extends Controller
         $absenceRow .= '<td style="text-align: center; font-size:16px;">absenceTypeCount1</td>';
         $absenceRow .= '<td style="text-align: center; font-size:16px;">absenceTypeCount2</td>';
         $absenceRow .= '<td style="text-align: center; font-size:16px;">absenceTypeCount3</td>';
+        if($convocatoria != 0){
+            $absenceRow .= '<td style="text-align: center; font-size:16px;">&nbsp;</td>';
+        }
         $absenceRow .= '<td style="text-align: center; font-size:16px;">&nbsp;</td>';
         $absenceRow .=  "</tr>";
 
@@ -904,10 +926,44 @@ class ReportController extends Controller
                 }
             }
             if($counterForAverage != 0){
-                $row = str_replace("courseRowNotaProm",number_format( ($totalForAverage/$counterForAverage), 2, '.', ''), $row);
-                if($totalForAverage != 0 && $totalForAverage/$counterForAverage < $notaMin->getNotaMin()){//Si se pierde curso igual suma...
-                    $numberOfLossCourses = $numberOfLossCourses + 1;
-                    //$logger->err("--> se perdio un curso: " . $courseName );
+                if($convocatoria != 0){
+                    //buscar nota convocatoria en la base
+                    //$notaCon =
+                    $notaCon = null; //quitar
+                    if($notaCon != null){
+                        // remplazar conv1 por nota
+                        if(number_format($notaCon, 0, '.', '')< $notaMin->getNotaMin()){ //sino lo pasa mantener promedio original
+                            $row = str_replace("courseRowNotaProm","*".number_format( ($totalForAverage/$counterForAverage), 2, '.', ''), $row);
+                        }else{ // si lo paso nota del periodo es la minima
+                            $row = str_replace("courseRowNotaProm",$notaMin->getNotaMin(), $row);
+                            //totales[3] =  /// necesario para actualizar el promedio general
+                        }
+                    }else{ //hace lo de siempre si no hizo examen en la materia
+                        // remplazar conv1 por nota
+                        $notaTemp = number_format( ($totalForAverage/$counterForAverage), 0, '.', '');
+                        if($notaTemp < $notaMin->getNotaMin()){
+                            $row = str_replace("courseRowNotaProm","*".number_format( ($totalForAverage/$counterForAverage), 2, '.', ''), $row);
+                        }else{
+                            $row = str_replace("courseRowNotaProm",number_format( ($totalForAverage/$counterForAverage), 2, '.', ''), $row);
+                        }
+                        if($totalForAverage != 0 && $totalForAverage/$counterForAverage < $notaMin->getNotaMin()){//Si se pierde curso igual suma...
+                            $numberOfLossCourses = $numberOfLossCourses + 1;
+                            //$logger->err("--> se perdio un curso: " . $courseName );
+                        }
+                    }
+
+                }
+                else{ //lo que hacia solo agrega asteristico si es materia aplazada
+                    $notaTemp = number_format( ($totalForAverage/$counterForAverage), 0, '.', '');
+                    if($notaTemp < $notaMin->getNotaMin()){
+                        $row = str_replace("courseRowNotaProm","*".number_format( ($totalForAverage/$counterForAverage), 2, '.', ''), $row);
+                    }else{
+                        $row = str_replace("courseRowNotaProm",number_format( ($totalForAverage/$counterForAverage), 2, '.', ''), $row);
+                    }
+                    if($totalForAverage != 0 && $totalForAverage/$counterForAverage < $notaMin->getNotaMin()){//Si se pierde curso igual suma...
+                        $numberOfLossCourses = $numberOfLossCourses + 1;
+                        //$logger->err("--> se perdio un curso: " . $courseName );
+                    }
                 }
             } else {
                 $row = str_replace("courseRowNotaProm", "-----", $row);

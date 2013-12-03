@@ -33,6 +33,15 @@ Tecnotek.PeriodGroupQualifications = {
         });
     },
     loadGroupsOfPeriod: function($periodId) {
+        if( $('#period option:selected').html() == "CONVI"){
+            $('input[name=conv]').val(1);
+        }else{
+            if( $('#period option:selected').html() == "CONVII"){
+            $('input[name=conv]').val(2);
+            }else{
+                $('input[name=conv]').val(0);
+            }
+        }
         console.debug("Load groups of period: " + $periodId);
         if(($periodId!==null)){
             $('#groups').children().remove();
@@ -116,7 +125,8 @@ Tecnotek.PeriodGroupQualifications = {
                 Tecnotek.ajaxCall(Tecnotek.UI.urls["loadQualificationsOfGroupURL"],
                     {   periodId: Tecnotek.PeriodGroupQualifications.periodId,
                         referenceId: studentId,
-                        groupId: Tecnotek.PeriodGroupQualifications.groupId},
+                        groupId: Tecnotek.PeriodGroupQualifications.groupId,
+                        conv: Tecnotek.PeriodGroupQualifications.periodId = $("#conv").val()},
                     function(data){
                         //$('#fountainG').hide();
                         if(data.error === true) {
@@ -151,7 +161,8 @@ Tecnotek.PeriodGroupQualifications = {
         Tecnotek.ajaxCall(Tecnotek.UI.urls["loadQualificationsOfGroupURL"],
             {   periodId: Tecnotek.PeriodGroupQualifications.periodId,
                 referenceId: studentId,
-                groupId: Tecnotek.PeriodGroupQualifications.groupId},
+                groupId: Tecnotek.PeriodGroupQualifications.groupId,
+                conv: Tecnotek.PeriodGroupQualifications.periodId = $("#conv").val()},
             function(data){
                 //$('#fountainG').hide();
                 if(data.error === true) {
