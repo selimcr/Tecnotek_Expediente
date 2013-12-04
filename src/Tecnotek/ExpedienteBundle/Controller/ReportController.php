@@ -927,8 +927,9 @@ class ReportController extends Controller
             }
             if($counterForAverage != 0){
                 if($convocatoria != 0){
-                    //$notaCon = $em->getRepository("TecnotekExpedienteBundle:StudentExtraTest")->findOneBy(array('studentYear' => $stdYear, 'course' => $courseStdQ, 'number' => '1'));
-                    $notaCon = null; //quitar
+                    //$logger->err("-----> Course: " . $courseClass->getCourse()->getId() . ", StudentYear: " . $stdYear->getId() . ", number: " . '1');
+                    $notaCon = $em->getRepository("TecnotekExpedienteBundle:StudentExtraTest")->findOneBy(array('studentYear' => $stdYear->getId(), 'course' => $courseClass->getCourse()->getId(), 'number' => 1));
+                    //$notaCon = null; //quitar
                     if($notaCon != null){
 
                         $notaConP = $notaCon->getQualification();
@@ -1020,6 +1021,10 @@ class ReportController extends Controller
             }
             $row = str_replace("courseRowNota" . $i, $conducta, $row);
         }
+        if($convocatoria != 0){
+            $row = str_replace("convo1", "", $row);
+        }
+
         if($totalConducta/$period->getOrderInYear() < $notaMin->getNotaMin()){//Si se pierde conducta igual suma...
             $numberOfLossCourses = $numberOfLossCourses + 1;
             //$logger->err("--> se perdio un curso: " . "Conducta" );
@@ -1042,7 +1047,7 @@ class ReportController extends Controller
                     $counters[$i]++;
                 }
                 $promedioPeriodo = $totales[$i] / $counters[$i];
-                $promedioRow = str_replace("promedio" . $i, number_format($promedioPeriodo, 2, '.', ''), $promedioRow);
+                    $promedioRow = str_replace("promedio" . $i, number_format($promedioPeriodo, 2, '.', ''), $promedioRow);
                 if($i == $period->getOrderInYear()){
                     if($promedioPeriodo >= 90){
                         //$honor = true;
@@ -1055,10 +1060,16 @@ class ReportController extends Controller
             }
         }
 
+
         if($counter == 0){
             $promedioRow = str_replace("promedioGeneral", "-----", $promedioRow);
         }else {
-            $promedioRow = str_replace("promedioGeneral", number_format($promedioGeneral/$counter, 2, '.', ''), $promedioRow);
+
+            if($convocatoria != 0){
+                $promedioRow = str_replace("promedioGeneral", "", $promedioRow);
+            }else{
+                $promedioRow = str_replace("promedioGeneral", number_format($promedioGeneral/$counter, 2, '.', ''), $promedioRow);
+            }
         }
 
         $html .= $row . $promedioRow . $absencesHtml;
