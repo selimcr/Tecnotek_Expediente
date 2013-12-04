@@ -885,7 +885,7 @@ class ReportController extends Controller
             $typeC = $courseClass->getCourse()->getType();
             $totalForAverage = 0;
             $counterForAverage = 0;
-
+            $tercerTrim = 0;
             for($i = 1; $i < 4; $i++){
                 if (array_key_exists("nota" . $i, $courseStdQ)) {
                     $notaFinal = $courseStdQ["nota" . $i];
@@ -896,6 +896,9 @@ class ReportController extends Controller
                         if($notaFinal->getQualification() != 0){
                             if($notaFinal->getQualification() < $notaMin->getNotaMin()){
                                 $row = str_replace("courseRowNota" . $i, "* " . $notaFinal->getQualification(), $row);
+                                if($i==3){
+                                    $tercerTrim = 1;
+                                }
                             } else {
                                 $row = str_replace("courseRowNota" . $i, $notaFinal->getQualification(), $row);
                             }
@@ -967,6 +970,12 @@ class ReportController extends Controller
                     if($totalForAverage != 0 && $totalForAverage/$counterForAverage < $notaMin->getNotaMin()){//Si se pierde curso igual suma...
                         $numberOfLossCourses = $numberOfLossCourses + 1;
                         //$logger->err("--> se perdio un curso: " . $courseName );
+                    }else{
+                        if($tercerTrim == 1){
+                            $numberOfLossCourses = $numberOfLossCourses + 1;
+                            $tercerTrim = 0;
+                        }
+
                     }
                 }
             } else {
