@@ -927,12 +927,14 @@ class ReportController extends Controller
             }
             if($counterForAverage != 0){
                 if($convocatoria != 0){
-                    //buscar nota convocatoria en la base
-                    //$notaCon =
+                    //$notaCon = $em->getRepository("TecnotekExpedienteBundle:StudentExtraTest")->findOneBy(array('studentYear' => $stdYear, 'course' => $courseStdQ, 'number' => '1'));
                     $notaCon = null; //quitar
                     if($notaCon != null){
+
+                        $notaConP = $notaCon->getQualification();
                         // remplazar conv1 por nota
-                        if(number_format($notaCon, 0, '.', '')< $notaMin->getNotaMin()){ //sino lo pasa mantener promedio original
+                        $row = str_replace("convo1",$notaConP, $row);
+                        if(number_format($notaConP, 0, '.', '')< $notaMin->getNotaMin()){ //sino lo pasa mantener promedio original
                             $row = str_replace("courseRowNotaProm","*".number_format( ($totalForAverage/$counterForAverage), 2, '.', ''), $row);
                         }else{ // si lo paso nota del periodo es la minima
                             $row = str_replace("courseRowNotaProm",$notaMin->getNotaMin(), $row);
@@ -940,6 +942,7 @@ class ReportController extends Controller
                         }
                     }else{ //hace lo de siempre si no hizo examen en la materia
                         // remplazar conv1 por nota
+                        $row = str_replace("convo1","", $row);
                         $notaTemp = number_format( ($totalForAverage/$counterForAverage), 0, '.', '');
                         if($notaTemp < $notaMin->getNotaMin()){
                             $row = str_replace("courseRowNotaProm","*".number_format( ($totalForAverage/$counterForAverage), 2, '.', ''), $row);
@@ -967,6 +970,9 @@ class ReportController extends Controller
                 }
             } else {
                 $row = str_replace("courseRowNotaProm", "-----", $row);
+                if($convocatoria != 0){
+                    $row = str_replace("convo1","", $row);
+                }
             }
 
             $row = str_replace("courseRowNotaProm", "-----", $row);
