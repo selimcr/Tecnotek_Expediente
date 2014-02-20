@@ -206,7 +206,7 @@ class ReportController extends Controller
         $request = $this->get('request')->request;
         $tipo = $request->get('tipo');
 
-$iSpecial = $request->get('iSpecial');
+        $iSpecial = $request->get('iSpecial');
 
         $gender = $request->get('gender');
         $age = $request->get('age');
@@ -931,37 +931,6 @@ $iSpecial = $request->get('iSpecial');
                 }
             }
             if($counterForAverage != 0){
-                /*if($convocatoria != 0){
-                    //$logger->err("-----> Course: " . $courseClass->getCourse()->getId() . ", StudentYear: " . $stdYear->getId() . ", number: " . '1');
-                    $notaCon = $em->getRepository("TecnotekExpedienteBundle:StudentExtraTest")->findOneBy(array('studentYear' => $stdYear->getId(), 'course' => $courseClass->getCourse()->getId(), 'number' => 1));
-                    //$notaCon = null; //quitar
-                    if($notaCon != null){
-
-                        $notaConP = $notaCon->getQualification();
-                        // remplazar conv1 por nota
-                        $row = str_replace("convo1",$notaConP, $row);
-                        if(number_format($notaConP, 0, '.', '')< $notaMin->getNotaMin()){ //sino lo pasa mantener promedio original
-                            $row = str_replace("courseRowNotaProm","*".number_format( ($totalForAverage/$counterForAverage), 2, '.', ''), $row);
-                        }else{ // si lo paso nota del periodo es la minima
-                            $row = str_replace("courseRowNotaProm",$notaMin->getNotaMin(), $row);
-                            //totales[3] =  /// necesario para actualizar el promedio general
-                        }
-                    }else{ //hace lo de siempre si no hizo examen en la materia
-                        // remplazar conv1 por nota
-                        $row = str_replace("convo1","", $row);
-                        $notaTemp = number_format( ($totalForAverage/$counterForAverage), 0, '.', '');
-                        if($notaTemp < $notaMin->getNotaMin()){
-                            $row = str_replace("courseRowNotaProm","*".number_format( ($totalForAverage/$counterForAverage), 2, '.', ''), $row);
-                        }else{
-                            $row = str_replace("courseRowNotaProm",number_format( ($totalForAverage/$counterForAverage), 2, '.', ''), $row);
-                        }
-                        if($totalForAverage != 0 && $totalForAverage/$counterForAverage < $notaMin->getNotaMin()){//Si se pierde curso igual suma...
-                            $numberOfLossCourses = $numberOfLossCourses + 1;
-                            //$logger->err("--> se perdio un curso: " . $courseName );
-                        }
-                    }
-
-                }*/
                 if($convocatoria != 0){
                     //$logger->err("-----> Course: " . $courseClass->getCourse()->getId() . ", StudentYear: " . $stdYear->getId() . ", number: " . '1');
                     $notaCon = $em->getRepository("TecnotekExpedienteBundle:StudentExtraTest")->findOneBy(array('studentYear' => $stdYear->getId(), 'course' => $courseClass->getCourse()->getId(), 'number' => 1));
@@ -1002,7 +971,7 @@ $iSpecial = $request->get('iSpecial');
                     }
                     if($totalForAverage != 0 && number_format( ($totalForAverage/$counterForAverage), 0, '.', '') < $notaMin->getNotaMin()){//Si se pierde curso igual suma...
                         if(number_format( ($totalForAverage/$counterForAverage), 0, '.', '') != '0.00'){
-                         $numberOfLossCourses = $numberOfLossCourses + 1;
+                            $numberOfLossCourses = $numberOfLossCourses + 1;
                         }
                         //$logger->err("--> se perdio un curso: " . $courseName );
                     }else{
@@ -1091,7 +1060,7 @@ $iSpecial = $request->get('iSpecial');
                     $counters[$i]++;
                 }
                 $promedioPeriodo = $totales[$i] / $counters[$i];
-                    $promedioRow = str_replace("promedio" . $i, number_format($promedioPeriodo, 2, '.', ''), $promedioRow);
+                $promedioRow = str_replace("promedio" . $i, number_format($promedioPeriodo, 2, '.', ''), $promedioRow);
                 if($i == $period->getOrderInYear()){
                     if($promedioPeriodo >= 90){
                         //$honor = true;
@@ -1274,27 +1243,6 @@ $iSpecial = $request->get('iSpecial');
             $valuetemp = $value;
             $stexpoints = $em->getRepository("TecnotekExpedienteBundle:StudentExtraPoints")->findBy(array('studentYear' => $studentYearId));
 
-            /*foreach($stexpoints as $ex){
-                //if ( isset($stexpoints) ){//si esta en la lista
-                if(round($value, 0, PHP_ROUND_HALF_UP) >= $notaMin->getNotaMin()){
-
-                    $extraPoints = $ex->getPoints();
-                    $course = $ex->getCourse();
-if($course == null){
- $valuetemp = $valuetemp + $extraPoints;
-}else{
- $course_of_cc = $em->getRepository("TecnotekExpedienteBundle:CourseClass")->findOneBy(array('id' => $i));
- $cour = $course_of_cc->getCourse();
- if($course != $cour){
-  $valuetemp = $valuetemp + $extraPoints;
- }
-}
-
-                    if ($valuetemp > 100){
-                        $valuetemp = 100;
-                    }
-                }
-            }*/
             foreach($stexpoints as $ex){
                 //if ( isset($stexpoints) ){//si esta en la lista
                 if(round($value, 0, PHP_ROUND_HALF_UP) >= $notaMin->getNotaMin()){
@@ -1316,7 +1264,6 @@ if($course == null){
                     }
                 }
             }
-
 
             $sql = 'INSERT INTO tek_student_year_course_qualifications (course_class_id,student_year_id, qualification) VALUES (' . $i . ',' . $studentYearId . ', ' . $value . ')'.
                 ' ON DUPLICATE KEY UPDATE qualification = ' . $valuetemp . ';';
