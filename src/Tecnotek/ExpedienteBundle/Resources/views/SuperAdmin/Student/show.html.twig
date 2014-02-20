@@ -53,11 +53,17 @@
         <div class="section-container auto" data-section>
             <section class="section">
                 <p class="title"><a href="#panel1">{%trans%}label.general{%endtrans%}</a></p>
+
                 <div class="content">
+                    <div style="float:right ">
+                        <p><img src="{{ asset('images/alumnos/') }}{{ entity.carne }}.JPG"></p>
+
+                    </div>
                     <div id="showContainer">
                         <div>
                             <label>{%trans%}label.firstname{%endtrans%}</label>
                             <span id="labelFirstname">{{ entity.firstname }}</span>
+
                         </div>
 
                         <div>
@@ -132,8 +138,11 @@
                         </div>
 
 
+
                     </div>
+
                 </div>
+
             </section>
             <section class="section">
                 <p class="title"><a href="#panel2">{%trans%}label.relatives.in.student{%endtrans%}</a></p>

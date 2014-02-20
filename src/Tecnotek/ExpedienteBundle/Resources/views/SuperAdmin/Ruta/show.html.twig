@@ -101,6 +101,7 @@
                                     {% for student in students %}
                                         <div id="student_row_{{ student.id }}" class="row userRow rel="{{ student.id }}">
                                             <div class="option_width" style="float: left; width: 300px;">{{ student }}</div>
+                                            <div class="right imageButton editButton editStudent" title="Editar" rel="{{ student.id }}"></div>
                                             <div class="right imageButton deleteButton" style="height: 16px;"  title="{% trans %}label.delete{% endtrans %}"  rel="{{ student.id }}"></div>
                                             <div class="clear"></div>
                                         </div>
@@ -117,6 +118,30 @@
                                 {% endfor %}
                             {% endif %}
                         </div>
+                    </div>
+        <a id="openStudentForm" class="right button success-darker tiny modalbox" style="margin: 4px 0px 0 0;" href="#studentFormContainer"></a>
+                    <div id="studentFormContainer" style="display: none; width: 400px;">
+                        <h3 style="margin-bottom: 0px;"><div class="left" id="studentTitleOption" name="studentTitleOption"></div> &nbsp;estudiante</h3>
+
+                        <form id="studentForm" name="studentForm">
+
+                            <input type="hidden" id="studentId" name="studentId" value="0">
+                            <div id="subformEntryError" class="formErrors"></div>
+
+                            <div style="margin-bottom: 5px;">
+                                <label style="display: inline-block; width: 100px">{% trans %}label.type{% endtrans %}</label>
+                                <select id="pickUp" name="pickUp"></select>
+                            </div>
+
+                            <div style="margin-bottom: 5px;">
+                                <label style="display: inline-block; width: 100px">{% trans %}label.route{% endtrans %}&nbsp;2</label>
+                                <select id="leaveTime" name="leaveTime"></select>
+                            </div>
+
+                            <div class="left"><input class="button success-darker tiny" style="margin-top: 0px;" type="button" name="entryFormCancel" id="entryFormCancel" value="{% trans %}label.cancelar{% endtrans %}"/></div>
+                            <div class="left"><input class="button success-darker tiny" style="margin-top: 0px; margin-left: 25px;" type="submit" name="save" value="{% trans %}label.save{% endtrans %}"/></div>
+                            <div class="clear"></div>
+                        </form>
                     </div>
 
                     <div class="left" style="margin-left: 50px;">

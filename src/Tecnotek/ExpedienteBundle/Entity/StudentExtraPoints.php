@@ -114,7 +114,7 @@ class StudentExtraPoints
      */
     public function setCourse(\Tecnotek\ExpedienteBundle\Entity\Course $Course)
     {
-        $this->Course = $Course;
+        $this->course = $Course;
     }
 
     /**
@@ -124,7 +124,7 @@ class StudentExtraPoints
      */
     public function getCourse()
     {
-        return $this->Course;
+        return $this->course;
     }
 
 }

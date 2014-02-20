@@ -1676,9 +1676,9 @@ class StudentController extends Controller
                 $text = $request->get('text');
 
                 $em = $this->getDoctrine()->getEntityManager();
-                $sql = "SELECT std.id, std.firstname, std.lastname "
+                $sql = "SELECT std.id, std.firstname, std.lastname, std.carne "
                     . " FROM tek_students std"
-                    . " LEFT JOIN tek_students_year stdy ON stdy.period_id = 1 AND stdy.student_id = std.id"
+                    . " LEFT JOIN tek_students_year stdy ON stdy.period_id = 4 AND stdy.student_id = std.id"
                     . " WHERE (std.firstname like '%" . $text . "%' OR std.lastname like '%" . $text . "%')"
                     . " AND (stdy.id is null or (stdy.period_id = " . $periodId . " AND stdy.group_id <> " . $groupId . " OR stdy.group_id is null))"
                     . " GROUP BY std.id"

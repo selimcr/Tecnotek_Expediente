@@ -206,6 +206,8 @@ class ReportController extends Controller
         $request = $this->get('request')->request;
         $tipo = $request->get('tipo');
 
+$iSpecial = $request->get('iSpecial');
+
         $gender = $request->get('gender');
         $age = $request->get('age');
         $address = $request->get('address');
@@ -303,7 +305,7 @@ class ReportController extends Controller
 
         return $this->render('TecnotekExpedienteBundle:SuperAdmin:Reports/students.html.twig', array('menuIndex' => 4,
             'tipo' => $tipo, 'typeLabel' => $typeLabel, 'groups' => $groups,
-            'grades' => $grades, 'institutions' => $institutions,
+            'grades' => $grades, 'institutions' => $institutions, 'iSpecial' => $iSpecial,
             'age' => $age, 'gender' => $gender, 'address' => $address, 'identification' => $identification,'birthday' => $birthday,
             'groupsT' => $groupsT, 'institutionsT' => $institutionsT,'gradesT' => $gradesT
         ));
@@ -411,6 +413,7 @@ class ReportController extends Controller
             try {
                 $request = $this->get('request')->request;
                 $periodId = $request->get('periodId');
+//                $periodId = 3;
                 $groupId = $request->get('groupId');
                 $convocatoria = $request->get('conv');
 
@@ -907,10 +910,9 @@ class ReportController extends Controller
                         }else{
                             $row = str_replace("courseRowNota" . $i, $notaFinal->getQualification(), $row);
                         }
-                        if($notaFinal->getQualification()<90){
+                        if($notaFinal->getQualification()<'90' && $i == $periodId){
                             $honor = false;
                         }
-
                     }
                     else{
                         $valorNota =  $notaFinal->getQualification();
@@ -967,8 +969,10 @@ class ReportController extends Controller
                     }else{
                         $row = str_replace("courseRowNotaProm",number_format( ($totalForAverage/$counterForAverage), 2, '.', ''), $row);
                     }
-                    if($totalForAverage != 0 && $totalForAverage/$counterForAverage < $notaMin->getNotaMin()){//Si se pierde curso igual suma...
-                        $numberOfLossCourses = $numberOfLossCourses + 1;
+                    if($totalForAverage != 0 && number_format( ($totalForAverage/$counterForAverage), 0, '.', '') < $notaMin->getNotaMin()){//Si se pierde curso igual suma...
+                        if(number_format( ($totalForAverage/$counterForAverage), 0, '.', '') != '0.00'){
+                         $numberOfLossCourses = $numberOfLossCourses + 1;
+                        }
                         //$logger->err("--> se perdio un curso: " . $courseName );
                     }else{
                         if($tercerTrim == 1){
@@ -1244,7 +1248,16 @@ class ReportController extends Controller
                 if(round($value, 0, PHP_ROUND_HALF_UP) >= $notaMin->getNotaMin()){
 
                     $extraPoints = $ex->getPoints();
-                    $valuetemp = $valuetemp + $extraPoints;
+                    $course = $ex->getCourse();
+if($course == null){
+ $valuetemp = $valuetemp + $extraPoints;
+}else{
+ $course_of_cc = $em->getRepository("TecnotekExpedienteBundle:CourseClass")->findOneBy(array('id' => $i));
+ $cour = $course_of_cc->getCourse();
+ if($course != $cour){
+  $valuetemp = $valuetemp + $extraPoints;
+ }
+}
 
                     if ($valuetemp > 100){
                         $valuetemp = 100;

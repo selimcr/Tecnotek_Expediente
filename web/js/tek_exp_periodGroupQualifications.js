@@ -126,7 +126,7 @@ Tecnotek.PeriodGroupQualifications = {
                     {   periodId: Tecnotek.PeriodGroupQualifications.periodId,
                         referenceId: studentId,
                         groupId: Tecnotek.PeriodGroupQualifications.groupId,
-                        conv: Tecnotek.PeriodGroupQualifications.periodId = $("#conv").val()},
+                        conv: $("#conv").val()},
                     function(data){
                         //$('#fountainG').hide();
                         if(data.error === true) {
@@ -162,7 +162,7 @@ Tecnotek.PeriodGroupQualifications = {
             {   periodId: Tecnotek.PeriodGroupQualifications.periodId,
                 referenceId: studentId,
                 groupId: Tecnotek.PeriodGroupQualifications.groupId,
-                conv: Tecnotek.PeriodGroupQualifications.periodId = $("#conv").val()},
+                conv: $("#conv").val()},
             function(data){
                 //$('#fountainG').hide();
                 if(data.error === true) {
@@ -174,8 +174,8 @@ Tecnotek.PeriodGroupQualifications = {
 
                     studentHtml += '<div class="reportContentHeader">';
                     studentHtml += '<div class="left reportContentLabel" style="width: 100%; font-size: 18px; text-align: center;">TARJETA DE CALIFICACIONES</div>';
-                    studentHtml += '<div class="left reportContentLabel" style="width: 100%; font-size: 14px; text-align: center; margin-bottom: 15px;">' + $periodYear + '</div>';
-                    studentHtml += '<div class="left reportContentLabel" style="width: 450px;">Alumnno(a):&nbsp;&nbsp;' + data.studentName  + '</div>';
+                    studentHtml += '<div class="left reportContentLabel" style="width: 100%; font-size: 14px; text-align: center; margin-bottom: 15px;">2013</div>';
+                    studentHtml += '<div class="left reportContentLabel" style="width: 450px;">Alumno(a):&nbsp;&nbsp;' + data.studentName  + '</div>';
                     studentHtml += '<div class="left reportContentLabel" style="width: 350px;">Secci&oacute;n:&nbsp;&nbsp;' + $("#groups").find(":selected").text() + '</div>';
                     studentHtml += '<div class="clear"></div>';
 
@@ -342,8 +342,8 @@ Tecnotek.PeriodGroupAverages = {
 
                     studentHtml += '<div class="reportContentHeader">';
                     studentHtml += '<div class="left reportContentLabel" style="width: 100%; font-size: 18px; text-align: center;">TARJETA DE CALIFICACIONES</div>';
-                    studentHtml += '<div class="left reportContentLabel" style="width: 100%; font-size: 14px; text-align: center; margin-bottom: 15px;">' + $periodYear + '</div>';
-                    studentHtml += '<div class="left reportContentLabel" style="width: 450px;">Alumnno(a):&nbsp;&nbsp;' + data.studentName  + '</div>';
+                    studentHtml += '<div class="left reportContentLabel" style="width: 100%; font-size: 14px; text-align: center; margin-bottom: 15px;">2013</div>';
+                    studentHtml += '<div class="left reportContentLabel" style="width: 450px;">Alumno(a):&nbsp;&nbsp;' + data.studentName  + '</div>';
                     studentHtml += '<div class="left reportContentLabel" style="width: 350px;">Secci&oacute;n:&nbsp;&nbsp;' + $("#groups").find(":selected").text() + '</div>';
                     studentHtml += '<div class="clear"></div>';
 

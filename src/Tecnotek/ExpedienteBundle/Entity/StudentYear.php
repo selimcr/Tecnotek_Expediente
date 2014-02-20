@@ -25,18 +25,18 @@ class StudentYear
      * @ORM\Column(type="float")
      * @Assert\NotBlank()
      */
-    private $conducta;
+    private $conducta = "100";
 
     /**
      * @ORM\Column(type="float")
      * @Assert\NotBlank()
      */
-    private $periodAverageScore;
+    private $periodAverageScore = "100";
 
     /**
      * @ORM\Column(type="integer")
      */
-    private $periodHonor;
+    private $periodHonor= "0";
 
     /**
      * @ManyToOne(targetEntity="Student")

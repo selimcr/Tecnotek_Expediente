@@ -98,8 +98,8 @@ Tecnotek.AdminPeriod = {
                             for(i=0; i<data.students.length; i++) {
                                 $data += '    <a class="searchResult" rel="' + data.students[i].id + '" name="' +
                                     data.students[i].lastname + ' ' + data.students[i].firstname + '">';
-                                $data += '      <span class="searchheading">' + data.students[i].lastname
-                                    + ' ' + data.students[i].firstname +  '</span>';
+                                $data += '      <span class="searchheading">' + data.students[i].carne
+                                    + ' ' + data.students[i].lastname +  ' ' + data.students[i].firstname +  '</span>';
                                 $data += '      <span>Incluir este estudiante.</span>';
                                 $data += '    </a>';
                             }

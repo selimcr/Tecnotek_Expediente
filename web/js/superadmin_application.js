@@ -1000,6 +1000,20 @@ var Tecnotek = {
                             }, true);
                     }
                 });
+            },
+            initializeRouteButtons: function(){
+                $('.editStudent').unbind();
+                $('.editStudent').click(function(event){
+                    event.preventDefault();
+
+                    var studentId = $(this).attr("rel");
+                    Tecnotek.UI.vars["studentId"]  = studentId;
+                    $("#leaveTime").val($(this).attr("pickUp"));
+                    $("#leaveTime").val($(this).attr("leaveTime"));
+                    Tecnotek.UI.vars["fromEdit"] = true;
+                    $('#openStudentForm').trigger('click');
+
+                });
             }
         },
         ClubShow : {
