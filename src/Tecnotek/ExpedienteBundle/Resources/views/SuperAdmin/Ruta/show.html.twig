@@ -5,9 +5,12 @@
 {% endblock %}
 
 {% block extracss %}
+<link rel="stylesheet" href="{{ asset('fancybox/jquery.fancybox.css') }}" type="text/css" media="all" />
+<link rel="stylesheet" href="{{ asset('fancybox/fancybox_style.css') }}" type="text/css" media="all" />
 {% endblock %}
 
 {% block extrajs %}
+<script type="text/javascript" src="{{ asset('fancybox/jquery.fancybox.js?v=2.0.6') }}"></script>
 <script type="text/javascript">
     Tecnotek.UI.urls["deleteURL"] = "{{ path("_delete_route", {id: entity.id}) }}";
     Tecnotek.UI.translates["confirmDelete"] = "{% trans %}messages.confirmation.route.delete{% endtrans %}";
@@ -119,7 +122,8 @@
                             {% endif %}
                         </div>
                     </div>
-        <a id="openStudentForm" class="right button success-darker tiny modalbox" style="margin: 4px 0px 0 0;" href="#studentFormContainer"></a>
+
+                         <a id="openStudentForm" class="right button success-darker tiny modalbox" style="margin: 4px 0px 0 0;" href="#studentFormContainer"></a>
                     <div id="studentFormContainer" style="display: none; width: 400px;">
                         <h3 style="margin-bottom: 0px;"><div class="left" id="studentTitleOption" name="studentTitleOption"></div> &nbsp;estudiante</h3>
 
@@ -162,4 +166,5 @@
 
     </div>
 </div>
+
 {% endblock %}
