@@ -82,7 +82,7 @@ class TicketItem
 
     public function __toString()
     {
-        return "Ticket #" . $this->id . ": " . $this->student. " :: " . $this->relative;
+        return "Prestamo #" . $this->id . ": " . $this->item. " :: " . $this->student;
     }
 
     /**

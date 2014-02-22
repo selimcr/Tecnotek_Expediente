@@ -62,7 +62,7 @@ class Item
     private $user;
 
     /**
-     * @ManyToOne(targetEntity="Category_Item")
+     * @ManyToOne(targetEntity="CategoryItem")
      * @JoinColumn(name="category_item_id", referencedColumnName="id")
      */
     private $category;
