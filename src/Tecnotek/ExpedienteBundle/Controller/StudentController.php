@@ -2143,4 +2143,98 @@ class StudentController extends Controller
             return new Response("<b>Not an ajax call!!!" . "</b>");
         }
     }
+
+    public function studentPsicoProfileAction($id)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $entity = $em->getRepository("TecnotekExpedienteBundle:Student")->find($id);
+        $forms = $em->getRepository("TecnotekExpedienteBundle:Questionnaire")->findPsicoQuestionnaires();
+
+        $answersResult = $em->getRepository("TecnotekExpedienteBundle:Questionnaire")
+                            ->findPsicoQuestionnairesAnswersOfStudent($id);
+        $answers = array();
+        foreach ($answersResult as $answer) {
+            $answers[$answer->getQuestion()->getId()] = $answer;
+        }
+
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Student/psicoProfile.html.twig',
+            array('entity' => $entity,'forms'   => $forms, 'menuIndex' => 3, 'answers' => $answers));
+    }
+
+    public function savePsicoFormAction(){
+        $logger = $this->get('logger');
+        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
+        {
+            $translator = $this->get("translator");
+            try {
+                $request = $this->get('request')->request;
+                $stdId = $request->get('studentId');
+
+                $em = $this->getDoctrine()->getEntityManager();
+
+                if( isset($stdId) ){
+                    $student = $em->getRepository("TecnotekExpedienteBundle:Student")->find($stdId);
+                    $parameters = $request->all();
+                    foreach ($parameters as $key => $value) {
+                        $logger->err("Parameter-> " . $key . ":" . $value);
+                    }
+                    foreach ($parameters as $key => $value) {
+                        if( $this->startswith($key, 'q-') ){
+                            $objs = explode('-', $key); //0: q, 1: questionId, 2: type
+                            $answer = new \Tecnotek\ExpedienteBundle\Entity\QuestionnaireAnswer();
+                            $answer = $em->getRepository("TecnotekExpedienteBundle:Questionnaire")
+                                    ->findStudentQuestion($stdId,$objs[1]);
+                            $answer->setStudent($student);
+                            switch($objs[2]){
+                                //SimpleInput, DateInput, TextAreaInput and YesNoSelectionSimple, Just save the answer
+                                case 1:
+                                case 2:
+                                case 5:
+                                case 6:
+                                    $answer->setMainText($value);
+                                    $answer->setSecondText("");
+                                    break;
+                                case 3://YesNoSelectionWithExplain: Must get the explanation also
+                                    $answer->setMainText($value);
+                                    $answer->setSecondText($request->get('qaux-' . $objs[1]));
+                                    break;
+                                case 4://Must get all the
+                                    break;
+                                case 8://Three Columns Table
+                                $answer->setMainText($request->get('qaux1-' . $objs[1]) . '-*-' .
+                                    $request->get('qaux2-' . $objs[1]) . '-*-'
+                                    . $request->get('qaux3-' . $objs[1]));
+                                $answer->setSecondText("");
+                                    break;
+                                default:
+                                    return new Response(json_encode(array('error' => true,
+                                                                          'message' => 'Tipo Incorrecto: ' . $objs[2])));
+                                    break;
+                            }
+                            $em->persist($answer);
+                        } else {
+                            //$logger->err("---> Omitiendo porque no es una pregunta... " . $key);
+                        }
+                    }
+                    $em->flush();
+                    return new Response(json_encode(array('error' => false)));
+                } else {
+                    return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
+                }
+            }
+            catch (Exception $e) {
+                $info = toString($e);
+                $logger->err('Student::savePsicoFormAction [' . $info . "]");
+                return new Response(json_encode(array('error' => true, 'message' => $info)));
+            }
+        }// endif this is an ajax request
+        else
+        {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+    }
+
+    private function startswith($haystack, $needle) {
+        return substr($haystack, 0, strlen($needle)) === $needle;
+    }
 }

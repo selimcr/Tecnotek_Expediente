@@ -147,7 +147,9 @@ var Tecnotek = {
                 case "studentPenaltiesReport":
                     Tecnotek.studentPenalties.init();
                     break;
-
+                case "psicoProfile":
+                    Tecnotek.psicoProfile.init();
+                    break;
                 default:
 					break;
 				}
@@ -480,6 +482,10 @@ var Tecnotek = {
                 $('.adminButton').click(function(event){
                     event.preventDefault();
                     location.href = Tecnotek.UI.urls["admin"] + "/" + $(this).attr("rel");
+                });
+                $('.psicoButton').click(function(event){
+                    event.preventDefault();
+                    location.href = Tecnotek.UI.urls["psico"] + "/" + $(this).attr("rel");
                 });
                 $('#btnSearch').click(function(event){
                     event.preventDefault();

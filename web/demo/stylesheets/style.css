@@ -73,6 +73,7 @@ body:before {
 .editButton {background: url(../images/icons/token_dark_full.png) no-repeat left 0px; background-position: -78px -42px;}
 .adminButton {background: url(../images/icons/setup.png) no-repeat left 0px;}
 .studentsButton {background: url(../images/icons/token_dark_full.png) no-repeat left 0px; background-position: -38px -258px;}
+.psicoButton {background: url(../images/icons/psico.jpg) no-repeat left 0px;margin-right: 0px; margin-top: 2px; width: 18px;}
 
 /*KPaginator Style*/
 .pagination {
