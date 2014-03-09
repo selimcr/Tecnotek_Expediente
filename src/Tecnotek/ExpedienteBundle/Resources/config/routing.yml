@@ -543,6 +543,14 @@ _expediente_report_students_by_route_club:
     pattern:  /reports/studentsByRouteClub/
     defaults: { _controller: TecnotekExpedienteBundle:Report:reportStudentByRouteClub }
 
+_expediente_report_students_by_route_club_level:
+    pattern:  /reports/studentsByRouteClubLevel/
+    defaults: { _controller: TecnotekExpedienteBundle:Report:reportStudentByRouteClubLevel }
+
+_expediente_report_students_by_route_club_route:
+    pattern:  /reports/studentsByRouteClubRoute/
+    defaults: { _controller: TecnotekExpedienteBundle:Report:reportStudentByRouteClubRoute }
+
 _expediente_report_students_routes:
     pattern:  /reports/studentsRoutes/
     defaults: { _controller: TecnotekExpedienteBundle:Report:reportStudentRoutes }
@@ -937,3 +945,79 @@ _expediente_sysadmin_student_show_ticket_simple:
 _expediente_sysadmin_student_show_ticket_return:
     pattern: /ticket
     defaults: { _controller: TecnotekExpedienteBundle:Student:ticketIndex2 }
+
+#CRUD de Items para SysAdmin
+_expediente_sysadmin_item:
+    pattern:  /item
+    defaults: { _controller: TecnotekExpedienteBundle:Item:itemList }
+
+_delete_item:
+    pattern:  /item/delete/{id}
+    defaults: { _controller: TecnotekExpedienteBundle:Item:itemDelete }
+
+_expediente_sysadmin_item_create:
+    pattern:  /item/create
+    defaults: { _controller: TecnotekExpedienteBundle:Item:itemCreate }
+
+_expediente_sysadmin_item_save:
+    pattern:  /item/save
+    defaults: { _controller: TecnotekExpedienteBundle:Item:itemSave }
+
+_expediente_sysadmin_item_update:
+    pattern:  /item/update
+    defaults: { _controller: TecnotekExpedienteBundle:Item:itemUpdate }
+
+_expediente_sysadmin_item_show:
+    pattern:  /item/show/{id}
+    defaults: { _controller: TecnotekExpedienteBundle:Item:itemShow }
+
+_expediente_sysadmin_item_edit:
+    pattern:  /item/edit/{id}
+    defaults: { _controller: TecnotekExpedienteBundle:Item:itemEdit }
+
+_expediente_sysadmin_item_show_simple:
+    pattern:  /item/show
+    defaults: { _controller: TecnotekExpedienteBundle:Item:itemShow }
+
+_expediente_sysadmin_item_edit_simple:
+    pattern:  /item/edit
+    defaults: { _controller: TecnotekExpedienteBundle:Item:itemEdit }
+#Fin de Items
+
+#CRUD de category_items para SysAdmin
+_expediente_sysadmin_category_item:
+    pattern:  /category_item
+    defaults: { _controller: TecnotekExpedienteBundle:Item:category_itemList }
+
+_delete_category_item:
+    pattern:  /category_item/delete/{id}
+    defaults: { _controller: TecnotekExpedienteBundle:Item:category_itemDelete }
+
+_expediente_sysadmin_category_item_create:
+    pattern:  /category_item/create
+    defaults: { _controller: TecnotekExpedienteBundle:Item:category_itemCreate }
+
+_expediente_sysadmin_category_item_save:
+    pattern:  /category_item/save
+    defaults: { _controller: TecnotekExpedienteBundle:Item:category_itemSave }
+
+_expediente_sysadmin_category_item_update:
+    pattern:  /category_item/update
+    defaults: { _controller: TecnotekExpedienteBundle:Item:category_itemUpdate }
+
+_expediente_sysadmin_category_item_show:
+    pattern:  /category_item/show/{id}
+    defaults: { _controller: TecnotekExpedienteBundle:Item:category_itemShow }
+
+_expediente_sysadmin_category_item_edit:
+    pattern:  /category_item/edit/{id}
+    defaults: { _controller: TecnotekExpedienteBundle:Item:category_itemEdit }
+
+_expediente_sysadmin_category_item_show_simple:
+    pattern:  /category_item/show
+    defaults: { _controller: TecnotekExpedienteBundle:Item:category_itemShow }
+
+_expediente_sysadmin_category_item_edit_simple:
+    pattern:  /category_item/edit
+    defaults: { _controller: TecnotekExpedienteBundle:Item:category_itemEdit }
+#Fin de Items

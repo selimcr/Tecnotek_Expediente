@@ -128,6 +128,103 @@ class ReportController extends Controller
         ));
     }
 
+    public function reportStudentByRouteClubLevelAction(){
+
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $logger = $this->get('logger');
+        $errorMessage = "";
+        try{
+            $stmt = $em->getConnection()->prepare("CALL setStudentsDailyStatus()");
+            $stmt->execute();
+        } catch (\Exception $e) {
+            $errorMessage = $e->getMessage();
+            $logger->err('Report::reportStudentAbsencesByRouteAction [Error runing sp: ' . $errorMessage . "]");
+        } catch (PDOException $e) {
+            $errorMessage = $e->getMessage();
+            $logger->err('Report::reportStudentAbsencesByRouteAction [Error runing sp: ' . $errorMessage . "]");
+        }
+
+        $text = $this->get('request')->query->get('text');
+        $day = $this->get('request')->query->get('day');
+
+        $sqlText = "";
+        if(isset($text) && $text != "") {
+            $sqlText = " WHERE r.name like '%$text%'";
+        }
+
+        $stmt = $this->getDoctrine()->getEntityManager()
+            ->getConnection()
+            ->prepare('select c.day, c.name, s.carne, concat (s.lastname," ",s.firstname) as student, s.groupyear
+            from tek_students s, tek_clubs c, club_student cs
+            where s.id = cs.student_id and c.id = cs.club_id and day = "'.$day.'"
+            order by c.day, s.groupyear');
+        $stmt->execute();
+        $entity = $stmt->fetchAll();
+
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Reports/students_by_route_club_level.html.twig', array(
+            'menuIndex' => 4, 'text' => $text, 'day' => $day, 'entities' => $entity
+        ));
+    }
+
+    public function reportStudentByRouteClubRouteAction(){
+
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $logger = $this->get('logger');
+        $errorMessage = "";
+        try{
+            $stmt = $em->getConnection()->prepare("CALL setStudentsDailyStatus()");
+            $stmt->execute();
+        } catch (\Exception $e) {
+            $errorMessage = $e->getMessage();
+            $logger->err('Report::reportStudentAbsencesByRouteAction [Error runing sp: ' . $errorMessage . "]");
+        } catch (PDOException $e) {
+            $errorMessage = $e->getMessage();
+            $logger->err('Report::reportStudentAbsencesByRouteAction [Error runing sp: ' . $errorMessage . "]");
+        }
+
+        $text = $this->get('request')->query->get('text');
+        $day = $this->get('request')->query->get('day');
+        $dayname = "";
+        switch($day){
+            case "1":   $dayname = "Lunes";
+                        break;
+            case "2":   $dayname = "Martes";
+                        break;
+            case "3":   $dayname = "Miercoles";
+                        break;
+            case "4":   $dayname = "Jueves";
+                        break;
+            case "5":   $dayname = "Viernes";
+                        break;
+            case "6":   $dayname = "Sabado";
+                        break;
+            case "7":   $dayname = "Domingo";
+                        break;
+            default:    $dayname = "";
+                        break;
+        }
+        $sqlText = "";
+        if(isset($text) && $text != "") {
+            $sqlText = " WHERE r.name like '%$text%'";
+        }
+
+        $stmt = $this->getDoctrine()->getEntityManager()
+            ->getConnection()
+            ->prepare('select r.name as route, c.day, c.name as club, s.carne, concat (s.lastname," ",s.firstname) as student, s.groupyear
+            from tek_students s, tek_clubs c, club_student cs, tek_route r, tek_students_to_routes sr
+            where cs.student_id = sr.student_id and r.id = sr.route_id and sr.student_id = s.id and s.id = cs.student_id and c.id = cs.club_id
+            and day = "'.$day.'"  and r.name like "%'.$dayname.'%"
+            order by r.name, s.groupyear, s.lastname');
+        $stmt->execute();
+        $entity = $stmt->fetchAll();
+
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Reports/students_by_route_club_route.html.twig', array(
+            'menuIndex' => 4, 'text' => $text, 'day' => $day, 'entities' => $entity
+        ));
+    }
+
     public function reportStudentRoutesAction(){
         $em = $this->getDoctrine()->getEntityManager();
 
@@ -207,6 +304,8 @@ class ReportController extends Controller
         $tipo = $request->get('tipo');
 
         $iSpecial = $request->get('iSpecial');
+        $iSpecialTiq = $request->get('iSpecialTiq');
+        $autoTiq = $request->get('autoTiq');
 
         $gender = $request->get('gender');
         $age = $request->get('age');
@@ -305,7 +404,7 @@ class ReportController extends Controller
 
         return $this->render('TecnotekExpedienteBundle:SuperAdmin:Reports/students.html.twig', array('menuIndex' => 4,
             'tipo' => $tipo, 'typeLabel' => $typeLabel, 'groups' => $groups,
-            'grades' => $grades, 'institutions' => $institutions, 'iSpecial' => $iSpecial,
+            'grades' => $grades, 'institutions' => $institutions, 'iSpecial' => $iSpecial, 'iSpecialTiq' => $iSpecialTiq,'autoTiq' => $autoTiq,
             'age' => $age, 'gender' => $gender, 'address' => $address, 'identification' => $identification,'birthday' => $birthday,
             'groupsT' => $groupsT, 'institutionsT' => $institutionsT,'gradesT' => $gradesT
         ));

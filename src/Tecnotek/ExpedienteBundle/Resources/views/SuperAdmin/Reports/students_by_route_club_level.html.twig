@@ -1,0 +1,91 @@
+{% extends 'TecnotekExpedienteBundle::logged_layout.html.twig' %}
+
+{% block htmlTitle %}
+    Tecnotek :: Expediente :: Super Administrador :: Reportes
+{% endblock %}
+
+{% block extrajs %}
+    <script type="text/javascript" src="{{ asset('js/jquery.printElement.min.js') }}"></script>
+    <script type="text/javascript">
+        Tecnotek.module = "reports";
+        Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
+    </script>
+{% endblock %}
+
+{% block content %}
+    <div class="container_24">
+        <div class="grid_24">
+            <div>
+                <div class="left">
+                    <h3>{% trans %}label.reports{% endtrans %}</h3>
+                </div>
+                <button style="margin-left: 15px; margin-top: 0px;" type="button" class="right button success-darker tiny" id="btnPrint" name="btnPrint" rel="Rutas por Zona"><span></span>{% trans %}label.print{% endtrans %}</button>
+                <div class="clear"></div>
+                <div class="right" style="margin-top: -2px;"><a style="margin: 4px 0px 0px 0px;" href="#"
+                  class="button success-darker tiny" id="btnSearchLevel" name="btnSearchLevel"><span></span>{% trans %}label.generate{% endtrans %}</a></div>
+                <div class="right" style="width: 5px; height: 26px"></div>
+
+                <div class="right">
+                    <select id="day" name="day" style="width: 150px;">
+                        <option value="1">Lunes</option>
+                        <option value="2">Martes</option>
+                        <option value="3">Miercoles</option>
+                        <option value="4">Jueves</option>
+                        <option value="5">Viernes</option>
+                        <option value="6">Sabado</option>
+                        <option value="7">Domingo</option>
+                    </select>
+                </div>
+
+                <div class="option_width right">
+                    <input id="searchText" name="searchText">
+                </div>
+
+            </div>
+
+            <div id="report" style="margin-top: 25px;">
+
+                <div class="titles" style="font-size: 10px;">
+                    <div class="left">{{corpo_name}}</div>
+                    <div class="right">Clubes</div>
+                    <div class="clear"></div>
+
+                    <div class="left">{{ "now"|date("d/M/Y H:i:s") }}</div>
+                    <div class="clear"></div>
+
+                    <p style="text-align: center;padding-bottom: 0px;">Estudiantes por grupo</p>
+                    <p style="text-align: center; padding-bottom: 0px;">Ordenados por Nombre</p>
+                </div>
+                <table>
+                {% for club in entities %}
+                    <div class="ContainerClub">
+
+
+                            <tr>
+                                <td style="width: 50px;">{{ club.day }}</td>
+                                <td style="width: 200px;">{{ club.name }}</td>
+                                <td style="width: 100px;">{{ club.carne }}</td>
+                                <td style="width: 400px;">{{ club.student }}</td>
+                                <td style="width: 100px;">{{ club.groupyear }}</td>
+                            <tr>
+                            <div class="clear"></div>
+
+                    </div>
+                {% else %}
+                    <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
+                        <div class="option_width" style="float: left; width: 375px;">{% trans %}results.not.found{%
+                        endtrans %}</div>
+                        <div class="clear"></div>
+                    </div>
+                {% endfor %}
+                </table>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <div class="wrapper">
+            <div class="grid_24 padline">
+                <div class="lineH"></div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,69 @@
+{% extends 'TecnotekExpedienteBundle::logged_layout.html.twig' %}
+
+{% block htmlTitle %}
+    Tecnotek :: Expediente :: Super Administrador :: Inventario
+{% endblock %}
+
+{% block extrajs %}
+    <script type="text/javascript">
+        Tecnotek.module = "entityList";
+        Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
+        Tecnotek.UI.urls["show"] = "{{ path('_expediente_sysadmin_category_item_show_simple')}}";
+        Tecnotek.UI.urls["edit"] = "{{ path('_expediente_sysadmin_category_item_edit_simple')}}";
+    </script>
+{% endblock %}
+
+{% block content %}
+    <div class="container_24">
+        <div class="grid_24">
+            <div class="titleRow">
+                <div class="left"><h3>{% trans %}label.category_item.listar{% endtrans %}</h3></div>
+                <div class="right"><a href="{{ path('_expediente_sysadmin_category_item_create') }}" class="button success-darker tiny"><span></span>{% trans %}label.add{% endtrans %}</a></div>
+                <div class="clear"></div>
+            </div>
+
+            <div class="table">
+                <div class="row tableHeader">
+                    <div class="option_width" style="float: left; width: 100px; margin-left: -6px;">
+                        {{ pagination.sortable('Codigo', 'ci.code')|raw }}
+                    </div>
+                    <div class="option_width" style="float: left; width: 200px; margin-left: -6px;">
+                        {{ pagination.sortable('Nombre', 'ci.name')|raw }}
+                    </div>
+                    <div class="option_width" style="float: left; width: 100px; margin-left: -6px;">
+                        {{ pagination.sortable('Descripcion', 'ci.description')|raw }}
+                    </div>
+                    <div class="right" style="margin-top: -2px;"><a style="margin: 4px 0px 0px 0px;" href="#" class="button success-darker tiny" id="btnSearch" name="btnSearch"><span></span>{% trans %}label.search{% endtrans %}</a></div>
+                    <div class="right" style="width: 5px; height: 26px"></div>
+                    <div class="option_width right">
+                        <input id="searchText" name="searchText" value="{{ text }}">
+                    </div>
+
+                </div>
+
+                {% set counter = 0 %}
+
+                {% for entity in pagination %}
+                    <div class="row userRow {% if counter%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}" rel="{{ entity.id }}">
+                        <div class="option_width" style="float: left; width: 100px; margin-left: -6px;">{{ entity.code }}</div>
+                        <div class="option_width" style="float: left; width: 200px; margin-left: -6px;">{{ entity.name }}</div>
+                        <div class="option_width" style="float: left; width: 100px; margin-left: -6px;">{{ entity.description }}</div>
+                        <div class="right imageButton editButton"  title="{% trans %}label.edit{% endtrans %}"  rel="{{ entity.id }}"></div>
+                        <div class="right imageButton viewButton"  title="{% trans %}label.view{% endtrans %}"  rel="{{ entity.id }}"></div>
+                        <div class="clear"></div>
+                    </div>
+                    {% set counter = counter + 1 %}
+                {% endfor %}
+            </div>
+
+            <br/>
+
+            <div style="margin-bottom:75px;">
+                {# display navigation #}
+                {{ pagination.render()|raw }}
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="clear"></div>
+    </div>
+{% endblock %}

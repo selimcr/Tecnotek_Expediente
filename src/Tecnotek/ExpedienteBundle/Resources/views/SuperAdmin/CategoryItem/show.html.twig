@@ -1,0 +1,79 @@
+{% extends 'TecnotekExpedienteBundle::logged_layout.html.twig' %}
+
+{% block htmlTitle %}
+    Tecnotek :: Expediente :: Super Administrador :: Inventario
+{% endblock %}
+
+{% block extracss %}
+    <link rel="stylesheet" href="{{ asset('fancybox/jquery.fancybox.css') }}" type="text/css" media="all" />
+    <link rel="stylesheet" href="{{ asset('fancybox/fancybox_style.css') }}" type="text/css" media="all" />
+{% endblock %}
+
+{% block extrajs %}
+    <script type="text/javascript" src="{{ asset('fancybox/jquery.fancybox.js?v=2.0.6') }}"></script>
+    <script type="text/javascript">
+
+        Tecnotek.module = "EntityShow";
+        Tecnotek.UI.translates["confirmDelete"] = "{% trans %}messages.confirmation.student.delete{% endtrans %}";
+
+        Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
+        Tecnotek.UI.urls["deleteURL"] = "{{ path("_delete_category_item", {id: entity.id}) }}";
+
+    </script>
+    <!-- basic fancybox setup -->
+    <script type="text/javascript">
+        $(function(){ $(".modalbox").fancybox(); });
+    </script>
+{% endblock %}
+
+{% block content %}
+    <div class="container_24" style="width: 900px;">
+        <div class="grid_24" style="width: 100%;">
+            <div class="titleRow">
+                <div class="left"><h3>{% trans %}label.category.show{% endtrans %}</h3></div>
+                <div class="right"><a href="{{ path('_expediente_sysadmin_category_item') }}" class="button success-darker tiny"><span></span>{% trans %}label.back.list{% endtrans %}</a></div>
+                <div class="clear"></div>
+            </div>
+            <!-- -->
+            <div class="section-container auto" data-section>
+                <section class="section">
+                    <p class="title"><a href="#panel1">{%trans%}label.general{%endtrans%}</a></p>
+
+                    <div class="content">
+
+                        <div id="showContainer">
+                            <div>
+                                <label>{%trans%}label.name{%endtrans%}</label>
+                                <span id="labelFirstname">{{ entity.name }}</span>
+
+                            </div>
+
+                            <div>
+                                <label>{%trans%}label.code{%endtrans%}</label>
+                                <span id="labelCarne">{{ entity.code }}</span>
+                            </div>
+
+                            <div>
+                                <label>{%trans%}label.description{%endtrans%}</label>
+                                <span id="labelCarne">{{ entity.description }}</span>
+                            </div>
+
+                            <div id="buttonsContainer" style="margin-top: 25px;">
+                                <a href="{{ path('_expediente_sysadmin_category_item_edit', {'id': entity.id}) }}" class="left button success-darker tiny"><span></span>{% trans %}label.edit{% endtrans %}</a>
+                                <div class="left button success-darker tiny" id="btnEliminar" style="margin-left: 25px;"><span></span>{% trans %}label.eliminar{% endtrans %}</div>
+                                <div class="clear"></div>
+                            </div>
+
+
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

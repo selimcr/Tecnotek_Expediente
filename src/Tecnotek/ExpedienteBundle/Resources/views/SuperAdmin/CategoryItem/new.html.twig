@@ -1,0 +1,67 @@
+{% extends 'TecnotekExpedienteBundle::logged_layout.html.twig' %}
+
+{% block htmlTitle %}
+    Tecnotek :: Expediente :: Super Administrador :: Inventario
+{% endblock %}
+
+{% block extrajs %}
+    <script type="text/javascript">
+        Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
+    </script>
+{% endblock %}
+
+{% block content %}
+    <div class="container_24" style="width: 800px;">
+        <div class="grid_24" style="width: 100%;">
+            <div class="panelRow" id="doc-forms">
+                <div class="large-12 columns">
+                    <form class="custom" id="mainForm" action="{{ path('_expediente_sysadmin_category_item_save') }}" method="post" {{ form_enctype(form) }}>
+                        {{ form_errors(form) }}
+
+                        {{ form_widget(form._token) }}
+
+                        <fieldset>
+                            <legend>{% trans %}label.category_item.new{% endtrans %}</legend>
+
+                            <div class="formRow">
+                                <label class="error">{{ form_errors(form.name) }}</label>
+                                <div class="large-12 columns">
+                                    <label>{% trans %}label.name{% endtrans %}</label>{{ form_widget(form.name) }}
+                                </div>
+                            </div>
+
+                            <div class="formRow">
+                                <label class="error">{{ form_errors(form.code) }}</label>
+                                <div class="large-12 columns">
+                                    <label>{% trans %}label.code{% endtrans %}</label>{{ form_widget(form.code) }}
+                                </div>
+                            </div>
+
+                            <div class="formRow">
+                                <label class="error">{{ form_errors(form.description) }}</label>
+                                <div class="large-12 columns">
+                                    <label>{% trans %}label.description{% endtrans %}</label>{{ form_widget(form.description) }}
+                                </div>
+                            </div>
+
+                            <div class="formRow ">
+                                <div class="large-12 columns buttonsPanel">
+                                    <a href="{{ path('_expediente_sysadmin_category_item') }}"
+                                       class="button success-darker tiny"><span></span>{% trans %}label.cancelar{% endtrans %}</a>
+
+                                    <input class="button success-darker tiny" style="margin-top: 0px;"
+                                           type="submit" name="save"
+                                           value="{% trans %}label.save{% endtrans %}"/>
+
+                                </div>
+                                <div class="clear"></div>
+                            </div>
+
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+{% endblock %}

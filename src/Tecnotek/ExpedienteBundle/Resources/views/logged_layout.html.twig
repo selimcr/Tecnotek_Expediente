@@ -104,6 +104,8 @@
                             <!-- <li><a href="{{ path('_expediente_report_penalty_students') }}">{% trans %}label.penalty.report{% endtrans %}</a></li> -->
                             <li><a href="{{ path('_expediente_report_students_routes') }}">{% trans %}label.student.route{% endtrans %}</a></li>
                             <li><a href="{{ path('_expediente_report_course_by_group') }}">{% trans %}label.report.grades.by.group.course{% endtrans %}</a></li>
+                            <li><a href="{{ path('_expediente_report_students_by_route_club_level') }}">{% trans %}label.students.by.route.club.level{% endtrans %}</a></li>
+                            <li><a href="{{ path('_expediente_report_students_by_route_club_route') }}">{% trans %}label.students.by.route.club.route{% endtrans %}</a></li>
                         </ul>
                     </li>
                     <li class="divider"></li>
@@ -115,6 +117,13 @@
                             <li><a href="{{ path('_expediente_sysadmin_course') }}">{% trans %}label.course{% endtrans %}</a></li>
                             <li><a href="{{ path('_expediente_sysadmin_qualifications') }}">{% trans %}label.qualifications{% endtrans %}</a></li>
 
+                        </ul>
+                    </li>
+                    <li class="divider"></li>
+                    <li class="has-dropdown{% if menuIndex is defined and menuIndex == 6%} current{% endif %}"><a href="#">{% trans %}label.inventary{% endtrans %}</a>
+                        <ul class="dropdown">
+                            <li><a href="{{ path('_expediente_sysadmin_item') }}">{% trans %}label.items{% endtrans %}</a></li>
+                            <li><a href="{{ path('_expediente_sysadmin_category_item') }}">{% trans %}label.categoryitems{% endtrans %}</a></li>
                         </ul>
                     </li>
                 </ul>

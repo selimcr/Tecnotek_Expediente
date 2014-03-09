@@ -324,6 +324,44 @@ var Tecnotek = {
                     window.location.href= url;
                 });
 
+                $('#btnSearchLevel').click(function(event){
+                    event.preventDefault();
+                    var url = location.href;
+                    var text = $("#searchText").val();
+                    var day = $("#day").val();
+                    if( url.indexOf("?") > -1 ){
+                        if( url.indexOf("day=") > -1 ){
+                            url += "&q=1";
+                            url = url.replace(/(day=).*?(&)/,'$1' + day + '$2');
+                            url = url.replace("&q=1","");
+                        } else {
+                            url += "&day=" + day + "&text=" + text;
+                        }
+                    } else {
+                        url += "?day=" + day + "&text=" + text;
+                    }
+                    window.location.href= url;
+                });
+
+                $('#btnSearchRoute').click(function(event){
+                    event.preventDefault();
+                    var url = location.href;
+                    var text = $("#searchText").val();
+                    var day = $("#day").val();
+                    if( url.indexOf("?") > -1 ){
+                        if( url.indexOf("day=") > -1 ){
+                            url += "&q=1";
+                            url = url.replace(/(day=).*?(&)/,'$1' + day + '$2');
+                            url = url.replace("&q=1","");
+                        } else {
+                            url += "&day=" + day + "&text=" + text;
+                        }
+                    } else {
+                        url += "?day=" + day + "&text=" + text;
+                    }
+                    window.location.href= url;
+                });
+
                 $('#btnPrintTransporte').click(function(event){
                     $("#report").printElement({printMode:'popup', pageTitle:$(this).attr('rel')});
                 });
@@ -901,6 +939,11 @@ var Tecnotek = {
                     $('#studentsTab').toggleClass("tab-current");
                 });
 
+                $("#entryFormCancel").click(function(event){
+                    event.preventDefault();
+                    $.fancybox.close();
+                });
+
                 $('#searchBox').keyup(function(event){
                     event.preventDefault();
                     if($(this).val().length == 0) {
@@ -976,7 +1019,7 @@ var Tecnotek = {
 
                 $("#openStudentForm").fancybox({
                     'beforeLoad' : function(){
-console.debug("openStudentForm <-- beforeLoad");
+                      console.debug("openStudentForm <-- beforeLoad");
                     },
                     'modal': true,
                     'width': 650
