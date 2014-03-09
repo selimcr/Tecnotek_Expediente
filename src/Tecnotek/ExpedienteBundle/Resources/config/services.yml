@@ -5,3 +5,10 @@ services:
 #    tecnotek_expediente.example:
 #        class: %tecnotek_expediente.example.class%
 #        arguments: [@service_id, "plain_value", %parameter%]
+    tecnotek.twig.product.package.extension:
+          class: Tecnotek\ExpedienteBundle\Twig\Extensions\QuestionnaireExtension
+          tags:
+              - { name: twig.extension }
+          arguments:
+              em: "@doctrine.orm.entity_manager"
+              translator: "@translator"

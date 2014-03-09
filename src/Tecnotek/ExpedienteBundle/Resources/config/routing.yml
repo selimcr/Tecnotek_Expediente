@@ -226,6 +226,18 @@ _expediente_sysadmin_student_show_simple:
 _expediente_sysadmin_student_edit_simple:
     pattern:  /student/edit
     defaults: { _controller: TecnotekExpedienteBundle:Student:studentEdit }
+
+_expediente_sysadmin_student_psico_profile_simple:
+    pattern:  /student/psicoProfile
+    defaults: { _controller: TecnotekExpedienteBundle:Student:studentPsicoProfile }
+
+_expediente_sysadmin_student_psico_profile:
+    pattern:  /student/psicoProfile/{id}
+    defaults: { _controller: TecnotekExpedienteBundle:Student:studentPsicoProfile }
+
+_expediente_sysadmin_save_student_psico_profile:
+    pattern:  /student/psicoProfileSave
+    defaults: { _controller: TecnotekExpedienteBundle:Student:savePsicoForm }
 #Fin de CRUD de Students
 
 #CRUD de Clubs para SysAdmin
