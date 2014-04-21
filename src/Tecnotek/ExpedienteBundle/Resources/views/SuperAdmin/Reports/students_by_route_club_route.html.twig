@@ -11,7 +11,8 @@
         Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
     </script>
 {% endblock %}
-
+{% set begin = 0 %}
+{% set levelcount = 1 %}
 {% block content %}
     <div class="container_24">
         <div class="grid_24">
@@ -59,13 +60,23 @@
                     {% for club in entities %}
                         <div class="ContainerClub">
 
+                            {% if begin == 0 %}
+                                {% set levelcount = club.route|slice(0,30) %}
+                                {% set begin = 1 %}
+                            {% endif %}
+                            {% if levelcount != club.route|slice(0,30) %}
+                                {% set levelcount = club.route|slice(0,30) %}
+                                </table>
+                                <div class="pageBreak"> </div>
+                                <table>
+                            {% endif %}
 
                             <tr>
-                                <td style="width: 200px;">{{ club.route }}</td>
-                                <td style="width: 200px;">{{ club.club }}</td>
+                                <td style="width: 350px;">{{ club.route }}</td>
+                                <td style="width: 180px;">{{ club.club }}</td>
                                 <td style="width: 80px;">{{ club.carne }}</td>
                                 <td style="width: 400px;">{{ club.student }}</td>
-                                <td style="width: 80px;">{{ club.groupyear }}</td>
+                                <td style="width: 50px;">{{ club.groupyear }}</td>
                             <tr>
                             <div class="clear"></div>
 

@@ -11,7 +11,8 @@
         Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
     </script>
 {% endblock %}
-
+{% set begin = 0 %}
+{% set levelcount = 1 %}
 {% block content %}
     <div class="container_24">
         <div class="grid_24">
@@ -22,7 +23,7 @@
                 <button style="margin-left: 15px; margin-top: 0px;" type="button" class="right button success-darker tiny" id="btnPrint" name="btnPrint" rel="Rutas por Zona"><span></span>{% trans %}label.print{% endtrans %}</button>
                 <div class="clear"></div>
                 <div class="right" style="margin-top: -2px;"><a style="margin: 4px 0px 0px 0px;" href="#"
-                  class="button success-darker tiny" id="btnSearchLevel" name="btnSearchLevel"><span></span>{% trans %}label.generate{% endtrans %}</a></div>
+                                                                class="button success-darker tiny" id="btnSearchLevel" name="btnSearchLevel"><span></span>{% trans %}label.generate{% endtrans %}</a></div>
                 <div class="right" style="width: 5px; height: 26px"></div>
 
                 <div class="right">
@@ -57,12 +58,21 @@
                     <p style="text-align: center; padding-bottom: 0px;">Ordenados por Nombre</p>
                 </div>
                 <table>
-                {% for club in entities %}
-                    <div class="ContainerClub">
+                    {% for club in entities %}
+                        <div class="report">
 
+                            {% if begin == 0 %}
+                                {% set levelcount = club.groupyear|slice(0,1) %}
+                                {% set begin = 1 %}
+                            {% endif %}
+                            {% if levelcount != club.groupyear|slice(0,1) %}
+                                {% set levelcount = levelcount + 1 %}
+                                 </table>
+                                    <div class="pageBreak"> </div>
+                                <table>
+                            {% endif %}
 
                             <tr>
-                                <td style="width: 50px;">{{ club.day }}</td>
                                 <td style="width: 200px;">{{ club.name }}</td>
                                 <td style="width: 100px;">{{ club.carne }}</td>
                                 <td style="width: 400px;">{{ club.student }}</td>
@@ -70,14 +80,16 @@
                             <tr>
                             <div class="clear"></div>
 
-                    </div>
-                {% else %}
-                    <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
-                        <div class="option_width" style="float: left; width: 375px;">{% trans %}results.not.found{%
-                        endtrans %}</div>
-                        <div class="clear"></div>
-                    </div>
-                {% endfor %}
+
+                        </div>
+
+                    {% else %}
+                        <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
+                            <div class="option_width" style="float: left; width: 375px;">{% trans %}results.not.found{%
+                            endtrans %}</div>
+                            <div class="clear"></div>
+                        </div>
+                    {% endfor %}
                 </table>
             </div>
         </div>

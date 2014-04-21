@@ -599,6 +599,14 @@ _expediente_report_group_qualifications:
    pattern:  /reports/groupQualifications/
    defaults: { _controller: TecnotekExpedienteBundle:Report:loadGroupQualifications }
 
+_expediente_report_group_observations:
+   pattern:  /reports/groupObservations/
+   defaults: { _controller: TecnotekExpedienteBundle:Report:loadGroupObservations }
+
+_expediente_report_period_observations_by_group:
+   pattern:  /reports/observationsOfPeriod/
+   defaults: { _controller: TecnotekExpedienteBundle:Report:observationsOfPeriod }
+
 _expediente_report_group_qualifications_by_course:
    pattern:  /reports/groupQualificationsByCourse/
    defaults: { _controller: TecnotekExpedienteBundle:Report:loadGroupQualificationsByCourse }

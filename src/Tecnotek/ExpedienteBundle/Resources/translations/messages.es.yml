@@ -224,6 +224,9 @@ label.fatherPhoneShort: Tel. Padre
 label.motherPhoneShort: Tel. Madre
 label.female: Mujer
 label.male: Hombre
+label.laterality: Lateralidad
+label.zurdo: Zurdo
+label.diestro: Diestro
 
 label.observation: Observaciones
 label.admission: Admision
@@ -260,6 +263,8 @@ label.students.by.route.club.level: Reporte Estudiantes en club por dia
 label.students.by.route.club.route: Reporte Estudiantes rutas club por dia
 
 label.reports.routes.club: Reporte de rutas de Clubes
+label.routeIn: Ruta Altarnativa
+label.routeType: Tipo Ruta
 
 label.reports.bus: Reporte de Busetas
 label.reports.bus.message: Ingrese las opciones de filtrado deseadas y presione el boton de filtrar.
@@ -271,6 +276,7 @@ label.reports.routes_zones.message:
 
 label.qualifications: Calificaciones
 label.observations: Observaciones
+menu.observations.report: Reporte Observaciones
 
 label.absence.show: Informacion de Ausencia
 label.enter.by.group: Ingresar por grupo

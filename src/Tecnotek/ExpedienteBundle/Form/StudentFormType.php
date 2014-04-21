@@ -14,6 +14,7 @@ class StudentFormType extends AbstractType
             add('lastname', 'text', array('trim' => true, 'required' => false))->
             add('carne', 'text', array('trim' => true))->
             add('gender', 'choice', array('choices' => array(  '1' => 'Hombre', '2' => 'Mujer'),'required'  => true))->
+            add('laterality', 'choice', array('choices' => array(  '1' => 'Diestro', '2' => 'Zurdo'),'required'  => true))->
             add('age', 'integer', array('required' => false))->
             add('address', 'text', array('trim' => true, 'required' => false))->
             add('fatherPhone', 'text', array('trim' => true, 'required' => false))->
@@ -24,7 +25,9 @@ class StudentFormType extends AbstractType
             add('admission', 'text', array('trim' => true, 'required' => false))->
             add('identification', 'text', array('trim' => true, 'required' => false))->
             add('observation', 'text', array('trim' => true, 'required' => false))->
-            add('route', 'entity', array('class' => 'TecnotekExpedienteBundle:Route', 'required' => false));
+            add('route', 'entity', array('class' => 'TecnotekExpedienteBundle:Route', 'required' => false))->
+            add('routeIn', 'entity', array('class' => 'TecnotekExpedienteBundle:Route', 'required' => false))->
+            add('routeType', 'choice', array('choices' => array(  '1' => 'Completo', '2' => 'Medio'),'required'  => false));
     }
 
     public function getName()

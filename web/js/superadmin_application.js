@@ -126,8 +126,11 @@ var Tecnotek = {
                 case "printQualifications":
                     Tecnotek.PrintQualifications.init();
                     break;
-                    case "periodGroupQualifications":
+                case "periodGroupQualifications":
                     Tecnotek.PeriodGroupQualifications.init();
+                    break;
+                case "PeriodGroupObservations":
+                    Tecnotek.PeriodGroupObservations.init();
                     break;
                 case "groupCourseQualifications":
                     Tecnotek.GroupCourseQualifications.init();
@@ -966,7 +969,9 @@ var Tecnotek = {
                                     $data += '    <span class="category">Estudiantes</span>';
                                     for(i=0; i<data.students.length; i++) {
                                         $data += '    <a class="searchResult" rel="' + data.students[i].id + '" name="' +
-                                            data.students[i].lastname + ' ' + data.students[i].firstname + '">';
+                                            data.students[i].lastname + ' ' + data.students[i].firstname + '" route="' +
+                                            data.students[i].in_route_id + ' type="' +
+                                            data.students[i].routeType + '>';
                                         $data += '      <span class="searchheading">' + data.students[i].carne
                                             + ' ' + data.students[i].lastname
                                             + ' ' + data.students[i].firstname  + ' ' + data.students[i].groupyear
@@ -983,6 +988,8 @@ var Tecnotek = {
                                         event.preventDefault();
                                         Tecnotek.UI.vars["studentId"] = $(this).attr("rel");
                                         Tecnotek.UI.vars["studentName"] = $(this).attr("name");
+                                        Tecnotek.UI.vars["routeType"] = $(this).attr("type");
+                                        Tecnotek.UI.vars["routeIn"] = $(this).attr("route");
                                         Tecnotek.ajaxCall(Tecnotek.UI.urls["associateStudentsURL"],
                                             {studentId: $(this).attr("rel"), routeId: Tecnotek.UI.vars["routeId"]},
                                             function(data){
@@ -990,7 +997,8 @@ var Tecnotek = {
                                                     Tecnotek.showErrorMessage(data.message,true, "", false);
                                                 } else {
                                                     console.debug("Add Student with Id: " + Tecnotek.UI.vars["studentId"]);
-                                                    $html = '<div id="student_row_' + Tecnotek.UI.vars["studentId"] + '" class="row userRow" rel="' + Tecnotek.UI.vars["studentId"] + '">';
+                                                    $html = '<div id="student_row_' + Tecnotek.UI.vars["studentId"] + '" class="row userRow" rel="' + Tecnotek.UI.vars["studentId"]
+                                                        + '" typeroute="' + Tecnotek.UI.vars["routeType"] + '" routein="' + Tecnotek.UI.vars["routeIn"] +'">';
                                                     $html += '<div class="option_width" style="float: left; width: 300px;">' + Tecnotek.UI.vars["studentName"] + '</div>';
                                                     $html += '<div class="right imageButton deleteButton" style="height: 16px;"  title="delete???"  rel="' + Tecnotek.UI.vars["studentId"] + '"></div>';
                                                     $html += '<div class="clear"></div>';

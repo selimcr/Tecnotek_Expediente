@@ -306,12 +306,14 @@ class ReportController extends Controller
         $iSpecial = $request->get('iSpecial');
         $iSpecialTiq = $request->get('iSpecialTiq');
         $autoTiq = $request->get('autoTiq');
+        $carneTiq = $request->get('carneTiq');
 
         $gender = $request->get('gender');
         $age = $request->get('age');
         $address = $request->get('address');
         $birthday = $request->get('birthday');
         $identification = $request->get('identification');
+        $laterality = $request->get('laterality');
 
         $groups = null;
         $grades = null;
@@ -404,8 +406,8 @@ class ReportController extends Controller
 
         return $this->render('TecnotekExpedienteBundle:SuperAdmin:Reports/students.html.twig', array('menuIndex' => 4,
             'tipo' => $tipo, 'typeLabel' => $typeLabel, 'groups' => $groups,
-            'grades' => $grades, 'institutions' => $institutions, 'iSpecial' => $iSpecial, 'iSpecialTiq' => $iSpecialTiq,'autoTiq' => $autoTiq,
-            'age' => $age, 'gender' => $gender, 'address' => $address, 'identification' => $identification,'birthday' => $birthday,
+            'grades' => $grades, 'institutions' => $institutions, 'iSpecial' => $iSpecial, 'iSpecialTiq' => $iSpecialTiq,'autoTiq' => $autoTiq,'carneTiq' => $carneTiq,
+            'age' => $age, 'gender' => $gender, 'address' => $address, 'identification' => $identification,'birthday' => $birthday, 'laterality' => $laterality,
             'groupsT' => $groupsT, 'institutionsT' => $institutionsT,'gradesT' => $gradesT
         ));
     }
@@ -2380,4 +2382,187 @@ class ReportController extends Controller
 
         return $html;
     }
+
+    public function loadGroupObservationsAction(){
+        $logger = $this->get('logger');
+        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
+        {
+            try {
+                $request = $this->get('request')->request;
+                $periodId = $request->get('periodId');
+//                $periodId = 3;
+                $groupId = $request->get('groupId');
+                $convocatoria = $request->get('conv');
+
+                $keywords = preg_split("/[\s-]+/", $groupId);
+                $groupId = $keywords[0];
+                $gradeId = $keywords[1];
+
+                $referenceId = $request->get('referenceId');
+
+                $translator = $this->get("translator");
+
+                if( isset($referenceId) && isset($groupId) && isset($periodId)) {
+                    $em = $this->getDoctrine()->getEntityManager();
+
+                    //$period = $em->getRepository("TecnotekExpedienteBundle:Period")->find($periodId);
+
+                    $carne = "";
+                    $teacherGroup = "";
+                    $studentName = "";
+
+                    $group = $em->getRepository("TecnotekExpedienteBundle:Group")->find($groupId);
+                    $teacher = $group->getTeacher();
+                    $imgHeader = "encabezadoDefault.png";
+                    $teacherGroup = $teacher->getFirstname() . " " . $teacher->getLastname();
+                    $director = "Indefinido";
+                    $institution = $group->getInstitution();
+                    if(isset($institution)){
+                        //Find Properties
+                        $property = $em->getRepository("TecnotekExpedienteBundle:InstitutionProperty")->findOneBy(
+                            array('institution' => $institution->getId(), 'code' => "TICKETS_IMAGE" ));
+
+                        if(isset($property)){
+                            $imgHeader = $property->getValue();
+                        }
+
+                        $property = $em->getRepository("TecnotekExpedienteBundle:InstitutionProperty")->findOneBy(
+                            array('institution' => $institution->getId(), 'code' => "DIRECTOR" ));
+
+                        if(isset($property)){
+                            $director = $property->getValue();
+                        }
+
+                        /*$property = $em->getRepository("TecnotekExpedienteBundle:InstitutionProperty")->findOneBy(
+                            array('institution' => $institution->getId(), 'code' => "TICKETS_TEXT" ));
+
+                        if(isset($property)){
+                            $text = $property->getValue();
+                        }*/
+                    }
+
+                    if($referenceId == 0){
+                        $html = "";
+                    } else{
+                        $studentYear = $em->getRepository("TecnotekExpedienteBundle:StudentYear")->find($referenceId);
+                        $student = $studentYear->getStudent();
+                        $carne = $student->getCarne();
+                        $studentName = "" . $student;
+                        $html = $this->getStudentByPeriodHTMLObservations($periodId, $gradeId, $groupId, $referenceId, $studentYear, $director, $institution, $convocatoria);
+                    }
+
+                    return new Response(json_encode(array('error' => false, 'html' => $html, 'carne' => $carne, 'teacherGroup' => $teacherGroup, "studentName" => $studentName, "imgHeader" => $imgHeader)));
+                } else {
+                    return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
+                }
+            }
+            catch (Exception $e) {
+                $info = toString($e);
+                $logger->err('Teacher::loadEntriesByCourseAction [' . $info . "]");
+                return new Response(json_encode(array('error' => true, 'message' => $info)));
+            }
+        }// endif this is an ajax request
+        else {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+    }
+
+    public function getStudentByPeriodHTMLObservations($periodId, $gradeId, $groupId, $studentId, $studentYear, $director, $institution, $convocatoria){
+
+
+
+        $logger = $this->get('logger');
+        $em = $this->getDoctrine()->getEntityManager();
+
+
+        $em->persist($studentYear);
+        $em->flush();
+
+
+        $dia=date("l");
+
+        if ($dia=="Monday") $dia="Lunes";
+        if ($dia=="Tuesday") $dia="Martes";
+        if ($dia=="Wednesday") $dia="Miércoles";
+        if ($dia=="Thursday") $dia="Jueves";
+        if ($dia=="Friday") $dia="Viernes";
+        if ($dia=="Saturday") $dia="Sabado";
+        if ($dia=="Sunday") $dia="Domingo";
+
+        $mes=date("F");
+
+        if ($mes=="January") $mes="Enero";
+        if ($mes=="February") $mes="Febrero";
+        if ($mes=="March") $mes="Marzo";
+        if ($mes=="April") $mes="Abril";
+        if ($mes=="May") $mes="Mayo";
+        if ($mes=="June") $mes="Junio";
+        if ($mes=="July") $mes="Julio";
+        if ($mes=="August") $mes="Agosto";
+        if ($mes=="September") $mes="Setiembre";
+        if ($mes=="October") $mes="Octubre";
+        if ($mes=="November") $mes="Noviembre";
+        if ($mes=="December") $mes="Diciembre";
+
+        $ano=date("Y");
+        $dia2=date("d");
+
+
+        $html = '<div style="margin-top: 25px; margin-bottom: 25px;">Desamparados, '. $dia.' '. $dia2 .' de '. $mes .' del '. $ano . '</br></br></div>';
+
+
+        $sql = "SELECT obs FROM TecnotekExpedienteBundle:Observation obs"
+            . " WHERE obs.studentYear = " .  $studentYear->getId();
+        //. " AND obs.courseClass = ".$periodId;
+        $query = $em->createQuery($sql);
+        $observations = $query->getResult();
+        $counter2=0;
+
+
+        $separator[0] = '/1./';
+        $separator[1] = '/2./';
+
+        $html .= '<table>';
+        $html .= '<tr><td colspan="3" style="text-align: center">Espeficación por materia</td></tr>';
+        foreach($observations as $observation){
+            $profesor =  $observation->getTeacher();
+            $courseClass =  $observation->getCourseClass();
+            $comments =  $observation->getDetail();
+
+            $courseName = preg_replace($separator,"",$courseClass->getCourse());
+            $html .= '<tr>';
+
+            $html .= '<td style="width: 150px;" >'. $profesor  . '</td>';
+            $html .= '<td style="width: 100px;" >'. $courseName  . '</td>';
+            $html .= '<td style="width: 550px;">'. $comments  . '</td>';
+
+
+
+            $html .= '</tr>';
+        }
+
+        $html .= '</table>';
+
+        $html .= '<div>Nota: Comunicarse con la auxiliar administrativa para asuntos de conducta y ausentismo.</div>';
+
+        $html .= '</br></br>';
+        $html .= '<div class="clear"></div>';
+        $html .= '<div class="left" style="width: 450px; text-align: center;"><div style="line-height: 25px;">______________________________</div><div>Firma del padre de familia o encargado</div></div>';
+        //$html .= '<div class="left" style="width: 250px; text-align: center; margin-left: 300px;"><div style="line-height: 25px;">______________________________</div><div>' . $director . '</div><div>Director</div></div>';
+        $html .= '<div class="clear"></div>';
+
+
+
+        $html .= '';
+        return $html;
+    }
+
+    public function observationsOfPeriodAction(){
+        $em = $this->getDoctrine()->getEntityManager();
+        $periods = $em->getRepository("TecnotekExpedienteBundle:Period")->findAll();
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Reports/periodGroupObservations.html.twig', array('menuIndex' => 4,
+            'periods' => $periods
+        ));
+    }
+
 }

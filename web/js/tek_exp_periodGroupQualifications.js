@@ -391,3 +391,214 @@ Tecnotek.PeriodGroupAverages = {
         $('#tableContainer').show();
     }
 };
+
+
+Tecnotek.PeriodGroupObservations = {
+    translates : {},
+    completeText: "",
+    studentsIndex: 0,
+    periodId: 0,
+    groupId: 0,
+    studentsLength: 0,
+    init : function() {
+        $("#period").change(function(event){
+            event.preventDefault();
+            $('#subentryFormParent').empty();
+            Tecnotek.PeriodGroupObservations.loadGroupsOfPeriod($(this).val());
+        });
+
+        $("#groups").change(function(event){
+            event.preventDefault();
+            Tecnotek.PeriodGroupObservations.loadGroupStudents($(this).val());
+        });
+
+        $("#students").change(function(event){
+            event.preventDefault();
+            Tecnotek.PeriodGroupObservations.loadQualificationsOfGroup($(this).val());
+        });
+
+        Tecnotek.PeriodGroupObservations.loadGroupsOfPeriod($('#period').val());
+        Tecnotek.PeriodGroupObservations.initButtons();
+    },
+    initButtons : function() {
+        $('#btnPrint').click(function(event){
+            $("#tableContainer").printElement({printMode:'popup', pageTitle:$(this).attr('rel')});
+        });
+    },
+    loadGroupsOfPeriod: function($periodId) {
+        if( $('#period option:selected').html() == "CONVI"){
+            $('input[name=conv]').val(1);
+        }else{
+            if( $('#period option:selected').html() == "CONVII"){
+                $('input[name=conv]').val(2);
+            }else{
+                $('input[name=conv]').val(0);
+            }
+        }
+        console.debug("Load groups of period: " + $periodId);
+        if(($periodId!==null)){
+            $('#groups').children().remove();
+            $('#students').children().remove();
+            $('#subentryFormParent').empty();
+            $('#tableContainer').hide();
+            Tecnotek.ajaxCall(Tecnotek.UI.urls["loadGroupsOfPeriodURL"],
+                {   periodId: $periodId },
+                function(data){
+                    if(data.error === true) {
+                        Tecnotek.showErrorMessage(data.message,true, "", false);
+                    } else {
+                        for(i=0; i<data.groups.length; i++) {
+                            $('#groups').append('<option value="' + data.groups[i].id + '">' + data.groups[i].name + '</option>');
+                        }
+                        Tecnotek.PeriodGroupObservations.loadGroupStudents($('#groups').val());
+                    }
+                },
+                function(jqXHR, textStatus){
+                    Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
+                    $(this).val("");
+                }, true);
+        }
+    },
+    loadGroupStudents: function($groupId) {
+        if(($groupId!==null)){
+            $('#students').children().remove();
+            $('#subentryFormParent').empty();
+            //Tecnotek.Qualifications.loadQualificationsOfGroup(0);
+            Tecnotek.ajaxCall(Tecnotek.UI.urls["loadStudentsGroupURL"],
+                {   groupId: $groupId.split("-")[0] },
+                function(data){
+                    if(data.error === true) {
+                        Tecnotek.showErrorMessage(data.message,true, "", false);
+                    } else {
+                        $('#students').append('<option value="-2"></option>');
+                        $('#students').append('<option value="-1">Solo Hoja</option>');
+                        $('#students').append('<option value="0">Todo</option>');
+                        for(i=0; i<data.students.length; i++) {
+                            $('#students').append('<option value="' + data.students[i].id + '">' + data.students[i].lastname + ", " + data.students[i].firstname + '</option>');
+                        }
+                        Tecnotek.PeriodGroupObservations.loadQualificationsOfGroup($('#students').val());
+                    }
+                },
+                function(jqXHR, textStatus){
+                    Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
+                    $(this).val("");
+                }, false);
+        }
+    },
+    loadQualificationsOfGroup: function(studentId) {
+        $('.editEntry').unbind();
+        $('#contentBody').empty();
+        $('#tableContainer').hide();
+        if(studentId === null || studentId == -2){//Clean page
+        } else {
+            $('#fountainG').show();
+            Tecnotek.PeriodGroupObservations.periodId = $("#period").val();
+            Tecnotek.PeriodGroupObservations.groupId = $("#groups").val();
+            if(studentId != 0){//Single student
+
+                Tecnotek.PeriodGroupObservations.completeText = "";
+                Tecnotek.PeriodGroupObservations.studentsIndex = $('#students option').length;
+                Tecnotek.PeriodGroupObservations.studentsLength = Tecnotek.PeriodGroupObservations.studentsIndex;
+                Tecnotek.PeriodGroupObservations.loadStudentQualification(studentId);
+
+            } else {//All Students
+                Tecnotek.ajaxCall(Tecnotek.UI.urls["loadObservationsOfGroupURL"],
+                    {   periodId: Tecnotek.PeriodGroupObservations.periodId,
+                        referenceId: studentId,
+                        groupId: Tecnotek.PeriodGroupObservations.groupId,
+                        conv: $("#conv").val()},
+                    function(data){
+                        //$('#fountainG').hide();
+                        if(data.error === true) {
+                            Tecnotek.showErrorMessage(data.message,true, "", false);
+                        } else {
+                            Tecnotek.PeriodGroupObservations.completeText = '<div class="center"><h3><img width="840" height="145" src="/expediente/web/images/' + data.imgHeader + '" alt="" class="image-hover"></h3></div>'
+                                + data.html + '<div class="pageBreak"> </div>';
+                            Tecnotek.PeriodGroupObservations.studentsIndex = 2;
+                            Tecnotek.PeriodGroupObservations.studentsLength = $('#students option').length;
+                            Tecnotek.PeriodGroupObservations.processStudentResponse("");
+                            //$('#contentHeader').html(tableHeader);
+                            //$('#contentBody').html(tableHeader + data.html);
+                            //$('#tableContainer').show();
+                        }
+                    },
+                    function(jqXHR, textStatus){
+                        $('#fountainG').hide();
+                        $( "#spinner-modal" ).dialog( "close" );
+                        Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
+                    }, false);
+            }
+
+        }
+    },
+    loadAllStudentsQualifications: function() {
+        studentId = $('#students option:eq(' + Tecnotek.PeriodGroupObservations.studentsIndex + ')').val();
+        Tecnotek.PeriodGroupObservations.loadStudentQualification(studentId);
+    },
+    loadStudentQualification: function(studentId) {
+        var studentHtml = "";
+
+        Tecnotek.ajaxCall(Tecnotek.UI.urls["loadObservationsOfGroupURL"],
+            {   periodId: Tecnotek.PeriodGroupObservations.periodId,
+                referenceId: studentId,
+                groupId: Tecnotek.PeriodGroupObservations.groupId,
+                conv: $("#conv").val()},
+            function(data){
+                //$('#fountainG').hide();
+                if(data.error === true) {
+                    Tecnotek.showErrorMessage(data.message,true, "", false);
+                } else {
+                    $period = $("#period").find(":selected").text();
+                    $periodYear = $period.split("-")[1];
+                    studentHtml += '<div class="center"><h3><img width="840" height="145" src="/expediente/web/images/' + data.imgHeader + '" alt="" class="image-hover"></h3></div>';
+
+                    studentHtml += '<div class="reportContentHeader">';
+                    studentHtml += '<div class="left reportContentLabel" style="width: 100%; font-size: 18px; text-align: center;">DEPARTAMENTO DE PSICOLOGIA Y ORIENTACION</div>';
+                    studentHtml += '<div class="left reportContentLabel" style="width: 100%; font-size: 14px; text-align: center; margin-bottom: 15px;">2014</div>';
+                    studentHtml += '<div class="left reportContentLabel" style="width: 550px;">Nombre del estudiante:&nbsp;&nbsp;' + data.studentName  + '</div>';
+                    studentHtml += '<div class="left reportContentLabel" style="width: 250px;">Secci&oacute;n:&nbsp;&nbsp;' + $("#groups").find(":selected").text() + '</div>';
+                    studentHtml += '<div class="clear"></div>';
+
+                    studentHtml += '<div class="left reportContentLabel" style="width: 550px;">Carn&eacute;:&nbsp;&nbsp;' + data.carne  + '</div>';
+                    studentHtml += '<div class="left reportContentLabel" style="width: 250px;">Trimestre:&nbsp;&nbsp;' + $period + '</div>';
+                    studentHtml += '<div class="clear"></div>';
+
+                    studentHtml += '<div class="text-justify" style="width: 800px;">Intrucciones: manifestaciones de la conducta del estudiante observadas por los distintos profesores dentro del ambiente escolar. Cada profesor puede indicar más de una manifestación en su respectiva materia. Cualquier duda consultar en horario de atención de cada profesor.</div>';
+                    studentHtml += '<div class="clear"></div>';
+
+
+                    studentHtml += "</div>";
+                    studentHtml += data.html  + '<div class="pageBreak"> </div>';
+
+                    Tecnotek.PeriodGroupObservations.processStudentResponse(studentHtml);
+                    //$('#contentBody').html(data.html);
+                    //$('#tableContainer').show();
+                }
+            },
+            function(jqXHR, textStatus){
+                $('#fountainG').hide();
+                $( "#spinner-modal" ).dialog( "close" );
+                Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
+            }, false);
+
+    },
+    processStudentResponse: function(html){
+
+        Tecnotek.PeriodGroupObservations.completeText += html;
+        Tecnotek.PeriodGroupObservations.studentsIndex++;
+        console.debug(Tecnotek.PeriodGroupObservations.studentsIndex + " :: " + Tecnotek.PeriodGroupObservations.studentsLength);
+        if(Tecnotek.PeriodGroupObservations.studentsIndex < Tecnotek.PeriodGroupObservations.studentsLength){
+            var studentId = $('#students option:eq(' + Tecnotek.PeriodGroupObservations.studentsIndex + ')').val();
+            console.debug("get student: " + studentId);
+            Tecnotek.PeriodGroupObservations.loadStudentQualification(studentId);
+        } else {
+            Tecnotek.PeriodGroupObservations.terminateGetAllQualifications();
+        }
+    },
+    terminateGetAllQualifications: function(){
+        //console.debug(html);
+        $('#fountainG').hide();
+        $('#contentBody').html(Tecnotek.PeriodGroupObservations.completeText);
+        $('#tableContainer').show();
+    }
+};

@@ -70,6 +70,13 @@
                         </div>
 
                         <div class="formRow">
+                            <label class="error">{{ form_errors(form.laterality) }}</label>
+                            <div class="large-12 columns">
+                                <label>{% trans %}label.laterality{% endtrans %}</label>{{ form_widget(form.laterality) }}
+                            </div>
+                        </div>
+
+                        <div class="formRow">
                             <label class="error">{{ form_errors(form.address) }}</label>
                             <div class="large-12 columns">
                                 <label>{% trans %}label.address{% endtrans %}</label>{{ form_widget(form.address) }}
@@ -136,6 +143,20 @@
                             <label class="error">{{ form_errors(form.route) }}</label>
                             <div class="large-12 columns">
                                 <label>{% trans %}label.route{% endtrans %}</label>{{ form_widget(form.route) }}
+                            </div>
+                        </div>
+
+                        <div class="formRow">
+                            <label class="error">{{ form_errors(form.routeIn) }}</label>
+                            <div class="large-12 columns">
+                                <label>{% trans %}label.routeIn{% endtrans %}</label>{{ form_widget(form.routeIn) }}
+                            </div>
+                        </div>
+
+                        <div class="formRow">
+                            <label class="error">{{ form_errors(form.routeType) }}</label>
+                            <div class="large-12 columns">
+                                <label>{% trans %}label.routeType{% endtrans %}</label>{{ form_widget(form.routeType) }}
                             </div>
                         </div>
 

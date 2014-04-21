@@ -45,10 +45,12 @@
                     <input type="radio" name="tipo" value="3" {% if tipo==3 %}checked{% endif %}> {%trans%}label.institution{%endtrans%}
 
                     <input type="checkbox" class="check" id="iSpecial" name="iSpecial" {% if iSpecial != null %}checked="checked"{% endif %}>{%trans%}Impresion Lista{%endtrans%}
-</br>
+                    </br>
                     <input type="checkbox" class="check" id="iSpecialTiq" name="iSpecialTiq" {% if iSpecialTiq != null %}checked="checked"{% endif %}>{%trans%}Impresion Tiquetes{%endtrans%}
 
                     <input type="checkbox" class="check" id="autoTiq" name="autoTiq" {% if autoTiq != null %}checked="checked"{% endif %}>{%trans%}Impresion T. Autorizacion{%endtrans%}
+
+                    <input type="checkbox" class="check" id="carneTiq" name="carneTiq" {% if carneTiq != null %}checked="checked"{% endif %}>{%trans%}Impresion Carne Estudiantil{%endtrans%}
                 </div>
                 <button style="margin-left: 15px; margin-top: 0px;" type="submit" class="right button success-darker tiny" name="search"><span></span>{% trans %}label.generate{% endtrans %}</button>
                 <div class="clear"></div>
@@ -59,6 +61,7 @@
                     <input type="checkbox" class="check" id="address" name="address" {% if address != null %}checked="checked"{% endif %}>{%trans%}label.address{%endtrans%}
                     <input type="checkbox" class="check" id="identification" name="identification" {% if identification != null %}checked="checked"{% endif %}>{%trans%}label.identification{%endtrans%}
                     <input type="checkbox" class="check" id="birthday" name="birthday" {% if birthday != null %}checked="checked"{% endif %}>{%trans%}label.birthday{%endtrans%}
+                    <input type="checkbox" class="check" id="laterality" name="laterality" {% if laterality != null %}checked="checked"{% endif %}>{%trans%}label.laterality{%endtrans%}
                 </div>
                 <hr>
                 <div>
@@ -94,6 +97,8 @@
     {% set counterM = 0 %}
     {% set counterF = 0 %}
 
+    {% set counterL1 = 0 %}
+    {% set counterL2 = 0 %}
 
     {% set numColumns = 0 %}
     {% if age == null %}{% set numColumns = numColumns + 1 %}{% endif %}
@@ -112,7 +117,7 @@
 
         <div id="report" style="margin-top: 25px; width: 950px;">
         {% if groups != null %}
-            {% if autoTiq != null %}
+            {% if carneTiq != null %}
 
                 {% for group in groups %}
                     <div class="groupContainer groupS_{{ group.id }} inst_{{ group.institution.id }} niv_{{ group.grade.id }}">
@@ -120,40 +125,46 @@
                         <div class="fields_row route">
                             <p style="text-decoration: underline; padding-bottom: 0px;">Nivel: {{ group.grade ~ " - " ~ group }}</p>
                         </div>
-                        <table style="border-width: 2px; border-style: solid;">
+                        <table class="neuvas" style="border-width: 2px; border-style: solid;">
                             {% set i = 1 %}
                             {% set j = 0 %}
                             {% for student in group.students %}
-                                {% if i == 1 %}
-                                    <tr>
+                            {% if i == 1 %}
+                            <tr>
                                 {% endif %}
-                                <td style="width: 315px; text-align: left;">
-                                    <img width="350" height="150"  src="{{ asset('images/autoTiq.png') }}"></br>
+                                <td style="width: 425px; text-align: right;"  BACKGROUND="{{ asset('images/estudiantescarne.png') }}">
+                                    </br></br></br></br></br></br></br></br>
+                                    <span style="font-family:arial;font-size:19px;">{{ student.lastname ~ ", " ~ student.firstname }}</span></br>
+                                    </br></br></br></br>
                                     <span style="font-family:arial;font-size:16px;">Carne: {{ student.carne }}</span></br>
-                                    <span style="font-family:arial;font-size:16px;">Nombre: {{ student.lastname ~ ", " ~ student.firstname }}</span>
-                                    </br><span style="font-family:arial;font-size:16px;"> Seccion: {{ student.groupyear }}</span></br></br>
-                                <span style="font-family:arial;font-size:8px;">PRESENTE ESTA TARJETA PARA APLICAR EXAMENES Y RESULTADOS</span></br></br></td>
-                                <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                    <span style="font-family:arial;font-size:16px;"> Seccion: {{ student.groupyear }}</span></br>
+                                    <span style="font-family:arial;font-size:16px;">{{ student.birthday }}</span>
+                                    </br></br></br></td>
+                                <td>&nbsp;&nbsp;&nbsp;</td>
                                 {% set j = j+1 %}
-                                {% if i == 3 %}
-                                    </tr>
-                                {% endif %}
+                                {% if i == 2 %}
+                            </tr>
+                            <tr>
+                                <td colspan="4" bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;</td>
+                            </tr>
+                            {% endif %}
 
-                                {% if i < 4 %}
-                                    {% set i = i + 1 %}
-                                {% endif %}
+                            {% if i < 3 %}
+                                {% set i = i + 1 %}
+                            {% endif %}
 
-                                {% if i == 4 %}
-                                    {% set i = 1 %}
-                                {% endif %}
+                            {% if i == 3 %}
+                                {% set i = 1 %}
+                            {% endif %}
 
-                                <div class="clear"></div>
-                                {% if j == 15 %}
-                                    </table>
-                                    <div class="pageBreak"> </div>
-                                    <table style="border-width: 2px; border-style: solid;">
-                                    {% set j = 0 %}
-                                {% endif %}
+                            <div class="clear"></div>
+                            {% if j == 8 %}
+                        </table>
+
+                        <div class="pageBreak"> </div>
+                        <table style="border-width: 2px; border-style: solid;">
+                            {% set j = 0 %}
+                            {% endif %}
                             {% endfor %}
 
                         </table>
@@ -168,116 +179,52 @@
                 {% endfor %}
 
             {% else %} <!-- specialautorizacion  -->
-            {% if iSpecialTiq != null %}
 
-                {% for group in groups %}
-                    <div class="groupContainer groupS_{{ group.id }} inst_{{ group.institution.id }} niv_{{ group.grade.id }}">
+                {% if autoTiq != null %}
 
-                        <div class="fields_row route">
-                            <p style="text-decoration: underline; padding-bottom: 0px;">Nivel: {{ group.grade ~ " - " ~ group }}</p>
-                        </div>
-                        <table style="border-width: 2px; border-style: solid;">
-                            {% set i = 1 %}
-                            {% for student in group.students %}
+                    {% for group in groups %}
+                        <div class="groupContainer groupS_{{ group.id }} inst_{{ group.institution.id }} niv_{{ group.grade.id }}">
+
+                            <div class="fields_row route">
+                                <p style="text-decoration: underline; padding-bottom: 0px;">Nivel: {{ group.grade ~ " - " ~ group }}</p>
+                            </div>
+                            <table style="border-width: 2px; border-style: solid;">
+                                {% set i = 1 %}
+                                {% set j = 0 %}
+                                {% for student in group.students %}
                                 {% if i == 1 %}
-                                    <tr>
-                                {% endif %}
-                                <td style="width: 285px;"><span style="font-family:arial;font-size:16px;">Carne: {{ student.carne }}</span></br>
-                                    <span style="font-family:arial;font-size:16px;">Nombre: {{ student.lastname ~ ", " ~ student.firstname }}</span>
-                                    </br><span style="font-family:arial;font-size:16px;"> Seccion: {{ student.groupyear }}</span></br></br></br></td>
-                                <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                                {% if i == 3 %}
-                                    </tr>
+                                <tr>
+                                    {% endif %}
+                                    <td style="width: 425px; text-align: left;">
+                                        <img width="420" height="150"  src="{{ asset('images/autoTiq.png') }}"></br></br>
+                                        <span style="font-family:arial;font-size:16px;">Carne: {{ student.carne }}</span></br>
+                                        <span style="font-family:arial;font-size:16px;">Nombre: {{ student.lastname ~ ", " ~ student.firstname }}</span>
+                                        </br><span style="font-family:arial;font-size:16px;"> Seccion: {{ student.groupyear }}</span></br></br>
+                                        <span style="font-family:arial;font-size:12px;">PRESENTE ESTA TARJETA PARA APLICAR EXAMENES Y RESULTADOS</span></br></br></td>
+                                    <td>&nbsp;&nbsp;&nbsp;</td>
+                                    {% set j = j+1 %}
+                                    {% if i == 2 %}
+                                </tr>
                                 {% endif %}
 
-                                {% if i < 4 %}
+                                {% if i < 3 %}
                                     {% set i = i + 1 %}
                                 {% endif %}
 
-                                {% if i == 4 %}
+                                {% if i == 3 %}
                                     {% set i = 1 %}
                                 {% endif %}
 
                                 <div class="clear"></div>
-                            {% endfor %}
-                        </table>
-                        <div class="pageBreak"> </div>
-                    </div>
-                {% else %}
-                    <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
-                        <div class="option_width" style="float: left; width: 375px;">{% trans %}results.not.found{% endtrans %}</div>
-                        <div class="clear"></div>
-                    </div>
-                {% endfor %}
-            {% else %} <!-- specialTiq  -->
-                {% if iSpecial == null %}
-                    {% for group in groups %}
-                        <div class="groupContainer group_{{ group.id }} inst_{{ group.institution.id }} niv_{{ group.grade.id }}">
-                            <div class="titles" style="font-size: 10px;">
-                                <div class="left">{{corpo_name}}</div>
-                                <div class="right">Reporte de estudiantes. Curso Lectivo 2013</div>
-                                <div class="clear"></div>
+                                {% if j == 8 %}
+                            </table>
+                            <div class="pageBreak"> </div>
+                            <table style="border-width: 2px; border-style: solid;">
+                                {% set j = 0 %}
+                                {% endif %}
+                                {% endfor %}
 
-                                <div class="left">{{ "now"|date("d/M/Y H:i:s") }}</div>
-                                <div class="clear"></div>
-
-                                <p style="text-align: center;padding-bottom: 0px;">Estudiantes por {{ typeLabel }}</p>
-                                <p style="text-align: center; padding-bottom: 0px;">Ordenados por Nombre</p>
-                            </div>
-                            <div class="fields_row route">
-                                <p style="text-decoration: underline; padding-bottom: 0px;">Nivel: {{ group.grade ~ " - " ~ group }}</p>
-                            </div>
-                            <div class="fields_row student_title">
-                                <div style="float: left; width: 50px;">{%trans%}label.carne{%endtrans%}</div>
-                                <div style="float: left; width: 350px;">{%trans%}label.student.name{%endtrans%}</div>
-                                {% if age != null %}
-                                    <div style="float: left; width: 100px;">{%trans%}label.age{%endtrans%}</div>
-                                {% endif %}
-                                {% if gender != null %}
-                                    <div style="float: left; width: 100px;">{%trans%}label.gender{%endtrans%}</div>
-                                {% endif %}
-                                {% if birthday != null %}
-                                    <div style="float: left; width: 100px;">{%trans%}label.birthday{%endtrans%}</div>
-                                {% endif %}
-                                {% if identification != null %}
-                                    <div style="float: left; width: 100px;">{%trans%}label.identification{%endtrans%}</div>
-                                {% endif %}
-                                {% if address != null %}
-                                    <div style="float: left; width: {{ widthAdress }}px;">{%trans%}label.address{%endtrans%}</div>
-                                {% endif %}
-                                <div style="float: left; width: 60px;"></div>
-                                <div class="clear"></div>
-                            </div>
-                            {% set counterF = 0 %}
-                            {% set counterM = 0 %}
-                            {% for student in group.students %}
-                                <div class="student_row">
-                                    <div style="float: left; width: 50px;">{{ student.carne }}</div>
-                                    <div style="float: left; width: 350px;">{{ student.lastname ~ ", " ~ student.firstname }}</div>
-                                    {% if age != null %}
-                                        <div style="float: left; width: 100px;"> &nbsp {{ student.age }}</div>
-                                    {% endif %}
-                                    {% if gender != null %}
-                                        <div style="float: left; width: 100px;"> &nbsp {% if student.gender == 1%}{% set counterM = counterM + 1 %}{% trans %}label.male{% endtrans %}{% else %}{% set counterF = counterF + 1 %}{% trans %}label.female{% endtrans %}{% endif %}</div>
-                                    {% endif %}
-                                    {% if birthday != null %}
-                                        <div style="float: left; width: 100px;"> &nbsp {{ student.birthday }}</div>
-                                    {% endif %}
-                                    {% if identification != null %}
-                                        <div style="float: left; width: 100px;"> &nbsp {{ student.identification }}</div>
-                                    {% endif %}
-                                    {% if address != null %}
-                                        <div style="float: left; width: {{ widthAdress }}px;">  {{ student.address }} &nbsp </div>
-                                    {% endif %}
-                                    <div style="float: left; width: 60px;">&nbsp;</div>
-                                </div>
-                                <div class="clear"></div>
-                            {% endfor %}
-                            <div class="student_footer">
-                                Total de estudiantes en el nivel: {{ group.students|length }}
-                                Total de hombres:  {{ counterM }}
-                                Total de mujeres:  {{ counterF }}
-                            </div>
+                            </table>
 
                             <div class="pageBreak"> </div>
                         </div>
@@ -286,117 +233,259 @@
                             <div class="option_width" style="float: left; width: 375px;">{% trans %}results.not.found{% endtrans %}</div>
                             <div class="clear"></div>
                         </div>
-
                     {% endfor %}
-                {% else %} <!-- special  -->
-                    {% for group in groups %}
-                        <div class="groupContainer groupS_{{ group.id }} inst_{{ group.institution.id }} niv_{{ group.grade.id }}">
-                            <div class="titles" style="font-size: 10px;">
-                                <div class="left">{{corpo_name}}</div>
-                                <div class="right">Reporte de estudiantes. Curso Lectivo 2014</div>
-                                <div class="clear"></div>
 
-                                <div class="left">{{ "now"|date("d/M/Y H:i:s") }}</div>
-                                <div class="clear"></div>
+                {% else %} <!-- specialautorizacion  -->
 
-                                <p style="text-align: center;padding-bottom: 0px;">Estudiantes por {{ typeLabel }}</p>
-                                <p style="text-align: center; padding-bottom: 0px;">Ordenados por Nombre</p>
+                    {% if iSpecialTiq != null %}
+
+                        {% for group in groups %}
+                            <div class="groupContainer groupS_{{ group.id }} inst_{{ group.institution.id }} niv_{{ group.grade.id }}">
+
+                                <div class="fields_row route">
+                                    <p style="text-decoration: underline; padding-bottom: 0px;">Nivel: {{ group.grade ~ " - " ~ group }}</p>
+                                </div>
+                                <table style="border-width: 2px; border-style: solid;">
+                                    {% set i = 1 %}
+                                    {% for student in group.students %}
+                                        {% if i == 1 %}
+                                            <tr>
+                                        {% endif %}
+                                        <td style="width: 285px;"><span style="font-family:arial;font-size:16px;">Carne: {{ student.carne }}</span></br>
+                                            <span style="font-family:arial;font-size:16px;">Nombre: {{ student.lastname ~ ", " ~ student.firstname }}</span>
+                                            </br><span style="font-family:arial;font-size:16px;"> Seccion: {{ student.groupyear }}</span></br></br></br></td>
+                                        <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                        {% if i == 3 %}
+                                            </tr>
+                                        {% endif %}
+
+                                        {% if i < 4 %}
+                                            {% set i = i + 1 %}
+                                        {% endif %}
+
+                                        {% if i == 4 %}
+                                            {% set i = 1 %}
+                                        {% endif %}
+
+                                        <div class="clear"></div>
+                                    {% endfor %}
+                                </table>
+                                <div class="pageBreak"> </div>
                             </div>
-                            <div class="fields_row route">
-                                <p style="text-decoration: underline; padding-bottom: 0px;">Nivel: {{ group.grade ~ " - " ~ group }}</p>
+                        {% else %}
+                            <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
+                                <div class="option_width" style="float: left; width: 375px;">{% trans %}results.not.found{% endtrans %}</div>
+                                <div class="clear"></div>
                             </div>
-                            <table style="border-width: 1px; border-style: solid;">
-                                <tr>
-                                    <td style="float: left;  width: 75px; height: 22px;"><span style="font-family:arial;font-size:18px;">{%trans%}label.carne{%endtrans%}</span></td>
-                                    <td style="float: left; width: 450px; height: 22px;"><span style="font-family:arial;font-size:18px;">{%trans%}label.student.name{%endtrans%}</span></td>
-                                    {% if age != null %}
-                                        <td style="float: left; width: 100px;">{%trans%}label.age{%endtrans%}</td>
-                                    {% endif %}
-                                    {% if gender != null %}
-                                        <td style="float: left; width: 100px;">{%trans%}label.gender{%endtrans%}</td>
-                                    {% endif %}
-                                    {% if birthday != null %}
-                                        <td style="float: left; width: 100px;">{%trans%}label.birthday{%endtrans%}</td>
-                                    {% endif %}
-                                    {% if identification != null %}
-                                        <td style="float: left; width: 100px;">{%trans%}label.identification{%endtrans%}</td>
-                                    {% endif %}
-                                    {% if address != null %}
-                                        <td style="float: left; width: {{ widthAdress }}px;">{%trans%}label.address{%endtrans%}</td>
-                                    {% endif %}
-                                    <td style="width: 30px; height: 22px; border-width: 1px; border-style: solid;">&nbsp</td>
-                                    <td style="width: 30px; height: 22px; border-width: 1px; border-style: solid;">&nbsp</td>
-                                    <td style="width: 30px; height: 22px; border-width: 1px; border-style: solid;">&nbsp</td>
-                                    <td style="width: 30px; height: 22px; border-width: 1px; border-style: solid;">&nbsp</td>
-                                    <td style="width: 30px; height: 22px; border-width: 1px; border-style: solid;">&nbsp</td>
-                                    <td style="width: 30px; height: 22px; border-width: 1px; border-style: solid;">&nbsp</td>
-                                    <td style="width: 30px; height: 22px; border-width: 1px; border-style: solid;">&nbsp</td>
-                                    <td style="width: 30px; height: 22px; border-width: 1px; border-style: solid;">&nbsp</td>
-                                    <td style="width: 30px; height: 22px; border-width: 1px; border-style: solid;">&nbsp</td>
-                                    <td style="width: 30px; height: 22px; border-width: 1px; border-style: solid;">&nbsp</td>
-                                </tr>
+                        {% endfor %}
+                    {% else %} <!-- specialTiq  -->
+                        {% if iSpecial == null %}
+                            {% for group in groups %}
+                                <div class="groupContainer group_{{ group.id }} inst_{{ group.institution.id }} niv_{{ group.grade.id }}">
+                                    <div class="titles" style="font-size: 10px;">
+                                        <div class="left"><span style="font-family:arial;font-size:16px;">{{corpo_name}}</span></div>
+                                        <div class="right"><span style="font-family:arial;font-size:16px;">Reporte de estudiantes. Curso Lectivo 2014</span></div>
+                                        <div class="clear"></div>
 
-                                {% set counterF = 0 %}
-                                {% set counterM = 0 %}
-                                {% for student in group.students %}
-                                    <tr>
-                                        <td style="float: left; width: 75px;  height: 22px;"><span style="font-family:arial;font-size:18px;">{{ student.carne }}</span></td>
-                                        <td style="float: left; width: 450px;  height: 22px;"><span style="font-family:arial;font-size:18px;">{{ student.lastname ~ ", " ~ student.firstname }}</span></td>
+                                        <div class="left">{{ "now"|date("d/M/Y H:i:s") }}</div>
+                                        <div class="clear"></div>
+
+                                        <p style="text-align: center;padding-bottom: 0px;"><span style="font-family:arial;font-size:16px;">Estudiantes por {{ typeLabel }}</span></p>
+                                        <p style="text-align: center; padding-bottom: 0px;"><span style="font-family:arial;font-size:16px;">Ordenados por Nombre</span></p>
+                                    </div>
+                                    <div class="fields_row route">
+                                        <p style="text-decoration: underline; padding-bottom: 0px;"><span style="font-family:arial;font-size:16px;">Nivel: {{ group.grade ~ " - " ~ group }}</p>
+                                    </div>
+                                    <div class="fields_row student_title">
+                                        <div style="float: left; width: 75px;"><span style="font-family:arial;font-size:16px;">{%trans%}label.carne{%endtrans%}</span></div>
+                                        <div style="float: left; width: 400px;"><span style="font-family:arial;font-size:16px;">{%trans%}label.student.name{%endtrans%}</span></div>
                                         {% if age != null %}
-                                            <td style="float: left; width: 100px;"> &nbsp {{ student.age }}</td>
+                                            <div style="float: left; width: 100px;"><span style="font-family:arial;font-size:16px;">{%trans%}label.age{%endtrans%}</span></div>
                                         {% endif %}
                                         {% if gender != null %}
-                                            <td style="float: left; width: 100px;"> &nbsp {% if student.gender == 1%}{% set counterM = counterM + 1 %}{% trans %}label.male{% endtrans %}{% else %}{% set counterF = counterF + 1 %}{% trans %}label.female{% endtrans %}{% endif %}</td>
+                                            <div style="float: left; width: 100px;"><span style="font-family:arial;font-size:16px;">{%trans%}label.gender{%endtrans%}</span></div>
                                         {% endif %}
                                         {% if birthday != null %}
-                                            <td style="float: left; width: 100px;"> &nbsp {{ student.birthday }}</td>
+                                            <div style="float: left; width: 100px;"><span style="font-family:arial;font-size:16px;">{%trans%}label.birthday{%endtrans%}</span></div>
                                         {% endif %}
                                         {% if identification != null %}
-                                            <td style="float: left; width: 100px;"> &nbsp {{ student.identification }}</td>
+                                            <div style="float: left; width: 100px;"><span style="font-family:arial;font-size:16px;">{%trans%}label.identification{%endtrans%}</span></div>
+                                        {% endif %}
+                                        {% if laterality != null %}
+                                            <div style="float: left; width: 100px;">{%trans%}label.laterality{%endtrans%}</div>
                                         {% endif %}
                                         {% if address != null %}
-                                            <td style="float: left; width: {{ widthAdress }}px;">  {{ student.address }} &nbsp </td>
+                                            <div style="float: left; width: {{ widthAdress }}px;"><span style="font-family:arial;font-size:16px;">{%trans%}label.address{%endtrans%}</span></div>
                                         {% endif %}
-                                        <td style="width: 30px; height: 22px; border-width: 1px; border-style: solid;">&nbsp</td>
-                                        <td style="width: 30px; height: 22px; border-width: 1px; border-style: solid;">&nbsp</td>
-                                        <td style="width: 30px; height: 22px; border-width: 1px; border-style: solid;">&nbsp</td>
-                                        <td style="width: 30px; height: 22px; border-width: 1px; border-style: solid;">&nbsp</td>
-                                        <td style="width: 30px; height: 22px; border-width: 1px; border-style: solid;">&nbsp</td>
-                                        <td style="width: 30px; height: 22px; border-width: 1px; border-style: solid;">&nbsp</td>
-                                        <td style="width: 30px; height: 22px; border-width: 1px; border-style: solid;">&nbsp</td>
-                                        <td style="width: 30px; height: 22px; border-width: 1px; border-style: solid;">&nbsp</td>
-                                        <td style="width: 30px; height: 22px; border-width: 1px; border-style: solid;">&nbsp</td>
-                                        <td style="width: 30px; height: 22px; border-width: 1px; border-style: solid;">&nbsp</td>
-                                    </tr>
+                                        <div style="float: left; width: 60px;"></div>
+                                        <div class="clear"></div>
+                                    </div>
+                                    {% set counterF = 0 %}
+                                    {% set counterM = 0 %}
+                                    {% for student in group.students %}
+                                        <div class="student_row">
+                                            <div style="float: left; width: 75px;"><span style="font-family:arial;font-size:16px;">{{ student.carne }}</span></div>
+                                            <div style="float: left; width: 400px;"><span style="font-family:arial;font-size:16px;">{{ student.lastname ~ ", " ~ student.firstname }}</span></div>
+                                            {% if age != null %}
+                                                <div style="float: left; width: 100px;"><span style="font-family:arial;font-size:16px;"> &nbsp {{ student.age }}</span></div>
+                                            {% endif %}
+                                            {% if gender != null %}
+                                                <div style="float: left; width: 100px;"><span style="font-family:arial;font-size:16px;"> &nbsp {% if student.gender == 1%}{% set counterM = counterM + 1 %}{% trans %}label.male{% endtrans %}{% else %}{% set counterF = counterF + 1 %}{% trans %}label.female{% endtrans %}{% endif %}</span></div>
+                                            {% endif %}
+                                            {% if birthday != null %}
+                                                <div style="float: left; width: 100px;"><span style="font-family:arial;font-size:16px;"> &nbsp {{ student.birthday }}</span></div>
+                                            {% endif %}
+                                            {% if identification != null %}
+                                                <div style="float: left; width: 100px;"><span style="font-family:arial;font-size:16px;"> &nbsp {{ student.identification }}</span></div>
+                                            {% endif %}
+                                            {% if laterality != null %}
+                                                <div style="float: left; width: 100px;"> &nbsp {% if student.laterality == 1%}{% set counterL1 = counterL1 + 1 %}{% trans %}label.diestro{% endtrans %}{% else %}{% set counterL2 = counterL2 + 1 %}{% trans %}label.zurdo{% endtrans %}{% endif %}</div>
+                                            {% endif %}
+                                            {% if address != null %}
+                                                <div style="float: left; width: {{ widthAdress }}px;"><span style="font-family:arial;font-size:16px;">  {{ student.address }} &nbsp </span></div>
+                                            {% endif %}
+                                            <div style="float: left; width: 60px;">&nbsp;</div>
+                                        </div>
+                                        <div class="clear"></div>
+                                    {% endfor %}
+                                    <div class="student_footer">
+                                <span style="font-family:arial;font-size:16px;">Total de estudiantes en el nivel: {{ group.students|length }}
+                                    Total de hombres:  {{ counterM }}
+                                    Total de mujeres:  {{ counterF }}
+                                    {% if laterality != null %}
+                                        </br>
+                                        Totales Lateralidad: {{ group.students|length }}
+                                        Total de diestros:  {{ counterL1 }}
+                                        Total de zurdos:  {{ counterL2 }}
+                                    {% endif %}
+                                </span>
+                                    </div>
 
+                                    <div class="pageBreak"> </div>
+                                </div>
+                            {% else %}
+                                <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
+                                    <div class="option_width" style="float: left; width: 375px;">{% trans %}results.not.found{% endtrans %}</div>
                                     <div class="clear"></div>
-                                {% endfor %}
-                            </table>
-                            <div class="student_footer">
-                                Total de estudiantes en el nivel: {{ group.students|length }}
-                                Total de hombres:  {{ counterM }}
-                                Total de mujeres:  {{ counterF }}
-                            </div>
+                                </div>
 
-                            <div class="pageBreak"> </div>
-                        </div>
-                    {% else %}
-                        <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
-                            <div class="option_width" style="float: left; width: 375px;">{% trans %}results.not.found{% endtrans %}</div>
-                            <div class="clear"></div>
-                        </div>
+                            {% endfor %}
+                        {% else %} <!-- special  -->
+                            {% for group in groups %}
+                                <div class="groupContainer groupS_{{ group.id }} inst_{{ group.institution.id }} niv_{{ group.grade.id }}">
+                                    <div class="titles" style="font-size: 10px;">
+                                        <div class="left">{{corpo_name}}</div>
+                                        <div class="right">Reporte de estudiantes. Curso Lectivo 2014</div>
+                                        <div class="clear"></div>
 
-                    {% endfor %}
+                                        <div class="left">{{ "now"|date("d/M/Y H:i:s") }}</div>
+                                        <div class="clear"></div>
+
+                                        <p style="text-align: center;padding-bottom: 0px;">Estudiantes por {{ typeLabel }}</p>
+                                        <p style="text-align: center; padding-bottom: 0px;">Ordenados por Nombre</p>
+                                    </div>
+                                    <div class="fields_row route">
+                                        <p style="text-decoration: underline; padding-bottom: 0px;">Nivel: {{ group.grade ~ " - " ~ group }}</p>
+                                    </div>
+                                    <table style="border-width: 1px; border-style: solid;">
+                                        <tr>
+                                            <td style="float: left;  width: 75px; height: 22px;"><span style="font-family:arial;font-size:18px;">{%trans%}label.carne{%endtrans%}</span></td>
+                                            <td style="float: left; width: 450px; height: 22px;"><span style="font-family:arial;font-size:18px;">{%trans%}label.student.name{%endtrans%}</span></td>
+                                            {% if age != null %}
+                                                <td style="float: left; width: 100px;">{%trans%}label.age{%endtrans%}</td>
+                                            {% endif %}
+                                            {% if gender != null %}
+                                                <td style="float: left; width: 100px;">{%trans%}label.gender{%endtrans%}</td>
+                                            {% endif %}
+                                            {% if birthday != null %}
+                                                <td style="float: left; width: 100px;">{%trans%}label.birthday{%endtrans%}</td>
+                                            {% endif %}
+                                            {% if identification != null %}
+                                                <td style="float: left; width: 100px;">{%trans%}label.identification{%endtrans%}</td>
+                                            {% endif %}
+                                            {% if address != null %}
+                                                <td style="float: left; width: {{ widthAdress }}px;">{%trans%}label.address{%endtrans%}</td>
+                                            {% endif %}
+                                            <td style="width: 30px; height: 22px; border-width: 1px; border-style: solid;">&nbsp</td>
+                                            <td style="width: 30px; height: 22px; border-width: 1px; border-style: solid;">&nbsp</td>
+                                            <td style="width: 30px; height: 22px; border-width: 1px; border-style: solid;">&nbsp</td>
+                                            <td style="width: 30px; height: 22px; border-width: 1px; border-style: solid;">&nbsp</td>
+                                            <td style="width: 30px; height: 22px; border-width: 1px; border-style: solid;">&nbsp</td>
+                                            <td style="width: 30px; height: 22px; border-width: 1px; border-style: solid;">&nbsp</td>
+                                            <td style="width: 30px; height: 22px; border-width: 1px; border-style: solid;">&nbsp</td>
+                                            <td style="width: 30px; height: 22px; border-width: 1px; border-style: solid;">&nbsp</td>
+                                            <td style="width: 30px; height: 22px; border-width: 1px; border-style: solid;">&nbsp</td>
+                                            <td style="width: 30px; height: 22px; border-width: 1px; border-style: solid;">&nbsp</td>
+                                        </tr>
+
+                                        {% set counterF = 0 %}
+                                        {% set counterM = 0 %}
+                                        {% for student in group.students %}
+                                            <tr>
+                                                <td style="float: left; width: 75px;  height: 22px;"><span style="font-family:arial;font-size:18px;">{{ student.carne }}</span></td>
+                                                <td style="float: left; width: 450px;  height: 22px;"><span style="font-family:arial;font-size:18px;">{{ student.lastname ~ ", " ~ student.firstname }}</span></td>
+                                                {% if age != null %}
+                                                    <td style="float: left; width: 100px;"> &nbsp {{ student.age }}</td>
+                                                {% endif %}
+                                                {% if gender != null %}
+                                                    <td style="float: left; width: 100px;"> &nbsp {% if student.gender == 1%}{% set counterM = counterM + 1 %}{% trans %}label.male{% endtrans %}{% else %}{% set counterF = counterF + 1 %}{% trans %}label.female{% endtrans %}{% endif %}</td>
+                                                {% endif %}
+                                                {% if birthday != null %}
+                                                    <td style="float: left; width: 100px;"> &nbsp {{ student.birthday }}</td>
+                                                {% endif %}
+                                                {% if identification != null %}
+                                                    <td style="float: left; width: 100px;"> &nbsp {{ student.identification }}</td>
+                                                {% endif %}
+                                                {% if address != null %}
+                                                    <td style="float: left; width: {{ widthAdress }}px;">  {{ student.address }} &nbsp </td>
+                                                {% endif %}
+                                                <td style="width: 30px; height: 22px; border-width: 1px; border-style: solid;">&nbsp</td>
+                                                <td style="width: 30px; height: 22px; border-width: 1px; border-style: solid;">&nbsp</td>
+                                                <td style="width: 30px; height: 22px; border-width: 1px; border-style: solid;">&nbsp</td>
+                                                <td style="width: 30px; height: 22px; border-width: 1px; border-style: solid;">&nbsp</td>
+                                                <td style="width: 30px; height: 22px; border-width: 1px; border-style: solid;">&nbsp</td>
+                                                <td style="width: 30px; height: 22px; border-width: 1px; border-style: solid;">&nbsp</td>
+                                                <td style="width: 30px; height: 22px; border-width: 1px; border-style: solid;">&nbsp</td>
+                                                <td style="width: 30px; height: 22px; border-width: 1px; border-style: solid;">&nbsp</td>
+                                                <td style="width: 30px; height: 22px; border-width: 1px; border-style: solid;">&nbsp</td>
+                                                <td style="width: 30px; height: 22px; border-width: 1px; border-style: solid;">&nbsp</td>
+                                            </tr>
+
+                                            <div class="clear"></div>
+                                        {% endfor %}
+                                    </table>
+                                    <div class="student_footer">
+                                        Total de estudiantes en el nivel: {{ group.students|length }}
+                                        Total de hombres:  {{ counterM }}
+                                        Total de mujeres:  {{ counterF }}
+                                        {% if laterality != null %}
+                                            </br>
+                                            Totales Lateralidad: {{ group.students|length }}
+                                            Total de diestros:  {{ counterL1 }}
+                                            Total de zurdos:  {{ counterL2 }}
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="pageBreak"> </div>
+                                </div>
+                            {% else %}
+                                <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
+                                    <div class="option_width" style="float: left; width: 375px;">{% trans %}results.not.found{% endtrans %}</div>
+                                    <div class="clear"></div>
+                                </div>
+
+                            {% endfor %}
+                        {% endif %}
+                    {% endif %}
                 {% endif %}
             {% endif %}
-        {% endif %}
         {% else %}
             {% if grades != null %}
                 {% for grade in grades %}
                     <div class="groupContainer niv_{{ grade.id }}">
                         <div class="titles" style="font-size: 10px;">
                             <div class="left">{{corpo_name}}</div>
-                            <div class="right">Reporte de estudiantes. Curso Lectivo 2013</div>
+                            <div class="right">Reporte de estudiantes. Curso Lectivo 2014</div>
                             <div class="clear"></div>
 
                             <div class="left">{{ "now"|date("d/M/Y H:i:s") }}</div>
@@ -423,6 +512,9 @@
                             {% if identification != null %}
                                 <div style="float: left; width: 100px;">{%trans%}label.identification{%endtrans%}</div>
                             {% endif %}
+                            {% if laterality != null %}
+                                <div style="float: left; width: 100px;">{%trans%}label.laterality{%endtrans%}</div>
+                            {% endif %}
                             {% if address != null %}
                                 <div style="float: left; width: {{ widthAdress }}px;">{%trans%}label.address{%endtrans%}</div>
                             {% endif %}
@@ -446,6 +538,9 @@
                                 {% endif %}
                                 {% if identification != null %}
                                     <div style="float: left; width: 100px;"> &nbsp {{ student.identification }}</div>
+                                {% endif %}
+                                {% if laterality != null %}
+                                    <div style="float: left; width: 100px;"> &nbsp {% if student.laterality == 1%}{% set counterL1 = counterL1 + 1 %}{% trans %}label.diestro{% endtrans %}{% else %}{% set counterL2 = counterL2 + 1 %}{% trans %}label.zurdo{% endtrans %}{% endif %}</div>
                                 {% endif %}
                                 {% if address != null %}
                                     <div style="float: left; width: {{ widthAdress }}px;"> {{ student.address }} &nbsp </div>
@@ -472,7 +567,7 @@
                     <div class="groupContainer inst_{{ institution.id }}">
                         <div class="titles" style="font-size: 10px;">
                             <div class="left">{{corpo_name}}</div>
-                            <div class="right">Reporte de estudiantes. Curso Lectivo 2013</div>
+                            <div class="right">Reporte de estudiantes. Curso Lectivo 2014</div>
                             <div class="clear"></div>
 
                             <div class="left">{{ "now"|date("d/M/Y H:i:s") }}</div>
@@ -499,6 +594,9 @@
                             {% if identification != null %}
                                 <div style="float: left; width: 100px;">{%trans%}label.identification{%endtrans%}</div>
                             {% endif %}
+                            {% if laterality != null %}
+                                <div style="float: left; width: 100px;">{%trans%}label.laterality{%endtrans%}</div>
+                            {% endif %}
                             {% if address != null %}
                                 <div style="float: left; width: {{ widthAdress }}px;">{%trans%}label.address{%endtrans%}</div>
                             {% endif %}
@@ -520,6 +618,9 @@
                                 {% endif %}
                                 {% if identification != null %}
                                     <div style="float: left; width: 100px;"> &nbsp {{ student.identification }}</div>
+                                {% endif %}
+                                {% if laterality != null %}
+                                    <div style="float: left; width: 100px;"> &nbsp {% if student.laterality == 1%}{% set counterL1 = counterL1 + 1 %}{% trans %}label.diestro{% endtrans %}{% else %}{% set counterL2 = counterL2 + 1 %}{% trans %}label.zurdo{% endtrans %}{% endif %}</div>
                                 {% endif %}
                                 {% if address != null %}
                                     <div style="float: left; width: {{ widthAdress }}px;"> {{ student.address }} &nbsp </div>

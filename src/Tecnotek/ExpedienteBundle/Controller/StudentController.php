@@ -358,7 +358,7 @@ class StudentController extends Controller
                 $currentPeriod = $em->getRepository("TecnotekExpedienteBundle:Period")->findOneBy(array('isActual' => true));
                 $currentPeriodId = $currentPeriod->getId();
                 if($route->getRouteType() == 1){
-                    $sql = "SELECT std.id, std.lastname, std.firstname, std.carne, std.groupyear "
+                    $sql = "SELECT std.id, std.lastname, std.firstname, std.carne, std.groupyear, std.routeType, std.in_route_id "
                         . " FROM tek_students std, tek_students_year stdy"
                         . " WHERE (std.firstname like '%" . $text . "%' OR std.lastname like '%" . $text . "%')"
                         . " AND (std.route_id is null Or std.route_id <> $routeId)"

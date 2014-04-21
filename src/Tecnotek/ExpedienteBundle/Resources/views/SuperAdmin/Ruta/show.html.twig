@@ -102,7 +102,8 @@
                             {% set counter = 0 %}
                             {% if entity.routeType == 1 %}
                                     {% for student in students %}
-                                        <div id="student_row_{{ student.id }}" class="row userRow rel="{{ student.id }}">
+                                        <div id="student_row_{{ student.id }}" class="row userRow rel="{{ student.id }}"
+                                        typeroute="{{ student.routeType }}" routein="{{ student.routeIn }}">
                                             <div class="option_width" style="float: left; width: 300px;">{{ student }}</div>
                                             <div class="right imageButton editButton editStudent" title="Editar" rel="{{ student.id }}"></div>
                                             <div class="right imageButton deleteButton" style="height: 16px;"  title="{% trans %}label.delete{% endtrans %}"  rel="{{ student.id }}"></div>

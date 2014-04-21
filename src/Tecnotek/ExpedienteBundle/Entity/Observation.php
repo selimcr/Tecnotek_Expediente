@@ -139,7 +139,7 @@ class Observation
      */
     public function getTeacher()
     {
-        return $this->teacher;
+        return $this->teacher->getLastname(). ' ' . $this->teacher->getFirstname();
     }
 
     /**

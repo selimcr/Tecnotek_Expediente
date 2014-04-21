@@ -145,6 +145,12 @@ class Student
     private $email;
 
     /**
+     * @ORM\Column(type="integer")
+     * @Assert\NotBlank()
+     */
+    private $laterality;
+
+    /**
      * @ORM\Column(type="string", length=15, nullable=true)
      * @Assert\MaxLength(limit = 5)
      */
@@ -183,6 +189,17 @@ class Student
     private $relatives;
 
 
+    /**
+     * @ManyToOne(targetEntity="Route")
+     * @JoinColumn(name="in_route_id", referencedColumnName="id", nullable=true)
+     */
+    private $routeIn;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $routeType;
+
     public function __construct()
     {
         $this->clubs = new ArrayCollection();
@@ -199,7 +216,7 @@ class Student
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -219,7 +236,7 @@ class Student
     /**
      * Get firstname
      *
-     * @return string 
+     * @return string
      */
     public function getFirstname()
     {
@@ -644,6 +661,26 @@ class Student
     }
 
     /**
+     * Set laterality
+     *
+     * @param integer $laterality
+     */
+    public function setLaterality($laterality)
+    {
+        $this->laterality = $laterality;
+    }
+
+    /**
+     * Get laterality
+     *
+     * @return integer
+     */
+    public function getLaterality()
+    {
+        return $this->laterality;
+    }
+
+    /**
      * Set payment
      *
      * @param string $payment
@@ -703,4 +740,50 @@ class Student
     {
         return $this->groupyear;
     }
+
+    /**
+     * Set routeIn
+     *
+     * @param \Tecnotek\ExpedienteBundle\Entity\Route $routeIn
+     */
+    public function setRouteIn(\Tecnotek\ExpedienteBundle\Entity\Route $routeIn)
+    {
+        $this->routeIn = $routeIn;
+    }
+
+    public function removeRouteIn()
+    {
+        $this->routeIn = null;
+    }
+
+    /**
+     * Get routeIn
+     *
+     * @return \Tecnotek\ExpedienteBundle\Entity\Route
+     */
+    public function getRouteIn()
+    {
+        return $this->routeIn;
+    }
+
+    /**
+     * Set routeType
+     *
+     * @param integer $routeType
+     */
+    public function setRouteType($routeType)
+    {
+        $this->routeType = $routeType;
+    }
+
+    /**
+     * Get routeType
+     *
+     * @return integer
+     */
+    public function getRouteType()
+    {
+        return $this->routeType;
+    }
+
 }

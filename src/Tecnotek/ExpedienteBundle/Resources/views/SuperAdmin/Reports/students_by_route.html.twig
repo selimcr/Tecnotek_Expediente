@@ -63,28 +63,20 @@ tiny" id="btnPrint" name="btnPrint" rel="Rutas por Zona"><span></span>{% trans %
                         </div>
                         <div class="fields_row student_title">
                             <div style="float: left; width: 50px;">{%trans%}label.carne{%endtrans%}</div>
-                            <div style="float: left; width: 200px;">{%trans%}label.student.name{%endtrans%}</div>
-                            <div style="float: left; width: 60px;">{%trans%}label.section{%endtrans%}</div>
-                            <div style="float: left; width: 315px;">{%trans%}label.address{%endtrans%}</div>
-                            <div style="float: left; width: 50px;">{%trans%}label.schedule{%endtrans%}</div>
-                            <div style="float: left; width: 55px;">{%trans%}label.pickUp{%endtrans%}</div>
-                            <div style="float: left; width: 50px;">{%trans%}label.leaveTime{%endtrans%}</div>
-                            <div style="float: left; width: 70px;">{%trans%}label.fatherPhoneShort{%endtrans%}</div>
-                            <div style="float: left; width: 70px;">{%trans%}label.motherPhoneShort{%endtrans%}</div>
+                            <div style="float: left; width: 300px;">{%trans%}label.student.name{%endtrans%}</div>
+                            <div style="float: left; width: 50px;">{%trans%}label.section{%endtrans%}</div>
+                            <div style="float: left; width: 80px;">{%trans%}label.schedule{%endtrans%}</div>
+                            <div style="float: left; width: 320px;">{%trans%}label.address{%endtrans%}</div>
 
                             <div class="clear"></div>
                         </div>
                         {% for student in route.students %}
                             <div class="student_row">
-                                <div style="float: left; width: 50px;">{{ student.carne }}</div>
-                                <div style="float: left; width: 200px;">{{ student }}</div>
-                                <div style="float: left; width: 50px;">{{ student.groupyear }}</div>
-                                <div style="float: left; width: 315px;">{{ student.address }}</div>
-                                <div style="float: left; width: 50px;">&nbsp;</div>
-                                <div style="float: left; width: 55px;">{{ student.pickUp }}</div>
-                                <div style="float: left; width: 50px;">{{ student.leaveTime }}</div>
-                                <div style="float: left; width: 70px;">{{ student.fatherPhone }}</div>
-                                <div style="float: left; width: 70px;">{{ student.motherPhone }}</div>
+                                <div style="float: left; width: 50px;">&nbsp;{{ student.carne }}</div>
+                                <div style="float: left; width: 300px;">&nbsp;{{ student }}</div>
+                                <div style="float: left; width: 50px;">&nbsp;{{ student.groupyear }}</div>
+                                <div style="float: left; width: 80px;">&nbsp;{% if student.routeType == 2%}Medio{% else %}Completo{% endif %}</div>
+                                <div style="float: left; width: 320px;">&nbsp;{{ student.address }}</div>
                             </div>
                             <div class="clear"></div>
                         {% endfor %}

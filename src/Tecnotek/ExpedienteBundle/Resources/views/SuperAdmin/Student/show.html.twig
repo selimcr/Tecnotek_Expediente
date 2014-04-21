@@ -87,6 +87,11 @@
                         </div>
 
                         <div>
+                            <label>{%trans%}label.laterality{%endtrans%}</label>
+                            <span id="labelLaterality">{% if entity.laterality == 1%}{% trans %}label.diestro{% endtrans %}{% else %}{% trans %}label.zurdo{% endtrans %}{% endif %}</span>
+                        </div>
+
+                        <div>
                             <label>{%trans%}label.address{%endtrans%}</label>
                             <span id="labelAddress">{{ entity.address }}</span>
                         </div>
