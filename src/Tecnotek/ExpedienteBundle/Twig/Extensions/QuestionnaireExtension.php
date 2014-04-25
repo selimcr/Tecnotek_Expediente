@@ -168,6 +168,52 @@ class QuestionnaireExtension extends \Twig_Extension
                 }
                 $html .= '</div>';
                 break;
+            case 9:
+                $texts = explode('-',$question->getSecondText());
+                $html .= '<table class="form-type-9">';
+                $html .= "<thead>";
+                $html .= "<tr><th>" . $question->getMainText() . "</th><th>" . $texts[0] . "</th><th>" . $texts[1] .
+                    "</th><th>" . $texts[2] . "</th></tr>";
+                $html .= "</thead>";
+                $html .= "<tbody>";
+                foreach ( $question->getChildren() as $q) {
+                    $html .= '<tr>';
+                    $html .= '';
+                    $value = 0;
+                    if(array_key_exists($q->getId(), $answers)){
+                        $value = $answers[$q->getId()]->getMainText();
+                    }
+                    $html .= '<td>' . $q->getMainText(). '</td>';
+                    $html .= '<td><input type="radio" ' . $this->getFieldId($q) . ' value="1" ' .
+                        (($value == 1)? 'checked="checked"':"") . '></td>';
+                    $html .= '<td><input type="radio" ' . $this->getFieldId($q) . ' value="2" ' .
+                        (($value == 2)? 'checked="checked"':"") . '></td>';
+                    $html .= '<td><input type="radio" ' . $this->getFieldId($q) . ' value="3" ' .
+                        (($value == 3)? 'checked="checked"':"") . '></td>';
+                    $html .= '</tr>';
+                    $html .= '';
+/*
+                    $html .= '<input type="hidden" ' . $this->getFieldId($q) . '>';
+                    $html .= '<div>' .
+                        '<div class="left" style="width: 325px;"> '
+                        . '<input type="text" id="qaux1-' . $q->getId() . '" name="qaux1-' . $q->getId() .
+                        '" value="' . $value2[0] . '">'
+                        . '</div>' .
+                        '<div class="left" style="width: 300px;"> '
+                        . '<input type="text" id="qaux2-' . $q->getId() . '" name="qaux2-' . $q->getId()
+                        . '" value="' . $value2[1] . '"></div>' .
+                        '<div class="left"> '
+                        . '<input style="width: 75px;" type="text" id="qaux3-' . $q->getId() . '" name="qaux3-' .
+                        $q->getId() . '" value="' . $value2[2] . '">'
+                        . '</div>' .
+                        '<div class="clear"></div>' .
+                        '</div>';*/
+                }
+
+                $html .= "</tbody>";
+                $html .= "</table>";
+
+                break;
             default:
                 $html .= 'Tipo desconocido: ' . $question->getType();
                 break;

@@ -250,3 +250,5 @@ a.desc {line-height: 32px; font-size: 15px; float: left; text-align: right; colo
 .notaHonor{font-family: 'Verdana, Geneva, sans-serif'; font-size: 20px; color: #000; font-weight: bold;}
 
 #pendientes {font-weight: bold; width: 195px; font-size: 10px; text-align: center; color: #56F36F; padding-left: 2px; background: url(../images/waitingBar.gif) center left no-repeat; display: none;}
+
+.form-type-9{width: 100%;}

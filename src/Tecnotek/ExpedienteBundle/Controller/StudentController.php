@@ -2151,7 +2151,7 @@ class StudentController extends Controller
         $forms = $em->getRepository("TecnotekExpedienteBundle:Questionnaire")->findPsicoQuestionnaires();
 
         $answersResult = $em->getRepository("TecnotekExpedienteBundle:Questionnaire")
-                            ->findPsicoQuestionnairesAnswersOfStudent($id);
+            ->findPsicoQuestionnairesAnswersOfStudent($id);
         $answers = array();
         foreach ($answersResult as $answer) {
             $answers[$answer->getQuestion()->getId()] = $answer;
@@ -2183,7 +2183,7 @@ class StudentController extends Controller
                             $objs = explode('-', $key); //0: q, 1: questionId, 2: type
                             $answer = new \Tecnotek\ExpedienteBundle\Entity\QuestionnaireAnswer();
                             $answer = $em->getRepository("TecnotekExpedienteBundle:Questionnaire")
-                                    ->findStudentQuestion($stdId,$objs[1]);
+                                ->findStudentQuestion($stdId,$objs[1]);
                             $answer->setStudent($student);
                             switch($objs[2]){
                                 //SimpleInput, DateInput, TextAreaInput and YesNoSelectionSimple, Just save the answer
@@ -2191,6 +2191,7 @@ class StudentController extends Controller
                                 case 2:
                                 case 5:
                                 case 6:
+                                case 10:
                                     $answer->setMainText($value);
                                     $answer->setSecondText("");
                                     break;
@@ -2201,10 +2202,10 @@ class StudentController extends Controller
                                 case 4://Must get all the
                                     break;
                                 case 8://Three Columns Table
-                                $answer->setMainText($request->get('qaux1-' . $objs[1]) . '-*-' .
-                                    $request->get('qaux2-' . $objs[1]) . '-*-'
-                                    . $request->get('qaux3-' . $objs[1]));
-                                $answer->setSecondText("");
+                                    $answer->setMainText($request->get('qaux1-' . $objs[1]) . '-*-' .
+                                        $request->get('qaux2-' . $objs[1]) . '-*-'
+                                        . $request->get('qaux3-' . $objs[1]));
+                                    $answer->setSecondText("");
                                     break;
                                 default:
                                     return new Response(json_encode(array('error' => true,
