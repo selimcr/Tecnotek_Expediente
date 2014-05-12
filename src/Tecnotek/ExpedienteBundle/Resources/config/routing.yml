@@ -950,6 +950,27 @@ _expediente_teacher_save_student_observation:
     pattern:  /t/student/observation/save
     defaults: { _controller: TecnotekExpedienteBundle:Teacher:saveStudentObservation }
 
+_expediente_teacher_special_qualifications:
+  pattern:  /t/specialQualifications
+  defaults: { _controller: TecnotekExpedienteBundle:Teacher:specialQualifications }
+
+_expediente_teacher_load_teacher_groups_of_period:
+  pattern: /t/loadTeacherGroupsOfPeriodAction/
+  defaults: { _controller: TecnotekExpedienteBundle:Teacher:loadTeacherGroupsOfPeriod }
+
+_expediente_teacher_load_group_special_qualifications:
+  pattern:  /t/loadGroupSpecialQualifications
+  defaults: { _controller: TecnotekExpedienteBundle:Teacher:loadGroupSpecialQualifications }
+
+_expediente_teacher_load_student_special_qualifications:
+  pattern:  /t/loadStudentSpecialQualifications
+  defaults: { _controller: TecnotekExpedienteBundle:Teacher:loadStudentSpecialQualifications }
+
+_expediente_teacher_save_student_special_qualifications:
+  pattern:  /t/saveStudentSpecialQualifications
+  defaults: { _controller: TecnotekExpedienteBundle:Teacher:saveStudentSpecialQualifications }
+
+##########33
 _expediente_sysadmin_remove_ticket:
     pattern:  /ticket/delete
     defaults: { _controller: TecnotekExpedienteBundle:Student:removeTicket}

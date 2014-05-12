@@ -277,6 +277,7 @@ label.reports.routes_zones.message:
 label.qualifications: Calificaciones
 label.observations: Observaciones
 menu.observations.report: Reporte Observaciones
+label.special.qualifications: Calificaciones Especiales
 
 label.absence.show: Informacion de Ausencia
 label.enter.by.group: Ingresar por grupo
@@ -352,6 +353,7 @@ title.course.entries.by.group: Definicion de Rubros por Grupo
 title.qualifications.by.group: Ingreso de calificaciones por grupo
 label.subentries.by.course: Subrubros
 label.usuarios.observations: Observaciones
+label.usuarios.special.qualifications: Especiales
 
 ######Inventary#######
 label.inventary: Inventario

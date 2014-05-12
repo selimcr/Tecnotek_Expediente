@@ -983,4 +983,379 @@ class TeacherController extends Controller
             return new Response("<b>Not an ajax call!!!" . "</b>");
         }
     }
+
+    public function specialQualificationsAction()
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $periods = $em->getRepository("TecnotekExpedienteBundle:Period")->findAll();
+        return $this->render('TecnotekExpedienteBundle:Teacher:special_qualifications.html.twig',
+            array('periods' => $periods, 'menuIndex' => 4));
+    }
+
+    public function loadTeacherGroupsOfPeriodAction(){
+        $logger = $this->get('logger');
+        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
+        {
+            try {
+                $request = $this->get('request')->request;
+                $periodId = $request->get('periodId');
+                $translator = $this->get("translator");
+
+                if( isset($periodId) ) {
+                    $em = $this->getDoctrine()->getEntityManager();
+                    $user=$this->get('security.context')->getToken()->getUser();
+
+                    $period = $em->getRepository("TecnotekExpedienteBundle:Period")->find( $periodId );
+                    if ( isset($period) ) {
+                        //Get Groups
+                        $sql = "SELECT CONCAT(g.id,'-',grade.id) as 'id', CONCAT(grade.name, ' :: ', g.name) as 'name'" .
+                            " FROM tek_groups g, tek_grades grade" .
+                            " WHERE g.period_id = " . $periodId . " AND g.user_id = " . $user->getId()
+                            . " AND grade.id = g.grade_id"  .
+                            " GROUP BY g.id" .
+                            " ORDER BY g.name";
+                        $stmt = $em->getConnection()->prepare($sql);
+                        $stmt->execute();
+                        $groups = $stmt->fetchAll();
+
+                        return new Response(json_encode(array('error' => false, 'groups' => $groups,
+                                                              'isEditable' => $period->isEditable())));
+                    } else {
+                        return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
+                    }
+                } else {
+                    return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
+                }
+            }
+            catch (Exception $e) {
+                $info = toString($e);
+                $logger->err('Teacher::loadGroupsOfPeriodAction [' . $info . "]");
+                return new Response(json_encode(array('error' => true, 'message' => $info)));
+            }
+        }// endif this is an ajax request
+        else
+        {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+    }
+
+    public function loadGroupSpecialQualificationsAction(){
+        $logger = $this->get('logger');
+        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
+        {
+            try {
+                $request = $this->get('request')->request;
+                $periodId = $request->get('periodId');
+                $groupId = $request->get('groupId');
+
+                $keywords = preg_split("/[\s-]+/", $groupId);
+                $groupId = $keywords[0];
+                $gradeId = $keywords[1];
+
+                $translator = $this->get("translator");
+
+                if( isset($groupId) && isset($periodId)) {
+                    $em = $this->getDoctrine()->getEntityManager();
+
+                    $dql = "SELECT cc FROM TecnotekExpedienteBundle:CourseClass cc "
+                        . " WHERE cc.period = " . $periodId . " AND cc.grade = " . $gradeId;
+                    $query = $em->createQuery($dql);
+                    $courseClass = $query->getResult();
+                    $temp = new \Tecnotek\ExpedienteBundle\Entity\CourseClass();
+                    $html =  '<tr  style="height: 175px; line-height: 0px;"><td class="celesteOscuro headcolcarne" style="width: 75px; font-size: 10px; height: 175px;"></td>';
+                    $html .=  '<td class="celesteClaro bold headcolnombre" style="width: 250px; font-size: 8px; height: 175px;"></td>';
+                    $html .= '<td class="azul headcoltrim" style="vertical-align: bottom; padding: 0.5625em 0.625em; height: 175px; line-height: 220px;"><div class="verticalText" style="color: #fff;"></div></td>';
+                    $html .= '<td  style="vertical-align: bottom; padding: 0.5625em 0.625em; height: 175px; line-height: 220px;"><div class="verticalText" style="color: #fff;"></div></td>';
+
+                    $marginLeft = 48;
+                    $marginLeftCode = 62;
+                    $htmlCodes =  '<tr  style="height: 30px;"><td class="celesteOscuro headcolcarne" style="width: 75px; font-size: 10px;"></td>';
+                    $htmlCodes .=  '<td class="celesteClaro bold headcolnombre" style="width: 250px; font-size: 8px;"></td>';
+                    $htmlCodes .= '<td class="azul headcoltrim" style="color: #fff;"></td>';
+                    $htmlCodes .= '<td  style="color: #fff;"></td>';
+                    $jumpRight = 46;
+                    $width = 44;
+
+                    $html3 =  '<tr style="height: 30px; line-height: 0px;" class="noPrint"><td class="celesteOscuro bold headcolcarne" style="width: 75px; font-size: 12px;">Carne</td>';
+                    $html3 .=  '<td class="celesteClaro bold headcolnombre" style="width: 250px; font-size: 12px;">Estudiante</td>';
+                    $html3 .= '<td class="azul headcoltrim" style="color: #fff;"></td>';
+                    $html3 .= '<td  style="color: #fff;"></td>';
+                    $studentRow = '';
+                    $studentsHeader = '';
+                    $colors = array(
+                        "one" => "#38255c",
+                        "two" => "#04D0E6"
+                    );
+
+                    $dql = "SELECT stdy FROM TecnotekExpedienteBundle:Student std, TecnotekExpedienteBundle:StudentYear stdy "
+                        . " WHERE stdy.student = std AND stdy.group = " . $groupId . " AND stdy.period = " . $periodId
+                        . " ORDER BY std.lastname, std.firstname";
+                    $query = $em->createQuery($dql);
+                    $students = $query->getResult();
+
+                    $studentsCount = sizeof($students);
+                    $rowIndex = 1;
+                    $colsCounter = 1;
+
+                    $specialCounter = 1;
+
+                    $htmlCodes .= "</tr>";
+                    $html .= "</tr>";
+                    $html3 .= "</tr>";
+                    $html = '<table class="tableQualifications">' . $html3;
+
+                    $studentRowIndex = 0;
+                    foreach($students as $stdy){
+                        $html .=  '<tr style="height: 30px; line-height: 0px;">';
+                        $studentRowIndex++;
+                        $html .=  '<td class="celesteOscuro headcolcarne" style="width: 75px; font-size: 10px;">' . $stdy->getStudent()->getCarne() . '</td>';
+                        $html .=  '<td class="celesteClaro bold headcolnombre" style="width: 250px; font-size: 12px;">' . $stdy->getStudent() . '</td>';
+
+
+                        $row = str_replace("stdId", $stdy->getStudent()->getId(), $studentRow);
+                        $row = str_replace("stdyIdd", $stdy->getId(), $row);
+
+                        //tabIndexColXx
+                        for ($i = 1; $i <= $colsCounter; $i++) {
+                            $indexVar = "tabIndexCol" . $i . "x";
+                            $row = str_replace($indexVar, "" . ($studentRowIndex + (($i - 1) * $studentsCount)), $row);
+                        }
+
+                        foreach($courseClass as $ccs){
+                            $row2 =  $ccs->getID();
+                        }
+
+
+                        $dql = "SELECT obs FROM TecnotekExpedienteBundle:Observation obs"
+                            . " WHERE obs.studentYear = " . $stdy->getId()
+                            . " AND obs.courseClass = ".$row2;
+                        //. " AND obs.teacher = ".$user_id; //falta capturar el id del profesor
+                        $query = $em->createQuery($dql);
+                        $observations = $query->getResult();
+                        foreach($observations as $observation){
+                            $row =  $observation->getDetail();
+                        }
+
+
+                        $html .=  '<td id="total_trim_' . $stdy->getStudent()->getId() . '" class="azul headcoltrim" style="color: #fff;">-</td>';
+                        $html .=  '<td id="obser_' . $stdy->getStudent()->getId() . '"  style="color: #000; width: 1600px">'
+                            . '<input type="button" class="specialQualificationsButton" style="width: 540px"'
+                            . ' stdyId="' . $stdy->getId() . '" value ="Ingresar Calificaciones"></td></tr>';
+                    }
+
+                    $html .= "</table>";
+
+                    return new Response(json_encode(array('error' => false, 'html' => $html, "studentsCounter" => $studentsCount, "codesCounter" => $specialCounter)));
+                } else {
+                    return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
+                }
+            }
+            catch (Exception $e) {
+                $info = toString($e);
+                $logger->err('Teacher::loadEntriesByCourseAction [' . $info . "]");
+                return new Response(json_encode(array('error' => true, 'message' => $info)));
+            }
+        }// endif this is an ajax request
+        else
+        {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+    }
+
+    public function loadStudentSpecialQualificationsAction(){
+        $logger = $this->get('logger');
+        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
+        {
+            try {
+                $request = $this->get('request')->request;
+                $stdyId = $request->get('stdyId');
+
+                $translator = $this->get("translator");
+
+                if( isset($stdyId)) {
+                    $em = $this->getDoctrine()->getEntityManager();
+
+                    $stdy = $em->getRepository("TecnotekExpedienteBundle:StudentYear")->find($stdyId);
+                    $grade = $stdy->getGroup()->getGrade();
+
+                    $dql = "SELECT obs FROM TecnotekExpedienteBundle:SpecialQualificationsForm obs"
+                        . " WHERE obs.grade = " . $grade->getId();
+                    $query = $em->createQuery($dql);
+                    $forms = $query->getResult();
+
+                    $html = "<table>";
+                    $dql = "SELECT obs FROM TecnotekExpedienteBundle:SpecialQualificationResult obs"
+                        . " WHERE obs.studentYear = " . $stdyId;
+                    $query = $em->createQuery($dql);
+                    $results = $query->getResult();
+                    $sqr = null;
+                    $responses = array();
+                    foreach($results as $r){
+                        $responses[$stdyId . '-' . $r->getSpecialQualification()->getId() . "-" . $r->getPeriodNumber()]
+                            = $r->getMainText();
+                    }
+
+                    foreach($forms as $form){
+                        $html .= "<tr><td>" . $this->printSpecialQualificationForm($form, $stdyId, $responses)
+                            . "</td></tr>";
+                    }
+
+                    $html .= "</table>";
+
+                    return new Response(json_encode(array('error' => false, 'html' => $html)));
+                } else {
+                    return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
+                }
+            }
+            catch (Exception $e) {
+                $info = toString($e);
+                $logger->err('Teacher::loadEntriesByCourseAction [' . $info . "]");
+                return new Response(json_encode(array('error' => true, 'message' => $info)));
+            }
+        }// endif this is an ajax request
+        else
+        {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+    }
+
+    private function printSpecialQualificationForm(
+        \Tecnotek\ExpedienteBundle\Entity\SpecialQualificationsForm $form, $stdyId, $responses){
+        $html = "";
+        switch($form->getEntryType()){
+            case 1:
+                $html .= "<table class='special-q-form-1'>";
+                $html .= '<tr class="header">';
+                $html .= '<td>' . $form->getName() . '</td>';
+                $html .= ($form->getShowsOnPeriodOne())? '<td>I</td>':'';
+                $html .= ($form->getShowsOnPeriodTwo())? '<td>II</td>':'';
+                $html .= ($form->getShowsOnPeriodThree())? '<td>III</td>':'';
+                $html .= "</tr>";
+                foreach($form->getQuestions() as $q){
+                    $html .= '<tr class="sq-row">';
+                    $html .= '<td>' . $q->getMainText() . '</td>';
+                    $html .= ($form->getShowsOnPeriodOne())? '<td>'
+                        . $this-> printSpecialQualificationOptions($q->getType(), $stdyId, $q->getId(), $responses, 1) .
+                        '</td>':'';
+                    $html .= ($form->getShowsOnPeriodTwo())? '<td>'
+                        . $this-> printSpecialQualificationOptions($q->getType(), $stdyId, $q->getId(), $responses, 2) . '</td>':'';
+                    $html .= ($form->getShowsOnPeriodThree())? '<td>'
+                        . $this-> printSpecialQualificationOptions($q->getType(), $stdyId, $q->getId(), $responses, 3) . '</td>':'';
+                    $html .= "</tr>";
+                }
+                $html .= "</table>";
+                break;
+            case 2:
+                $html .= "<table class='special-q-form-1'>";
+                $html .= '<tr class="header">';
+                $html .= '<td>' . $form->getName() . '</td>';
+                $html .= ($form->getShowsOnPeriodOne())? '<td>I</td>':'';
+                $html .= ($form->getShowsOnPeriodTwo())? '<td>II</td>':'';
+                $html .= ($form->getShowsOnPeriodThree())? '<td>III</td>':'';
+                $html .= "</tr>";
+                foreach($form->getQuestions() as $q){
+                    $html .= '<tr class="sq-row">';
+                    $html .= '<td>' . $q->getMainText() . '</td>';
+                    $html .= ($form->getShowsOnPeriodOne())? '<td>'
+                        . $this-> printSpecialQualificationOptions($q->getType(), $stdyId, $q->getId(), $responses, 1) .
+                        '</td>':'';
+                    $html .= ($form->getShowsOnPeriodTwo())? '<td>'
+                        . $this-> printSpecialQualificationOptions($q->getType(), $stdyId, $q->getId(), $responses, 2) . '</td>':'';
+                    $html .= ($form->getShowsOnPeriodThree())? '<td>'
+                        . $this-> printSpecialQualificationOptions($q->getType(), $stdyId, $q->getId(), $responses, 3) . '</td>':'';
+                    $html .= "</tr>";
+                }
+                $html .= "</table>";
+                break;
+            default:
+                break;
+        }
+        return $html;
+    }
+
+    private function printSpecialQualificationOptions($type, $stdyId, $sq, $responses, $periodNumber){
+        $html = "";
+        $option = (key_exists($stdyId . '-' . $sq . '-' . $periodNumber, $responses))? $responses[$stdyId . '-' . $sq . "-" .
+            $periodNumber]:0;
+        $option = $option*1;
+        switch($type){
+            case 1:
+                $html = '<select class="sq-option" stdyId="' . $stdyId . '" sq="' . $sq . '" pn="' . $periodNumber .
+                '">';
+                $html .= '<option value="0"' . (($option==0)? ' selected':'') . '>&nbsp;</option>';
+                $html .= '<option value="1"' . (($option==1)? ' selected':'') . '>Domina el contenido</option>';
+                $html .= '<option value="2"' . (($option==2)? ' selected':'') . '>No domina el contenido</option>';
+                $html .= '<option value="3"' . (($option==3)? ' selected':'') . '>Necesita mejorar</option>';
+                $html .= '<option value="4"' . (($option==4)? ' selected':'') . '>Algunas Veces</option>';
+                $html .= '</select>';
+                break;
+            case 2:
+                $html = '<select class="sq-option" stdyId="' . $stdyId . '" sq="' . $sq . '" pn="' . $periodNumber .
+                    '">';
+                $html .= '<option value="0"' . (($option==0)? ' selected':'') . '>&nbsp;</option>';
+                $html .= '<option value="1"' . (($option==1)? ' selected':'') . '>Bueno</option>';
+                $html .= '<option value="2"' . (($option==2)? ' selected':'') . '>MB - Muy bueno</option>';
+                $html .= '<option value="3"' . (($option==3)? ' selected':'') . '>Exc - Excelente</option>';
+                $html .= '</select>';
+                break;
+            default:
+                break;
+        }
+        return $html;
+    }
+
+    public function saveStudentSpecialQualificationsAction(){
+        $logger = $this->get('logger');
+        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
+        {
+            try {
+                $request = $this->get('request')->request;
+                $stdyId = $request->get('stdyId');
+                $sq = $request->get('sq');
+                $pn = $request->get('pn');
+                $value = $request->get('value');
+
+                $translator = $this->get("translator");
+
+                if( isset($stdyId) && isset($sq) && isset($pn) && isset($value)) {
+                    $em = $this->getDoctrine()->getEntityManager();
+
+                    $dql = "SELECT obs FROM TecnotekExpedienteBundle:SpecialQualificationResult obs"
+                        . " WHERE obs.specialQualification = " . $sq . " AND obs.studentYear = " . $stdyId .
+                        " AND obs.periodNumber = " . $pn;
+                    $query = $em->createQuery($dql);
+                    $results = $query->getResult();
+                    $sqr = null;
+                    foreach($results as $r){
+                        $sqr = $r;
+                    }
+                    if($sqr === null){
+                        $sqr = new \Tecnotek\ExpedienteBundle\Entity\SpecialQualificationResult();
+                        $sqr->setSpecialQualification(
+                            $em->getRepository("TecnotekExpedienteBundle:SpecialQualification")->find($sq));
+                        $sqr->setStudentYear(
+                            $em->getRepository("TecnotekExpedienteBundle:StudentYear")->find($stdyId));
+                        $sqr->setPeriodNumber($pn);
+                    }
+                    $sqr->setMainText($value);
+
+                    $em->persist($sqr);
+                    $em->flush();
+
+                    return new Response(json_encode(array('error' => false)));
+                } else {
+                    return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
+                }
+            }
+            catch (Exception $e) {
+                $info = toString($e);
+                $logger->err('Teacher::loadEntriesByCourseAction [' . $info . "]");
+                return new Response(json_encode(array('error' => true, 'message' => $info)));
+            }
+        }// endif this is an ajax request
+        else
+        {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+    }
 }

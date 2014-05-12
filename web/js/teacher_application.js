@@ -101,6 +101,9 @@ var Tecnotek = {
                 case "observations":
                     Tecnotek.Observations.init();
                     break;
+                case "special_qualifications":
+                    Tecnotek.SpecialQualifications.init();
+                    break;
                 default:
 					break;
 				}
@@ -1301,6 +1304,156 @@ var Tecnotek = {
                         }
                     });
                 });
+            }
+        },
+        SpecialQualifications : {
+            translates : {},
+            init : function() {
+
+                $("#period").change(function(event){
+                    event.preventDefault();
+                    $('#subentryFormParent').empty();
+                    Tecnotek.SpecialQualifications.loadGroupsOfPeriod($(this).val());
+                });
+
+                $("#groups").change(function(event){
+                    event.preventDefault();
+                    Tecnotek.SpecialQualifications.loadCoursesOfGroupByTeacher($(this).val());
+                });
+                $("#openPageWithForms").fancybox({
+                    'afterLoad' : function(){
+
+                    }
+                });
+
+                Tecnotek.SpecialQualifications.loadGroupsOfPeriod($('#period').val());
+                Tecnotek.SpecialQualifications.initButtons();
+            },
+            initButtons : function() {
+                $("#entryFormCancel").click(function(event){
+                    event.preventDefault();
+                    $.fancybox.close();
+                });
+            },
+            loadGroupsOfPeriod: function($periodId) {
+                if(($periodId!==null)){
+                    $('#groups').children().remove();
+                    $('#courses').children().remove();
+                    $('#subentryFormParent').empty();
+                    $('#tableContainer').hide();
+                    Tecnotek.ajaxCall(Tecnotek.UI.urls["loadGroupsOfPeriodURL"],
+                        {   periodId: $periodId },
+                        function(data){
+                            if(data.error === true) {
+                                Tecnotek.showErrorMessage(data.message,true, "", false);
+                            } else {
+                                for(i=0; i<data.groups.length; i++) {
+                                    $('#groups').append('<option value="' + data.groups[i].id + '">' + data.groups[i].name + '</option>');
+                                }
+                                Tecnotek.isPeriodEditable = data.isEditable;
+                                Tecnotek.SpecialQualifications.loadSpecialQualificationsOfGroup();
+                            }
+                        },
+                        function(jqXHR, textStatus){
+                            Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
+                            $(this).val("");
+                        }, true);
+                }
+            },
+            loadSpecialQualificationsOfGroup: function() {
+                console.debug("--> loadSpecialQualificationsOfGroup ");
+                $('.editEntry').unbind();
+                $('#entriesRows').empty();
+                $('#subentriesRows').empty();
+                $('#subentryFormParent').empty();
+                $('#contentBody').empty();
+                $('#studentsHeader').empty();
+                    Tecnotek.ajaxCall(Tecnotek.UI.urls["loadObservationsOfGroupURL"],
+                        {   periodId: $("#period").val(),
+                            groupId: $("#groups").val()},
+                        function(data){
+                            if(data.error === true) {
+                                Tecnotek.showErrorMessage(data.message,true, "", false);
+                            } else {
+                                $("#tableContainer").width(data.codesCounter * 46 + 280);
+                                $('#contentBody').html(data.html);
+                                $('#studentsHeader').html(data.studentsHeader);
+                                $('#tableContainer').show();
+
+                                var height = data.studentsCounter * 26.66 + 300;
+                                $("#studentsTableContainer").css("height", height + "px");
+
+                                $(".textField").each(function(){
+                                    if($(this).attr("val") !== "-1" && $(this).attr("val").indexOf("val") !== 0){
+                                        $(this).val($(this).attr("val"));
+                                    }
+                                    $(this).trigger("blur");
+                                });
+
+                                Tecnotek.SpecialQualifications.initializeTable();
+
+                                //$( "#spinner-modal" ).dialog( "close" );
+                            }
+                        },
+                        function(jqXHR, textStatus){
+                            $( "#spinner-modal" ).dialog( "close" );
+                            Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
+                        }, false);
+            },
+            initializeTable: function() {
+                if(Tecnotek.isPeriodEditable === false){
+                    $(".observation").attr('disabled', 'disabled');
+                }
+                $('.specialQualificationsButton').unbind();
+                $('.specialQualificationsButton').click(function(e){
+                    e.preventDefault();
+                    Tecnotek.SpecialQualifications.loadSpecialQualificationsForms($(this).attr('stdyId'));
+                });
+            },
+            loadSpecialQualificationsForms: function($stdyId) {
+                $("#specialQualificationsForms").html("");
+
+                Tecnotek.ajaxCall(Tecnotek.UI.urls["loadStudentSpecialQualificationsURL"],
+                    {   stdyId: $stdyId},
+                    function(data){
+                        if(data.error === true) {
+                            Tecnotek.showErrorMessage(data.message,true, "", false);
+                        } else {
+                            $('#specialQualificationsForms').html(data.html);
+                            $("#openPageWithForms").trigger("click");
+                            Tecnotek.SpecialQualifications.initializeOptions();
+                        }
+                    },
+                    function(jqXHR, textStatus){
+                        $( "#spinner-modal" ).dialog( "close" );
+                        Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
+                    }, false);
+            },
+            initializeOptions: function(){
+                $(".sq-option").unbind();
+                $(".sq-option").change(function(e){
+                    e.preventDefault();
+                    $stdyId = $(this).attr('stdyId');
+                    $sq = $(this).attr('sq');
+                    Tecnotek.SpecialQualifications.saveStudentQualification($stdyId, $sq, $(this).val(), $(this).attr('pn') );
+                });
+            },
+            saveStudentQualification : function($stdyId, $sq, $value, $pn){
+                console.debug("Save value of " + $stdyId + " - " + $sq + ": " + $value);
+                Tecnotek.ajaxCall(Tecnotek.UI.urls["saveStudentQualificationURL"],
+                    {   stdyId: $stdyId,
+                        sq:     $sq,
+                        value:  $value,
+                        pn:     $pn
+                    },
+                    function(data){
+                        if(data.error === true) {
+
+                        }
+                    },
+                    function(jqXHR, textStatus){
+                        //Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
+                    }, false);
             }
         }
 	};
