@@ -10,6 +10,7 @@
     Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
     Tecnotek.UI.urls["show"] = "{{ path('_expediente_sysadmin_student_show_simple')}}";
     Tecnotek.UI.urls["edit"] = "{{ path('_expediente_sysadmin_student_edit_simple')}}";
+    Tecnotek.UI.urls["religion"] = "{{ path('_expediente_sysadmin_student_religion_edit_simple')}}";
     Tecnotek.UI.urls["psico"] = "{{ path('_expediente_sysadmin_student_psico_profile_simple')}}";
 </script>
 {% endblock %}
@@ -59,6 +60,7 @@
                 <div class="option_width" style="float: left; width: 100px; margin-left: -6px;">{% if entity.gender == 1%}{% trans %}label.male{% endtrans %}{% else %}{% trans %}label.female{% endtrans %}{% endif %}</div>
                 <div class="right imageButton editButton"  title="{% trans %}label.edit{% endtrans %}"  rel="{{ entity.id }}"></div>
                 <div class="right imageButton viewButton"  title="{% trans %}label.view{% endtrans %}"  rel="{{ entity.id }}"></div>
+                <div class="right imageButton religionButton"  title="{% trans %}label.religion{% endtrans %}"  rel="{{ entity.id }}"></div>
                 <div class="right imageButton psicoButton"  title="{% trans %}label.psico{% endtrans %}"
                      rel="{{ entity.id }}"></div>
                 <div class="clear"></div>

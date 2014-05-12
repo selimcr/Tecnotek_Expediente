@@ -528,6 +528,10 @@ var Tecnotek = {
                     event.preventDefault();
                     location.href = Tecnotek.UI.urls["psico"] + "/" + $(this).attr("rel");
                 });
+                $('.religionButton').click(function(event){
+                    event.preventDefault();
+                    location.href = Tecnotek.UI.urls["religion"] + "/" + $(this).attr("rel");
+                });
                 $('#btnSearch').click(function(event){
                     event.preventDefault();
                     var url = location.href;

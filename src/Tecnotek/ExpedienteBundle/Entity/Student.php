@@ -163,6 +163,66 @@ class Student
     private $code;
 
     /**
+     * @ORM\Column(type="string", length=15, nullable=true)
+     * @Assert\MaxLength(limit = 30)
+     */
+    private $rbautizado;
+
+    /**
+     * @ORM\Column(type="string", length=15, nullable=true)
+     * @Assert\MaxLength(limit = 15)
+     */
+    private $rtomo;
+
+    /**
+     * @ORM\Column(type="string", length=15, nullable=true)
+     * @Assert\MaxLength(limit = 15)
+     */
+    private $rfolio;
+
+    /**
+     * @ORM\Column(type="string", length=15, nullable=true)
+     * @Assert\MaxLength(limit = 15)
+     */
+    private $rasiento;
+
+    /**
+     * @ORM\Column(type="string", length=15, nullable=true)
+     * @Assert\MaxLength(limit = 15)
+     */
+    private $rpromesasfecha;
+
+    /**
+     * @ORM\Column(type="string", length=15, nullable=true)
+     * @Assert\MaxLength(limit = 45)
+     */
+    private $rpromesaslugar;
+
+    /**
+     * @ORM\Column(type="string", length=15, nullable=true)
+     * @Assert\MaxLength(limit = 15)
+     */
+    private $rconfesionfecha;
+
+    /**
+     * @ORM\Column(type="string", length=15, nullable=true)
+     * @Assert\MaxLength(limit = 45)
+     */
+    private $rconfesionlugar;
+
+    /**
+     * @ORM\Column(type="string", length=15, nullable=true)
+     * @Assert\MaxLength(limit = 15)
+     */
+    private $rcomunionfecha;
+
+    /**
+     * @ORM\Column(type="string", length=15, nullable=true)
+     * @Assert\MaxLength(limit = 45)
+     */
+    private $rcomunionlugar;
+
+    /**
      * @ORM\Column(type="string", length=30, nullable=true)
      * @Assert\MaxLength(limit = 30)
      */
@@ -174,6 +234,17 @@ class Student
      * @JoinColumn(name="route_id", referencedColumnName="id", nullable=true)
      */
     private $route;
+
+    /**
+     * @ManyToOne(targetEntity="Route")
+     * @JoinColumn(name="in_route_id", referencedColumnName="id", nullable=true)
+     */
+    private $routeIn;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $routeType;
 
     /**
      * @var ArrayCollection $clubs
@@ -188,17 +259,6 @@ class Student
      */
     private $relatives;
 
-
-    /**
-     * @ManyToOne(targetEntity="Route")
-     * @JoinColumn(name="in_route_id", referencedColumnName="id", nullable=true)
-     */
-    private $routeIn;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $routeType;
 
     public function __construct()
     {
@@ -244,10 +304,10 @@ class Student
     }
 
     /**
- * Set lastname
- *
- * @param string $lastname
- */
+     * Set lastname
+     *
+     * @param string $lastname
+     */
     public function setLastname($lastname)
     {
         $this->lastname = $lastname;
@@ -461,6 +521,52 @@ class Student
     }
 
     /**
+     * Set routeIn
+     *
+     * @param \Tecnotek\ExpedienteBundle\Entity\Route $routeIn
+     */
+    public function setRouteIn(\Tecnotek\ExpedienteBundle\Entity\Route $routeIn)
+    {
+        $this->routeIn = $routeIn;
+    }
+
+    public function removeRouteIn()
+    {
+        $this->routeIn = null;
+    }
+
+    /**
+     * Get routeIn
+     *
+     * @return \Tecnotek\ExpedienteBundle\Entity\Route
+     */
+    public function getRouteIn()
+    {
+        return $this->routeIn;
+    }
+
+    /**
+     * Set routeType
+     *
+     * @param integer $routeType
+     */
+    public function setRouteType($routeType)
+    {
+        $this->routeType = $routeType;
+    }
+
+    /**
+     * Get routeType
+     *
+     * @return integer
+     */
+    public function getRouteType()
+    {
+        return $this->routeType;
+    }
+
+
+    /**
      * Set age
      *
      * @param integer $age
@@ -498,6 +604,26 @@ class Student
     public function getGender()
     {
         return $this->gender;
+    }
+
+    /**
+     * Set laterality
+     *
+     * @param integer $laterality
+     */
+    public function setLaterality($laterality)
+    {
+        $this->laterality = $laterality;
+    }
+
+    /**
+     * Get laterality
+     *
+     * @return integer
+     */
+    public function getLaterality()
+    {
+        return $this->laterality;
     }
 
     /**
@@ -661,26 +787,6 @@ class Student
     }
 
     /**
-     * Set laterality
-     *
-     * @param integer $laterality
-     */
-    public function setLaterality($laterality)
-    {
-        $this->laterality = $laterality;
-    }
-
-    /**
-     * Get laterality
-     *
-     * @return integer
-     */
-    public function getLaterality()
-    {
-        return $this->laterality;
-    }
-
-    /**
      * Set payment
      *
      * @param string $payment
@@ -720,6 +826,205 @@ class Student
         return $this->code;
     }
 
+    /**
+     * Set rbautizado
+     *
+     * @param string $rbautizado
+     */
+    public function setRbautizado($rbautizado)
+    {
+        $this->rbautizado = $rbautizado;
+    }
+
+    /**
+     * Get rbautizado
+     *
+     * @return string
+     */
+    public function getRbautizado()
+    {
+        return $this->rbautizado;
+    }
+
+    /**
+     * Set rtomo
+     *
+     * @param string $rtomo
+     */
+    public function setRtomo($rtomo)
+    {
+        $this->rtomo = $rtomo;
+    }
+
+    /**
+     * Get rtomo
+     *
+     * @return string
+     */
+    public function getRtomo()
+    {
+        return $this->rtomo;
+    }
+
+    /**
+     * Set rfolio
+     *
+     * @param string $rfolio
+     */
+    public function setRfolio($rfolio)
+    {
+        $this->rfolio = $rfolio;
+    }
+
+    /**
+     * Get rfolio
+     *
+     * @return string
+     */
+    public function getRfolio()
+    {
+        return $this->rfolio;
+    }
+
+    /**
+     * Set rasiento
+     *
+     * @param string $rasiento
+     */
+    public function setRasiento($rasiento)
+    {
+        $this->rasiento = $rasiento;
+    }
+
+    /**
+     * Get rasiento
+     *
+     * @return string
+     */
+    public function getRasiento()
+    {
+        return $this->rasiento;
+    }
+
+    /**
+     * Set rpromesasfecha
+     *
+     * @param string $rpromesasfecha
+     */
+    public function setRpromesasfecha($rpromesasfecha)
+    {
+        $this->rpromesasfecha = $rpromesasfecha;
+    }
+
+    /**
+     * Get rpromesasfecha
+     *
+     * @return string
+     */
+    public function getRpromesasfecha()
+    {
+        return $this->rpromesasfecha;
+    }
+
+    /**
+     * Set rpromesaslugar
+     *
+     * @param string $rpromesaslugar
+     */
+    public function setRpromesaslugar($rpromesaslugar)
+    {
+        $this->rpromesaslugar = $rpromesaslugar;
+    }
+
+    /**
+     * Get rpromesaslugar
+     *
+     * @return string
+     */
+    public function getRpromesaslugar()
+    {
+        return $this->rpromesaslugar;
+    }
+
+    /**
+     * Set rconfesionfecha
+     *
+     * @param string $rconfesionfecha
+     */
+    public function setRconfesionfecha($rconfesionfecha)
+    {
+        $this->rconfesionfecha = $rconfesionfecha;
+    }
+
+    /**
+     * Get rconfesionfecha
+     *
+     * @return string
+     */
+    public function getRconfesionfecha()
+    {
+        return $this->rconfesionfecha;
+    }
+
+    /**
+     * Set rconfesionlugar
+     *
+     * @param string $rconfesionlugar
+     */
+    public function setRconfesionlugar($rconfesionlugar)
+    {
+        $this->rconfesionlugar = $rconfesionlugar;
+    }
+
+    /**
+     * Get rconfesionlugar
+     *
+     * @return string
+     */
+    public function getRconfesionlugar()
+    {
+        return $this->rconfesionlugar;
+    }
+
+    /**
+     * Set rcomunionfecha
+     *
+     * @param string $rcomunionfecha
+     */
+    public function setRcomunionfecha($rcomunionfecha)
+    {
+        $this->rcomunionfecha = $rcomunionfecha;
+    }
+
+    /**
+     * Get rcomunionfecha
+     *
+     * @return string
+     */
+    public function getRcomunionfecha()
+    {
+        return $this->rcomunionfecha;
+    }
+
+    /**
+     * Set rcomunionlugar
+     *
+     * @param string $rcomunionlugar
+     */
+    public function setRcomunionlugar($rcomunionlugar)
+    {
+        $this->rcomunionlugar = $rcomunionlugar;
+    }
+
+    /**
+     * Get rcomunionlugar
+     *
+     * @return string
+     */
+    public function getRcomunionlugar()
+    {
+        return $this->rcomunionlugar;
+    }
 
     /**
      * Set groupyear
@@ -740,50 +1045,4 @@ class Student
     {
         return $this->groupyear;
     }
-
-    /**
-     * Set routeIn
-     *
-     * @param \Tecnotek\ExpedienteBundle\Entity\Route $routeIn
-     */
-    public function setRouteIn(\Tecnotek\ExpedienteBundle\Entity\Route $routeIn)
-    {
-        $this->routeIn = $routeIn;
-    }
-
-    public function removeRouteIn()
-    {
-        $this->routeIn = null;
-    }
-
-    /**
-     * Get routeIn
-     *
-     * @return \Tecnotek\ExpedienteBundle\Entity\Route
-     */
-    public function getRouteIn()
-    {
-        return $this->routeIn;
-    }
-
-    /**
-     * Set routeType
-     *
-     * @param integer $routeType
-     */
-    public function setRouteType($routeType)
-    {
-        $this->routeType = $routeType;
-    }
-
-    /**
-     * Get routeType
-     *
-     * @return integer
-     */
-    public function getRouteType()
-    {
-        return $this->routeType;
-    }
-
 }

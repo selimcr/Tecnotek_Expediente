@@ -366,6 +366,19 @@ label.category.show: Mostrar categoria
 label.category: Categoria
 label.user: Encargado
 
+
+##Religion
+label.rbautizado: Bautizo
+label.rtomo: Tomo
+label.rfolio: Folio
+label.rasiento: Asiento
+label.rpromesasfecha: Promesas Bautismales Fecha:
+label.rpromesaslugar: Lugar:
+label.rconfesionfecha: Confesión Fecha:
+label.rconfesionlugar: Lugar:
+label.rcomunionfecha: Primera Comunión Fecha:
+label.rcomunionlugar: Lugar:
+
 #Validation
 not.blank.name: Probando proband.
 not:
