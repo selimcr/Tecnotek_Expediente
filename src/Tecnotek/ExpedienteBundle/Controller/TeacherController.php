@@ -1111,32 +1111,6 @@ class TeacherController extends Controller
                         $html .=  '<td class="celesteOscuro headcolcarne" style="width: 75px; font-size: 10px;">' . $stdy->getStudent()->getCarne() . '</td>';
                         $html .=  '<td class="celesteClaro bold headcolnombre" style="width: 250px; font-size: 12px;">' . $stdy->getStudent() . '</td>';
 
-
-                        $row = str_replace("stdId", $stdy->getStudent()->getId(), $studentRow);
-                        $row = str_replace("stdyIdd", $stdy->getId(), $row);
-
-                        //tabIndexColXx
-                        for ($i = 1; $i <= $colsCounter; $i++) {
-                            $indexVar = "tabIndexCol" . $i . "x";
-                            $row = str_replace($indexVar, "" . ($studentRowIndex + (($i - 1) * $studentsCount)), $row);
-                        }
-
-                        foreach($courseClass as $ccs){
-                            $row2 =  $ccs->getID();
-                        }
-
-
-                        $dql = "SELECT obs FROM TecnotekExpedienteBundle:Observation obs"
-                            . " WHERE obs.studentYear = " . $stdy->getId()
-                            . " AND obs.courseClass = ".$row2;
-                        //. " AND obs.teacher = ".$user_id; //falta capturar el id del profesor
-                        $query = $em->createQuery($dql);
-                        $observations = $query->getResult();
-                        foreach($observations as $observation){
-                            $row =  $observation->getDetail();
-                        }
-
-
                         $html .=  '<td id="total_trim_' . $stdy->getStudent()->getId() . '" class="azul headcoltrim" style="color: #fff;">-</td>';
                         $html .=  '<td id="obser_' . $stdy->getStudent()->getId() . '"  style="color: #000; width: 1600px">'
                             . '<input type="button" class="specialQualificationsButton" style="width: 540px"'
