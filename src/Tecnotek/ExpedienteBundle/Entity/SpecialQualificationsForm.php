@@ -66,6 +66,10 @@ class SpecialQualificationsForm
      */
     private $showsOnPeriodThree;
 
+    /**
+     * @ORM\Column(name="must_include_comments", type="boolean")
+     */
+    private $mustIncludeComments;
 
     /**
      * @var questions
@@ -81,6 +85,7 @@ class SpecialQualificationsForm
         $this->showsOnPeriodOne = false;
         $this->showsOnPeriodTwo = false;
         $this->showsOnPeriodThree = false;
+        $this->mustIncludeComments = false;
 
     }
 
@@ -211,6 +216,16 @@ class SpecialQualificationsForm
 
     public function getQuestions(){
         return $this->questions;
+    }
+
+    public function setMustIncludeComments($mustIncludeComments)
+    {
+        $this->mustIncludeComments = $mustIncludeComments;
+    }
+
+    public function getMustIncludeComments()
+    {
+        return $this->mustIncludeComments;
     }
 
 }

@@ -1437,8 +1437,47 @@ var Tecnotek = {
                     $sq = $(this).attr('sq');
                     Tecnotek.SpecialQualifications.saveStudentQualification($stdyId, $sq, $(this).val(), $(this).attr('pn') );
                 });
+                $('.form-comments').unbind();
+                $('.form-comments').blur(function(){
+                    $stdyId = $(this).attr('stdyId');
+                    $fq = $(this).attr('fq');
+                    Tecnotek.SpecialQualifications.saveStudentQualification($stdyId, $fq, $(this).val(), 0);
+                });
             },
             saveStudentQualification : function($stdyId, $sq, $value, $pn){
+                Tecnotek.Qualifications.cantidadPendientes++;
+                $("#pendientes").html(Tecnotek.Qualifications.cantidadPendientes + " Pendientes").show();
+                console.debug(Tecnotek.Qualifications.cantidadPendientes + " Pendientes");
+                Tecnotek.Qualifications.ajaxQueue({
+                    url: Tecnotek.UI.urls["saveStudentQualificationURL"],
+                    data: {
+                        stdyId: $stdyId,
+                        sq:     $sq,
+                        value:  $value,
+                        pn:     $pn
+                    },
+                    type: "POST",
+                    dataType: "json",
+                    success: function( data ) {
+                        if(data.error === true) {
+                        } else {
+                        }
+
+                        //Termino de procesar una.
+                        Tecnotek.Qualifications.cantidadPendientes--;
+                        if(Tecnotek.Qualifications.cantidadPendientes == 0){
+                            $("#pendientes").html(Tecnotek.Qualifications.cantidadPendientes + " Pendientes");
+                            $("#pendientes").hide();
+                            console.debug("No Quedan Pendientes!!!");
+                        } else {
+                            console.debug("Quedan pendientes: " + Tecnotek.Qualifications.cantidadPendientes);
+                            $("#pendientes").html(Tecnotek.Qualifications.cantidadPendientes + " Pendientes");
+                            $("#pendientes").show();
+                        }
+                    }
+                });
+
+                /*
                 console.debug("Save value of " + $stdyId + " - " + $sq + ": " + $value);
                 Tecnotek.ajaxCall(Tecnotek.UI.urls["saveStudentQualificationURL"],
                     {   stdyId: $stdyId,
@@ -1453,7 +1492,7 @@ var Tecnotek = {
                     },
                     function(jqXHR, textStatus){
                         //Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
-                    }, false);
+                    }, false);*/
             }
         }
 	};

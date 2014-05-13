@@ -1169,6 +1169,16 @@ class TeacherController extends Controller
                             = $r->getMainText();
                     }
 
+                    $dql = "SELECT obs FROM TecnotekExpedienteBundle:SpecialQualificationFormComment obs"
+                        . " WHERE obs.studentYear = " . $stdyId;
+                    $query = $em->createQuery($dql);
+                    $results = $query->getResult();
+                    $sqr = null;
+                    foreach($results as $r){
+                        $responses[$stdyId . '-' . $r->getSpecialQualificationsForm()->getId()]
+                            = $r->getMainText();
+                    }
+
                     foreach($forms as $form){
                         $html .= "<tr><td>" . $this->printSpecialQualificationForm($form, $stdyId, $responses)
                             . "</td></tr>";
@@ -1196,6 +1206,11 @@ class TeacherController extends Controller
     private function printSpecialQualificationForm(
         \Tecnotek\ExpedienteBundle\Entity\SpecialQualificationsForm $form, $stdyId, $responses){
         $html = "";
+        $columnsCounter = 1;
+        $columnsCounter = ($form->getShowsOnPeriodOne())? $columnsCounter+1:$columnsCounter;
+        $columnsCounter = ($form->getShowsOnPeriodTwo())? $columnsCounter+1:$columnsCounter;
+        $columnsCounter = ($form->getShowsOnPeriodThree())? $columnsCounter+1:$columnsCounter;
+
         switch($form->getEntryType()){
             case 1:
                 $html .= "<table class='special-q-form-1'>";
@@ -1216,6 +1231,15 @@ class TeacherController extends Controller
                     $html .= ($form->getShowsOnPeriodThree())? '<td>'
                         . $this-> printSpecialQualificationOptions($q->getType(), $stdyId, $q->getId(), $responses, 3) . '</td>':'';
                     $html .= "</tr>";
+                }
+                if($form->getMustIncludeComments()){
+                    $value = (key_exists($stdyId . '-' . $form->getId(), $responses))? $responses[$stdyId . '-' .
+                        $form->getId()]:"";
+
+                    $html .='<tr class="sq-row"><td class="comments-title" colspan="' . $columnsCounter . '">Comentarios</td></tr>';
+                    $html .='<tr class="sq-row"><td colspan="' . $columnsCounter . '">' .
+                        '<textarea class="form-comments" stdyId="' . $stdyId . '" fq="' . $form->getId() .
+                        '">' . $value . '</textarea>' . '</td></tr>';
                 }
                 $html .= "</table>";
                 break;
@@ -1294,26 +1318,48 @@ class TeacherController extends Controller
                 if( isset($stdyId) && isset($sq) && isset($pn) && isset($value)) {
                     $em = $this->getDoctrine()->getEntityManager();
 
-                    $dql = "SELECT obs FROM TecnotekExpedienteBundle:SpecialQualificationResult obs"
-                        . " WHERE obs.specialQualification = " . $sq . " AND obs.studentYear = " . $stdyId .
-                        " AND obs.periodNumber = " . $pn;
-                    $query = $em->createQuery($dql);
-                    $results = $query->getResult();
-                    $sqr = null;
-                    foreach($results as $r){
-                        $sqr = $r;
-                    }
-                    if($sqr === null){
-                        $sqr = new \Tecnotek\ExpedienteBundle\Entity\SpecialQualificationResult();
-                        $sqr->setSpecialQualification(
-                            $em->getRepository("TecnotekExpedienteBundle:SpecialQualification")->find($sq));
-                        $sqr->setStudentYear(
-                            $em->getRepository("TecnotekExpedienteBundle:StudentYear")->find($stdyId));
-                        $sqr->setPeriodNumber($pn);
-                    }
-                    $sqr->setMainText($value);
+                    if($pn > 0){
+                        $dql = "SELECT obs FROM TecnotekExpedienteBundle:SpecialQualificationResult obs"
+                            . " WHERE obs.specialQualification = " . $sq . " AND obs.studentYear = " . $stdyId .
+                            " AND obs.periodNumber = " . $pn;
+                        $query = $em->createQuery($dql);
+                        $results = $query->getResult();
+                        $sqr = null;
+                        foreach($results as $r){
+                            $sqr = $r;
+                        }
+                        if($sqr === null){
+                            $sqr = new \Tecnotek\ExpedienteBundle\Entity\SpecialQualificationResult();
+                            $sqr->setSpecialQualification(
+                                $em->getRepository("TecnotekExpedienteBundle:SpecialQualification")->find($sq));
+                            $sqr->setStudentYear(
+                                $em->getRepository("TecnotekExpedienteBundle:StudentYear")->find($stdyId));
+                            $sqr->setPeriodNumber($pn);
+                        }
+                        $sqr->setMainText($value);
 
-                    $em->persist($sqr);
+                        $em->persist($sqr);
+                    } else {//Form Comments
+                        $dql = "SELECT obs FROM TecnotekExpedienteBundle:SpecialQualificationFormComment obs"
+                            . " WHERE obs.specialQualificationsForm = " . $sq . " AND obs.studentYear = " . $stdyId;
+                        $query = $em->createQuery($dql);
+                        $results = $query->getResult();
+                        $sqr = null;
+                        foreach($results as $r){
+                            $sqr = $r;
+                        }
+                        if($sqr === null){
+                            $sqr = new \Tecnotek\ExpedienteBundle\Entity\SpecialQualificationFormComment();
+                            $sqr->setSpecialQualificationsForm(
+                                $em->getRepository("TecnotekExpedienteBundle:SpecialQualificationsForm")->find($sq));
+                            $sqr->setStudentYear(
+                                $em->getRepository("TecnotekExpedienteBundle:StudentYear")->find($stdyId));
+                        }
+                        $sqr->setMainText($value);
+
+                        $em->persist($sqr);
+                    }
+
                     $em->flush();
 
                     return new Response(json_encode(array('error' => false)));

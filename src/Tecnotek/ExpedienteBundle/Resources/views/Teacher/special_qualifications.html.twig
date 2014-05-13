@@ -71,7 +71,8 @@
         .special-q-form-1 .sq-row td {line-height: 18px;}
         .special-q-form-1 .sq-row td:first-child{width: 200px; padding: 2px;}
         .special-q-form-1 .sq-row td select{width: 150px;margin: 2px;}
-
+        .special-q-form-1 .sq-row td .comments-title{text-align: center; line-height: 25px;}
+        .special-q-form-1 .sq-row td textarea{width: 100%; height: 75px;}
 
     </style>
 
@@ -116,9 +117,6 @@
                 <div class="left" style="line-height: 48px; margin-left: 25px;">
                     <span>Ingrese o verifique la informacion de las calificaciones de los estudiantes por grupo</span>
                 </div>
-                <div id="pendientes" class="right" style="line-height: 48px;">
-                    0 Pendientes
-                </div>
                 <div class="clear"></div>
             </div>
             <div class="clear"></div>
@@ -136,8 +134,17 @@
 <!-- hidden groupForm form -->
 <a id="openPageWithForms" class="modalbox"  style="display: none;" href="#specialQualificationsContainer">asdasdasd</a>
 <div id="specialQualificationsContainer" style="display: none;">
-    <div id="specialQualificationsForms" style="width: 100%; height: 600px;">
+    <div>
+        <div style="height: 25px;">
+            <div id="pendientes" class="left">
+                0 Pendientes
+            </div>
+        </div>
 
+        <div class="clear"></div>
+        <div id="specialQualificationsForms" style="width: 100%; height: 600px; overflow: scroll;">
+
+        </div>
     </div>
 </div>
 {% endblock %}
