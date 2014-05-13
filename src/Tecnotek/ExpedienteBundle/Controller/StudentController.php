@@ -111,6 +111,15 @@ class StudentController extends Controller
             'form'   => $form->createView(), 'menuIndex' => 3));
     }
 
+    public function studentReligionEditAction($id)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $entity = $em->getRepository("TecnotekExpedienteBundle:Student")->find($id);
+        $form   = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\StudentReligionFormType(), $entity);
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Student/religion.html.twig', array('entity' => $entity,
+            'form'   => $form->createView(), 'menuIndex' => 3));
+    }
+
     public function studentUpdateAction(){
         $em = $this->getDoctrine()->getEntityManager();
         $request = $this->get('request')->request;
@@ -135,6 +144,32 @@ class StudentController extends Controller
         }
 
     }
+
+    public function studentReligionUpdateAction(){
+        $em = $this->getDoctrine()->getEntityManager();
+        $request = $this->get('request')->request;
+        $entity = $em->getRepository("TecnotekExpedienteBundle:Student")->find( $request->get('id'));
+
+        if ( isset($entity) ) {
+            $request = $this->getRequest();
+            $form    = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\StudentReligionFormType(), $entity);
+            $form->bindRequest($request);
+
+            if ($form->isValid()) {
+                $em->persist($entity);
+                $em->flush();
+                return $this->redirect($this->generateUrl('_expediente_sysadmin_student'));
+            } else {
+                return $this->render('TecnotekExpedienteBundle:SuperAdmin:Student/religion.html.twig', array(
+                    'entity' => $entity, 'form'   => $form->createView(), 'menuIndex' => 3
+                ));
+            }
+        } else {
+            return $this->redirect($this->generateUrl('_expediente_sysadmin_student'));
+        }
+
+    }
+
     /* Final de los metodos para CRUD de students*/
 
     /* Metodos para CRUD de Clubs */

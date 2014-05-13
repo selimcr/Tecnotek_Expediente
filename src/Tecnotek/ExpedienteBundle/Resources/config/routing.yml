@@ -211,6 +211,10 @@ _expediente_sysadmin_student_update:
     pattern:  /student/update
     defaults: { _controller: TecnotekExpedienteBundle:Student:studentUpdate }
 
+_expediente_sysadmin_student_religion_update:
+    pattern:  /student/religionUpdate
+    defaults: { _controller: TecnotekExpedienteBundle:Student:studentReligionUpdate }
+
 _expediente_sysadmin_student_show:
     pattern:  /student/show/{id}
     defaults: { _controller: TecnotekExpedienteBundle:Student:studentShow }
@@ -219,6 +223,10 @@ _expediente_sysadmin_student_edit:
     pattern:  /student/edit/{id}
     defaults: { _controller: TecnotekExpedienteBundle:Student:studentEdit }
 
+_expediente_sysadmin_student_religion_edit:
+    pattern:  /student/religion/{id}
+    defaults: { _controller: TecnotekExpedienteBundle:Student:studentReligionEdit }
+
 _expediente_sysadmin_student_show_simple:
     pattern:  /student/show
     defaults: { _controller: TecnotekExpedienteBundle:Student:studentShow }
@@ -226,6 +234,10 @@ _expediente_sysadmin_student_show_simple:
 _expediente_sysadmin_student_edit_simple:
     pattern:  /student/edit
     defaults: { _controller: TecnotekExpedienteBundle:Student:studentEdit }
+
+_expediente_sysadmin_student_religion_edit_simple:
+    pattern:  /student/religion
+    defaults: { _controller: TecnotekExpedienteBundle:Student:studentReligionEdit }
 
 _expediente_sysadmin_student_psico_profile_simple:
     pattern:  /student/psicoProfile

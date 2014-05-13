@@ -189,21 +189,21 @@ class ReportController extends Controller
         $dayname = "";
         switch($day){
             case "1":   $dayname = "Lunes";
-                        break;
+                break;
             case "2":   $dayname = "Martes";
-                        break;
+                break;
             case "3":   $dayname = "Miercoles";
-                        break;
+                break;
             case "4":   $dayname = "Jueves";
-                        break;
+                break;
             case "5":   $dayname = "Viernes";
-                        break;
+                break;
             case "6":   $dayname = "Sabado";
-                        break;
+                break;
             case "7":   $dayname = "Domingo";
-                        break;
+                break;
             default:    $dayname = "";
-                        break;
+            break;
         }
         $sqlText = "";
         if(isset($text) && $text != "") {
@@ -769,7 +769,7 @@ class ReportController extends Controller
         $headersRow =  '<thead>';
         $headersRow .=  '    <tr style="height: 30px;">';
         $headersRow .=  '        <th style="width: 350px; text-align: left;">MATERIAS</th>';
-        $headersRow .=  '        <th style="width: 100px; text-align: center;">I TRIM.</th>';
+        $headersRow .=  '        <th style="width: 100px; text-align: center;">!!!I TRIM.</th>';
         $headersRow .=  '        <th style="width: 100px; text-align: center;">II TRIM.</th>';
         $headersRow .=  '        <th style="width: 100px; text-align: center;">III TRIM</th>';
         if($convocatoria != 0){
@@ -990,6 +990,11 @@ class ReportController extends Controller
             $totalForAverage = 0;
             $counterForAverage = 0;
             $tercerTrim = 0;
+
+            if($periodId == 4){
+                $periodIdb=1;}
+            else {
+                $periodIdb=$periodId;}
             for($i = 1; $i < 4; $i++){
                 if (array_key_exists("nota" . $i, $courseStdQ)) {
                     $notaFinal = $courseStdQ["nota" . $i];
@@ -1011,7 +1016,7 @@ class ReportController extends Controller
                         }else{
                             $row = str_replace("courseRowNota" . $i, $notaFinal->getQualification(), $row);
                         }
-                        if($notaFinal->getQualification()<'90' && $i == $periodId){
+                        if($notaFinal->getQualification()<'90' && $i == $periodIdb ){
                             $honor = false;
                         }
                     }
@@ -1024,6 +1029,14 @@ class ReportController extends Controller
                         if($valorNota == 50)
                             $valorNota = "Good";
                         if($valorNota == 25)
+                            $valorNota = "N.I.";
+                        if($valorNota == 4)
+                            $valorNota = "Exc";
+                        if($valorNota == 3)
+                            $valorNota = "V.Good";
+                        if($valorNota == 2)
+                            $valorNota = "Good";
+                        if($valorNota == 1)
                             $valorNota = "N.I.";
                         $row = str_replace("courseRowNota" . $i, "" . $valorNota, $row);
                     }
@@ -1224,20 +1237,21 @@ class ReportController extends Controller
         $query = $em->createQuery($sql);
         $observations = $query->getResult();
         $counter2=0;
-        foreach($observations as $observation){
-            $row =  $observation->getDetail();
-            if($counter2 == 0){
-                $html .= '<div style="color: #000; font-size: 16px;">';
-                $html .= 'Observaciones:</br>';
+        if($institution->getId() == '2'){
+            foreach($observations as $observation){
+                $row =  $observation->getDetail();
+                if($counter2 == 0){
+                    $html .= '<div style="color: #000; font-size: 16px;">';
+                    $html .= 'Observaciones:</br>';
+                }
+                $html .= '-'. $row  . '</br>';
+
+                $counter2++;
             }
-            $html .= '-'. $row  . '</br>';
-
-            $counter2++;
+            if($counter2 != 0){
+                $html .= '</div>';
+            }
         }
-        if($counter2 != 0){
-            $html .= '</div>';
-        }
-
 
         $dia=date("l");
 
@@ -2522,8 +2536,8 @@ class ReportController extends Controller
         $separator[0] = '/1./';
         $separator[1] = '/2./';
 
-        $html .= '<table>';
-        $html .= '<tr><td colspan="3" style="text-align: center">Espeficación por materia</td></tr>';
+        $html .= '<table class="new">';
+        $html .= '<tr><td colspan="3" style="text-align: center"><FONT FACE="Geneva, Arial" color=black SIZE=3>Especificación por materia</FONT></td></tr>';
         foreach($observations as $observation){
             $profesor =  $observation->getTeacher();
             $courseClass =  $observation->getCourseClass();
@@ -2532,9 +2546,9 @@ class ReportController extends Controller
             $courseName = preg_replace($separator,"",$courseClass->getCourse());
             $html .= '<tr>';
 
-            $html .= '<td style="width: 150px;" >'. $profesor  . '</td>';
-            $html .= '<td style="width: 100px;" >'. $courseName  . '</td>';
-            $html .= '<td style="width: 550px;">'. $comments  . '</td>';
+            $html .= '<td height="18" VALIGN="top" style="width: 160px; margin-top: 15px; margin-bottom: 25px;" ><FONT FACE="Geneva, Arial" color=black SIZE=3>'. $profesor  . '</FONT></td>';
+            $html .= '<td height="18" VALIGN="top" style="width: 165px; margin-top: 15px; margin-bottom: 25px;" ><FONT FACE="Geneva, Arial" color=black SIZE=3>'. $courseName  . '</FONT></td>';
+            $html .= '<td  height="18" VALIGN="top" style="width: 475px; margin-top: 15px; margin-bottom: 25px;"><FONT FACE="Geneva, Arial" color=black SIZE=3>'. $comments  . '</FONT></br>&nbsp;</td>';
 
 
 

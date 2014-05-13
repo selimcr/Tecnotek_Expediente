@@ -1,0 +1,110 @@
+{% extends 'TecnotekExpedienteBundle::logged_layout.html.twig' %}
+
+{% block htmlTitle %}
+    Tecnotek :: Expediente :: Super Administrador :: Estudiante
+{% endblock %}
+
+{% block extracss %}
+{% endblock %}
+
+{% block extrajs %}
+    <script type="text/javascript">
+        Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
+    </script>
+{% endblock %}
+
+{% block content %}
+    <div class="container_24" style="width: 800px;">
+        <div class="grid_24" style="width: 100%;">
+            <div class="titleRow">
+                <div class="left"><h3>{% trans %}label.student.show{% endtrans %}</h3></div>
+                <div class="right"><a href="{{ path('_expediente_sysadmin_student') }}" class="button success-darker tiny"><span></span>{% trans %}label.back.list{% endtrans %}</a></div>
+                <div class="clear"></div>
+            </div>
+
+            <div class="panelRow" id="doc-forms">
+                <div class="large-12 columns">
+                    <form class="custom" id="mainForm" name="mainForm" action="{{ path('_expediente_sysadmin_student_religion_update') }}" method="post">
+                        <input type="hidden" id="id" name="id" value="{{ entity.id }}">
+
+                        {{ form_errors(form) }}
+
+                        {{ form_widget(form._token) }}
+
+                        <fieldset>
+                            <legend></legend>
+
+                            <div class="formRow">
+                                <label class="error">{{ form_errors(form.rbautizado) }}</label>
+                                <div class="large-12 columns">
+                                    <label>{% trans %}label.rbautizado{% endtrans %}</label>{{ form_widget(form.rbautizado) }}
+                                </div>
+                            </div>
+
+                            <div class="formRow">
+                                <label class="error">{{ form_errors(form.rtomo) }}</label>
+                                <div class="large-12 columns">
+                                    <label>{% trans %}label.rtomo{% endtrans %}</label>{{ form_widget(form.rtomo) }}
+                                </div>
+                            </div>
+
+                            <div class="formRow">
+                                <label class="error">{{ form_errors(form.rfolio) }}</label>
+                                <div class="large-12 columns">
+                                    <label>{% trans %}label.rfolio{% endtrans %}</label>{{ form_widget(form.rfolio) }}
+                                </div>
+                            </div>
+
+                            <div class="formRow">
+                                <label class="error">{{ form_errors(form.rasiento) }}</label>
+                                <div class="large-12 columns">
+                                    <label>{% trans %}label.rasiento{% endtrans %}</label>{{ form_widget(form.rasiento) }}
+                                </div>
+                            </div>
+
+                            <div style="width: 300px" class="formRow">
+                                <label class="error">{{ form_errors(form.rpromesasfecha) }}</label>
+                                <div  style="width: 200px" class="large-12 columns">
+                                    <label>{% trans %}label.rpromesasfecha{% endtrans %}</label>{{ form_widget(form.rpromesasfecha) }}
+                                    <label>{% trans %}label.rpromesaslugar{% endtrans %}</label>{{ form_widget(form.rpromesaslugar) }}
+                                </div>
+                            </div>
+
+                            <div style="width: 300px" class="formRow">
+                                <label class="error">{{ form_errors(form.rconfesionfecha) }}</label>
+                                <label class="error">{{ form_errors(form.rconfesionlugar) }}</label>
+                                <div  style="width: 200px" class="large-12 columns">
+                                    <label>{% trans %}label.rconfesionfecha{% endtrans %}</label>{{ form_widget(form.rconfesionfecha) }}
+                                    <label>{% trans %}label.rconfesionlugar{% endtrans %}</label>{{ form_widget(form.rconfesionlugar) }}
+                                </div>
+                            </div>
+
+                            <div class="formRow">
+                                <label class="error">{{ form_errors(form.rcomunionfecha) }}</label>
+                                <label class="error">{{ form_errors(form.rcomunionlugar) }}</label>
+                                <div style="width: 200px" class="large-12 columns">
+                                    <label>{% trans %}label.rcomunionfecha{% endtrans %}</label>{{ form_widget(form.rcomunionfecha) }}
+                                    <label>{% trans %}label.rcomunionlugar{% endtrans %}</label>{{ form_widget(form.rcomunionlugar) }}
+                                </div>
+                            </div>
+
+
+
+
+
+                            <div class="formRow ">
+                                <div class="large-12 columns buttonsPanel">
+                                    <a href="{{ path('_expediente_sysadmin_student_show', {'id': entity.id}) }}" class="button success-darker tiny"><span></span>{% trans %}label.cancelar{% endtrans %}</a>
+                                    <button style="margin-left: 15px; margin-top: 0px;" type="submit" class="button success-darker tiny" name="save"><span></span>{% trans %}label.save{% endtrans %}</button>
+                                </div>
+                                <div class="clear"></div>
+                            </div>
+
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+{% endblock %}
