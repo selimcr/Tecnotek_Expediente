@@ -536,6 +536,7 @@ class ReportController extends Controller
                     $studentName = "";
 
                     $group = $em->getRepository("TecnotekExpedienteBundle:Group")->find($groupId);
+                    $grade = $em->getRepository("TecnotekExpedienteBundle:Grade")->find($gradeId);
                     $teacher = $group->getTeacher();
                     $imgHeader = "encabezadoDefault.png";
                     $teacherGroup = $teacher->getFirstname() . " " . $teacher->getLastname();
@@ -565,14 +566,30 @@ class ReportController extends Controller
                         }*/
                     }
 
-                    if($referenceId == 0){
-                        $html = $this->getGroupHTMLQualifications($periodId, $gradeId, $groupId);
+                    //$grade = new \Tecnotek\ExpedienteBundle\Entity\Grade();
+                    if($grade->getIsSpecial()){
+                        if($referenceId == 0){
+                            //$html = $this->getGroupHTMLQualifications($periodId, $gradeId, $groupId);
+                            $html = "Trabajando....";
+                        } else {
+                            $studentYear = $em->getRepository("TecnotekExpedienteBundle:StudentYear")->find($referenceId);
+                            $student = $studentYear->getStudent();
+                            $carne = $student->getCarne();
+                            $studentName = "" . $student;
+                            $html = "Trabajando estudiante o.o'";
+                            $html = $this->getStudentSpecialQualificationHTMLQualifications($periodId, $gradeId, $groupId,
+                                $referenceId, $studentYear, $director, $institution, $convocatoria);
+                        }
                     } else {
-                        $studentYear = $em->getRepository("TecnotekExpedienteBundle:StudentYear")->find($referenceId);
-                        $student = $studentYear->getStudent();
-                        $carne = $student->getCarne();
-                        $studentName = "" . $student;
-                        $html = $this->getStudentByPeriodHTMLQualifications($periodId, $gradeId, $groupId, $referenceId, $studentYear, $director, $institution, $convocatoria);
+                        if($referenceId == 0){
+                            $html = $this->getGroupHTMLQualifications($periodId, $gradeId, $groupId);
+                        } else {
+                            $studentYear = $em->getRepository("TecnotekExpedienteBundle:StudentYear")->find($referenceId);
+                            $student = $studentYear->getStudent();
+                            $carne = $student->getCarne();
+                            $studentName = "" . $student;
+                            $html = $this->getStudentByPeriodHTMLQualifications($periodId, $gradeId, $groupId, $referenceId, $studentYear, $director, $institution, $convocatoria);
+                        }
                     }
 
                     return new Response(json_encode(array('error' => false, 'html' => $html, 'carne' => $carne, 'teacherGroup' => $teacherGroup, "studentName" => $studentName, "imgHeader" => $imgHeader)));
@@ -747,6 +764,186 @@ class ReportController extends Controller
             $html .=  $row . "</tr>";
         }
 
+        $html .= "</table>";
+
+        return $html;
+    }
+
+    private function printSpecialQualificationOptions($type, $stdyId, $sq, $responses, $periodNumber){
+        $html = "";
+        $option = (key_exists($stdyId . '-' . $sq . '-' . $periodNumber, $responses))? $responses[$stdyId . '-' . $sq . "-" .
+            $periodNumber]:0;
+        $option = $option*1;
+        switch($type){
+            case 1:
+                $html = '<select class="sq-option" stdyId="' . $stdyId . '" sq="' . $sq . '" pn="' . $periodNumber .
+                    '">';
+                $html .= '<option value="0"' . (($option==0)? ' selected':'') . '>&nbsp;</option>';
+                $html .= '<option value="1"' . (($option==1)? ' selected':'') . '>Domina el contenido</option>';
+                $html .= '<option value="2"' . (($option==2)? ' selected':'') . '>No domina el contenido</option>';
+                $html .= '<option value="3"' . (($option==3)? ' selected':'') . '>Necesita mejorar</option>';
+                $html .= '<option value="4"' . (($option==4)? ' selected':'') . '>Algunas Veces</option>';
+                $html .= '</select>';
+                break;
+            case 2:
+                $html = '<select class="sq-option" stdyId="' . $stdyId . '" sq="' . $sq . '" pn="' . $periodNumber .
+                    '">';
+                $html .= '<option value="0"' . (($option==0)? ' selected':'') . '>&nbsp;</option>';
+                $html .= '<option value="1"' . (($option==1)? ' selected':'') . '>Bueno</option>';
+                $html .= '<option value="2"' . (($option==2)? ' selected':'') . '>MB - Muy bueno</option>';
+                $html .= '<option value="3"' . (($option==3)? ' selected':'') . '>Exc - Excelente</option>';
+                $html .= '</select>';
+                break;
+            default:
+                break;
+        }
+        return $html;
+    }
+
+    private function getSpecialQualificationValue(
+            \Tecnotek\ExpedienteBundle\Entity\SpecialQualificationsForm $form,
+        $q){
+
+        $result = "";
+        switch($form->getEntryType()){
+            case 1:
+                switch($q){
+                    case '1': $result = "Domina el contenido"; break;
+                    case '2': $result = "No domina el contenido"; break;
+                    case '3': $result = "Necesita mejorar"; break;
+                    case '4': $result = "Algunas Veces"; break;
+                    default: $result = "-"; break;
+                }
+                break;
+            case 2:
+                switch($q){
+                    case '1': $result = "Bueno"; break;
+                    case '2': $result = "MB - Muy bueno"; break;
+                    case '3': $result = "Exc - Excelente"; break;
+                    default: $result = "-"; break;
+                }
+                break;
+            default:
+                $result = '-';
+                break;
+        }
+        return $result;
+    }
+
+    private function printSpecialFormByStudent(\Tecnotek\ExpedienteBundle\Entity\SpecialQualificationsForm $form,
+                                               $responses){
+        $html = "";
+        $html .= '<table class="student-special-form" style="width: 100%">';
+        $html .= '<tr class="header"><td colspan="2">' . $form->getName() . '</td></tr>';
+        $q = new \Tecnotek\ExpedienteBundle\Entity\SpecialQualification();
+        foreach($form->getQuestions() as $q){
+            $html .= '<tr>';
+            $html .= '<td>' . $q->getMainText();
+            $html .= '</td>';
+            if(key_exists($q->getId() . "-q", $responses)){
+                $html .= '<td>' . $this->getSpecialQualificationValue($form, $responses[$q->getId() . "-q"]) . '</td>';
+            } else  {
+                $html .= '<td> - </td>';
+            }
+
+            $html .= '</tr>';
+        }
+        $html .= '';
+        $html .= '';
+        $html .= '';
+        $html .='</table>';
+        return $html;
+    }
+    private function getStudentSpecialQualificationHTMLQualifications($periodId, $gradeId, $groupId, $studentId,
+                                                               $studentYear, $director, $institution, $convocatoria){
+        $logger = $this->get('logger');
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $period = $em->getRepository("TecnotekExpedienteBundle:Period")
+            ->find($periodId);
+        $periodNumber = $period->getOrderInYear();
+
+        $dql = "SELECT obs FROM TecnotekExpedienteBundle:SpecialQualificationResult obs"
+            . " WHERE obs.studentYear = " . $studentYear->getId() . " AND obs.periodNumber = " . $periodNumber;
+        $query = $em->createQuery($dql);
+        $results = $query->getResult();
+        $sqr = null;
+        $responses = array();
+        foreach($results as $r){
+            $responses[$r->getSpecialQualification()->getId() . "-q"]
+                = $r->getMainText();
+        }
+
+        $dql = "SELECT obs FROM TecnotekExpedienteBundle:SpecialQualificationFormComment obs"
+            . " WHERE obs.studentYear = " . $studentYear->getId();
+        $query = $em->createQuery($dql);
+        $results = $query->getResult();
+        $sqr = null;
+        foreach($results as $r){
+            $responses[$r->getSpecialQualificationsForm()->getId() . "-c"]
+                = $r->getMainText();
+        }
+
+        //Obtener Formularios del Grade
+        $formularios = $em->getRepository("TecnotekExpedienteBundle:SpecialQualificationsForm")
+            ->findBy(array('grade' => $gradeId));
+
+        $headersRow =  '<thead>';
+        $headersRow .=  '    <tr style="height: 30px;">';
+        $headersRow .=  '        <th style="width: 50%; text-align: left;"></th>';
+        $headersRow .=  '        <th style="width: 50%; text-align: center;"></th>';
+        $headersRow .=  '    </tr>';
+        $headersRow .=  '</thead>';
+
+        $html = '<table class="tableQualificationsSpecial" cellSpacing="0" cellPadding="0">' .
+            $headersRow;
+        $html .= '<tr>';
+        $html .= '<td>';
+        //Pintar los de la columna 1
+        $form = new \Tecnotek\ExpedienteBundle\Entity\SpecialQualificationsForm();
+        foreach($formularios as $form){
+            if($form->getColumnNumber() == 1){
+                $html .= $this->printSpecialFormByStudent($form, $responses);
+            }
+        }
+        $html .= '</td>';
+        $html .= '<td>';
+        //Pintar los de la columna 2
+        foreach($formularios as $form){
+            if($form->getColumnNumber() == 2){
+                $html .= $this->printSpecialFormByStudent($form, $responses);
+            }
+        }
+        $html .= '</td>';
+        $html .= '</tr>';
+        $html .= '';
+        $html .= "</table>";
+
+        //Second Page
+        $html .= '<div class="pageBreak"> </div>';
+
+        $html .= '<table class="tableQualificationsSpecial" cellSpacing="0" cellPadding="0">' .
+            $headersRow;
+        $html .= '<tr>';
+        $html .= '<td>';
+        //Pintar los de la columna 1
+        $form = new \Tecnotek\ExpedienteBundle\Entity\SpecialQualificationsForm();
+        foreach($formularios as $form){
+            if($form->getColumnNumber() == 3){
+                $html .= $this->printSpecialFormByStudent($form, $responses);
+            }
+        }
+        $html .= '</td>';
+        $html .= '<td>';
+        //Pintar los de la columna 2
+        foreach($formularios as $form){
+            if($form->getColumnNumber() == 4){
+                $html .= $this->printSpecialFormByStudent($form, $responses);
+            }
+        }
+        $html .= '</td>';
+        $html .= '</tr>';
+        $html .= '';
         $html .= "</table>";
 
         return $html;

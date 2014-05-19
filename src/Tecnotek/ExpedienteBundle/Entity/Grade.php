@@ -43,6 +43,12 @@ class Grade
      */
     private $notaMin;
 
+    /**
+     * @ORM\Column(type="boolean")
+     * @Assert\NotBlank()
+     */
+    private $isSpecial;
+
     private $students;
 
     public function __construct()
@@ -130,5 +136,15 @@ class Grade
     public function getNotaMin()
     {
         return $this->notaMin;
+    }
+
+    public function setIsSpecial($isSpecial)
+    {
+        $this->isSpecial = $isSpecial;
+    }
+
+    public function getIsSpecial()
+    {
+        return $this->isSpecial;
     }
 }

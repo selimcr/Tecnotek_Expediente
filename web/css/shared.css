@@ -1,0 +1,6 @@
+.tableQualificationsSpecial {width: 840px;}
+.tableQualificationsSpecial td {vertical-align: top; padding: 5px; color: black;}
+.student-special-form {vertical-align: top; border: solid 2px;}
+.student-special-form .header{background-color: #b94a00;}
+.student-special-form .header td{text-align: center;}
+.student-special-form td{color: #000000;}
