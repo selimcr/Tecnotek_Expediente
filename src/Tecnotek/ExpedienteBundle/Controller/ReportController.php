@@ -848,8 +848,12 @@ class ReportController extends Controller
 
             $html .= '</tr>';
         }
-        $html .= '';
-        $html .= '';
+        if($form->getMustIncludeComments() && key_exists($form->getId() . "-c", $responses)){
+            $html .= '<tr><td colspan="2" style="background-color: rgb(187, 214, 188);">';
+            $html .= '<b>Comentarios:</b> '. $responses[$form->getId() . '-c'];
+            $html .= '</td></tr>';
+        }
+
         $html .= '';
         $html .='</table>';
         return $html;
