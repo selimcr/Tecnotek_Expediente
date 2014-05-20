@@ -72,6 +72,12 @@ class SpecialQualificationsForm
     private $mustIncludeComments;
 
     /**
+     * @ORM\Column(type="integer")
+     * @Assert\NotBlank()
+     */
+    private $columnNumber;
+
+    /**
      * @var questions
      *
      * @ORM\OneToMany(targetEntity="SpecialQualification", mappedBy="form", cascade={"all"})
@@ -226,6 +232,16 @@ class SpecialQualificationsForm
     public function getMustIncludeComments()
     {
         return $this->mustIncludeComments;
+    }
+
+    public function setColumnNumber($columnNumber)
+    {
+        $this->columnNumber = $columnNumber;
+    }
+
+    public function getColumnNumber()
+    {
+        return $this->columnNumber;
     }
 
 }
