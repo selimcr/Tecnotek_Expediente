@@ -2273,4 +2273,50 @@ class StudentController extends Controller
     private function startswith($haystack, $needle) {
         return substr($haystack, 0, strlen($needle)) === $needle;
     }
+
+public function studentListPsicoEscAction($rowsPerPage = 35)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $text = $this->get('request')->query->get('text');
+        $sqlText = "";
+        ;
+        if(isset($text) && $text != "") {
+            $sqlText = " and (s.firstname like '%$text%' or s.lastname like '%$text%' or s.carne like '%$text%' or s.groupyear like '%$text%')";
+        }
+
+        $dql = "SELECT s FROM TecnotekExpedienteBundle:Student s where (s.groupyear = '1-A' or s.groupyear = '1-B' or s.groupyear = '1-C' or
+        s.groupyear = '2-A' or s.groupyear = '2-B' or s.groupyear = '2-C' or
+        s.groupyear = '3-A' or s.groupyear = '3-B' or s.groupyear = '3-C' or
+        s.groupyear = '4-A' or s.groupyear = '4-B' or s.groupyear = '4-C' or
+        s.groupyear = '5-A' or s.groupyear = '5-B' or s.groupyear = '5-C' or
+        s.groupyear = '6-A' or s.groupyear = '6-B' or s.groupyear = '6-C') " . $sqlText;
+        $query = $em->createQuery($dql);
+
+        $param = $this->get('request')->query->get('rowsPerPage');
+
+
+
+        if(isset($param) && $param != "")
+            $rowsPerPage = $param;
+
+        $dql2 = "SELECT count(s) FROM TecnotekExpedienteBundle:Student s where (s.groupyear = '1-A' or s.groupyear = '1-B' or s.groupyear = '1-C' or
+        s.groupyear = '2-A' or s.groupyear = '2-B' or s.groupyear = '2-C' or
+        s.groupyear = '3-A' or s.groupyear = '3-B' or s.groupyear = '3-C' or
+        s.groupyear = '4-A' or s.groupyear = '4-B' or s.groupyear = '4-C' or
+        s.groupyear = '5-A' or s.groupyear = '5-B' or s.groupyear = '5-C' or
+        s.groupyear = '6-A' or s.groupyear = '6-B' or s.groupyear = '6-C') " . $sqlText;
+        $page = $this->getPaginationPage($dql2, $this->get('request')->query->get('page', 1), $rowsPerPage);
+
+        $paginator = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $query,
+            $page/*page number*/,
+            $rowsPerPage/*limit per page*/
+        );
+
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Student/listpsicoesc.html.twig', array(
+            'pagination' => $pagination, 'rowsPerPage' => $rowsPerPage, 'menuIndex' => 3, 'text' => $text
+        ));
+    }
 }

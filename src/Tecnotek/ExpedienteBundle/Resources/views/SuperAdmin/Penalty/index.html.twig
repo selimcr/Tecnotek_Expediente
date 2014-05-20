@@ -112,16 +112,16 @@ $(function() {
 
         <div class="search-results table" style="margin-top: 25px;">
             <div class="row tableHeader" style="height: 32px; line-height: 32px;">
-                <div class="option_width" style="float: left; width: 250px;">{% trans %}label.student{% endtrans %}</div>
+                <div class="option_width" style="float: left; width: 350px;">{% trans %}label.student{% endtrans %}</div>
                 <div class="option_width" style="float: left; width: 150px;">{% trans %}label.date{% endtrans %}</div>
-                <div class="option_width" style="float: left; width: 150px;">{% trans %}label.type{% endtrans %}</div>
+                <div class="option_width" style="float: left; width: 250px;">{% trans %}label.type{% endtrans %}</div>
             </div>
 
             {% for entity in entities %}
             <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
-                <div class="option_width" style="float: left; width: 250px;">{{ entity.studentYear.student }}</div>
+                <div class="option_width" style="float: left; width: 350px;">{{ entity.studentYear.student }}</div>
                 <div class="option_width" style="float: left; width: 150px;">{% if entity.date != null %} {{ entity.date|date("d/M/y") }} {% else %} &nbsp; {% endif %}</div>
-                <div class="option_width" style="float: left; width: 150px;" title="{{ entity.comments }}">{{ entity.penalty }}</div>
+                <div class="option_width" style="float: left; width: 250px;" title="{{ entity.comments }}">{{ entity.penalty }}</div>
 
                 <div class="right imageButton editButton"  title="{% trans %}label.edit{% endtrans %}"  rel="{{ entity.id }}"></div>
                 <div class="right imageButton deleteButton" style="height: 16px;"  title="{% trans %}label.delete{% endtrans %}"  rel="{{ entity.id }}"></div>

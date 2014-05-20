@@ -195,6 +195,10 @@ _expediente_sysadmin_student:
     pattern:  /student
     defaults: { _controller: TecnotekExpedienteBundle:Student:studentList }
 
+_expediente_sysadmin_student_psico_esc:
+    pattern:  /studentPsico
+    defaults: { _controller: TecnotekExpedienteBundle:Student:studentListPsicoEsc }
+
 _delete_student:
     pattern:  /student/delete/{id}
     defaults: { _controller: TecnotekExpedienteBundle:Student:studentDelete }

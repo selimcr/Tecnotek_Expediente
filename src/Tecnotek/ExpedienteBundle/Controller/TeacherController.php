@@ -1282,18 +1282,67 @@ class TeacherController extends Controller
                 '">';
                 $html .= '<option value="0"' . (($option==0)? ' selected':'') . '>&nbsp;</option>';
                 $html .= '<option value="1"' . (($option==1)? ' selected':'') . '>Domina el contenido</option>';
-                $html .= '<option value="2"' . (($option==2)? ' selected':'') . '>No domina el contenido</option>';
-                $html .= '<option value="3"' . (($option==3)? ' selected':'') . '>Necesita mejorar</option>';
-                $html .= '<option value="4"' . (($option==4)? ' selected':'') . '>Algunas Veces</option>';
+                $html .= '<option value="2"' . (($option==2)? ' selected':'') . '>Habilidad en proceso</option>';
+                $html .= '<option value="3"' . (($option==3)? ' selected':'') . '>Necesita refuerzo</option>';
                 $html .= '</select>';
                 break;
             case 2:
                 $html = '<select class="sq-option" stdyId="' . $stdyId . '" sq="' . $sq . '" pn="' . $periodNumber .
                     '">';
                 $html .= '<option value="0"' . (($option==0)? ' selected':'') . '>&nbsp;</option>';
-                $html .= '<option value="1"' . (($option==1)? ' selected':'') . '>Bueno</option>';
-                $html .= '<option value="2"' . (($option==2)? ' selected':'') . '>MB - Muy bueno</option>';
-                $html .= '<option value="3"' . (($option==3)? ' selected':'') . '>Exc - Excelente</option>';
+                $html .= '<option value="1"' . (($option==1)? ' selected':'') . '>Excellent</option>';
+                $html .= '<option value="2"' . (($option==2)? ' selected':'') . '>Very Good</option>';
+                $html .= '<option value="3"' . (($option==3)? ' selected':'') . '>In Process</option>';
+                $html .= '<option value="4"' . (($option==4)? ' selected':'') . '>Needs Reteaching</option>';
+                $html .= '<option value="5"' . (($option==5)? ' selected':'') . '>Good</option>';
+                $html .= '</select>';
+                break;
+            case 3:
+                $html = '<select class="sq-option" stdyId="' . $stdyId . '" sq="' . $sq . '" pn="' . $periodNumber .
+                    '">';
+                $html .= '<option value="0"' . (($option==0)? ' selected':'') . '>&nbsp;</option>';
+                $html .= '<option value="1"' . (($option==1)? ' selected':'') . '>Domina el contenido</option>';
+                $html .= '<option value="2"' . (($option==2)? ' selected':'') . '>No domina el contenido</option>';
+                $html .= '<option value="3"' . (($option==3)? ' selected':'') . '>Necesita mejorar</option>';
+                $html .= '<option value="4"' . (($option==4)? ' selected':'') . '>Algunas veces</option>';
+                $html .= '</select>';
+                break;
+             case 4:
+                $html = '<select class="sq-option" stdyId="' . $stdyId . '" sq="' . $sq . '" pn="' . $periodNumber .
+                    '">';
+                $html .= '<option value="0"' . (($option==0)? ' selected':'') . '>&nbsp;</option>';
+                $html .= '<option value="1"' . (($option==1)? ' selected':'') . '>Excelente</option>';
+                $html .= '<option value="2"' . (($option==2)? ' selected':'') . '>Muy Bueno</option>';
+                $html .= '<option value="3"' . (($option==3)? ' selected':'') . '>Bueno</option>';
+                $html .= '</select>';
+                break;
+             case 5:
+                $html = '<select class="sq-option" stdyId="' . $stdyId . '" sq="' . $sq . '" pn="' . $periodNumber .
+                    '">';
+                $html .= '<option value="0"' . (($option==0)? ' selected':'') . '>&nbsp;</option>';
+                $html .= '<option value="1"' . (($option==1)? ' selected':'') . '>Lo logra</option>';
+                $html .= '<option value="2"' . (($option==2)? ' selected':'') . '>Habilidad en proceso</option>';
+                $html .= '</select>';
+                break;
+              case 9:
+                $html = '<select class="sq-option" stdyId="' . $stdyId . '" sq="' . $sq . '" pn="' . $periodNumber .
+                    '">';
+                $html .= '<option value="0"' . (($option==0)? ' selected':'') . '>&nbsp;</option>';
+                $html .= '<option value="1"' . (($option==1)? ' selected':'') . '>1</option>';
+                $html .= '<option value="2"' . (($option==2)? ' selected':'') . '>2</option>';
+                $html .= '<option value="3"' . (($option==3)? ' selected':'') . '>3</option>';
+                $html .= '<option value="4"' . (($option==4)? ' selected':'') . '>4</option>';
+                $html .= '<option value="5"' . (($option==5)? ' selected':'') . '>5</option>';
+                $html .= '<option value="6"' . (($option==6)? ' selected':'') . '>6</option>';
+                $html .= '<option value="7"' . (($option==7)? ' selected':'') . '>7</option>';
+                $html .= '<option value="8"' . (($option==8)? ' selected':'') . '>8</option>';
+                $html .= '<option value="9"' . (($option==9)? ' selected':'') . '>9</option>';
+                $html .= '<option value="10"' . (($option==10)? ' selected':'') . '>10</option>';
+                $html .= '<option value="11"' . (($option==11)? ' selected':'') . '>11</option>';
+                $html .= '<option value="12"' . (($option==12)? ' selected':'') . '>12</option>';
+                $html .= '<option value="13"' . (($option==13)? ' selected':'') . '>13</option>';
+                $html .= '<option value="14"' . (($option==14)? ' selected':'') . '>14</option>';
+                $html .= '<option value="15"' . (($option==15)? ' selected':'') . '>15</option>';
                 $html .= '</select>';
                 break;
             default:

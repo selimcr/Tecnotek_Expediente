@@ -381,6 +381,9 @@ label.rconfesionlugar: Lugar:
 label.rcomunionfecha: Primera Comunión Fecha:
 label.rcomunionlugar: Lugar:
 
+##psicologia
+label.psicologiaescuela: Psicologia Esc.
+
 #Validation
 not.blank.name: Probando proband.
 not:
