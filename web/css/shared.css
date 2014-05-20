@@ -1,5 +1,5 @@
 .tableQualificationsSpecial {width: 840px;}
-.tableQualificationsSpecial td {vertical-align: top; padding: 5px; color: black;}
+.tableQualificationsSpecial td {vertical-align: top; padding: 1px 2px 1px 2px; color: black; border: none;}
 .student-special-form {vertical-align: top; border: solid 2px;}
 .student-special-form .header{background-color: #b94a00;}
 .student-special-form .header td{text-align: center;}

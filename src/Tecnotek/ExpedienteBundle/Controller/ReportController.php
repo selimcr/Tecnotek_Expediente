@@ -892,15 +892,7 @@ class ReportController extends Controller
         $formularios = $em->getRepository("TecnotekExpedienteBundle:SpecialQualificationsForm")
             ->findBy(array('grade' => $gradeId));
 
-        $headersRow =  '<thead>';
-        $headersRow .=  '    <tr style="height: 30px;">';
-        $headersRow .=  '        <th style="width: 50%; text-align: left;"></th>';
-        $headersRow .=  '        <th style="width: 50%; text-align: center;"></th>';
-        $headersRow .=  '    </tr>';
-        $headersRow .=  '</thead>';
-
-        $html = '<table class="tableQualificationsSpecial" cellSpacing="0" cellPadding="0">' .
-            $headersRow;
+        $html = '<table class="tableQualificationsSpecial" cellSpacing="0" cellPadding="0">';
         $html .= '<tr>';
         $html .= '<td>';
         //Pintar los de la columna 1
