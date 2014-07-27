@@ -5,209 +5,209 @@
 {% endblock %}
 
 {% block extracss %}
-<link rel="stylesheet" href="{{ asset('fancybox/jquery.fancybox.css') }}" type="text/css" media="all" />
-<link rel="stylesheet" href="{{ asset('fancybox/fancybox_style.css') }}" type="text/css" media="all" />
-<link rel="stylesheet" href="{{ asset('css/jquery-ui-timepicker-addon.css') }}" type="text/css" media="all" />
+    <link rel="stylesheet" href="{{ asset('fancybox/jquery.fancybox.css') }}" type="text/css" media="all" />
+    <link rel="stylesheet" href="{{ asset('fancybox/fancybox_style.css') }}" type="text/css" media="all" />
+    <link rel="stylesheet" href="{{ asset('css/jquery-ui-timepicker-addon.css') }}" type="text/css" media="all" />
 {% endblock %}
 
 {% block extrajs %}
-<script type="text/javascript" src="{{ asset('fancybox/jquery.fancybox.js?v=2.0.6') }}"></script>
+    <script type="text/javascript" src="{{ asset('fancybox/jquery.fancybox.js?v=2.0.6') }}"></script>
 
-<script type="text/javascript">
-    Tecnotek.module = "penalties";
-    Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
-    Tecnotek.UI.urls["savePenaltyURL"] = "{{ path('_expediente_penalties_save')}}";
+    <script type="text/javascript">
+        Tecnotek.module = "penalties";
+        Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
+        Tecnotek.UI.urls["savePenaltyURL"] = "{{ path('_expediente_penalties_save')}}";
 
-    Tecnotek.UI.urls["getStudentsURL"] = "{{ path('_expediente_sysadmin_student_ajax_list')}}";
-    Tecnotek.UI.urls["loadStudentRelativesURL"] = "{{ path('_expediente_sysadmin_relatives_list')}}";
+        Tecnotek.UI.urls["getStudentsURL"] = "{{ path('_expediente_sysadmin_student_ajax_list')}}";
+        Tecnotek.UI.urls["loadStudentRelativesURL"] = "{{ path('_expediente_sysadmin_relatives_list')}}";
 
-    Tecnotek.UI.urls["show"] = "{{ path('_expediente_sysadmin_absence_show_simple')}}";
-    Tecnotek.UI.urls["edit"] = "{{ path('_expediente_sysadmin_penalties_edit_simple')}}";
-    Tecnotek.UI.urls["show"] = "#";
+        Tecnotek.UI.urls["show"] = "{{ path('_expediente_sysadmin_absence_show_simple')}}";
+        Tecnotek.UI.urls["edit"] = "{{ path('_expediente_sysadmin_penalties_edit_simple')}}";
+        Tecnotek.UI.urls["show"] = "#";
 
-    Tecnotek.UI.vars["currentPeriod"] = {{ currentPeriod }};
-    Tecnotek.UI.urls["deleteURL"] = "{{ path("_delete_penalties_simple") }}";
-    Tecnotek.UI.translates["confirmDelete"] = "{% trans %}messages.confirmation.penalty.delete{% endtrans %}";
+        Tecnotek.UI.vars["currentPeriod"] = {{ currentPeriod }};
+        Tecnotek.UI.urls["deleteURL"] = "{{ path("_delete_penalties_simple") }}";
+        Tecnotek.UI.translates["confirmDelete"] = "{% trans %}messages.confirmation.penalty.delete{% endtrans %}";
 
-</script>
-<!-- basic fancybox setup -->
-<script>
-    $(function() {
-        $( "#from" ).datepicker({
-            defaultDate: "0d",
-            changeMonth: true,
-            dateFormat: "yy-mm-dd",
-            showButtonPanel: true,
-            currentText: "Hoy",
-            numberOfMonths: 1,
-            onClose: function( selectedDate ) {
-                $( "#to" ).datepicker( "option", "minDate", selectedDate );
-            }
+    </script>
+    <!-- basic fancybox setup -->
+    <script>
+        $(function() {
+            $( "#from" ).datepicker({
+                defaultDate: "0d",
+                changeMonth: true,
+                dateFormat: "yy-mm-dd",
+                showButtonPanel: true,
+                currentText: "Hoy",
+                numberOfMonths: 1,
+                onClose: function( selectedDate ) {
+                    $( "#to" ).datepicker( "option", "minDate", selectedDate );
+                }
+            });
+            $( "#to" ).datepicker({
+                defaultDate: "0d",
+                changeMonth: true,
+                dateFormat: "yy-mm-dd",
+                showButtonPanel: true,
+                currentText: "Hoy",
+                numberOfMonths: 1,
+                onClose: function( selectedDate ) {
+                    $( "#from" ).datepicker( "option", "maxDate", selectedDate );
+                }
+            });
         });
-        $( "#to" ).datepicker({
-            defaultDate: "0d",
-            changeMonth: true,
-            dateFormat: "yy-mm-dd",
-            showButtonPanel: true,
-            currentText: "Hoy",
-            numberOfMonths: 1,
-            onClose: function( selectedDate ) {
-                $( "#from" ).datepicker( "option", "maxDate", selectedDate );
-            }
-        });
-    });
-</script>
-<script type="text/javascript">
+    </script>
+    <script type="text/javascript">
 
-$(function() {
-    $(".modalbox").fancybox();
+        $(function() {
+            $(".modalbox").fancybox();
 //$("#contact").submit(function() { return false; });
-});
-</script>
+        });
+    </script>
 {% endblock %}
 
 {% block content %}
-<div class="container_24">
-    <div class="grid_24">
-        <div class="titleRow">
-            <div>
-                <h3 class="left" style="margin: 0px;">{% trans %}label.penalties.title{% endtrans %}</h3>
-                <a id="newAbsence"  class="right modalbox button success-darker tiny" href="#inline">{% trans %}label.new{% endtrans %}</a>
+    <div class="container_24">
+        <div class="grid_24">
+            <div class="titleRow">
+                <div>
+                    <h3 class="left" style="margin: 0px;">{% trans %}label.penalties.title{% endtrans %}</h3>
+                    <a id="newAbsence"  class="right modalbox button success-darker tiny" href="#inline">{% trans %}label.new{% endtrans %}</a>
 
+                    <div class="clear"></div>
+                </div>
+                <div class="clear"></div>
+                <span>{% trans %}label.penalties.message{% endtrans %}</span>
                 <div class="clear"></div>
             </div>
             <div class="clear"></div>
-            <span>{% trans %}label.penalties.message{% endtrans %}</span>
+            <div class="filter-search table" style="margin-top: 25px;">
+                <div class="internal">
+                    <form id="searchForm" action="{{ path('_expediente_penalties_search') }}" method="post">
+                        <div class="left" style="width: 50%;">
+                            <label>{%trans%}label.student{%endtrans%}</label><input type="text" id="student" name="student" value=" {{ student }}" style="margin-right: 5px;" {% if student == "" %}disabled="disabled"{% endif %}><input type="checkbox" id="searchByStudent" name="searchByStudent" class="check" rel="student" {% if student != "" %}checked="checked"{% endif %}>
+                        </div>
+                        <div class="left" style="width: 50%;">
+                            <label style="padding-left: 60px;">{%trans%}label.period{%endtrans%}</label>
+                            <select id="period" name="period" style="width: 290px;">
+                                <option value="-1" {% if period == '-1' %}selected="selected"{% endif %}>{%trans%}label.all{%endtrans%}</option>
+
+                            </select>
+                        </div>
+                        <div class="clear"></div>
+
+                        <div class="left" style="width: 50%;">
+                            <label for="from">Desde</label><input type="text" id="from" name="from" value="{{ dateFrom }}" />
+                        </div>
+                        <div class="left" style="width: 50%;">
+                            <label for="to" style="padding-left: 60px;">Hasta</label><input type="text" id="to" name="to" value="{{ dateTo }}" />
+                        </div>
+                        <div class="clear"></div>
+
+                        <button style="margin-right: 30px; margin-top: 0px;" type="submit" class="right button success-darker tiny" name="search"><span></span>{% trans %}label.filter{% endtrans %}</button>
+                        <div class="clear"></div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="search-results table" style="margin-top: 25px;">
+                <div class="row tableHeader" style="height: 32px; line-height: 32px;">
+                    <div class="option_width" style="float: left; width: 350px;">{% trans %}label.student{% endtrans %}</div>
+                    <div class="option_width" style="float: left; width: 150px;">{% trans %}label.date{% endtrans %}</div>
+                    <div class="option_width" style="float: left; width: 250px;">{% trans %}label.type{% endtrans %}</div>
+                </div>
+
+                {% for entity in entities %}
+                    <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
+                        <div class="option_width" style="float: left; width: 350px;">{{ entity.studentYear.student }}</div>
+                        <div class="option_width" style="float: left; width: 150px;">{% if entity.date != null %} {{ entity.date|date("d/M/y") }} {% else %} &nbsp; {% endif %}</div>
+                        <div class="option_width" style="float: left; width: 250px;" title="{{ entity.comments }}">{{ entity.penalty }}</div>
+
+                        <div class="right imageButton editButton"  title="{% trans %}label.edit{% endtrans %}"  rel="{{ entity.id }}"></div>
+                        <div class="right imageButton deleteButton" style="height: 16px;"  title="{% trans %}label.delete{% endtrans %}"  rel="{{ entity.id }}"></div>
+
+                        <div class="clear"></div>
+                    </div>
+                {% else %}
+                    <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
+                        <div class="option_width" style="float: left; width: 375px;">{% trans %}results.not.found{% endtrans %}</div>
+                        <div class="clear"></div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="clear"></div>
+        <div class="wrapper">
+            <div class="grid_24 padline">
+                <div class="lineH"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- hidden inline form -->
+    <div id="inline">
+        <h3>Registrar nueva sanci&oacute;n</h3>
+
+        <form class="customForm" id="createPenaltyForm" name="createPenaltyForm" action="#" method="post">
+
+            <div class="left" style="margin-right: 10px;">
+                <label style="display: inline-block; width: 150px">{% trans %}label.student{% endtrans %}</label>
+                <select id="studentId" name="studentId" style="width: 250px">
+                    {% for student in students %}
+                        <option value="{{ student.id }}">{{ student }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="left">
+                <a class="modalbox button success-darker tiny" href="#searchStudentWindow">{% trans %}label.search{% endtrans %}</a>
+            </div>
             <div class="clear"></div>
-        </div>
-        <div class="clear"></div>
-        <div class="filter-search table" style="margin-top: 25px;">
-            <div class="internal">
-                <form id="searchForm" action="{{ path('_expediente_penalties_search') }}" method="post">
-                    <div class="left" style="width: 50%;">
-                        <label>{%trans%}label.student{%endtrans%}</label><input type="text" id="student" name="student" value=" {{ student }}" style="margin-right: 5px;" {% if student == "" %}disabled="disabled"{% endif %}><input type="checkbox" id="searchByStudent" name="searchByStudent" class="check" rel="student" {% if student != "" %}checked="checked"{% endif %}>
-                    </div>
-                    <div class="left" style="width: 50%;">
-                        <label style="padding-left: 60px;">{%trans%}label.period{%endtrans%}</label>
-                        <select id="period" name="period" style="width: 290px;">
-                            <option value="-1" {% if period == '-1' %}selected="selected"{% endif %}>{%trans%}label.all{%endtrans%}</option>
 
-                        </select>
-                    </div>
-                    <div class="clear"></div>
-
-                    <div class="left" style="width: 50%;">
-                        <label for="from">Desde</label><input type="text" id="from" name="from" value="{{ dateFrom }}" />
-                    </div>
-                    <div class="left" style="width: 50%;">
-                        <label for="to" style="padding-left: 60px;">Hasta</label><input type="text" id="to" name="to" value="{{ dateTo }}" />
-                    </div>
-                    <div class="clear"></div>
-
-                    <button style="margin-right: 30px; margin-top: 0px;" type="submit" class="right button success-darker tiny" name="search"><span></span>{% trans %}label.filter{% endtrans %}</button>
-                    <div class="clear"></div>
-                </form>
-            </div>
-        </div>
-
-        <div class="search-results table" style="margin-top: 25px;">
-            <div class="row tableHeader" style="height: 32px; line-height: 32px;">
-                <div class="option_width" style="float: left; width: 350px;">{% trans %}label.student{% endtrans %}</div>
-                <div class="option_width" style="float: left; width: 150px;">{% trans %}label.date{% endtrans %}</div>
-                <div class="option_width" style="float: left; width: 250px;">{% trans %}label.type{% endtrans %}</div>
+            <div style="margin-bottom: 5px;">
+                <label style="display: inline-block; width: 150px">{% trans %}label.penalty.type{% endtrans %}</label>
+                <select id="penaltyType" name="penaltyType" style="width: 350px">
+                    {% for penalty in penalties %}
+                        <option insti="{{ penalty.institution.id }}" maxPenalty="{{ penalty.maxPenalty }}" minPenalty="{{ penalty.minPenalty }}" value="{{ penalty.id }}">({{ penalty.minPenalty}}-{{ penalty.maxPenalty}}){{ penalty.code}} - {{ penalty }}</option>
+                    {% endfor %}
+                </select>
             </div>
 
-            {% for entity in entities %}
-            <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
-                <div class="option_width" style="float: left; width: 350px;">{{ entity.studentYear.student }}</div>
-                <div class="option_width" style="float: left; width: 150px;">{% if entity.date != null %} {{ entity.date|date("d/M/y") }} {% else %} &nbsp; {% endif %}</div>
-                <div class="option_width" style="float: left; width: 250px;" title="{{ entity.comments }}">{{ entity.penalty }}</div>
-
-                <div class="right imageButton editButton"  title="{% trans %}label.edit{% endtrans %}"  rel="{{ entity.id }}"></div>
-                <div class="right imageButton deleteButton" style="height: 16px;"  title="{% trans %}label.delete{% endtrans %}"  rel="{{ entity.id }}"></div>
-
-                <div class="clear"></div>
+            <div style="margin-bottom: 5px;">
+                <label style="display: inline-block; width: 150px">{% trans %}label.date{% endtrans %}</label>
+                <input id="date" name="date" style="width: 250px">
             </div>
-            {% else %}
-            <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
-                <div class="option_width" style="float: left; width: 375px;">{% trans %}results.not.found{% endtrans %}</div>
-                <div class="clear"></div>
+
+            <div style="margin-bottom: 5px;">
+                <label style="display: inline-block; width: 150px">{% trans %}label.comments{% endtrans %}</label>
+                <textarea rows="3" cols="15" id="comments" name="comments" style="width: 250px"></textarea>
             </div>
-            {% endfor %}
-        </div>
+
+            <div style="margin-bottom: 5px;">
+                <label style="display: inline-block; width: 150px">{% trans %}label.points{% endtrans %}</label>
+                <input type="integer" id="pointsPenalty" name="pointsPenalty" style="width: 50px">
+            </div>
+
+            <div class="left"><input class="button success-darker tiny cancelButton" style="margin-top: 0px;" type="button" value="{% trans %}label.cancelar{% endtrans %}"/></div>
+            <div class="left" style="margin-left: 25px;"><input class="button success-darker tiny" style="margin-top: 0px;" type="submit" name="save" value="{% trans %}label.save{% endtrans %}"/></div>
+            <div class="clear"></div>
+
+        </form>
     </div>
-    <div class="clear"></div>
-    <div class="wrapper">
-        <div class="grid_24 padline">
-            <div class="lineH"></div>
-        </div>
-    </div>
-</div>
 
-<!-- hidden inline form -->
-<div id="inline">
-    <h3>Registrar nueva sanci&oacute;n</h3>
-
-    <form class="customForm" id="createPenaltyForm" name="createPenaltyForm" action="#" method="post">
-
-        <div class="left" style="margin-right: 10px;">
-        <label style="display: inline-block; width: 150px">{% trans %}label.student{% endtrans %}</label>
-            <select id="studentId" name="studentId" style="width: 250px">
-                {% for student in students %}
-                    <option value="{{ student.id }}">{{ student }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div class="left">
-            <a class="modalbox button success-darker tiny" href="#searchStudentWindow">{% trans %}label.search{% endtrans %}</a>
-        </div>
-        <div class="clear"></div>
-
-        <div style="margin-bottom: 5px;">
-            <label style="display: inline-block; width: 150px">{% trans %}label.penalty.type{% endtrans %}</label>
-            <select id="penaltyType" name="penaltyType" style="width: 350px">
-                {% for penalty in penalties %}
-                    <option insti="{{ penalty.institution.id }}" maxPenalty="{{ penalty.maxPenalty }}" minPenalty="{{ penalty.minPenalty }}" value="{{ penalty.id }}">({{ penalty.minPenalty}}-{{ penalty.maxPenalty}}){{ penalty.code}} - {{ penalty }}</option>
-                {% endfor %}
-            </select>
-        </div>
-
-        <div style="margin-bottom: 5px;">
-            <label style="display: inline-block; width: 150px">{% trans %}label.date{% endtrans %}</label>
-            <input id="date" name="date" style="width: 250px">
-        </div>
-
-        <div style="margin-bottom: 5px;">
-            <label style="display: inline-block; width: 150px">{% trans %}label.comments{% endtrans %}</label>
-            <textarea rows="3" cols="15" id="comments" name="comments" style="width: 250px"></textarea>
-        </div>
-
-        <div style="margin-bottom: 5px;">
-            <label style="display: inline-block; width: 150px">{% trans %}label.points{% endtrans %}</label>
-            <input type="integer" id="pointsPenalty" name="pointsPenalty" style="width: 50px">
+    <!-- hidden inline form -->
+    <div id="searchStudentWindow" name="searchStudentWindow" style="display: none;">
+        <h3>Buscar estudiante</h3>
+        <div style="line-height: 10px; vertical-align: middle;">
+            <div class="left">
+                <div>
+                    <div style="font-size: 10px;">{% trans %}club.include.help{%endtrans%}</div>
+                    <input type="text" size="30" value="" id="searchBox"/>
+                </div>
+                <div id="suggestions"></div>
+            </div>
+            <div class="clear"></div>
         </div>
 
         <div class="left"><input class="button success-darker tiny cancelButton" style="margin-top: 0px;" type="button" value="{% trans %}label.cancelar{% endtrans %}"/></div>
-        <div class="left" style="margin-left: 25px;"><input class="button success-darker tiny" style="margin-top: 0px;" type="submit" name="save" value="{% trans %}label.save{% endtrans %}"/></div>
-        <div class="clear"></div>
-
-    </form>
-</div>
-
-<!-- hidden inline form -->
-<div id="searchStudentWindow" name="searchStudentWindow" style="display: none;">
-    <h3>Buscar estudiante</h3>
-    <div style="line-height: 10px; vertical-align: middle;">
-        <div class="left">
-            <div>
-                <div style="font-size: 10px;">{% trans %}club.include.help{%endtrans%}</div>
-                <input type="text" size="30" value="" id="searchBox"/>
-            </div>
-            <div id="suggestions"></div>
-        </div>
-        <div class="clear"></div>
     </div>
-
-    <div class="left"><input class="button success-darker tiny cancelButton" style="margin-top: 0px;" type="button" value="{% trans %}label.cancelar{% endtrans %}"/></div>
-</div>
 {% endblock %}

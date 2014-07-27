@@ -37,7 +37,7 @@ Tecnotek.PeriodGroupQualifications = {
             $('input[name=conv]').val(1);
         }else{
             if( $('#period option:selected').html() == "CONVII"){
-            $('input[name=conv]').val(2);
+                $('input[name=conv]').val(2);
             }else{
                 $('input[name=conv]').val(0);
             }
@@ -174,7 +174,7 @@ Tecnotek.PeriodGroupQualifications = {
 
                     studentHtml += '<div class="reportContentHeader">';
                     studentHtml += '<div class="left reportContentLabel" style="width: 100%; font-size: 18px; text-align: center;">TARJETA DE CALIFICACIONES</div>';
-                    studentHtml += '<div class="left reportContentLabel" style="width: 100%; font-size: 14px; text-align: center; margin-bottom: 15px;">2013</div>';
+                    studentHtml += '<div class="left reportContentLabel" style="width: 100%; font-size: 14px; text-align: center; margin-bottom: 15px;">2014</div>';
                     studentHtml += '<div class="left reportContentLabel" style="width: 450px;">Alumno(a):&nbsp;&nbsp;' + data.studentName  + '</div>';
                     studentHtml += '<div class="left reportContentLabel" style="width: 350px;">Secci&oacute;n:&nbsp;&nbsp;' + $("#groups").find(":selected").text() + '</div>';
                     studentHtml += '<div class="clear"></div>';
@@ -187,7 +187,7 @@ Tecnotek.PeriodGroupQualifications = {
                     studentHtml += '<div class="left reportContentLabel" style="width: 350px;">Profesor:&nbsp;&nbsp;' + data.teacherGroup + '</div>';
                     studentHtml += '<div class="clear"></div>';
                     //studentHtml += '<div class="left reportContentLabel">Grado y Grupo:</div><div class="left reportContentText">' + $("#groups").find(":selected").text() + '</div><div class="clear"></div>';
-                   // studentHtml += '<div class="left reportContentLabel">Estudiante:</div><div class="left reportContentText">' + $("#students").find(":selected").text() + '</div><div class="clear"></div>';
+                    // studentHtml += '<div class="left reportContentLabel">Estudiante:</div><div class="left reportContentText">' + $("#students").find(":selected").text() + '</div><div class="clear"></div>';
                     studentHtml += "</div>";
                     studentHtml += data.html  + '<div class="pageBreak"> </div>';
 
@@ -287,36 +287,36 @@ Tecnotek.PeriodGroupAverages = {
             Tecnotek.PeriodGroupAverages.groupId = $("#groups").val();
             /*if(studentId != 0){//Single student
 
-                Tecnotek.PeriodGroupAverages.completeText = "";
-                Tecnotek.PeriodGroupAverages.studentsIndex = $('#students option').length;
-                Tecnotek.PeriodGroupAverages.studentsLength = Tecnotek.PeriodGroupAverages.studentsIndex;
-                Tecnotek.PeriodGroupAverages.loadStudentQualification(studentId);
+             Tecnotek.PeriodGroupAverages.completeText = "";
+             Tecnotek.PeriodGroupAverages.studentsIndex = $('#students option').length;
+             Tecnotek.PeriodGroupAverages.studentsLength = Tecnotek.PeriodGroupAverages.studentsIndex;
+             Tecnotek.PeriodGroupAverages.loadStudentQualification(studentId);
 
-            } else {//All Students
-                */Tecnotek.ajaxCall(Tecnotek.UI.urls["loadQualificationsOfGroupURL"],
-                    {   periodId: Tecnotek.PeriodGroupAverages.periodId,
-                        referenceId: studentId,
-                        groupId: Tecnotek.PeriodGroupAverages.groupId},
-                    function(data){
-                        //$('#fountainG').hide();
-                        if(data.error === true) {
-                            Tecnotek.showErrorMessage(data.message,true, "", false);
-                        } else {
-                            Tecnotek.PeriodGroupAverages.completeText = '<div class="center"><h3><img width="840" height="145" src="/expediente/web/images/' + data.imgHeader + '" alt="" class="image-hover"></h3></div>'
-                                + data.html + '<div class="pageBreak"> </div>';
-                            Tecnotek.PeriodGroupAverages.studentsIndex = 1;
-                            Tecnotek.PeriodGroupAverages.studentsLength = $('#students option').length;
-                            Tecnotek.PeriodGroupAverages.processStudentResponse("");
-                            //$('#contentHeader').html(tableHeader);
-                            //$('#contentBody').html(tableHeader + data.html);
-                            //$('#tableContainer').show();
-                        }
-                    },
-                    function(jqXHR, textStatus){
-                        $('#fountainG').hide();
-                        $( "#spinner-modal" ).dialog( "close" );
-                        Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
-                    }, false);
+             } else {//All Students
+             */Tecnotek.ajaxCall(Tecnotek.UI.urls["loadQualificationsOfGroupURL"],
+                {   periodId: Tecnotek.PeriodGroupAverages.periodId,
+                    referenceId: studentId,
+                    groupId: Tecnotek.PeriodGroupAverages.groupId},
+                function(data){
+                    //$('#fountainG').hide();
+                    if(data.error === true) {
+                        Tecnotek.showErrorMessage(data.message,true, "", false);
+                    } else {
+                        Tecnotek.PeriodGroupAverages.completeText = '<div class="center"><h3><img width="840" height="145" src="/expediente/web/images/' + data.imgHeader + '" alt="" class="image-hover"></h3></div>'
+                            + data.html + '<div class="pageBreak"> </div>';
+                        Tecnotek.PeriodGroupAverages.studentsIndex = 1;
+                        Tecnotek.PeriodGroupAverages.studentsLength = $('#students option').length;
+                        Tecnotek.PeriodGroupAverages.processStudentResponse("");
+                        //$('#contentHeader').html(tableHeader);
+                        //$('#contentBody').html(tableHeader + data.html);
+                        //$('#tableContainer').show();
+                    }
+                },
+                function(jqXHR, textStatus){
+                    $('#fountainG').hide();
+                    $( "#spinner-modal" ).dialog( "close" );
+                    Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
+                }, false);
             //}
         }
     },
@@ -342,7 +342,7 @@ Tecnotek.PeriodGroupAverages = {
 
                     studentHtml += '<div class="reportContentHeader">';
                     studentHtml += '<div class="left reportContentLabel" style="width: 100%; font-size: 18px; text-align: center;">TARJETA DE CALIFICACIONES</div>';
-                    studentHtml += '<div class="left reportContentLabel" style="width: 100%; font-size: 14px; text-align: center; margin-bottom: 15px;">2013</div>';
+                    studentHtml += '<div class="left reportContentLabel" style="width: 100%; font-size: 14px; text-align: center; margin-bottom: 15px;">2014</div>';
                     studentHtml += '<div class="left reportContentLabel" style="width: 450px;">Alumno(a):&nbsp;&nbsp;' + data.studentName  + '</div>';
                     studentHtml += '<div class="left reportContentLabel" style="width: 350px;">Secci&oacute;n:&nbsp;&nbsp;' + $("#groups").find(":selected").text() + '</div>';
                     studentHtml += '<div class="clear"></div>';
@@ -563,7 +563,7 @@ Tecnotek.PeriodGroupObservations = {
                     studentHtml += '<div class="left reportContentLabel" style="width: 250px;">Trimestre:&nbsp;&nbsp;' + $period + '</div>';
                     studentHtml += '<div class="clear"></div>';
 
-                    studentHtml += '<div class="text-justify" style="width: 800px;">Intrucciones: manifestaciones de la conducta del estudiante observadas por los distintos profesores dentro del ambiente escolar. Cada profesor puede indicar más de una manifestación en su respectiva materia. Cualquier duda consultar en horario de atención de cada profesor.</div>';
+                    studentHtml += '<div class="text-justify" style="width: 800px;">Intrucciones: manifestaciones de la conducta del estudiante observadas por los distintos profesores dentro del ambiente escolar. Cada profesor puede indicar m谩s de una manifestaci贸n en su respectiva materia. Cualquier duda consultar en horario de atenci贸n de cada profesor.</div>';
                     studentHtml += '<div class="clear"></div>';
 
 

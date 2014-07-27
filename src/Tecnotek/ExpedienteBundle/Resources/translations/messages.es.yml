@@ -108,6 +108,7 @@ label.code: Codigo
 label.description: Descripcion
 label.enter.by.rubro: Ingresar notas por rubro
 label.enter.convocatorias: Ingresar Convocatorias
+label.students.emergency: Reporte para emergencias
 
 label.password.cambiar: Cambiar Password
 label.usuarios.admin: Administradores
@@ -380,6 +381,13 @@ label.rconfesionfecha: Confesión Fecha:
 label.rconfesionlugar: Lugar:
 label.rcomunionfecha: Primera Comunión Fecha:
 label.rcomunionlugar: Lugar:
+
+##Emergencias
+label.emergencyout: Viaja Solo:
+label.emergencyoutinst: Institucion Salida:
+label.brethren: Tiene hermanos:
+label.familiars: Hermanos:
+label.emergencyinfo: En caso de emergencia:
 
 ##psicologia
 label.psicologiaescuela: Psicologia Esc.

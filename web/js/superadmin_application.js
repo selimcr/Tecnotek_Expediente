@@ -532,6 +532,10 @@ var Tecnotek = {
                     event.preventDefault();
                     location.href = Tecnotek.UI.urls["religion"] + "/" + $(this).attr("rel");
                 });
+                $('.emergencyButton').click(function(event){
+                    event.preventDefault();
+                    location.href = Tecnotek.UI.urls["emergency"] + "/" + $(this).attr("rel");
+                });
                 $('#btnSearch').click(function(event){
                     event.preventDefault();
                     var url = location.href;

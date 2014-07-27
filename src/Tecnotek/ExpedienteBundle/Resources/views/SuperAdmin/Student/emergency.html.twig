@@ -1,0 +1,88 @@
+{% extends 'TecnotekExpedienteBundle::logged_layout.html.twig' %}
+
+{% block htmlTitle %}
+    Tecnotek :: Expediente :: Super Administrador :: Estudiante
+{% endblock %}
+
+{% block extracss %}
+{% endblock %}
+
+{% block extrajs %}
+    <script type="text/javascript">
+        Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
+    </script>
+{% endblock %}
+
+{% block content %}
+    <div class="container_24" style="width: 800px;">
+        <div class="grid_24" style="width: 100%;">
+            <div class="titleRow">
+                <div class="left"><h3>{% trans %}label.student.show{% endtrans %}</h3></div>
+                <div class="right"><a href="{{ path('_expediente_sysadmin_student') }}" class="button success-darker tiny"><span></span>{% trans %}label.back.list{% endtrans %}</a></div>
+                <div class="clear"></div>
+            </div>
+
+            <div class="panelRow" id="doc-forms">
+                <div class="large-12 columns">
+                    <form class="custom" id="mainForm" name="mainForm" action="{{ path('_expediente_sysadmin_student_emergency_update') }}" method="post">
+                        <input type="hidden" id="id" name="id" value="{{ entity.id }}">
+
+                        {{ form_errors(form) }}
+
+                        {{ form_widget(form._token) }}
+
+                        <fieldset>
+                            <legend></legend>
+
+                            <div class="formRow">
+                                <label class="error">{{ form_errors(form.emergencyout) }}</label>
+                                <div class="large-12 columns">
+                                    <label>{% trans %}label.emergencyout{% endtrans %}</label>{{ form_widget(form.emergencyout) }}
+                                </div>
+                            </div>
+
+                            <div class="formRow">
+                                <label class="error">{{ form_errors(form.emergencyoutinst) }}</label>
+                                <div class="large-12 columns">
+                                    <label>{% trans %}label.emergencyoutinst{% endtrans %}</label>{{ form_widget(form.emergencyoutinst) }}
+                                </div>
+                            </div>
+
+                            <div class="formRow">
+                                <label class="error">{{ form_errors(form.brethren) }}</label>
+                                <div class="large-12 columns">
+                                    <label>{% trans %}label.brethren{% endtrans %}</label>{{ form_widget(form.brethren) }}
+                                </div>
+                            </div>
+
+                            <div class="formRow">
+                                <label class="error">{{ form_errors(form.familiars) }}</label>
+                                <div class="large-12 columns">
+                                    <label>{% trans %}label.familiars{% endtrans %}</label>{{ form_widget(form.familiars) }}
+                                </div>
+                            </div>
+
+                            <div class="formRow">
+                                <label class="error">{{ form_errors(form.emergencyinfo) }}</label>
+                                <div class="large-12 columns">
+                                    <label>{% trans %}label.emergencyinfo{% endtrans %}</label>{{ form_widget(form.emergencyinfo) }}
+                                </div>
+                            </div>
+
+
+                            <div class="formRow ">
+                                <div class="large-12 columns buttonsPanel">
+                                    <a href="{{ path('_expediente_sysadmin_student_show', {'id': entity.id}) }}" class="button success-darker tiny"><span></span>{% trans %}label.cancelar{% endtrans %}</a>
+                                    <button style="margin-left: 15px; margin-top: 0px;" type="submit" class="button success-darker tiny" name="save"><span></span>{% trans %}label.save{% endtrans %}</button>
+                                </div>
+                                <div class="clear"></div>
+                            </div>
+
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+{% endblock %}

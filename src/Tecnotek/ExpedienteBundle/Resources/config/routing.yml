@@ -219,6 +219,10 @@ _expediente_sysadmin_student_religion_update:
     pattern:  /student/religionUpdate
     defaults: { _controller: TecnotekExpedienteBundle:Student:studentReligionUpdate }
 
+_expediente_sysadmin_student_emergency_update:
+    pattern:  /student/emergencyUpdate
+    defaults: { _controller: TecnotekExpedienteBundle:Student:studentEmergencyUpdate }
+
 _expediente_sysadmin_student_show:
     pattern:  /student/show/{id}
     defaults: { _controller: TecnotekExpedienteBundle:Student:studentShow }
@@ -231,6 +235,10 @@ _expediente_sysadmin_student_religion_edit:
     pattern:  /student/religion/{id}
     defaults: { _controller: TecnotekExpedienteBundle:Student:studentReligionEdit }
 
+_expediente_sysadmin_student_emergency_edit:
+    pattern:  /student/emergency/{id}
+    defaults: { _controller: TecnotekExpedienteBundle:Student:studentEmergencyEdit }
+
 _expediente_sysadmin_student_show_simple:
     pattern:  /student/show
     defaults: { _controller: TecnotekExpedienteBundle:Student:studentShow }
@@ -242,6 +250,10 @@ _expediente_sysadmin_student_edit_simple:
 _expediente_sysadmin_student_religion_edit_simple:
     pattern:  /student/religion
     defaults: { _controller: TecnotekExpedienteBundle:Student:studentReligionEdit }
+
+_expediente_sysadmin_student_emergency_edit_simple:
+    pattern:  /student/emergency
+    defaults: { _controller: TecnotekExpedienteBundle:Student:studentEmergencyEdit }
 
 _expediente_sysadmin_student_psico_profile_simple:
     pattern:  /student/psicoProfile
@@ -583,6 +595,18 @@ _expediente_report_students_routes:
     pattern:  /reports/studentsRoutes/
     defaults: { _controller: TecnotekExpedienteBundle:Report:reportStudentRoutes }
 
+_expediente_report_students_by_route_filter2:
+    pattern:  /reports/studentsByRouteFilter2/
+    defaults: { _controller: TecnotekExpedienteBundle:Report:reportStudentByRouteFilter2 }
+
+_expediente_report_absences_by_route_filter2:
+   pattern:  /reports/absencesByRouteFilter2/
+   defaults: { _controller: TecnotekExpedienteBundle:Report:reportStudentAbsencesByRouteFilter2 }
+
+_expediente_report_daily_by_route_filter2:
+   pattern:  /reports/dailyByRouteFilter2/
+   defaults: { _controller: TecnotekExpedienteBundle:Report:reportStudentDailyByRouteFilter2 }
+
 _expediente_report_course_by_group:
     pattern:  /reports/groupByCourse/
     defaults: { _controller: TecnotekExpedienteBundle:Report:groupByCourse }
@@ -598,6 +622,10 @@ _expediente_report_daily_by_route:
 _expediente_report_students:
    pattern:  /reports/students/
    defaults: { _controller: TecnotekExpedienteBundle:Report:reportStudents }
+
+_expediente_report_students_emergency:
+  pattern:  /reports/studentsEmergency/
+  defaults: { _controller: TecnotekExpedienteBundle:Report:reportEmergencyStudents }
 
 _expediente_report_clubs:
    pattern:  /reports/clubs/

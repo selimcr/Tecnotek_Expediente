@@ -67,17 +67,27 @@
                     <div class="center" style="float: left; width: 160px; font-size: 14px;">{% trans %}label.ticket7 {% endtrans %}</div>
 
 
+
                 {% endif %}
-                </br></br></br></br></br></br></br></br></br></br>
+                </br></br></br></br></br></br></br></br>
                 <div class="center" style="float: left; width: 860px; font-size: 14px;">{{ text }}</div>
+
+                {% if ticket.student.groupyear == '11-1' or ticket.student.groupyear == '11-2' or ticket.student.groupyear == '11-3' or
+                ticket.student.groupyear == '10-1' or ticket.student.groupyear == '10-2' or ticket.student.groupyear == '10-3' or
+                ticket.student.groupyear == '9-1' or ticket.student.groupyear == '9-2' or ticket.student.groupyear == '9-3' or
+                ticket.student.groupyear == '8-1' or ticket.student.groupyear == '8-2' or ticket.student.groupyear == '8-3' or
+                ticket.student.groupyear == '7-1' or ticket.student.groupyear == '7-2' or ticket.student.groupyear == '7-3'  %}
+                    <div class="left" style="float: left; width: 860px; font-size: 12px;">Se les avisa que a partir de las 2:45pm se deben estacionar en el parqueo de la escuela, esto por motivo del ingreso de las busetas en el Colegio y a partir de las 3:30 pm ya puede ingresar en dicha instituci贸n.</div></br>
+                {% endif %}
+
                 </br></br>
-                <!--  if ticket.student.groupyear == '1-A' or ticket.student.groupyear == '1-B' or ticket.student.groupyear == '1-C' or
+                <!--  if ticket.student.groupyear == '1-Aasdsa'  -->
+                {% if ticket.student.groupyear == '1-A' or ticket.student.groupyear == '1-B' or ticket.student.groupyear == '1-C' or
                 ticket.student.groupyear == '2-A' or ticket.student.groupyear == '2-B' or ticket.student.groupyear == '2-C' or
                 ticket.student.groupyear == '3-A' or ticket.student.groupyear == '3-B' or ticket.student.groupyear == '3-C' or
                 ticket.student.groupyear == '4-A' or ticket.student.groupyear == '4-B' or ticket.student.groupyear == '4-C' or
                 ticket.student.groupyear == '5-A' or ticket.student.groupyear == '5-B' or ticket.student.groupyear == '5-C' or
-                ticket.student.groupyear == '6-A' or ticket.student.groupyear == '6-B' or ticket.student.groupyear == '6-C'  -->
-                {% if ticket.student.groupyear == '1-Aasdsa' %}
+                ticket.student.groupyear == '6-A' or ticket.student.groupyear == '6-B' or ticket.student.groupyear == '6-C' %}
                     <div class="center"><h3><img width="820" height="140" src="{{ asset('images/' ~ header) }}" alt="" class="image-hover"></h3></div>
 
                     <div class="center"><h3>{% trans %}label.ticket4{% endtrans %}</h3></div>
@@ -100,6 +110,8 @@
                     </br></br></br></br></br></br></br></br></br></br>
                     <div class="center" style="float: left; width: 860px; font-size: 14px;">{{ text }}</div>
                     </br></br>
+                    </br></br>
+
                 {% endif %}
             </div>
             <div class="clear"></div>

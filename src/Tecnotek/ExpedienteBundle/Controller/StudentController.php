@@ -120,6 +120,41 @@ class StudentController extends Controller
             'form'   => $form->createView(), 'menuIndex' => 3));
     }
 
+    public function studentEmergencyEditAction($id)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $entity = $em->getRepository("TecnotekExpedienteBundle:Student")->find($id);
+        $form   = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\StudentEmergencyFormType(), $entity);
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Student/emergency.html.twig', array('entity' => $entity,
+            'form'   => $form->createView(), 'menuIndex' => 3));
+    }
+
+
+    public function studentEmergencyUpdateAction(){
+        $em = $this->getDoctrine()->getEntityManager();
+        $request = $this->get('request')->request;
+        $entity = $em->getRepository("TecnotekExpedienteBundle:Student")->find( $request->get('id'));
+
+        if ( isset($entity) ) {
+            $request = $this->getRequest();
+            $form    = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\StudentEmergencyFormType(), $entity);
+            $form->bindRequest($request);
+
+            if ($form->isValid()) {
+                $em->persist($entity);
+                $em->flush();
+                return $this->redirect($this->generateUrl('_expediente_sysadmin_student'));
+            } else {
+                return $this->render('TecnotekExpedienteBundle:SuperAdmin:Student/emergency.html.twig', array(
+                    'entity' => $entity, 'form'   => $form->createView(), 'menuIndex' => 3
+                ));
+            }
+        } else {
+            return $this->redirect($this->generateUrl('_expediente_sysadmin_student'));
+        }
+
+    }
+
     public function studentUpdateAction(){
         $em = $this->getDoctrine()->getEntityManager();
         $request = $this->get('request')->request;
@@ -1050,7 +1085,7 @@ class StudentController extends Controller
     }
     /* Final de los metodos para CRUD de tickets*/
 
-/* Metodos para editar contactos de estudiante*/
+    /* Metodos para editar contactos de estudiante*/
 
     public function relativesEditAction($id)
     {
@@ -1591,7 +1626,7 @@ class StudentController extends Controller
         }
     }
 
-     public function penaltyDeleteAction($id){
+    public function penaltyDeleteAction($id){
         $em = $this->getDoctrine()->getEntityManager();
         $entity = $em->getRepository("TecnotekExpedienteBundle:StudentPenalty")->find( $id );
         if ( isset($entity) ) {
@@ -1634,35 +1669,35 @@ class StudentController extends Controller
         }
 
     }
-/*
-    public function absenceCreateAction()
-    {
-        $entity = new Absence();
-        $form   = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\AbsenceFormType(), $entity);
-        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Absence/new.html.twig', array('entity' => $entity,
-            'form'   => $form->createView(), 'menuIndex' => 3));
-    }
-
-    public function absenceShowAction($id)
-    {
-        $em = $this->getDoctrine()->getEntityManager();
-        $entity = $em->getRepository("TecnotekExpedienteBundle:Absence")->find($id);
-        $form   = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\AbsenceFormType(), $entity);
-        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Absence/show.html.twig', array('entity' => $entity,
-            'form'   => $form->createView(), 'menuIndex' => 3));
-    }
-
-    public function absenceDeleteAction($id){
-        $em = $this->getDoctrine()->getEntityManager();
-        $entity = $em->getRepository("TecnotekExpedienteBundle:Absence")->find( $id );
-        if ( isset($entity) ) {
-            $em->remove($entity);
-            $em->flush();
+    /*
+        public function absenceCreateAction()
+        {
+            $entity = new Absence();
+            $form   = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\AbsenceFormType(), $entity);
+            return $this->render('TecnotekExpedienteBundle:SuperAdmin:Absence/new.html.twig', array('entity' => $entity,
+                'form'   => $form->createView(), 'menuIndex' => 3));
         }
-        return $this->redirect($this->generateUrl('_expediente_absences'));
-    }
 
-    /* Final de los metodos para CRUD de Penalties*/
+        public function absenceShowAction($id)
+        {
+            $em = $this->getDoctrine()->getEntityManager();
+            $entity = $em->getRepository("TecnotekExpedienteBundle:Absence")->find($id);
+            $form   = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\AbsenceFormType(), $entity);
+            return $this->render('TecnotekExpedienteBundle:SuperAdmin:Absence/show.html.twig', array('entity' => $entity,
+                'form'   => $form->createView(), 'menuIndex' => 3));
+        }
+
+        public function absenceDeleteAction($id){
+            $em = $this->getDoctrine()->getEntityManager();
+            $entity = $em->getRepository("TecnotekExpedienteBundle:Absence")->find( $id );
+            if ( isset($entity) ) {
+                $em->remove($entity);
+                $em->flush();
+            }
+            return $this->redirect($this->generateUrl('_expediente_absences'));
+        }
+
+        /* Final de los metodos para CRUD de Penalties*/
 
     public function getListStudentsOfGroupAction(){
         $logger = $this->get('logger');
@@ -1908,7 +1943,7 @@ class StudentController extends Controller
             array('ticket' => $ticket, 'header' => $header, 'text' => $text));
 
         //return $this->render('TecnotekExpedienteBundle:SuperAdmin:Student/show.html.twig', array('entity' => $entity,
-          //  'form'   => $form->createView(), 'menuIndex' => 3, 'relatives' => $relatives));
+        //  'form'   => $form->createView(), 'menuIndex' => 3, 'relatives' => $relatives));
     }
 
     public function ticketIndex2Action()
@@ -2244,7 +2279,7 @@ class StudentController extends Controller
                                     break;
                                 default:
                                     return new Response(json_encode(array('error' => true,
-                                                                          'message' => 'Tipo Incorrecto: ' . $objs[2])));
+                                        'message' => 'Tipo Incorrecto: ' . $objs[2])));
                                     break;
                             }
                             $em->persist($answer);
@@ -2274,7 +2309,7 @@ class StudentController extends Controller
         return substr($haystack, 0, strlen($needle)) === $needle;
     }
 
-public function studentListPsicoEscAction($rowsPerPage = 35)
+    public function studentListPsicoEscAction($rowsPerPage = 35)
     {
         $em = $this->getDoctrine()->getEntityManager();
 

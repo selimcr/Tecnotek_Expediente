@@ -852,7 +852,7 @@ class TeacherController extends Controller
                         $dql = "SELECT obs FROM TecnotekExpedienteBundle:Observation obs"
                             . " WHERE obs.studentYear = " . $stdy->getId()
                             . " AND obs.courseClass = ".$row2;
-                            //. " AND obs.teacher = ".$user_id; //falta capturar el id del profesor
+                        //. " AND obs.teacher = ".$user_id; //falta capturar el id del profesor
                         $query = $em->createQuery($dql);
                         $observations = $query->getResult();
                         foreach($observations as $observation){
@@ -894,7 +894,7 @@ class TeacherController extends Controller
                 $studentYearId = $request->get('studentYearId');
                 $qualification = $request->get('qualification');
                 $translator = $this->get("translator");
-                 $logger->err('--> ' . $subentryId . " :: " . $studentYearId . " :: " . $qualification);
+                $logger->err('--> ' . $subentryId . " :: " . $studentYearId . " :: " . $qualification);
                 if( !isset($qualification) || $qualification == ""){
                     $qualification = -1;
                 }
@@ -1019,7 +1019,7 @@ class TeacherController extends Controller
                         $groups = $stmt->fetchAll();
 
                         return new Response(json_encode(array('error' => false, 'groups' => $groups,
-                                                              'isEditable' => $period->isEditable())));
+                            'isEditable' => $period->isEditable())));
                     } else {
                         return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
                     }
@@ -1279,7 +1279,7 @@ class TeacherController extends Controller
         switch($type){
             case 1:
                 $html = '<select class="sq-option" stdyId="' . $stdyId . '" sq="' . $sq . '" pn="' . $periodNumber .
-                '">';
+                    '">';
                 $html .= '<option value="0"' . (($option==0)? ' selected':'') . '>&nbsp;</option>';
                 $html .= '<option value="1"' . (($option==1)? ' selected':'') . '>Domina el contenido</option>';
                 $html .= '<option value="2"' . (($option==2)? ' selected':'') . '>Habilidad en proceso</option>';
@@ -1307,7 +1307,7 @@ class TeacherController extends Controller
                 $html .= '<option value="4"' . (($option==4)? ' selected':'') . '>Algunas veces</option>';
                 $html .= '</select>';
                 break;
-             case 4:
+            case 4:
                 $html = '<select class="sq-option" stdyId="' . $stdyId . '" sq="' . $sq . '" pn="' . $periodNumber .
                     '">';
                 $html .= '<option value="0"' . (($option==0)? ' selected':'') . '>&nbsp;</option>';
@@ -1316,7 +1316,7 @@ class TeacherController extends Controller
                 $html .= '<option value="3"' . (($option==3)? ' selected':'') . '>Bueno</option>';
                 $html .= '</select>';
                 break;
-             case 5:
+            case 5:
                 $html = '<select class="sq-option" stdyId="' . $stdyId . '" sq="' . $sq . '" pn="' . $periodNumber .
                     '">';
                 $html .= '<option value="0"' . (($option==0)? ' selected':'') . '>&nbsp;</option>';
@@ -1324,7 +1324,7 @@ class TeacherController extends Controller
                 $html .= '<option value="2"' . (($option==2)? ' selected':'') . '>Habilidad en proceso</option>';
                 $html .= '</select>';
                 break;
-              case 9:
+            case 9:
                 $html = '<select class="sq-option" stdyId="' . $stdyId . '" sq="' . $sq . '" pn="' . $periodNumber .
                     '">';
                 $html .= '<option value="0"' . (($option==0)? ' selected':'') . '>&nbsp;</option>';
@@ -1343,6 +1343,9 @@ class TeacherController extends Controller
                 $html .= '<option value="13"' . (($option==13)? ' selected':'') . '>13</option>';
                 $html .= '<option value="14"' . (($option==14)? ' selected':'') . '>14</option>';
                 $html .= '<option value="15"' . (($option==15)? ' selected':'') . '>15</option>';
+                $html .= '<option value="16"' . (($option==16)? ' selected':'') . '>Excelente</option>';
+                $html .= '<option value="17"' . (($option==17)? ' selected':'') . '>Muy Bueno</option>';
+                $html .= '<option value="18"' . (($option==18)? ' selected':'') . '>Bueno</option>';
                 $html .= '</select>';
                 break;
             default:

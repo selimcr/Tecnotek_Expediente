@@ -91,6 +91,64 @@ class ReportController extends Controller
         ));
     }
 
+    public function reportStudentByRouteFilter2Action(){
+        $em = $this->getDoctrine()->getEntityManager();
+        $entities = $em->getRepository("TecnotekExpedienteBundle:Route")->findAll();
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Reports/students_by_route_filter2.html.twig', array('menuIndex' => 4,
+            'entities' => $entities
+        ));
+    }
+
+
+    public function reportStudentDailyByRouteFilter2Action(){
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $logger = $this->get('logger');
+        $errorMessage = "";
+        try{
+            $stmt = $em->getConnection()->prepare("CALL setStudentsDailyStatus()");
+            $stmt->execute();
+        } catch (\Exception $e) {
+            $errorMessage = $e->getMessage();
+            $logger->err('Report::reportStudentAbsencesByRouteFilter2Action [Error runing sp: ' . $errorMessage . "]");
+        } catch (PDOException $e) {
+            $errorMessage = $e->getMessage();
+            $logger->err('Report::reportStudentAbsencesByRouteFilter2Action [Error runing sp: ' . $errorMessage . "]");
+        }
+
+        $entities = $em->getRepository("TecnotekExpedienteBundle:Route")->findAll();
+
+        $html = "";
+
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Reports/daily_by_route_filter2.html.twig', array('menuIndex' => 4,
+            'entities' => $entities
+        ));
+    }
+
+
+
+    public function reportStudentAbsencesByRouteFilter2Action(){
+        $em = $this->getDoctrine()->getEntityManager();
+        $logger = $this->get('logger');
+        $errorMessage = "";
+        try{
+            $stmt = $em->getConnection()->prepare("CALL setStudentsDailyStatus()");
+            $stmt->execute();
+        } catch (\Exception $e) {
+            $errorMessage = $e->getMessage();
+            $logger->err('Report::reportStudentAbsencesByRouteFilter2Action [Error runing sp: ' . $errorMessage . "]");
+        } catch (PDOException $e) {
+            $errorMessage = $e->getMessage();
+            $logger->err('Report::reportStudentAbsencesByRouteFilter2Action [Error runing sp: ' . $errorMessage . "]");
+        }
+
+        $entities = $em->getRepository("TecnotekExpedienteBundle:Route")->findAll();
+
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Reports/absences_by_route_filter2.html.twig', array('menuIndex' => 4,
+            'entities' => $entities, 'errorMessage' => $errorMessage
+        ));
+    }
+
     public function reportStudentByRouteClubAction(){
 
         $em = $this->getDoctrine()->getEntityManager();
@@ -412,6 +470,81 @@ class ReportController extends Controller
         ));
     }
 
+    public function reportEmergencyStudentsAction(){
+        $logger = $this->get("logger");
+        $em = $this->getDoctrine()->getEntityManager();
+        $currentPeriod = $em->getRepository("TecnotekExpedienteBundle:Period")->findOneBy(array('isActual' => true));
+
+        $logger->err("--> CurrentPeriod: " . $currentPeriod);
+        $request = $this->get('request')->request;
+        $tipo = $request->get('tipo');
+
+        $iSpecial = $request->get('iSpecial');
+        $iSpecialTiq = $request->get('iSpecialTiq');
+        $autoTiq = $request->get('autoTiq');
+        $carneTiq = $request->get('carneTiq');
+
+        $fatherPhone = $request->get('fatherPhone');
+        $motherPhone = $request->get('motherPhone');
+        $address = $request->get('address');
+        $birthday = $request->get('birthday');
+        $identification = $request->get('identification');
+        $laterality = $request->get('laterality');
+
+        $groups = null;
+        $grades = null;
+        $institutions = null;
+
+        $groupsT = null;
+        $gradesT = null;
+        $institutionsT = null;
+
+        $tipo = 1;
+        if( !isset($tipo)){
+            $tipo = 0;
+        } else {
+            if($tipo == 1){
+                $dql = "SELECT g FROM TecnotekExpedienteBundle:Group g JOIN g.grade grade WHERE g.period = " . $currentPeriod->getId() . " ORDER BY grade.number";
+                $query = $em->createQuery($dql);
+                $groups = $query->getResult();
+                $groupRepo = $em->getRepository("TecnotekExpedienteBundle:Group");
+                foreach($groups as $group){
+                    $group->setStudents($groupRepo->findAllStudentsByLastname($group->getId()));
+                }
+
+                $dql = "SELECT g FROM TecnotekExpedienteBundle:Group g JOIN g.grade grade WHERE g.period = " . $currentPeriod->getId() . " ORDER BY grade.number";
+                $query = $em->createQuery($dql);
+                $groupsT = $query->getResult();
+
+                $dql = "SELECT grade FROM TecnotekExpedienteBundle:Grade grade ORDER BY grade.number";
+                $query = $em->createQuery($dql);
+                $gradesT = $query->getResult();
+
+                $dql = "SELECT institution FROM TecnotekExpedienteBundle:Institution institution ORDER BY institution.id";
+                $query = $em->createQuery($dql);
+                $institutionsT = $query->getResult();
+
+            }
+
+            //$groups = $em->getRepository("TecnotekExpedienteBundle:Group")->findBy(array('period' => $currentPeriod));
+        }
+        $logger->err("--> groups: " . sizeof($groups) );
+        $logger->err("--> groups: " . sizeof($grades) );
+        $typeLabel = "";
+        switch($tipo){
+            case 1: $typeLabel = "Grupo"; break;
+            case 2: $typeLabel = "Nivel"; break;
+            case 3: $typeLabel = "Institucion"; break;
+        }
+
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Reports/studentsEmergency.html.twig', array('menuIndex' => 4,
+            'tipo' => $tipo, 'typeLabel' => $typeLabel, 'groups' => $groups,
+            'grades' => $grades, 'institutions' => $institutions, 'iSpecial' => $iSpecial, 'iSpecialTiq' => $iSpecialTiq,'autoTiq' => $autoTiq,'carneTiq' => $carneTiq,
+            'fatherPhone' => $fatherPhone, 'motherPhone' => $motherPhone, 'address' => $address, 'identification' => $identification,'birthday' => $birthday, 'laterality' => $laterality,
+            'groupsT' => $groupsT, 'institutionsT' => $institutionsT,'gradesT' => $gradesT
+        ));
+    }
+
     public function reportClubsAction(){
         $logger = $this->get("logger");
         $em = $this->getDoctrine()->getEntityManager();
@@ -709,6 +842,14 @@ class ReportController extends Controller
                             $valorNota = "Good";
                         if($valorNota == 25)
                             $valorNota = "N.I.";
+                        if($valorNota == 4)
+                            $valorNota = "Exc";
+                        if($valorNota == 3)
+                            $valorNota = "V.Good";
+                        if($valorNota == 2)
+                            $valorNota = "Good";
+                        if($valorNota == 1)
+                            $valorNota = "N.I.";
                         $row = str_replace("Nota_" . $course->getId() . "_", $valorNota, $row);
                     }
                 }
@@ -801,7 +942,7 @@ class ReportController extends Controller
     }
 
     private function getSpecialQualificationValue(
-            \Tecnotek\ExpedienteBundle\Entity\SpecialQualificationsForm $form,
+        \Tecnotek\ExpedienteBundle\Entity\SpecialQualificationsForm $form,
         $q){
 
         $result = "";
@@ -851,7 +992,7 @@ class ReportController extends Controller
         if($form->getMustIncludeComments() && key_exists($form->getId() . "-c", $responses)){
             $html .= '<tr><td colspan="2" style="background-color: rgb(187, 214, 188);">';
             $html .= '<b>Comentarios:</b> '. $responses[$form->getId() . '-c'];
-            $html .= '</td></tr>';
+            $html .= '</td><td>Firma: _______________</td></tr>';
         }
 
         $html .= '';
@@ -859,7 +1000,7 @@ class ReportController extends Controller
         return $html;
     }
     private function getStudentSpecialQualificationHTMLQualifications($periodId, $gradeId, $groupId, $studentId,
-                                                               $studentYear, $director, $institution, $convocatoria){
+                                                                      $studentYear, $director, $institution, $convocatoria){
         $logger = $this->get('logger');
         $em = $this->getDoctrine()->getEntityManager();
 
@@ -892,7 +1033,15 @@ class ReportController extends Controller
         $formularios = $em->getRepository("TecnotekExpedienteBundle:SpecialQualificationsForm")
             ->findBy(array('grade' => $gradeId));
 
-        $html = '<table class="tableQualificationsSpecial" cellSpacing="0" cellPadding="0">';
+        $headersRow =  '<thead>';
+        $headersRow .=  '    <tr style="height: 30px;">';
+        $headersRow .=  '        <th style="width: 50%; text-align: left;"></th>';
+        $headersRow .=  '        <th style="width: 50%; text-align: center;"></th>';
+        $headersRow .=  '    </tr>';
+        $headersRow .=  '</thead>';
+
+        $html = '<table class="tableQualificationsSpecial" cellSpacing="0" cellPadding="0">' .
+            $headersRow;
         $html .= '<tr>';
         $html .= '<td>';
         //Pintar los de la columna 1
@@ -962,7 +1111,7 @@ class ReportController extends Controller
         $headersRow =  '<thead>';
         $headersRow .=  '    <tr style="height: 30px;">';
         $headersRow .=  '        <th style="width: 350px; text-align: left;">MATERIAS</th>';
-        $headersRow .=  '        <th style="width: 100px; text-align: center;">!!!I TRIM.</th>';
+        $headersRow .=  '        <th style="width: 100px; text-align: center;">I TRIM.</th>';
         $headersRow .=  '        <th style="width: 100px; text-align: center;">II TRIM.</th>';
         $headersRow .=  '        <th style="width: 100px; text-align: center;">III TRIM</th>';
         if($convocatoria != 0){
@@ -1209,7 +1358,7 @@ class ReportController extends Controller
                         }else{
                             $row = str_replace("courseRowNota" . $i, $notaFinal->getQualification(), $row);
                         }
-                        if($notaFinal->getQualification()<'90' && $i == $periodIdb ){
+                        if($notaFinal->getQualification()<'90' && $i == $periodIdb && $notaFinal->getQualification()!='0'){
                             $honor = false;
                         }
                     }
@@ -2564,6 +2713,14 @@ class ReportController extends Controller
                                     if($valorNota == 50)
                                         $valorNota = "Good";
                                     if($valorNota == 25)
+                                        $valorNota = "N.I.";
+                                    if($valorNota == 4)
+                                        $valorNota = "Exc";
+                                    if($valorNota == 3)
+                                        $valorNota = "V.Good";
+                                    if($valorNota == 2)
+                                        $valorNota = "Good";
+                                    if($valorNota == 1)
                                         $valorNota = "N.I.";
                                     $row = str_replace("Nota_Period_" . $i, $valorNota, $row);
                                 }

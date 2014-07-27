@@ -37,7 +37,7 @@
                 <p style="text-align: center; padding-bottom: 0px;">Ordenados por Nombre</p>
             </div>
 
-            {% for route in entities if route.routeType == 1 %}
+            {% for route in entities if (route.routeType == 1  and  route.institution.id == 2 ) %}
             <div class="fields_row route">
                 <p style="text-decoration: underline; padding-bottom: 0px;">Ruta {{ loop.index }}: {{ route.code ~ " - " ~ route.description }}</p>
                 {% if route.bus != "" %}

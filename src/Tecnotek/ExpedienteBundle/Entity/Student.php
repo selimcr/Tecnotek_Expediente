@@ -228,6 +228,30 @@ class Student
      */
     private $groupyear;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $emergencyout;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $emergencyoutinst;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $brethren;
+
+    /**
+     * @ORM\Column(type="string", length=100, nullable=true)
+     */
+    private $familiars;
+
+    /**
+     * @ORM\Column(type="string", length=200, nullable=true)
+     */
+    private $emergencyinfo;
 
     /**
      * @ManyToOne(targetEntity="Route")
@@ -1044,5 +1068,106 @@ class Student
     public function getGroupyear()
     {
         return $this->groupyear;
+    }
+
+    /**
+     * Set emergencyout
+     *
+     * @param integer $emergencyout
+     */
+    public function setEmergencyout($emergencyout)
+    {
+        $this->emergencyout = $emergencyout;
+    }
+
+    /**
+     * Get emergencyout
+     *
+     * @return integer
+     */
+    public function getEmergencyout()
+    {
+        return $this->emergencyout;
+    }
+
+    /**
+     * Set emergencyoutinst
+     *
+     * @param integer $emergencyoutinst
+     */
+    public function setEmergencyoutinst($emergencyoutinst)
+    {
+        $this->emergencyoutinst = $emergencyoutinst;
+    }
+
+    /**
+     * Get emergencyoutinst
+     *
+     * @return integer
+     */
+    public function getEmergencyoutinst()
+    {
+        return $this->emergencyoutinst;
+    }
+
+    /**
+     * Set brethren
+     *
+     * @param integer $brethren
+     */
+    public function setBrethren($brethren)
+    {
+        $this->brethren = $brethren;
+    }
+
+    /**
+     * Get brethren
+     *
+     * @return integer
+     */
+    public function getBrethren()
+    {
+        return $this->brethren;
+    }
+
+    /**
+     * Set familiars
+     *
+     * @param string $familiars
+     */
+    public function setFamiliars($familiars)
+    {
+        $this->familiars = $familiars;
+    }
+
+    /**
+     * Get familiars
+     *
+     * @return string
+     */
+    public function getFamiliars()
+    {
+        return $this->familiars;
+    }
+
+
+    /**
+     * Set emergencyinfo
+     *
+     * @param string $emergencyinfo
+     */
+    public function setEmergencyinfo($emergencyinfo)
+    {
+        $this->emergencyinfo = $emergencyinfo;
+    }
+
+    /**
+     * Get emergencyinfo
+     *
+     * @return string
+     */
+    public function getEmergencyinfo()
+    {
+        return $this->emergencyinfo;
     }
 }
