@@ -1318,6 +1318,8 @@ var Tecnotek = {
 
                 $("#groups").change(function(event){
                     event.preventDefault();
+                    console.debug("Sera que entro a este event??? o.o");
+                    Tecnotek.SpecialQualifications.loadSpecialQualificationsOfGroup();
                     Tecnotek.SpecialQualifications.loadCoursesOfGroupByTeacher($(this).val());
                 });
                 $("#openPageWithForms").fancybox({
@@ -1412,9 +1414,11 @@ var Tecnotek = {
             },
             loadSpecialQualificationsForms: function($stdyId) {
                 $("#specialQualificationsForms").html("");
-
+console.debug("alo alo, voy pr aca...");
                 Tecnotek.ajaxCall(Tecnotek.UI.urls["loadStudentSpecialQualificationsURL"],
-                    {   stdyId: $stdyId},
+                    {   periodId: $("#period").val(),
+                        stdyId: $stdyId
+                    },
                     function(data){
                         if(data.error === true) {
                             Tecnotek.showErrorMessage(data.message,true, "", false);

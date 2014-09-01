@@ -645,7 +645,9 @@ class ReportController extends Controller
         if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
         {
             try {
+                //ToDo: volver a poner el request de post
                 $request = $this->get('request')->request;
+                //$request = $this->get('request');
                 $periodId = $request->get('periodId');
 //                $periodId = 3;
                 $groupId = $request->get('groupId');
@@ -1194,114 +1196,121 @@ class ReportController extends Controller
         foreach( $periods as $period )
         {
             //Get Student Year of the Period related to the student
-            $stdYear = $em->getRepository("TecnotekExpedienteBundle:StudentYear")->findOneBy(array('student' => $studentYear->getStudent()->getId(), 'period' => $period->getId()));
+            $logger->err("Getting stdYear with: " . $studentYear->getStudent()->getId() . " AND " . $period->getId());
+            $stdYear = $em->getRepository("TecnotekExpedienteBundle:StudentYear")->
+                findOneBy(array('student' => $studentYear->getStudent()->getId(), 'period' => $period->getId()));
 
-            /*****************/
-            $dql = "SELECT cc "
-                . " FROM TecnotekExpedienteBundle:Course c, TecnotekExpedienteBundle:CourseClass cc "
-                . " WHERE cc.grade = " . $gradeId . " AND cc.course = c"
-                . " AND cc.period = " . $period->getId() . " "
-                . " ORDER BY c.name";
+            if(isset($stdYear)){
+                /*****************/
+                $dql = "SELECT cc "
+                    . " FROM TecnotekExpedienteBundle:Course c, TecnotekExpedienteBundle:CourseClass cc "
+                    . " WHERE cc.grade = " . $gradeId . " AND cc.course = c"
+                    . " AND cc.period = " . $period->getId() . " "
+                    . " ORDER BY c.name";
 
-            $query = $em->createQuery($dql);
-            $courses = $query->getResult();
+                $query = $em->createQuery($dql);
+                $courses = $query->getResult();
 
-            foreach( $courses as $courseClass )
-            {
-                if (!array_key_exists("" . $courseClass->getCourse()->getName(), $stdQualifications)) {
-                    $courseQ = array();
-                    $courseQ["courseClass"] = $courseClass;
-                    $stdQualifications["" . $courseClass->getCourse()->getName()] = $courseQ;
-                }
-            }
-
-            $qualifications = $em->getRepository("TecnotekExpedienteBundle:StudentYearCourseQualification")->findBy(array('studentYear' => $stdYear->getId()));
-
-            foreach( $qualifications as $q )
-            {
-                if (array_key_exists("" . $q->getCourseClass()->getCourse()->getName(), $stdQualifications)) {
-                    $courseQ = $stdQualifications["" . $q->getCourseClass()->getCourse()->getName()];
-                    $courseQ["nota" . $period->getOrderInYear()] = $q;
-                    $stdQualifications["" . $q->getCourseClass()->getCourse()->getName()] = $courseQ;
-                } else {
-                    $courseQ = array();
-                    $courseQ["courseClass"] = $q->getCourseClass();
-                    $courseQ["nota" . $period->getOrderInYear()] = $q;
-                    $stdQualifications["" . $q->getCourseClass()->getCourse()->getName()] = $courseQ;
-                }
-            }
-
-            //Get Absences Detail
-            if($institution->getId() == '3'){
-                $sql = "select at.name, count(a.id) as 'total', (count(a.id) * atp.points) as 'puntos'"
-                    . " from tek_absence_types at"
-                    . " join tek_absence_types_points atp on at.id = atp.absence_type_id and atp.institution_id = " . $institution->getId()
-                    . " left join tek_absences a on a.type_id = at.id and a.justify = 0 and a.studentYear_id = " . $stdYear->getId()
-                    . " group by at.id;";
-
-                /*$sql = "select at.name, count(a.id) as 'total', sum(atp.points) as 'puntos'"
-                    . " from tek_absences a "
-                    . " join tek_absence_types at on at.id = a.type_id"
-                    . " join tek_absence_types_points atp on at.id = atp.absence_type_id and atp.institution_id = " . $institution->getId()
-                    . " where a.studentYear_id =  " . $stdYear->getId()." AND a.justify = 0"
-                    . " group by a.type_id;";*/
-
-            }
-            if($institution->getId() == '2'){
-                $sql = "select at.name, count(a.id) as 'total', sum(atp.points) as 'puntos'"
-                    . " from tek_absences a "
-                    . " join tek_absence_types at on at.id = a.type_id"
-                    . " join tek_absence_types_points atp on at.id = atp.absence_type_id and atp.institution_id = " . $institution->getId()
-                    . " where a.studentYear_id =  " . $stdYear->getId()." AND a.justify = 0"
-                    . " group by a.type_id;";
-            }
-
-            $htmlAbsence = "";
-            $absences = $em->getConnection()->executeQuery($sql);
-            $conducta = 100;
-            foreach($absences as $absenceType){
-                if($absenceType["total"] > 0) {
-                    $absencePoints = $absenceType["total"] . "(" . number_format($absenceType["puntos"], 1, '.', '') . "pts)";
-                } else {
-                    $absencePoints = "0";
+                foreach( $courses as $courseClass )
+                {
+                    if (!array_key_exists("" . $courseClass->getCourse()->getName(), $stdQualifications)) {
+                        $courseQ = array();
+                        $courseQ["courseClass"] = $courseClass;
+                        $stdQualifications["" . $courseClass->getCourse()->getName()] = $courseQ;
+                    }
                 }
 
-                if (!array_key_exists($absenceType["name"], $absencesArray)) {
-                    $absenceDetail = array();
-                    $absenceDetail["absence" . $period->getOrderInYear()] = $absencePoints;
-                    $absenceDetail["puntos" . $period->getOrderInYear()] = $absenceType["puntos"];
-                    $absencesArray[$absenceType["name"]] = $absenceDetail;
-                } else {
-                    $absenceDetail = $absencesArray[$absenceType["name"]];
-                    $absenceDetail["absence" . $period->getOrderInYear()] = $absencePoints;
-                    $absenceDetail["puntos" . $period->getOrderInYear()] = $absenceType["puntos"];
-                    $absencesArray[$absenceType["name"]] = $absenceDetail;
-                }
-            }
+                $qualifications = $em->getRepository("TecnotekExpedienteBundle:StudentYearCourseQualification")
+                    ->findBy(array('studentYear' => $stdYear->getId()));
 
-            $sql = 'SELECT COUNT(id) as "total",SUM(pointsPenalty) as "puntos" FROM tek_student_penalties where student_year_id = ' . $stdYear->getId();
-            $puntosPorSancion = $em->getConnection()->executeQuery($sql);
-            foreach($puntosPorSancion as $pa){
-                //if($institution->getId() == '3'){
-                //$absenceDetail = array();
-                //$absencePoints = $pa["total"] . "(" . number_format($pa["puntos"], 1, '.', '') . "pts)";
-                //$absenceDetail["absence" . $period->getOrderInYear()] = $absencePoints;
-                //$absenceDetail["puntos" . $period->getOrderInYear()] = $pa["puntos"];
-                //$absencesArray["Puntos por Observaciones"] = $absenceDetail;
-                //}
-                if (!array_key_exists("Puntos por Observaciones", $absencesArray)) {
-                    $absenceDetail = array();
-                    $absencePoints = $pa["total"] . "(" . number_format($pa["puntos"], 1, '.', '') . "pts)";
-                    $absenceDetail["absence" . $period->getOrderInYear()] = $absencePoints;
-                    $absenceDetail["puntos" . $period->getOrderInYear()] = $pa["puntos"];
-                    $absencesArray["Puntos por Observaciones"] = $absenceDetail;
-                } else {
-                    $absenceDetail = $absencesArray["Puntos por Observaciones"];
-                    $absencePoints = $pa["total"] . "(" . number_format($pa["puntos"], 1, '.', '') . "pts)";
-                    $absenceDetail["absence" . $period->getOrderInYear()] = $absencePoints;
-                    $absenceDetail["puntos" . $period->getOrderInYear()] = $pa["puntos"];
-                    $absencesArray["Puntos por Observaciones"] = $absenceDetail;
+                foreach( $qualifications as $q )
+                {
+                    if (array_key_exists("" . $q->getCourseClass()->getCourse()->getName(), $stdQualifications)) {
+                        $courseQ = $stdQualifications["" . $q->getCourseClass()->getCourse()->getName()];
+                        $courseQ["nota" . $period->getOrderInYear()] = $q;
+                        $stdQualifications["" . $q->getCourseClass()->getCourse()->getName()] = $courseQ;
+                    } else {
+                        $courseQ = array();
+                        $courseQ["courseClass"] = $q->getCourseClass();
+                        $courseQ["nota" . $period->getOrderInYear()] = $q;
+                        $stdQualifications["" . $q->getCourseClass()->getCourse()->getName()] = $courseQ;
+                    }
                 }
+
+                //Get Absences Detail
+                if($institution->getId() == '3'){
+                    $sql = "select at.name, count(a.id) as 'total', (count(a.id) * atp.points) as 'puntos'"
+                        . " from tek_absence_types at"
+                        . " join tek_absence_types_points atp on at.id = atp.absence_type_id and atp.institution_id = " . $institution->getId()
+                        . " left join tek_absences a on a.type_id = at.id and a.justify = 0 and a.studentYear_id = " . $stdYear->getId()
+                        . " group by at.id;";
+
+                    /*$sql = "select at.name, count(a.id) as 'total', sum(atp.points) as 'puntos'"
+                . " from tek_absences a "
+                . " join tek_absence_types at on at.id = a.type_id"
+                . " join tek_absence_types_points atp on at.id = atp.absence_type_id and atp.institution_id = " . $institution->getId()
+                . " where a.studentYear_id =  " . $stdYear->getId()." AND a.justify = 0"
+                . " group by a.type_id;";*/
+
+                }
+                if($institution->getId() == '2'){
+                    $sql = "select at.name, count(a.id) as 'total', sum(atp.points) as 'puntos'"
+                        . " from tek_absences a "
+                        . " join tek_absence_types at on at.id = a.type_id"
+                        . " join tek_absence_types_points atp on at.id = atp.absence_type_id and atp.institution_id = " . $institution->getId()
+                        . " where a.studentYear_id =  " . $stdYear->getId()." AND a.justify = 0"
+                        . " group by a.type_id;";
+                }
+
+                $htmlAbsence = "";
+                $absences = $em->getConnection()->executeQuery($sql);
+                $conducta = 100;
+                foreach($absences as $absenceType){
+                    if($absenceType["total"] > 0) {
+                        $absencePoints = $absenceType["total"] . "(" . number_format($absenceType["puntos"], 1, '.', '') . "pts)";
+                    } else {
+                        $absencePoints = "0";
+                    }
+
+                    if (!array_key_exists($absenceType["name"], $absencesArray)) {
+                        $absenceDetail = array();
+                        $absenceDetail["absence" . $period->getOrderInYear()] = $absencePoints;
+                        $absenceDetail["puntos" . $period->getOrderInYear()] = $absenceType["puntos"];
+                        $absencesArray[$absenceType["name"]] = $absenceDetail;
+                    } else {
+                        $absenceDetail = $absencesArray[$absenceType["name"]];
+                        $absenceDetail["absence" . $period->getOrderInYear()] = $absencePoints;
+                        $absenceDetail["puntos" . $period->getOrderInYear()] = $absenceType["puntos"];
+                        $absencesArray[$absenceType["name"]] = $absenceDetail;
+                    }
+                }
+
+                $sql = 'SELECT COUNT(id) as "total",SUM(pointsPenalty) as "puntos" FROM tek_student_penalties where student_year_id = ' . $stdYear->getId();
+                $puntosPorSancion = $em->getConnection()->executeQuery($sql);
+                foreach($puntosPorSancion as $pa){
+                    //if($institution->getId() == '3'){
+                    //$absenceDetail = array();
+                    //$absencePoints = $pa["total"] . "(" . number_format($pa["puntos"], 1, '.', '') . "pts)";
+                    //$absenceDetail["absence" . $period->getOrderInYear()] = $absencePoints;
+                    //$absenceDetail["puntos" . $period->getOrderInYear()] = $pa["puntos"];
+                    //$absencesArray["Puntos por Observaciones"] = $absenceDetail;
+                    //}
+                    if (!array_key_exists("Puntos por Observaciones", $absencesArray)) {
+                        $absenceDetail = array();
+                        $absencePoints = $pa["total"] . "(" . number_format($pa["puntos"], 1, '.', '') . "pts)";
+                        $absenceDetail["absence" . $period->getOrderInYear()] = $absencePoints;
+                        $absenceDetail["puntos" . $period->getOrderInYear()] = $pa["puntos"];
+                        $absencesArray["Puntos por Observaciones"] = $absenceDetail;
+                    } else {
+                        $absenceDetail = $absencesArray["Puntos por Observaciones"];
+                        $absencePoints = $pa["total"] . "(" . number_format($pa["puntos"], 1, '.', '') . "pts)";
+                        $absenceDetail["absence" . $period->getOrderInYear()] = $absencePoints;
+                        $absenceDetail["puntos" . $period->getOrderInYear()] = $pa["puntos"];
+                        $absencesArray["Puntos por Observaciones"] = $absenceDetail;
+                    }
+                }
+            } else {
+                //No hay notas para el periodo buscado
             }
         }
 

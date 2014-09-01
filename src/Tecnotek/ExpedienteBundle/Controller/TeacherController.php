@@ -1143,17 +1143,25 @@ class TeacherController extends Controller
             try {
                 $request = $this->get('request')->request;
                 $stdyId = $request->get('stdyId');
+                $periodId = $request->get('periodId');
 
                 $translator = $this->get("translator");
 
-                if( isset($stdyId)) {
+                if( isset($stdyId) && isset($periodId)) {
                     $em = $this->getDoctrine()->getEntityManager();
-
+                    $period = new \Tecnotek\ExpedienteBundle\Entity\Period();
+                    $period = $em->getRepository("TecnotekExpedienteBundle:Period")->find($periodId);
                     $stdy = $em->getRepository("TecnotekExpedienteBundle:StudentYear")->find($stdyId);
                     $grade = $stdy->getGroup()->getGrade();
 
+                    $periodOnlyQuery = "";
+                    switch($period->getOrderInYear()){
+                        case 1: $periodOnlyQuery = " AND obs.showsOnPeriodOne = 1"; break;
+                        case 2: $periodOnlyQuery = " AND obs.showsOnPeriodTwo = 1"; break;
+                        case 3: $periodOnlyQuery = " AND obs.showsOnPeriodThree = 1"; break;
+                    }
                     $dql = "SELECT obs FROM TecnotekExpedienteBundle:SpecialQualificationsForm obs"
-                        . " WHERE obs.grade = " . $grade->getId();
+                        . " WHERE obs.grade = " . $grade->getId() . $periodOnlyQuery;
                     $query = $em->createQuery($dql);
                     $forms = $query->getResult();
 
@@ -1180,7 +1188,7 @@ class TeacherController extends Controller
                     }
 
                     foreach($forms as $form){
-                        $html .= "<tr><td>" . $this->printSpecialQualificationForm($form, $stdyId, $responses)
+                        $html .= "<tr><td>" . $this->printSpecialQualificationForm($form, $stdyId, $responses, $period->getOrderInYear())
                             . "</td></tr>";
                     }
 
@@ -1204,31 +1212,31 @@ class TeacherController extends Controller
     }
 
     private function printSpecialQualificationForm(
-        \Tecnotek\ExpedienteBundle\Entity\SpecialQualificationsForm $form, $stdyId, $responses){
+        \Tecnotek\ExpedienteBundle\Entity\SpecialQualificationsForm $form, $stdyId, $responses, $periodNumber){
         $html = "";
         $columnsCounter = 1;
-        $columnsCounter = ($form->getShowsOnPeriodOne())? $columnsCounter+1:$columnsCounter;
-        $columnsCounter = ($form->getShowsOnPeriodTwo())? $columnsCounter+1:$columnsCounter;
-        $columnsCounter = ($form->getShowsOnPeriodThree())? $columnsCounter+1:$columnsCounter;
+        $columnsCounter = ($form->getShowsOnPeriodOne() && $periodNumber==1)? $columnsCounter+1:$columnsCounter;
+        $columnsCounter = ($form->getShowsOnPeriodTwo() && $periodNumber==2)? $columnsCounter+1:$columnsCounter;
+        $columnsCounter = ($form->getShowsOnPeriodThree() && $periodNumber==3)? $columnsCounter+1:$columnsCounter;
 
         switch($form->getEntryType()){
             case 1:
                 $html .= "<table class='special-q-form-1'>";
                 $html .= '<tr class="header">';
                 $html .= '<td>' . $form->getName() . '</td>';
-                $html .= ($form->getShowsOnPeriodOne())? '<td>I</td>':'';
-                $html .= ($form->getShowsOnPeriodTwo())? '<td>II</td>':'';
-                $html .= ($form->getShowsOnPeriodThree())? '<td>III</td>':'';
+                $html .= ($form->getShowsOnPeriodOne() && $periodNumber==1)? '<td>I</td>':'';
+                $html .= ($form->getShowsOnPeriodTwo() && $periodNumber==2)? '<td>II</td>':'';
+                $html .= ($form->getShowsOnPeriodThree() && $periodNumber==3)? '<td>III</td>':'';
                 $html .= "</tr>";
                 foreach($form->getQuestions() as $q){
                     $html .= '<tr class="sq-row">';
                     $html .= '<td>' . $q->getMainText() . '</td>';
-                    $html .= ($form->getShowsOnPeriodOne())? '<td>'
+                    $html .= ($form->getShowsOnPeriodOne()  && $periodNumber==1)? '<td>'
                         . $this-> printSpecialQualificationOptions($q->getType(), $stdyId, $q->getId(), $responses, 1) .
                         '</td>':'';
-                    $html .= ($form->getShowsOnPeriodTwo())? '<td>'
+                    $html .= ($form->getShowsOnPeriodTwo()  && $periodNumber==2)? '<td>'
                         . $this-> printSpecialQualificationOptions($q->getType(), $stdyId, $q->getId(), $responses, 2) . '</td>':'';
-                    $html .= ($form->getShowsOnPeriodThree())? '<td>'
+                    $html .= ($form->getShowsOnPeriodThree()  && $periodNumber==3)? '<td>'
                         . $this-> printSpecialQualificationOptions($q->getType(), $stdyId, $q->getId(), $responses, 3) . '</td>':'';
                     $html .= "</tr>";
                 }
@@ -1247,19 +1255,19 @@ class TeacherController extends Controller
                 $html .= "<table class='special-q-form-1'>";
                 $html .= '<tr class="header">';
                 $html .= '<td>' . $form->getName() . '</td>';
-                $html .= ($form->getShowsOnPeriodOne())? '<td>I</td>':'';
-                $html .= ($form->getShowsOnPeriodTwo())? '<td>II</td>':'';
-                $html .= ($form->getShowsOnPeriodThree())? '<td>III</td>':'';
+                $html .= ($form->getShowsOnPeriodOne()  && $periodNumber==1)? '<td>I</td>':'';
+                $html .= ($form->getShowsOnPeriodTwo()  && $periodNumber==2)? '<td>II</td>':'';
+                $html .= ($form->getShowsOnPeriodThree()  && $periodNumber==3)? '<td>III</td>':'';
                 $html .= "</tr>";
                 foreach($form->getQuestions() as $q){
                     $html .= '<tr class="sq-row">';
                     $html .= '<td>' . $q->getMainText() . '</td>';
-                    $html .= ($form->getShowsOnPeriodOne())? '<td>'
+                    $html .= ($form->getShowsOnPeriodOne()  && $periodNumber==1)? '<td>'
                         . $this-> printSpecialQualificationOptions($q->getType(), $stdyId, $q->getId(), $responses, 1) .
                         '</td>':'';
-                    $html .= ($form->getShowsOnPeriodTwo())? '<td>'
+                    $html .= ($form->getShowsOnPeriodTwo()  && $periodNumber==2)? '<td>'
                         . $this-> printSpecialQualificationOptions($q->getType(), $stdyId, $q->getId(), $responses, 2) . '</td>':'';
-                    $html .= ($form->getShowsOnPeriodThree())? '<td>'
+                    $html .= ($form->getShowsOnPeriodThree()  && $periodNumber==3)? '<td>'
                         . $this-> printSpecialQualificationOptions($q->getType(), $stdyId, $q->getId(), $responses, 3) . '</td>':'';
                     $html .= "</tr>";
                 }
