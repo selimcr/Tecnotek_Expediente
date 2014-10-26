@@ -1105,6 +1105,98 @@ $kinder1 = 0;
         $html .='</table>';
         return $html;
     }
+
+    private function printSpecialFormByStudent2(\Tecnotek\ExpedienteBundle\Entity\SpecialQualificationsForm $form,
+                                                $responses){
+        $html = "";
+        $html .= '<table class="student-special-form" style="width: 100%">';
+        $html .= '<tr class="header"><td>' . $form->getName() . '</td><td>I</td><td>II</td><td>III</td></tr>';
+        $q = new \Tecnotek\ExpedienteBundle\Entity\SpecialQualification();
+        foreach($form->getQuestions() as $q){
+            $html .= '<tr>';
+            $html .= '<td>' . $q->getMainText();
+            $html .= '</td>';
+            $html .= '<td>'. $q->getId() . '-q';
+            $html .= '</td>';
+            $html .= '<td>';
+            $html .= '</td>';
+            if(key_exists($q->getId() . "-q", $responses)){
+                $html .= '<td>' . $this->getSpecialQualificationValue2($form, $responses[$q->getId() . "-q"], $q->getType()) . '</td>';
+            } else  {
+                $html .= '<td> - </td>';
+            }
+
+            $html .= '</tr>';
+        }
+        //$html .= 'blabla';
+        if($form->getMustIncludeComments() && key_exists($form->getId() . "-c", $responses)){
+            $html .= '<tr><td colspan="3" style="background-color: rgb(187, 214, 188);">';
+            $html .= '<b>Comentarios:</b> '. $responses[$form->getId() . '-c'];
+            $html .= '</br></br>Firma: _______________</td></tr>';
+        }
+
+        $html .= '';
+        $html .='</table>';
+        return $html;
+    }
+
+    private function getSpecialQualificationValue2(
+        \Tecnotek\ExpedienteBundle\Entity\SpecialQualificationsForm $form,
+        $q, $questionType){
+
+        $result = "";
+        //switch($form->getEntryType()){
+        switch($questionType){
+            case 1:
+                switch($q){
+                    case '1': $result = "DC"; break;
+                    case '2': $result = "NDC"; break;
+                    case '3': $result = "NM"; break;
+                    case '4': $result = "AV"; break;
+                    default: $result = "-"; break;
+                }
+                break;
+
+            case 3:
+                switch($q){
+                    case '1': $result = "DC"; break;
+                    case '2': $result = "HP"; break;
+                    case '3': $result = "NM"; break;
+                    case '4': $result = "AV"; break;
+                    default: $result = "-"; break;
+                }
+                break;
+
+            case 9:
+                switch($q){
+                    case '1': $result = "1"; break;
+                    case '2': $result = "2"; break;
+                    case '3': $result = "3"; break;
+                    case '4': $result = "4"; break;
+                    case '5': $result = "5"; break;
+                    case '6': $result = "6"; break;
+                    case '7': $result = "7"; break;
+                    case '8': $result = "8"; break;
+                    case '9': $result = "9"; break;
+                    case '10': $result = "10"; break;
+                    case '11': $result = "11"; break;
+                    case '12': $result = "12"; break;
+                    case '13': $result = "13"; break;
+                    case '14': $result = "14"; break;
+                    case '15': $result = "15"; break;
+                    case '16': $result = "EX"; break;
+                    case '17': $result = "MB"; break;
+                    case '18': $result = "B"; break;
+                    default: $result = "-"; break;
+                }
+                break;
+            default:
+                $result = '-';
+                break;
+        }
+        return $result;
+    }
+
     private function getStudentSpecialQualificationHTMLQualifications($periodId, $gradeId, $groupId, $studentId,
                                                                       $studentYear, $director, $institution, $convocatoria){
         $logger = $this->get('logger');
@@ -1174,7 +1266,7 @@ $kinder1 = 0;
                     }
                         break;
                     case 3: if($form->getShowsOnPeriodThree() == 1 ){
-                        $html .= $this->printSpecialFormByStudent($form, $responses);
+                        $html .= $this->printSpecialFormByStudent2($form, $responses);
                     }
                         break;
                 }
