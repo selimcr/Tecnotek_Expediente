@@ -763,7 +763,6 @@ $kinder1 = 0;
                             $carne = $student->getCarne();
                             $kinder1 = 1;
                             $studentName = "" . $student;
-                            $html = "Trabajando estudiante o.o'";
                             $html = $this->getStudentSpecialQualificationHTMLQualifications($periodId, $gradeId, $groupId,
                                 $referenceId, $studentYear, $director, $institution, $convocatoria);
                         }
@@ -1078,7 +1077,7 @@ $kinder1 = 0;
     }
 
     private function printSpecialFormByStudent(\Tecnotek\ExpedienteBundle\Entity\SpecialQualificationsForm $form,
-                                               $responses){
+                                               $responses, $periodNumber){
         $html = "";
         $html .= '<table class="student-special-form" style="width: 100%">';
         $html .= '<tr class="header"><td colspan="2">' . $form->getName() . '</td></tr>';
@@ -1087,8 +1086,9 @@ $kinder1 = 0;
             $html .= '<tr>';
             $html .= '<td>' . $q->getMainText();
             $html .= '</td>';
-            if(key_exists($q->getId() . "-q", $responses)){
-                $html .= '<td>' . $this->getSpecialQualificationValue($form, $responses[$q->getId() . "-q"], $q->getType()) . '</td>';
+            if(key_exists($q->getId() . "-q-" . $periodNumber, $responses)){
+                $html .= '<td>' . $this->getSpecialQualificationValue($form, $responses[$q->getId() . "-q-" . $periodNumber],
+                    $q->getType()) . '</td>';
             } else  {
                 $html .= '<td> - </td>';
             }
@@ -1108,6 +1108,7 @@ $kinder1 = 0;
 
     private function printSpecialFormByStudent2(\Tecnotek\ExpedienteBundle\Entity\SpecialQualificationsForm $form,
                                                 $responses){
+        $logger = $this->get('logger');
         $html = "";
         $html .= '<table class="student-special-form" style="width: 100%">';
         $html .= '<tr class="header"><td>' . $form->getName() . '</td><td>I</td><td>II</td><td>III</td></tr>';
@@ -1116,12 +1117,25 @@ $kinder1 = 0;
             $html .= '<tr>';
             $html .= '<td>' . $q->getMainText();
             $html .= '</td>';
-            $html .= '<td>'. $q->getId() . '-q';
-            $html .= '</td>';
-            $html .= '<td>';
-            $html .= '</td>';
-            if(key_exists($q->getId() . "-q", $responses)){
-                $html .= '<td>' . $this->getSpecialQualificationValue2($form, $responses[$q->getId() . "-q"], $q->getType()) . '</td>';
+
+            //Primer Periodo
+            if(key_exists($q->getId() . "-q-1", $responses)){
+                $html .= '<td>' . $this->getSpecialQualificationValue2($form, $responses[$q->getId() . "-q-1"],
+                    $q->getType()) . '</td>';
+            } else  {
+                $html .= '<td> - </td>';
+            }
+            //Segundo Periodo
+            if(key_exists($q->getId() . "-q-2", $responses)){
+                $html .= '<td>' . $this->getSpecialQualificationValue2($form, $responses[$q->getId() . "-q-2"],
+                    $q->getType()) . '</td>';
+            } else  {
+                $html .= '<td> - </td>';
+            }
+            //Tercer Periodo
+            if(key_exists($q->getId() . "-q-3", $responses)){
+                $html .= '<td>' . $this->getSpecialQualificationValue2($form, $responses[$q->getId() . "-q-3"],
+                    $q->getType()) . '</td>';
             } else  {
                 $html .= '<td> - </td>';
             }
@@ -1166,7 +1180,14 @@ $kinder1 = 0;
                     default: $result = "-"; break;
                 }
                 break;
-
+            case 4:
+                switch($q){
+                    case '1': $result = "EX"; break;
+                    case '2': $result = "MB"; break;
+                    case '3': $result = "B"; break;
+                    default: $result = "-"; break;
+                }
+                break;
             case 9:
                 switch($q){
                     case '1': $result = "1"; break;
@@ -1206,15 +1227,41 @@ $kinder1 = 0;
             ->find($periodId);
         $periodNumber = $period->getOrderInYear();
 
-        $dql = "SELECT obs FROM TecnotekExpedienteBundle:SpecialQualificationResult obs"
-            . " WHERE obs.studentYear = " . $studentYear->getId() . " AND obs.periodNumber = " . $periodNumber;
-        $query = $em->createQuery($dql);
-        $results = $query->getResult();
-        $sqr = null;
         $responses = array();
-        foreach($results as $r){
-            $responses[$r->getSpecialQualification()->getId() . "-q"]
-                = $r->getMainText();
+        $periodsArray = array();
+        $sqr = null;
+
+        //Para el tercer periodo debe cargar los del primer y segundo tambien
+        if($periodNumber == 3){
+            $loadPeriods = array(1, 2, 3);
+            $periodOne = $em->getRepository("TecnotekExpedienteBundle:Period")
+                ->findOneBy(array('year' => $period->getYear(), 'orderInYear' => 1));
+            $periodTwo = $em->getRepository("TecnotekExpedienteBundle:Period")
+                ->findOneBy(array('year' => $period->getYear(), 'orderInYear' => 2));
+            $periodsArray[1] = $periodOne;
+            $periodsArray[2] = $periodTwo;
+        } else {//Si no es tercer periodo solo cargar el periodo normalmente
+            $loadPeriods = array($periodNumber);
+        }
+        foreach ($loadPeriods as $periodN) {
+            $stdYearId = 0;
+            if($periodN == $periodNumber){
+                $stdYearId = $studentYear->getId();
+            } else {
+                $stdYearRecord = $em->getRepository("TecnotekExpedienteBundle:StudentYear")
+                    ->findOneBy(array('student' => $studentYear->getStudent()->getId(),
+                                      'period' => $periodsArray[$periodN]->getId()));
+
+                $stdYearId = $stdYearRecord->getId();
+            }
+            $dql = "SELECT obs FROM TecnotekExpedienteBundle:SpecialQualificationResult obs"
+                . " WHERE obs.studentYear = " . $stdYearId . " AND obs.periodNumber = " . $periodN;
+            $query = $em->createQuery($dql);
+            $results = $query->getResult();
+            foreach($results as $r){
+                $responses[$r->getSpecialQualification()->getId() . "-q-" . $periodN]
+                    = $r->getMainText();
+            }
         }
 
         $dql = "SELECT obs FROM TecnotekExpedienteBundle:SpecialQualificationFormComment obs"
@@ -1226,17 +1273,6 @@ $kinder1 = 0;
             $responses[$r->getSpecialQualificationsForm()->getId() . "-c"]
                 = $r->getMainText();
         }
-
-        if($periodId == "4"){
-            $periodActual = 1;
-        }
-        if($periodId == "5"){
-            $periodActual = 2;
-        }
-        if($periodId == "6"){
-            $periodActual = 3;
-        }
-
         //Obtener Formularios del Grade
         $formularios = $em->getRepository("TecnotekExpedienteBundle:SpecialQualificationsForm")
             ->findBy(array('grade' => $gradeId), array('sortOrder' => 'ASC'));
@@ -1256,13 +1292,13 @@ $kinder1 = 0;
         $form = new \Tecnotek\ExpedienteBundle\Entity\SpecialQualificationsForm();
         foreach($formularios as $form){
             if($form->getColumnNumber() == 1){
-               switch($periodActual){
+               switch($periodNumber){
                     case 1: if($form->getshowsOnPeriodOne() == 1 ){
-                                $html .= $this->printSpecialFormByStudent($form, $responses);
+                                $html .= $this->printSpecialFormByStudent($form, $responses, $periodNumber);
                             }
                             break;
                     case 2: if($form->getshowsOnPeriodTwo() == 1 ){
-                        $html .= $this->printSpecialFormByStudent($form, $responses);
+                        $html .= $this->printSpecialFormByStudent($form, $responses, $periodNumber);
                     }
                         break;
                     case 3: if($form->getShowsOnPeriodThree() == 1 ){
@@ -1277,17 +1313,17 @@ $kinder1 = 0;
         //Pintar los de la columna 2
         foreach($formularios as $form){
             if($form->getColumnNumber() == 2){
-                switch($periodActual){
+                switch($periodNumber){
                     case 1: if($form->getshowsOnPeriodOne() == 1 ){
-                                $html .= $this->printSpecialFormByStudent($form, $responses);
+                                $html .= $this->printSpecialFormByStudent($form, $responses, $periodNumber);
                             }
                             break;
                     case 2: if($form->getshowsOnPeriodTwo() == 1 ){
-                        $html .= $this->printSpecialFormByStudent($form, $responses);
+                        $html .= $this->printSpecialFormByStudent($form, $responses, $periodNumber);
                     }
                         break;
                     case 3: if($form->getShowsOnPeriodThree() == 1 ){
-                        $html .= $this->printSpecialFormByStudent($form, $responses);
+                        $html .= $this->printSpecialFormByStudent($form, $responses, $periodNumber);
                     }
                         break;
                 }
@@ -1310,17 +1346,17 @@ $html .= '<img width="200" height="100" src="/expediente/web/images/kinderpictit
         $form = new \Tecnotek\ExpedienteBundle\Entity\SpecialQualificationsForm();
         foreach($formularios as $form){
             if($form->getColumnNumber() == 3){
-                switch($periodActual){
+                switch($periodNumber){
                     case 1: if($form->getshowsOnPeriodOne() == 1 ){
-                                $html .= $this->printSpecialFormByStudent($form, $responses);
+                                $html .= $this->printSpecialFormByStudent($form, $responses, $periodNumber);
                             }
                             break;
                     case 2: if($form->getshowsOnPeriodTwo() == 1 ){
-                        $html .= $this->printSpecialFormByStudent($form, $responses);
+                        $html .= $this->printSpecialFormByStudent($form, $responses, $periodNumber);
                     }
                         break;
                     case 3: if($form->getShowsOnPeriodThree() == 1 ){
-                        $html .= $this->printSpecialFormByStudent($form, $responses);
+                        $html .= $this->printSpecialFormByStudent($form, $responses, $periodNumber);
                     }
                         break;
                 }
@@ -1332,17 +1368,17 @@ $html .= '<img width="200" height="100" src="/expediente/web/images/kinderpictit
 $html .= '<img width="250" height="120" src="/expediente/web/images/kinderpictittle2.png" allign= "center" alt="" class="image-hover">';
         foreach($formularios as $form){
             if($form->getColumnNumber() == 4){
-                switch($periodActual){
+                switch($periodNumber){
                     case 1: if($form->getshowsOnPeriodOne() == 1 ){
-                                $html .= $this->printSpecialFormByStudent($form, $responses);
+                                $html .= $this->printSpecialFormByStudent($form, $responses, $periodNumber);
                             }
                             break;
                     case 2: if($form->getshowsOnPeriodTwo() == 1 ){
-                        $html .= $this->printSpecialFormByStudent($form, $responses);
+                        $html .= $this->printSpecialFormByStudent($form, $responses, $periodNumber);
                     }
                         break;
                     case 3: if($form->getShowsOnPeriodThree() == 1 ){
-                        $html .= $this->printSpecialFormByStudent($form, $responses);
+                        $html .= $this->printSpecialFormByStudent($form, $responses, $periodNumber);
                     }
                         break;
                 }
