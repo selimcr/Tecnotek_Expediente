@@ -491,6 +491,12 @@ class ReportController extends Controller
         $identification = $request->get('identification');
         $laterality = $request->get('laterality');
 
+        $emergencyout = $request->get('emergencyout');
+        $emergencyoutinst = $request->get('emergencyoutinst');
+        $brethren = $request->get('brethren');
+        $familiars = $request->get('familiars');
+        $emergencyinfo = $request->get('emergencyinfo');
+
         $groups = null;
         $grades = null;
         $institutions = null;
@@ -524,6 +530,50 @@ class ReportController extends Controller
                 $query = $em->createQuery($dql);
                 $institutionsT = $query->getResult();
 
+            } else {
+                if($tipo == 2){
+                    $dql = "SELECT grade FROM TecnotekExpedienteBundle:Grade grade ORDER BY grade.number";
+                    $query = $em->createQuery($dql);
+                    $grades = $query->getResult();
+                    $gradeRepo = $em->getRepository("TecnotekExpedienteBundle:Grade");
+                    foreach($grades as $grade){
+                        $grade->setStudents($gradeRepo->findAllStudentsByLastname($grade->getId(), $currentPeriod->getId()));
+                    }
+
+                    $dql = "SELECT g FROM TecnotekExpedienteBundle:Group g JOIN g.grade grade WHERE g.period = " . $currentPeriod->getId() . " ORDER BY grade.number";
+                    $query = $em->createQuery($dql);
+                    $groupsT = $query->getResult();
+
+                    $dql = "SELECT grade FROM TecnotekExpedienteBundle:Grade grade ORDER BY grade.number";
+                    $query = $em->createQuery($dql);
+                    $gradesT = $query->getResult();
+
+                    $dql = "SELECT institution FROM TecnotekExpedienteBundle:Institution institution ORDER BY institution.id";
+                    $query = $em->createQuery($dql);
+                    $institutionsT = $query->getResult();
+
+                } else {
+                    $dql = "SELECT institution FROM TecnotekExpedienteBundle:Institution institution ORDER BY institution.id";
+                    $query = $em->createQuery($dql);
+                    $institutions = $query->getResult();
+                    $repo = $em->getRepository("TecnotekExpedienteBundle:Institution");
+                    foreach($institutions as $institution){
+                        $institution->setStudents($repo->findAllStudentsByLastname($institution->getId(), $currentPeriod->getId()));
+                    }
+
+                    $dql = "SELECT g FROM TecnotekExpedienteBundle:Group g JOIN g.grade grade WHERE g.period = " . $currentPeriod->getId() . " ORDER BY grade.number";
+                    $query = $em->createQuery($dql);
+                    $groupsT = $query->getResult();
+
+                    $dql = "SELECT grade FROM TecnotekExpedienteBundle:Grade grade ORDER BY grade.number";
+                    $query = $em->createQuery($dql);
+                    $gradesT = $query->getResult();
+
+                    $dql = "SELECT institution FROM TecnotekExpedienteBundle:Institution institution ORDER BY institution.id";
+                    $query = $em->createQuery($dql);
+                    $institutionsT = $query->getResult();
+
+                }
             }
 
             //$groups = $em->getRepository("TecnotekExpedienteBundle:Group")->findBy(array('period' => $currentPeriod));
@@ -541,7 +591,8 @@ class ReportController extends Controller
             'tipo' => $tipo, 'typeLabel' => $typeLabel, 'groups' => $groups,
             'grades' => $grades, 'institutions' => $institutions, 'iSpecial' => $iSpecial, 'iSpecialTiq' => $iSpecialTiq,'autoTiq' => $autoTiq,'carneTiq' => $carneTiq,
             'fatherPhone' => $fatherPhone, 'motherPhone' => $motherPhone, 'address' => $address, 'identification' => $identification,'birthday' => $birthday, 'laterality' => $laterality,
-            'groupsT' => $groupsT, 'institutionsT' => $institutionsT,'gradesT' => $gradesT
+            'groupsT' => $groupsT, 'institutionsT' => $institutionsT,'gradesT' => $gradesT,'emergencyout' => $emergencyout, 'emergencyoutinst' => $emergencyoutinst,
+            'brethren' => $brethren, 'familiars' => $familiars,'emergencyinfo' => $emergencyinfo
         ));
     }
 
@@ -656,7 +707,7 @@ class ReportController extends Controller
                 $keywords = preg_split("/[\s-]+/", $groupId);
                 $groupId = $keywords[0];
                 $gradeId = $keywords[1];
-
+$kinder1 = 0;
                 $referenceId = $request->get('referenceId');
 
                 $translator = $this->get("translator");
@@ -710,6 +761,7 @@ class ReportController extends Controller
                             $studentYear = $em->getRepository("TecnotekExpedienteBundle:StudentYear")->find($referenceId);
                             $student = $studentYear->getStudent();
                             $carne = $student->getCarne();
+                            $kinder1 = 1;
                             $studentName = "" . $student;
                             $html = "Trabajando estudiante o.o'";
                             $html = $this->getStudentSpecialQualificationHTMLQualifications($periodId, $gradeId, $groupId,
@@ -727,7 +779,7 @@ class ReportController extends Controller
                         }
                     }
 
-                    return new Response(json_encode(array('error' => false, 'html' => $html, 'carne' => $carne, 'teacherGroup' => $teacherGroup, "studentName" => $studentName, "imgHeader" => $imgHeader)));
+                    return new Response(json_encode(array('error' => false, 'html' => $html, 'carne' => $carne, 'teacherGroup' => $teacherGroup, "studentName" => $studentName, "imgHeader" => $imgHeader, "kinder1" => $kinder1)));
                 } else {
                     return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
                 }
@@ -790,7 +842,9 @@ class ReportController extends Controller
         $grupo = $em->getRepository("TecnotekExpedienteBundle:Group")->findOneBy(array('id' => $groupId));
         $html .=  'Grupo: '.$grupo->getGrade().'-'. $grupo->getName();
         $studentRowIndex = 0;
+ //$html .= "entro";
         foreach($students as $stdy){
+ //$html .= "entro";
             $this->calculateStudentYearQualification($periodId, $stdy->getId(), $stdy);
 
 
@@ -944,25 +998,75 @@ class ReportController extends Controller
     }
 
     private function getSpecialQualificationValue(
-        \Tecnotek\ExpedienteBundle\Entity\SpecialQualificationsForm $form,
-        $q){
+            \Tecnotek\ExpedienteBundle\Entity\SpecialQualificationsForm $form,
+        $q, $questionType){
 
         $result = "";
-        switch($form->getEntryType()){
+        //switch($form->getEntryType()){
+        switch($questionType){
             case 1:
                 switch($q){
                     case '1': $result = "Domina el contenido"; break;
-                    case '2': $result = "No domina el contenido"; break;
-                    case '3': $result = "Necesita mejorar"; break;
+                    case '2': $result = "Habilidad en proceso"; break;
+                    case '3': $result = "Necesita refuerzo"; break;
                     case '4': $result = "Algunas Veces"; break;
                     default: $result = "-"; break;
                 }
                 break;
             case 2:
                 switch($q){
-                    case '1': $result = "Bueno"; break;
-                    case '2': $result = "MB - Muy bueno"; break;
-                    case '3': $result = "Exc - Excelente"; break;
+                    case '1': $result = "Excellent"; break;
+                    case '2': $result = "Very Good"; break;
+                    case '3': $result = "In Process"; break;
+                    case '4': $result = "Needs Reteaching"; break;
+                    case '5': $result = "Good"; break;
+                    default: $result = "-"; break;
+                }
+                break;
+            case 3:
+                switch($q){
+                    case '1': $result = "Domina el contenido"; break;
+                    case '2': $result = "Habilidad en proceso"; break;
+                    case '3': $result = "Necesita mejorar"; break;
+                    case '4': $result = "Algunas veces"; break;
+                    default: $result = "-"; break;
+                }
+                break;
+            case 4:
+                switch($q){
+                    case '1': $result = "Excelente"; break;
+                    case '2': $result = "Muy Bueno"; break;
+                    case '3': $result = "Bueno"; break;
+                    default: $result = "-"; break;
+                }
+                break;
+            case 5:
+                switch($q){
+                    case '1': $result = "Lo logra"; break;
+                    case '2': $result = "Habilidad en proceso"; break;
+                    default: $result = "-"; break;
+                }
+                break;
+            case 9:
+                switch($q){
+                    case '1': $result = "1"; break;
+                    case '2': $result = "2"; break;
+                    case '3': $result = "3"; break;
+                    case '4': $result = "4"; break;
+                    case '5': $result = "5"; break;
+                    case '6': $result = "6"; break;
+                    case '7': $result = "7"; break;
+                    case '8': $result = "8"; break;
+                    case '9': $result = "9"; break;
+                    case '10': $result = "10"; break;
+                    case '11': $result = "11"; break;
+                    case '12': $result = "12"; break;
+                    case '13': $result = "13"; break;
+                    case '14': $result = "14"; break;
+                    case '15': $result = "15"; break;
+                    case '16': $result = "Excelente"; break;
+                    case '17': $result = "Muy Bueno"; break;
+                    case '18': $result = "Bueno"; break;
                     default: $result = "-"; break;
                 }
                 break;
@@ -984,7 +1088,7 @@ class ReportController extends Controller
             $html .= '<td>' . $q->getMainText();
             $html .= '</td>';
             if(key_exists($q->getId() . "-q", $responses)){
-                $html .= '<td>' . $this->getSpecialQualificationValue($form, $responses[$q->getId() . "-q"]) . '</td>';
+                $html .= '<td>' . $this->getSpecialQualificationValue($form, $responses[$q->getId() . "-q"], $q->getType()) . '</td>';
             } else  {
                 $html .= '<td> - </td>';
             }
@@ -992,9 +1096,9 @@ class ReportController extends Controller
             $html .= '</tr>';
         }
         if($form->getMustIncludeComments() && key_exists($form->getId() . "-c", $responses)){
-            $html .= '<tr><td colspan="2" style="background-color: rgb(187, 214, 188);">';
+            $html .= '<tr><td colspan="3" style="background-color: rgb(187, 214, 188);">';
             $html .= '<b>Comentarios:</b> '. $responses[$form->getId() . '-c'];
-            $html .= '</td><td>Firma: _______________</td></tr>';
+            $html .= '</br></br>Firma: _______________</td></tr>';
         }
 
         $html .= '';
@@ -1031,9 +1135,19 @@ class ReportController extends Controller
                 = $r->getMainText();
         }
 
+        if($periodId == "4"){
+            $periodActual = 1;
+        }
+        if($periodId == "5"){
+            $periodActual = 2;
+        }
+        if($periodId == "6"){
+            $periodActual = 3;
+        }
+
         //Obtener Formularios del Grade
         $formularios = $em->getRepository("TecnotekExpedienteBundle:SpecialQualificationsForm")
-            ->findBy(array('grade' => $gradeId));
+            ->findBy(array('grade' => $gradeId), array('sortOrder' => 'ASC'));
 
         $headersRow =  '<thead>';
         $headersRow .=  '    <tr style="height: 30px;">';
@@ -1050,7 +1164,20 @@ class ReportController extends Controller
         $form = new \Tecnotek\ExpedienteBundle\Entity\SpecialQualificationsForm();
         foreach($formularios as $form){
             if($form->getColumnNumber() == 1){
-                $html .= $this->printSpecialFormByStudent($form, $responses);
+               switch($periodActual){
+                    case 1: if($form->getshowsOnPeriodOne() == 1 ){
+                                $html .= $this->printSpecialFormByStudent($form, $responses);
+                            }
+                            break;
+                    case 2: if($form->getshowsOnPeriodTwo() == 1 ){
+                        $html .= $this->printSpecialFormByStudent($form, $responses);
+                    }
+                        break;
+                    case 3: if($form->getShowsOnPeriodThree() == 1 ){
+                        $html .= $this->printSpecialFormByStudent($form, $responses);
+                    }
+                        break;
+                }
             }
         }
         $html .= '</td>';
@@ -1058,7 +1185,20 @@ class ReportController extends Controller
         //Pintar los de la columna 2
         foreach($formularios as $form){
             if($form->getColumnNumber() == 2){
-                $html .= $this->printSpecialFormByStudent($form, $responses);
+                switch($periodActual){
+                    case 1: if($form->getshowsOnPeriodOne() == 1 ){
+                                $html .= $this->printSpecialFormByStudent($form, $responses);
+                            }
+                            break;
+                    case 2: if($form->getshowsOnPeriodTwo() == 1 ){
+                        $html .= $this->printSpecialFormByStudent($form, $responses);
+                    }
+                        break;
+                    case 3: if($form->getShowsOnPeriodThree() == 1 ){
+                        $html .= $this->printSpecialFormByStudent($form, $responses);
+                    }
+                        break;
+                }
             }
         }
         $html .= '</td>';
@@ -1074,18 +1214,46 @@ class ReportController extends Controller
         $html .= '<tr>';
         $html .= '<td>';
         //Pintar los de la columna 1
+$html .= '<img width="200" height="100" src="/expediente/web/images/kinderpictittle.png" allign= "center" alt="" class="image-hover">';
         $form = new \Tecnotek\ExpedienteBundle\Entity\SpecialQualificationsForm();
         foreach($formularios as $form){
             if($form->getColumnNumber() == 3){
-                $html .= $this->printSpecialFormByStudent($form, $responses);
+                switch($periodActual){
+                    case 1: if($form->getshowsOnPeriodOne() == 1 ){
+                                $html .= $this->printSpecialFormByStudent($form, $responses);
+                            }
+                            break;
+                    case 2: if($form->getshowsOnPeriodTwo() == 1 ){
+                        $html .= $this->printSpecialFormByStudent($form, $responses);
+                    }
+                        break;
+                    case 3: if($form->getShowsOnPeriodThree() == 1 ){
+                        $html .= $this->printSpecialFormByStudent($form, $responses);
+                    }
+                        break;
+                }
             }
         }
         $html .= '</td>';
         $html .= '<td>';
         //Pintar los de la columna 2
+$html .= '<img width="250" height="120" src="/expediente/web/images/kinderpictittle2.png" allign= "center" alt="" class="image-hover">';
         foreach($formularios as $form){
             if($form->getColumnNumber() == 4){
-                $html .= $this->printSpecialFormByStudent($form, $responses);
+                switch($periodActual){
+                    case 1: if($form->getshowsOnPeriodOne() == 1 ){
+                                $html .= $this->printSpecialFormByStudent($form, $responses);
+                            }
+                            break;
+                    case 2: if($form->getshowsOnPeriodTwo() == 1 ){
+                        $html .= $this->printSpecialFormByStudent($form, $responses);
+                    }
+                        break;
+                    case 3: if($form->getShowsOnPeriodThree() == 1 ){
+                        $html .= $this->printSpecialFormByStudent($form, $responses);
+                    }
+                        break;
+                }
             }
         }
         $html .= '</td>';
@@ -1342,10 +1510,22 @@ class ReportController extends Controller
             $counterForAverage = 0;
             $tercerTrim = 0;
 
-            if($periodId == 4){
-                $periodIdb=1;}
-            else {
-                $periodIdb=$periodId;}
+
+            switch($periodId){
+                case 1: $periodIdb=1;
+                        break;
+                case 2: $periodIdb=2;
+                        break;
+                case 3: $periodIdb=3;
+                        break;
+                case 4: $periodIdb=1;
+                        break;
+                case 5: $periodIdb=2;
+                        break;
+                case 6: $periodIdb=3;
+                        break;
+            }
+
             for($i = 1; $i < 4; $i++){
                 if (array_key_exists("nota" . $i, $courseStdQ)) {
                     $notaFinal = $courseStdQ["nota" . $i];
@@ -1364,6 +1544,27 @@ class ReportController extends Controller
                             }
                             $counters[$i] += 1;
                             $totales[$i] += $notaFinal->getQualification();
+//desde aca
+/*if($notaFinal->getQualification()<'50'){
+	$notaFinalAplicada = 50;
+}else{
+         $notaFinalAplicada = $notaFinal->getQualification(); 
+}
+                                $row = str_replace("courseRowNota" . $i, "* " . $notaFinalAplicada , $row);
+                                if($i==3){
+                                    $tercerTrim = 1;
+                                }
+                                $counters[$i] += 1;
+                                $totales[$i] += $notaFinalAplicada;    
+
+
+
+                            } else {
+                                $row = str_replace("courseRowNota" . $i, $notaFinal->getQualification(), $row);
+                                $counters[$i] += 1;
+                                $totales[$i] += $notaFinal->getQualification();    
+                            } */  /// reemplazado hasta aca
+
                         }else{
                             $row = str_replace("courseRowNota" . $i, $notaFinal->getQualification(), $row);
                         }
@@ -1728,8 +1929,22 @@ class ReportController extends Controller
                     if ($valuetemp > 100){
                         $valuetemp = 100;
                     }
+
+                    
                 }
+
+  
             }
+
+                    if ($valuetemp < 0){
+                        $valuetemp = 0;
+                    }
+
+                    if($studentYear->getGroup()->getInstitution()->getId() == 2){
+                        if ($valuetemp < 50 && $valuetemp != 0 && $valuetemp != 1 && $valuetemp != 1 && $valuetemp != 3 && $valuetemp != 4){
+                            $valuetemp = 50;
+                        }
+                    }
 
             $sql = 'INSERT INTO tek_student_year_course_qualifications (course_class_id,student_year_id, qualification) VALUES (' . $i . ',' . $studentYearId . ', ' . $value . ')'.
                 ' ON DUPLICATE KEY UPDATE qualification = ' . $valuetemp . ';';

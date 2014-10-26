@@ -349,11 +349,15 @@ class StudentController extends Controller
                 $clubId = $request->get('clubId');
 
                 $em = $this->getDoctrine()->getEntityManager();
+
+$currentPeriod = $em->getRepository("TecnotekExpedienteBundle:Period")->findOneBy(array('isActual' => true));
+                $currentPeriodId = $currentPeriod->getId();
+
                 $sql = "SELECT std.id, std.lastname, std.firstname "
                     . " FROM tek_students std, tek_students_year stdy"
                     . " WHERE (std.firstname like '%" . $text . "%' OR std.lastname like '%" . $text . "%')"
                     . " AND std.id NOT IN (SELECT cs.student_id FROM club_student cs WHERE cs.club_id = " . $clubId . ")"
-                    . " AND std.id = stdy.student_id"
+                    . " AND std.id = stdy.student_id AND stdy.period_Id =".$currentPeriodId 
                     . " ORDER BY std.lastname, std.firstname";
                 $stmt = $em->getConnection()->prepare($sql);
                 $stmt->execute();
