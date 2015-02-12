@@ -23,18 +23,18 @@ class QuestionnaireAnswer
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=1000)
      * @Assert\NotBlank()
      * @Assert\MinLength(limit = 3)
-     * @Assert\MaxLength(limit = 255)
+     * @Assert\MaxLength(limit = 1000)
      */
     private $mainText;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=1000, nullable=true)
      * @Assert\NotBlank()
      * @Assert\MinLength(limit = 3)
-     * @Assert\MaxLength(limit = 255)
+     * @Assert\MaxLength(limit = 1000)
      */
     private $secondText;
 

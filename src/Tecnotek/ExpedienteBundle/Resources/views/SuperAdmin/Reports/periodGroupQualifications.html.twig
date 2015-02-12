@@ -47,8 +47,10 @@
                     {% for period in periods %}
                     <option {% if period.isActual == '1' %}  selected="selected" {% endif %} value="{{ period.id }}">{{period}}</option>
                     {% endfor %}
-                    <option value="3" convo="1">CONVI</option>
-                    <option value="3" convo="2">CONVII</option>
+                    <option value="3" convo="1">CONVI 2013</option>
+                    <option value="3" convo="2">CONVII 2013</option>
+                    <option value="6" convo="1">CONVI 2014</option>
+                    <option value="6" convo="2">CONVII 2014</option>
                 </select>
             </div>
             <input id="conv" name="conv" hidden="hidden" value = "0">

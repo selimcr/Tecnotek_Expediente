@@ -349,9 +349,9 @@
                                         <div class="clear"></div>
                                     {% endfor %}
                                     <div class="student_footer">
-                                <span style="font-family:arial;font-size:16px;">Total de estudiantes en el nivel: {{ group.students|length }}
+                                <span style="font-family:arial;font-size:16px;">Total de estudiantes en el nivel: {{ group.students|length }}{% if gender != null %}
                                     Total de hombres:  {{ counterM }}
-                                    Total de mujeres:  {{ counterF }}
+                                    Total de mujeres:  {{ counterF }}{% endif %}
                                     {% if laterality != null %}
                                         </br>
                                         Totales Lateralidad: {{ group.students|length }}

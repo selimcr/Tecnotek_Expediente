@@ -33,13 +33,21 @@ Tecnotek.PeriodGroupQualifications = {
         });
     },
     loadGroupsOfPeriod: function($periodId) {
-        if( $('#period option:selected').html() == "CONVI"){
+        if( $('#period option:selected').html() == "CONVI 2013"){
             $('input[name=conv]').val(1);
         }else{
-            if( $('#period option:selected').html() == "CONVII"){
+            if( $('#period option:selected').html() == "CONVII 2013"){
                 $('input[name=conv]').val(2);
             }else{
-                $('input[name=conv]').val(0);
+                if( $('#period option:selected').html() == "CONVI 2014"){
+                $('input[name=conv]').val(1);
+                }else{
+                   if( $('#period option:selected').html() == "CONVII 2014"){
+                     $('input[name=conv]').val(2);
+                   }else{
+                     $('input[name=conv]').val(0);
+                   }
+                }
             }
         }
         console.debug("Load groups of period: " + $periodId);
@@ -170,11 +178,15 @@ Tecnotek.PeriodGroupQualifications = {
                 } else {
                     $period = $("#period").find(":selected").text();
                     $periodYear = $period.split("-")[1];
-                    studentHtml += '<div class="center"><h3><img width="840" height="145" src="/expediente/web/images/' + data.imgHeader + '" alt="" class="image-hover"></h3></div>';
+if(data.kinder1 == '1'){
+                    studentHtml += '<div class="center"><h3><img width="840" height="245" src="/expediente/web/images/notaskinder.png" alt="" class="image-hover"></h3></div>';
+}else{
+                    studentHtml += '<div class="center"><h3><img width="840" height="145" src="/expediente/web/images/' + data.imgHeader + '" alt="" class="image-hover"></h3></div>';}
 
                     studentHtml += '<div class="reportContentHeader">';
-                    studentHtml += '<div class="left reportContentLabel" style="width: 100%; font-size: 18px; text-align: center;">TARJETA DE CALIFICACIONES</div>';
-                    studentHtml += '<div class="left reportContentLabel" style="width: 100%; font-size: 14px; text-align: center; margin-bottom: 15px;">2014</div>';
+if(data.kinder1 != '1'){
+                    studentHtml += '<div class="left reportContentLabel" style="width: 100%; font-size: 18px; text-align: center;">TARJETA DE CALIFICACIONES</div>';}
+                    studentHtml += '<div class="left reportContentLabel" style="width: 100%; font-size: 14px; text-align: center; margin-bottom: 15px;"> </div>';
                     studentHtml += '<div class="left reportContentLabel" style="width: 450px;">Alumno(a):&nbsp;&nbsp;' + data.studentName  + '</div>';
                     studentHtml += '<div class="left reportContentLabel" style="width: 350px;">Secci&oacute;n:&nbsp;&nbsp;' + $("#groups").find(":selected").text() + '</div>';
                     studentHtml += '<div class="clear"></div>';
@@ -342,7 +354,7 @@ Tecnotek.PeriodGroupAverages = {
 
                     studentHtml += '<div class="reportContentHeader">';
                     studentHtml += '<div class="left reportContentLabel" style="width: 100%; font-size: 18px; text-align: center;">TARJETA DE CALIFICACIONES</div>';
-                    studentHtml += '<div class="left reportContentLabel" style="width: 100%; font-size: 14px; text-align: center; margin-bottom: 15px;">2014</div>';
+                    studentHtml += '<div class="left reportContentLabel" style="width: 100%; font-size: 14px; text-align: center; margin-bottom: 15px;"></div>';
                     studentHtml += '<div class="left reportContentLabel" style="width: 450px;">Alumno(a):&nbsp;&nbsp;' + data.studentName  + '</div>';
                     studentHtml += '<div class="left reportContentLabel" style="width: 350px;">Secci&oacute;n:&nbsp;&nbsp;' + $("#groups").find(":selected").text() + '</div>';
                     studentHtml += '<div class="clear"></div>';

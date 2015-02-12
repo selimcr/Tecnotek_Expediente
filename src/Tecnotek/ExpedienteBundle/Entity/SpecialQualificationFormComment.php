@@ -23,10 +23,10 @@ class SpecialQualificationFormComment
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=500)
      * @Assert\NotBlank()
      * @Assert\MinLength(limit = 1)
-     * @Assert\MaxLength(limit = 255)
+     * @Assert\MaxLength(limit = 500)
      */
     private $mainText;
 
