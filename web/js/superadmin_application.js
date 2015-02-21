@@ -153,6 +153,9 @@ var Tecnotek = {
                 case "psicoProfile":
                     Tecnotek.psicoProfile.init();
                     break;
+                case "emails":
+                    Tecnotek.Emails.init();
+                    break;
                 default:
 					break;
 				}

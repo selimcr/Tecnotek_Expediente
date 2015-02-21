@@ -1,0 +1,90 @@
+{% extends 'TecnotekExpedienteBundle::logged_layout.html.twig' %}
+
+{% block htmlTitle %}
+    Tecnotek :: Expediente :: Super Administrador :: Estudiante
+{% endblock %}
+
+{% block extracss %}
+<link rel="stylesheet" href="{{ asset('fancybox/jquery.fancybox.css') }}" type="text/css" media="all" />
+<link rel="stylesheet" href="{{ asset('fancybox/fancybox_style.css') }}" type="text/css" media="all" />
+{% endblock %}
+
+{% block extrajs %}
+<script type="text/javascript" src="{{ asset('js/tek_exp_emails.js') }}"></script>
+<script type="text/javascript" src="{{ asset('fancybox/jquery.fancybox.js?v=2.0.6') }}"></script>
+<script type="text/javascript">
+    Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
+    Tecnotek.UI.urls["removeRelativeURL"] = "{{ path("_expediente_remove_relative") }}";
+    Tecnotek.UI.urls["saveNewContactURL"] = "{{ path("_expediente_save_new_contact") }}";
+    Tecnotek.UI.urls["getRelativeInfoURL"] = "{{ path("_expediente_sysadmin_get_relative_info") }}";
+
+    Tecnotek.UI.translates["confirmDelete"] = "{% trans %}messages.confirmation.student.delete{% endtrans %}";
+    Tecnotek.UI.translates["confirmRemoveRelative"] = "{% trans %}messages.confirmation.remove.relative{% endtrans %}";
+    Tecnotek.StudentShow.translates["emptyFields"] = "{% trans %}messages.empty.fields{% endtrans %}";
+    Tecnotek.StudentShow.translates["confirmRelative"] = "{% trans %}messages.confirm.relative{% endtrans %}";
+
+    Tecnotek.module = "emails";
+
+    Tecnotek.UI.urls["edit"] = "{{ path('_expediente_sysadmin_relatives_edit_simple')}}";
+
+    Tecnotek.UI.urls["getContactsURL"] = "{{ path("_expediente_get_contacts_list") }}";
+    Tecnotek.UI.urls["associateStudentsURL"] = "{{ path("_expediente_associate_student") }}";
+
+    Tecnotek.UI.urls["associateContactURL"] = "{{ path("_expediente_associate_new_contact") }}";
+
+    /**/
+    Tecnotek.UI.urls["loadLevelsOfPeriodURL"] = "{{ path('_expediente_sysadmin_load_period_levels')}}";
+    Tecnotek.UI.urls["loadGroupsOfPeriodAndLevelsURL"] = "{{ path('_expediente_sysadmin_load_period_level_groups')}}";
+    Tecnotek.UI.urls["loadEmailsURL"] = "{{ path('_expediente_emails_load')}}";
+
+
+
+</script>
+<!-- basic fancybox setup -->
+<script type="text/javascript">
+    $(function(){ $(".modalbox").fancybox(); });
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="container_24" style="width: 900px;">
+    <div class="grid_24" style="width: 100%;">
+        <div style="line-height: 26px;">
+            <div class="left" style="width: 70px; font-weight: bold;">{%trans%}label.period{%endtrans%}</div>
+            <div id="labelPeriod" class="left">
+                <select id="period" name="period" style="width: 150px;">
+                    {% for period in periods %}
+                    <option {% if period.isActual == '1' %}  selected="selected" {% endif %} value="{{ period.id }}">{{period}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div id="levelsContainer" class="left" style="margin-left: 50px;">
+                <div class="left" style="width: 65px; font-weight: bold;">{%trans%}label.level{%endtrans%}</div>
+                <div class="left">
+                    <select id="levels" name="levels" style="width: 150px;">
+                    </select>
+                </div>
+            </div>
+
+            <div id="groupsContainer" class="left" style="margin-left: 40px;">
+                <div class="left" style="width: 95px; font-weight: bold;">{%trans%}label.group{%endtrans%}</div>
+                <div class="left">
+                    <select id="groups" name="groups" style="width: 150px;">
+                    </select>
+                </div>
+            </div>
+
+            <button style="margin-left: 15px; margin-top: 0px;" type="button" class="right button success-darker tiny"
+                    id="btnLoad" name="btnLoad" rel="Calificaciones"><span></span>
+                {% trans %}label.get{% endtrans %}</button>
+            <div class="clear"></div>
+        </div>
+
+        <div id="emails-container" style="width: 100%; margin: auto; text-align: center;">
+            <textarea id="emails-ta" readonly style="margin: 0px 0px 7px; width: 90%; height: 300px;">
+
+            </textarea>
+        </div>
+    </div>
+</div>
+{% endblock %}

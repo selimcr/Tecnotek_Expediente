@@ -1557,6 +1557,91 @@ class SuperAdminController extends Controller
     }
 
     /******************************* Funciones para la administracion de las calificaciones *******************************/
+    public function loadLevelsOfPeriodAction(){
+        $logger = $this->get('logger');
+        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
+        {
+            try {
+                $request = $this->get('request')->request;
+                $periodId = $request->get('periodId');
+                $translator = $this->get("translator");
+
+                if( isset($periodId) ) {
+                    $em = $this->getDoctrine()->getEntityManager();
+
+                    //Get Groups
+                    $sql = "SELECT grade.id as 'id', grade.name as 'name'
+                            FROM tek_groups g, tek_grades grade
+                            WHERE g.period_id = " . $periodId . " AND g.grade_id = grade.id
+                            GROUP BY grade.id
+                            ORDER BY grade.id, g.name;";
+                    $stmt = $em->getConnection()->prepare($sql);
+                    $stmt->execute();
+                    $levels = $stmt->fetchAll();
+
+                    return new Response(json_encode(array('error' => false, 'levels' => $levels)));
+                } else {
+                    return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
+                }
+            }
+            catch (Exception $e) {
+                $info = toString($e);
+                $logger->err('Admin::loadGroupsOfPeriodAction [' . $info . "]");
+                return new Response(json_encode(array('error' => true, 'message' => $info)));
+            }
+        }// endif this is an ajax request
+        else
+        {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+    }
+
+    public function loadGroupsOfPeriodAndLevelAction(){
+        $logger = $this->get('logger');
+        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
+        {
+            try {
+                $request = $this->get('request')->request;
+                $periodId = $request->get('periodId');
+                $levelId = $request->get('levelId');
+                $translator = $this->get("translator");
+
+                if( isset($periodId) && isset($levelId) ) {
+                    $em = $this->getDoctrine()->getEntityManager();
+
+                    //Get Groups
+                    $sql = "SELECT CONCAT(g.id,'-',grade.id) as 'id', CONCAT(grade.name, ' :: ', g.name) as 'name'" .
+                        " FROM tek_groups g, tek_grades grade" .
+                        " WHERE g.period_id = " . $periodId  . " AND g.grade_id = grade.id";
+
+                    if($levelId != 0){
+                        $sql .= " AND grade.id = " . $levelId;
+                    }
+
+                    $sql .+
+                        " GROUP BY g.id" .
+                        " ORDER BY grade.id, g.name";
+                    $stmt = $em->getConnection()->prepare($sql);
+                    $stmt->execute();
+                    $groups = $stmt->fetchAll();
+
+                    return new Response(json_encode(array('error' => false, 'groups' => $groups)));
+                } else {
+                    return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
+                }
+            }
+            catch (Exception $e) {
+                $info = toString($e);
+                $logger->err('Admin::loadGroupsOfPeriodAction [' . $info . "]");
+                return new Response(json_encode(array('error' => true, 'message' => $info)));
+            }
+        }// endif this is an ajax request
+        else
+        {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+    }
+
     public function loadGroupsOfPeriodAction(){
         $logger = $this->get('logger');
         if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?

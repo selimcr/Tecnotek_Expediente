@@ -28,6 +28,8 @@ label.edit: Editar
 label.delete: Eliminar
 label.eliminar: Eliminar
 label.usuarios: Usuarios
+label.level: Nivel
+label.emails: Correos Electrónicos
 label.actualizar: Actualizar
 label.routes: Rutas
 label.route: Ruta
@@ -168,6 +170,8 @@ label.convocatorias.by.group.title: Definici&oacute;n de Convocatorias por Grupo
 label.convocatorias.by.group.help: Marque las convocatorias por estudiante e ingresa la nota obtenida
 label.convocatoria: Convocatoria
 
+label.get: Obtener
+label.copy: Copiar
 label.schedule: Horario
 label.gender: Genero
 label.age: Edad

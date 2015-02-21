@@ -2358,4 +2358,133 @@ $currentPeriod = $em->getRepository("TecnotekExpedienteBundle:Period")->findOneB
             'pagination' => $pagination, 'rowsPerPage' => $rowsPerPage, 'menuIndex' => 3, 'text' => $text
         ));
     }
+
+    /**
+     * This method will render the page for the generation of the email lists of the
+     * students
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function emailsAction(){
+        $em = $this->getDoctrine()->getEntityManager();
+        $periods = $em->getRepository("TecnotekExpedienteBundle:Period")->findAll();
+
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Student/emails.html.twig', array(
+            'menuIndex' => 3, 'periods' => $periods
+        ));
+    } // End of emailsAction
+
+    public function emailsLoadAction(){
+        $logger = $this->get('logger');
+        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
+        {
+            try {
+                $request = $this->get('request')->request;
+                $periodId = $request->get('periodId');
+                $levelId = $request->get('levelId');
+                $groupId = $request->get('groupId');
+                $keywords = preg_split("/[\s-]+/", $groupId);
+                $groupId = $keywords[0];
+                $gradeId = $keywords[1];
+
+                //$logger->err("Period: " . $periodId . ", Level: " . $levelId . ", Group: " . $groupId);
+                $em = $this->getDoctrine()->getEntityManager();
+
+                $sql = " SELECT distinct con.email
+                FROM tek_students_year stdY
+                INNER JOIN tek_students std ON std.id = stdY.student_id
+                INNER JOIN tek_groups g ON g.id = stdY.group_id
+                INNER JOIN tek_relatives rel ON rel.student_id = std.id
+                INNER JOIN tek_contacts con ON con.id = rel.contact_id
+                WHERE g.period_id = " . $periodId;
+
+                if($levelId != 0){
+                    $sql .= " AND g.grade_id = " . $levelId;
+                }
+
+                if($groupId != 0){
+                    $sql .= " AND g.id = " . $groupId;
+                }
+
+                $sql .= " AND con.email is not null AND con.email <> ''
+                ORDER BY con.email;";
+
+                //$logger->err("--> " . $sql);
+                $stmt = $em->getConnection()->prepare($sql);
+                $stmt->execute();
+                $contactsEmails = $stmt->fetchAll();
+
+                $emailsFinal = array();
+                foreach ($contactsEmails as $email) {
+                    if($email[0] != ""){
+                        $contactEmails = explode(';', $email[0]);
+                        foreach ($contactEmails as $contactEmail) {
+                            if(!in_array(strtolower($contactEmail), $emailsFinal)){
+                                array_push($emailsFinal, strtolower($contactEmail));
+                                //$logger->err("Adding: " . strtolower($contactEmail));
+                            }
+                        }
+                    }
+                }
+
+                //$logger->err('Count of contacts emails [' . sizeof($emailsFinal) . "]");
+
+                $sql = "SELECT distinct std.email
+                FROM tek_students_year stdY
+                INNER JOIN tek_students std ON std.id = stdY.student_id
+                INNER JOIN tek_groups g ON g.id = stdY.group_id
+                WHERE g.period_id = " . $periodId;
+
+                if($levelId != 0){
+                    $sql .= " AND g.grade_id = " . $levelId;
+                }
+
+                if($groupId != 0){
+                    $sql .= " AND g.id = " . $groupId;
+                }
+
+                $sql .= " AND std.email is not null AND std.email <> ''
+                ORDER BY std.email;";
+
+                $stmt = $em->getConnection()->prepare($sql);
+                $stmt->execute();
+                $emailsStudents = $stmt->fetchAll();
+
+                foreach ($emailsStudents as $email) {
+                    $studentEmails = explode(';', $email[0]);
+                    foreach ($studentEmails as $studentEmail) {
+                        if(!in_array(strtolower($studentEmail), $emailsFinal)){
+                            array_push($emailsFinal, strtolower($studentEmail));
+                            //$logger->err("Adding: " . strtolower($studentEmail));
+                        }
+                    }
+                }
+
+                //$logger->err('Count with students emails [' . count($emailsFinal) . "]");
+                sort($emailsFinal);
+                $emailsStr = "";
+                if(sizeof($emailsFinal) > 0){
+                    $emailsStr = $emailsFinal[0];
+                    for($i = 1; $i < sizeof($emailsFinal); $i++){
+                        $emailsStr .= ";" . $emailsFinal[$i];
+                    }
+                }
+
+                if ( isset($emailsStr) ) {
+                    return new Response(json_encode(array('error' => false, 'emails' => $emailsStr)));
+                } else {
+                    return new Response(json_encode(array('error' => true, 'message' => "Data not found.")));
+                }
+            }
+            catch (Exception $e) {
+                $info = toString($e);
+                $logger->err('Student::getListAction [' . $info . "]");
+                return new Response(json_encode(array('error' => true, 'message' => $info)));
+            }
+        }// endif this is an ajax request
+        else
+        {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+    }// End of emailsLoadAction
 }

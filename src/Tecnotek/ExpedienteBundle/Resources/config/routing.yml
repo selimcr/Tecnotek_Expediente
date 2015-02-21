@@ -1106,3 +1106,19 @@ _expediente_sysadmin_category_item_edit_simple:
     pattern:  /category_item/edit
     defaults: { _controller: TecnotekExpedienteBundle:Item:category_itemEdit }
 #Fin de Items
+
+_expediente_emails:
+    pattern:  /std/emails/
+    defaults: { _controller: TecnotekExpedienteBundle:Student:emails }
+
+_expediente_emails_load:
+    pattern:  /std/emails/load
+    defaults: { _controller: TecnotekExpedienteBundle:Student:emailsLoad }
+
+_expediente_sysadmin_load_period_levels:
+    pattern:  /levels/load
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:loadLevelsOfPeriod }
+
+_expediente_sysadmin_load_period_level_groups:
+    pattern:  /groupsOfPeriodByLevel/load
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:loadGroupsOfPeriodAndLevel }
