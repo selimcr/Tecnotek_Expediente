@@ -2954,7 +2954,7 @@ form.custom .custom.disabled {
   z-index: 99;
 }
 .top-bar-section .dropdown li {
-  width: 100%;
+  width: 100%; position: relative;
 }
 .top-bar-section .dropdown li a {
   font-weight: normal;
@@ -3090,6 +3090,7 @@ form.custom .custom.disabled {
     white-space: nowrap;
     padding: 7px 15px;
     background: #219900;
+    min-width: 150px;
   }
   .top-bar-section .dropdown li label {
     white-space: nowrap;
@@ -3119,6 +3120,33 @@ form.custom .custom.disabled {
   }
   .top-bar-section ul.right li .dropdown li .dropdown {
     right: 100%;
+  }
+
+  .top-bar-section .dropdown li ul {
+    position: absolute;
+    left: 100%;
+    top: 0;
+    visibility: hidden;
+    z-index: 99;
+  }
+
+  .top-bar-section .dropdown li.has-submenu:after {
+    content: "";
+    display: block;
+    width: 0;
+    height: 0;
+    border: solid 5px;
+    border-color: transparent transparent transparent rgba(255, 255, 255, 0.5);
+    margin-right: 15px;
+    margin-top: -6.5px;
+    position: absolute;
+    top: 15px;
+    right: 0;
+    box-sizing: border-box;
+  }
+
+  .top-bar-section .dropdown li.has-submenu:hover > ul {
+    visibility: visible;
   }
 }
 .orbit-container {

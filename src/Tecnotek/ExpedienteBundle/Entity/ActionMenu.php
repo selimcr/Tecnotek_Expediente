@@ -14,6 +14,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *
  * @ORM\Table(name="tek_actions_menu")
  * @ORM\Entity()
+ * @ORM\OrderBy({"sortOrder" = "ASC"})
  */
 class ActionMenu
 {
@@ -61,6 +62,7 @@ class ActionMenu
     /**
      * @var childrens
      * @ORM\OneToMany(targetEntity="ActionMenu", mappedBy="parent", cascade={"persist", "remove"})
+     * @ORM\OrderBy({"sortOrder" = "ASC"})
      */
     private $childrens;
 

@@ -222,15 +222,86 @@ class SecuredController extends Controller
     public function showMenuAction(){
         $logger = $this->get('logger');
         $user= $this->get('security.context')->getToken()->getUser();
+        $em = $this->getDoctrine()->getEntityManager();
 
+        /// Get Allowed Menu Actions of the User
+        $sql = 'SELECT p.action_menu_id'
+            . ' FROM tek_users_privileges p'
+            . ' WHERE p.user_id = ' . $user->getId();
+
+        $stmt = $em->getConnection()->prepare($sql);
+        $stmt->execute();
+        $privileges = $stmt->fetchAll();
+        $allowed = array();
+
+        foreach($privileges as $privilege){
+            $logger->err("Adding privilege: " . $privilege[0]);
+            array_push($allowed, $privilege[0]);
+        }
+
+        //if(!in_array(strtolower($contactEmail), $emailsFinal)){        }
+
+        $dql = "SELECT e FROM TecnotekExpedienteBundle:ActionMenu e WHERE e.parent is null order by e.sortOrder";
+        $query = $em->createQuery($dql);
+        $headers = $query->getResult();
+
+        $html = '';
+        $menu = '';
+        $html .= '<li class="divider"></li>';
+        foreach($headers as $header){
+            $menu = '';
+            foreach($header->getChildrens() as $children){
+                $logger->err("---> Checking: " . $children->getLabel() . '<---');
+                $submenuHtml = '';
+                if(sizeof($children->getChildrens()) > 0){
+                    foreach($children->getChildrens() as $submenu){
+                        if(in_array($submenu->getId(), $allowed)){
+                            $submenuHtml .= '<li class=""><a href="' .
+                                ($submenu->getRoute() == "#"? "#":$this->generateUrl($submenu->getRoute())) . '">'
+                                . $submenu->getLabel() . '</a>';
+                            $submenuHtml .= '</li>';
+                        }
+                    }
+
+                    if($submenuHtml != ''){
+                        $menu .= '<li class="has-submenu"><a href="' .
+                            ($children->getRoute() == "#"? "#":$this->generateUrl($children->getRoute())) . '">'
+                            . $children->getLabel() . '</a>';
+
+                        $submenuHtml = '<ul class="dropdown">' . $submenuHtml . '</ul>';
+
+                        $menu .= $submenuHtml . '</li>';
+                    }
+
+                } else { // The children (second level) do not has a submenu
+                    $logger->err("No tiene hijos y es visible: " . in_array($children->getId(), $allowed));
+                    if(in_array($children->getId(), $allowed)){
+                        $menu .= '<li><a href="' .
+                            ($children->getRoute() == "#"? "#":$this->generateUrl($children->getRoute())) . '">'
+                            . $children->getLabel() . '</a></li>';
+                    }
+                    $logger->err('Current Menu: ' . $menu);
+                }
+            }//End of childrens
+
+            if($menu != ''){
+                $menu = '<ul class="dropdown">' . $menu . '</ul>';
+                $html .= '<li class="has-dropdown"><a href="' .
+                    ($header->getRoute() == "#"? "#":$this->generateUrl($header->getRoute())) . '">' . $header->getLabel()
+                    . '</a>';
+                $html .= $menu;
+                $html .= '</li>';
+            }
+        }
         //Get Current User Privileges
-        $sql = 'SELECT m.label, m.route, m.parent_id, f.label as "father_label", f.route as "father_route"'
+        /*$sql = 'SELECT m.label, m.route, m.parent_id, f.label as "father_label", f.route as "father_route"'
                 . ' FROM tek_users_privileges p'
                 . ' JOIN tek_actions_menu m ON m.id = p.action_menu_id'
                 . ' JOIN tek_actions_menu f ON f.id = m.parent_id'
-                . ' WHERE p.user_id = ' . $user->getId() . ' AND m.parent_id is not null order by f.sort_order, m.sort_order;';
+                . ' WHERE p.user_id = ' . $user->getId() . ' AND m.parent_id is not null'
+                . ' order by f.sort_order, m.sort_order;';
 
-        $em = $this->getDoctrine()->getEntityManager();
+
         $stmt = $em->getConnection()->prepare($sql);
         $stmt->execute();
         $privileges = $stmt->fetchAll();
@@ -262,7 +333,7 @@ class SecuredController extends Controller
         if($html != ""){
             $html .= '  </ul>';
             $html .= '</li>';
-        }
+        }*/
 
         return new Response($html);
     }
