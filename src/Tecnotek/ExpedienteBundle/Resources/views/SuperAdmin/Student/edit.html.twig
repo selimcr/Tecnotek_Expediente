@@ -84,6 +84,20 @@
                         </div>
 
                         <div class="formRow">
+                            <label class="error">{{ form_errors(form.religion) }}</label>
+                            <div class="large-12 columns">
+                                <label>{% trans %}label.religion{% endtrans %}</label>{{ form_widget(form.religion) }}
+                            </div>
+                        </div>
+
+                        <div class="formRow">
+                            <label class="error">{{ form_errors(form.nacionality) }}</label>
+                            <div class="large-12 columns">
+                                <label>{% trans %}label.nationality{% endtrans %}</label>{{ form_widget(form.nacionality) }}
+                            </div>
+                        </div>
+
+                        <div class="formRow">
                             <label class="error">{{ form_errors(form.fatherPhone) }}</label>
                             <div class="large-12 columns">
                                 <label>{% trans %}label.fatherPhone{% endtrans %}</label>{{ form_widget(form.fatherPhone) }}
