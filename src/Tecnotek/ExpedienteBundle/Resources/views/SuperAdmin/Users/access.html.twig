@@ -54,6 +54,17 @@
                             {% for children in permiso.childrens %}
                             <li id="{{ children.id }}" name="{{ children.id }}">
                                 <a href="#">{{ children }}</a>
+
+                                <!-- SubMenus -->
+                                {% if children.childrens|length > 0 %}
+                                <ul>
+                                    {% for submenu in children.childrens %}
+                                    <li id="{{ submenu.id }}" name="{{ submenu.id }}">
+                                        <a href="#">{{ submenu }}</a>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                                {% endif %}
                             </li>
                             {% endfor %}
                         </ul>

@@ -3090,6 +3090,7 @@ form.custom .custom.disabled {
     white-space: nowrap;
     padding: 7px 15px;
     background: #219900;
+    min-width: 150px;
   }
   .top-bar-section .dropdown li label {
     white-space: nowrap;
