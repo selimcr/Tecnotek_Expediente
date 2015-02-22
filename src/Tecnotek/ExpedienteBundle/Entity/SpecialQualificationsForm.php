@@ -85,6 +85,12 @@ class SpecialQualificationsForm
      */
     private $questions;
 
+    /**
+     * @ORM\Column(type="integer")
+     * @Assert\NotBlank()
+     */
+    private $year;
+
 
     public function __construct()
     {
@@ -244,4 +250,23 @@ class SpecialQualificationsForm
         return $this->columnNumber;
     }
 
+    /**
+     * Set year
+     *
+     * @param integer $year
+     */
+    public function setYear($year)
+    {
+        $this->year = $year;
+    }
+
+    /**
+     * Get year
+     *
+     * @return integer
+     */
+    public function getYear()
+    {
+        return $this->year;
+    }
 }

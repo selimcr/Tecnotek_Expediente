@@ -1147,6 +1147,12 @@ class TeacherController extends Controller
 
                 $translator = $this->get("translator");
 
+                //para filtro del año
+                $em = $this->getDoctrine()->getEntityManager();
+                $period = $em->getRepository("TecnotekExpedienteBundle:Period")
+                    ->find($periodId);
+                $year = $period->getYear(); ///para filtro de año
+
                 if( isset($stdyId) && isset($periodId)) {
                     $em = $this->getDoctrine()->getEntityManager();
                     $period = new \Tecnotek\ExpedienteBundle\Entity\Period();
@@ -1161,7 +1167,7 @@ class TeacherController extends Controller
                         case 3: $periodOnlyQuery = " AND obs.showsOnPeriodThree = 1"; break;
                     }
                     $dql = "SELECT obs FROM TecnotekExpedienteBundle:SpecialQualificationsForm obs"
-                        . " WHERE obs.grade = " . $grade->getId() . $periodOnlyQuery;
+                        . " WHERE obs.grade = " . $grade->getId() . $periodOnlyQuery ." and obs.year = " . $year;
                     $query = $em->createQuery($dql);
                     $forms = $query->getResult();
 

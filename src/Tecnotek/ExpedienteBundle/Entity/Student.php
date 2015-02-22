@@ -139,7 +139,7 @@ class Student
     private $observation;
 
     /**
-     * @ORM\Column(type="string", length=15, nullable=true)
+     * @ORM\Column(type="string", length=75, nullable=true)
      * @Assert\MaxLength(limit = 75)
      */
     private $email;
@@ -163,61 +163,61 @@ class Student
     private $code;
 
     /**
-     * @ORM\Column(type="string", length=15, nullable=true)
+     * @ORM\Column(type="string", length=60, nullable=true)
      * @Assert\MaxLength(limit = 30)
      */
     private $rbautizado;
 
     /**
-     * @ORM\Column(type="string", length=15, nullable=true)
+     * @ORM\Column(type="string", length=30, nullable=true)
      * @Assert\MaxLength(limit = 15)
      */
     private $rtomo;
 
     /**
-     * @ORM\Column(type="string", length=15, nullable=true)
+     * @ORM\Column(type="string", length=30, nullable=true)
      * @Assert\MaxLength(limit = 15)
      */
     private $rfolio;
 
     /**
-     * @ORM\Column(type="string", length=15, nullable=true)
+     * @ORM\Column(type="string", length=30, nullable=true)
      * @Assert\MaxLength(limit = 15)
      */
     private $rasiento;
 
     /**
-     * @ORM\Column(type="string", length=15, nullable=true)
+     * @ORM\Column(type="string", length=30, nullable=true)
      * @Assert\MaxLength(limit = 15)
      */
     private $rpromesasfecha;
 
     /**
-     * @ORM\Column(type="string", length=15, nullable=true)
+     * @ORM\Column(type="string", length=60, nullable=true)
      * @Assert\MaxLength(limit = 45)
      */
     private $rpromesaslugar;
 
     /**
-     * @ORM\Column(type="string", length=15, nullable=true)
+     * @ORM\Column(type="string", length=30, nullable=true)
      * @Assert\MaxLength(limit = 15)
      */
     private $rconfesionfecha;
 
     /**
-     * @ORM\Column(type="string", length=15, nullable=true)
+     * @ORM\Column(type="string", length=60, nullable=true)
      * @Assert\MaxLength(limit = 45)
      */
     private $rconfesionlugar;
 
     /**
-     * @ORM\Column(type="string", length=15, nullable=true)
+     * @ORM\Column(type="string", length=30, nullable=true)
      * @Assert\MaxLength(limit = 15)
      */
     private $rcomunionfecha;
 
     /**
-     * @ORM\Column(type="string", length=15, nullable=true)
+     * @ORM\Column(type="string", length=60, nullable=true)
      * @Assert\MaxLength(limit = 45)
      */
     private $rcomunionlugar;
@@ -239,7 +239,7 @@ class Student
     private $emergencyoutinst;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $brethren;
 

@@ -353,7 +353,7 @@ class StudentController extends Controller
 $currentPeriod = $em->getRepository("TecnotekExpedienteBundle:Period")->findOneBy(array('isActual' => true));
                 $currentPeriodId = $currentPeriod->getId();
 
-                $sql = "SELECT std.id, std.lastname, std.firstname "
+                $sql = "SELECT std.id, std.lastname, std.firstname, std.groupyear "
                     . " FROM tek_students std, tek_students_year stdy"
                     . " WHERE (std.firstname like '%" . $text . "%' OR std.lastname like '%" . $text . "%')"
                     . " AND std.id NOT IN (SELECT cs.student_id FROM club_student cs WHERE cs.club_id = " . $clubId . ")"
@@ -680,7 +680,7 @@ $currentPeriod = $em->getRepository("TecnotekExpedienteBundle:Period")->findOneB
 
                             $em->flush();
 
-                            return new Response(json_encode(array('error' => false, 'id' => $relative->getId())));
+                            return new Response(json_encode(array('error' => false, 'id' => $relative->getId(), 'idc' => $contact->getId())));
                         } else {
                             return new Response(json_encode(array('error' => true, 'message' => $result)));
                         }
