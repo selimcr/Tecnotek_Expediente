@@ -89,30 +89,58 @@
                     <li class="divider"></li>
                     <li class="has-dropdown{% if menuIndex is defined and menuIndex == 4%} current{% endif %}"><a href="#">{% trans %}label.reports{% endtrans %}</a>
                         <ul class="dropdown">
-                            <li><a href="{{ path('_expediente_report_bus') }}">{% trans %}label.buses{% endtrans %}</a></li>
-                            <li><a href="{{ path('_expediente_report_routes') }}">{% trans %}label.routes{% endtrans %}</a></li>
-                            <li><a href="{{ path('_expediente_report_zones') }}">{% trans %}label.routes.by.zone{% endtrans %}</a></li>
-                            <li><a href="{{ path('_expediente_report_students_by_route') }}">{% trans %}label.students.by.route{% endtrans %}</a></li>
-                            <li><a href="{{ path('_expediente_report_students_by_route_club') }}">{% trans %}label.students.by.route.club{% endtrans %}</a></li>
-                            <li><a href="{{ path('_expediente_report_absences_by_route') }}">{% trans %}label.students.absences.by.route{% endtrans %}</a></li>
-                            <li><a href="{{ path('_expediente_report_daily_by_route') }}">{% trans %}label.students.daily.by.route{% endtrans %}</a></li>
-                            <li><a href="{{ path('_expediente_report_students') }}">{% trans %}label.students{% endtrans %}</a></li>
-                            <li><a href="{{ path('_expediente_report_clubs') }}">{% trans %}label.clubs{% endtrans %}</a></li>
-                            <li><a href="{{ path('_expediente_report_period_notes_by_group') }}">{% trans %}menu.qualifications.report{% endtrans %}</a></li>
-                            <li><a href="{{ path('_expediente_report_best_averages_by_group') }}">{% trans %}menu.averages.report{% endtrans %}</a></li>
-                            <li><a href="{{ path('_expediente_report_group_qualifications_by_rubro') }}">{% trans %}menu.qualifications.of.group.by.rubro{% endtrans %}</a></li>
-                            <li><a href="{{ path('_expediente_report_student_qualifications') }}">{% trans %}menu.detail.student.qualifications{% endtrans %}</a></li>
-                            <li><a href="{{ path('_expediente_report_routes_club') }}">{% trans %}label.routes.club{% endtrans %}</a></li>
+                            <li class="has-submenu">
+                                <a href="{{ path('_expediente_report_students') }}">
+                                    {% trans %}label.students{% endtrans %}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+                                <ul>
+                                    <li><a href="{{ path('_expediente_report_students') }}">{% trans %}label.students{% endtrans %}</a></li>
+                                    <li><a href="{{ path('_expediente_report_period_observations_by_group') }}">{% trans %}menu.observations.report{% endtrans %}</a></li>
+                                    <li><a href="{{ path('_expediente_report_students_emergency') }}">{% trans %}label.students.emergency{% endtrans %}</a></li>
+                                </ul>
+                            </li>
+
+                            <li class="has-submenu">
+                                <a href="{{ path('_expediente_report_students_routes') }}">
+                                    {% trans %}label.qualifications{% endtrans %}</a>
+                                <ul>
+                                    <li><a href="{{ path('_expediente_report_period_notes_by_group') }}">{% trans %}menu.qualifications.report{% endtrans %}</a></li>
+                                    <li><a href="{{ path('_expediente_report_group_qualifications_by_rubro') }}">{% trans %}menu.qualifications.of.group.by.rubro{% endtrans %}</a></li>
+                                    <li><a href="{{ path('_expediente_report_student_qualifications') }}">{% trans %}menu.detail.student.qualifications{% endtrans %}</a></li>
+                                    <li><a href="{{ path('_expediente_report_course_by_group') }}">{% trans %}label.report.grades.by.group.course{% endtrans %}</a></li>
+                                    <li><a href="{{ path('_expediente_report_best_averages_by_group') }}">{% trans %}menu.averages.report{% endtrans %}</a></li>
+                                </ul>
+                            </li>
+
+                            <li class="has-submenu">
+                                <a href="{{ path('_expediente_report_students_routes') }}">
+                                    {% trans %}label.transport{% endtrans %}</a>
+                                <ul>
+                                    <li><a href="{{ path('_expediente_report_students_routes') }}">{% trans %}label.student.route{% endtrans %}</a></li>
+                                    <li><a href="{{ path('_expediente_report_bus') }}">{% trans %}label.buses{% endtrans %}</a></li>
+                                    <li><a href="{{ path('_expediente_report_routes') }}">{% trans %}label.routes{% endtrans %}</a></li>
+                                    <li><a href="{{ path('_expediente_report_zones') }}">{% trans %}label.routes.by.zone{% endtrans %}</a></li>
+                                    <li><a href="{{ path('_expediente_report_students_by_route') }}">{% trans %}label.students.by.route{% endtrans %}</a></li>
+                                    <li><a href="{{ path('_expediente_report_absences_by_route') }}">{% trans %}label.students.absences.by.route{% endtrans %}</a></li>
+                                    <li><a href="{{ path('_expediente_report_daily_by_route') }}">{% trans %}label.students.daily.by.route{% endtrans %}</a></li>
+                                    <li><a href="{{ path('_expediente_report_students_by_route_filter2') }}">{% trans %}label.students.by.route{% endtrans %} Colegio</a></li>
+                                    <li><a href="{{ path('_expediente_report_absences_by_route_filter2') }}">{% trans %}label.students.absences.by.route{% endtrans %} Colegio</a></li>
+                                    <li><a href="{{ path('_expediente_report_daily_by_route_filter2') }}">{% trans %}label.students.daily.by.route{% endtrans %} Colegio</a></li>
+                                </ul>
+                            </li>
+
+                            <li class="has-submenu">
+                                <a href="{{ path('_expediente_report_clubs') }}">
+                                    {% trans %}label.clubs{% endtrans %}</a>
+                                <ul>
+                                    <li><a href="{{ path('_expediente_report_clubs') }}">{% trans %}label.clubs{% endtrans %}</a></li>
+                                    <li><a href="{{ path('_expediente_report_routes_club') }}">{% trans %}label.routes.club{% endtrans %}</a></li>
+                                    <li><a href="{{ path('_expediente_report_students_by_route_club') }}">{% trans %}label.students.by.route.club{% endtrans %}</a></li>
+                                    <li><a href="{{ path('_expediente_report_students_by_route_club_route') }}">{% trans %}label.students.by.route.club.route{% endtrans %}</a></li>
+                                    <li><a href="{{ path('_expediente_report_students_by_route_club_level') }}">{% trans %}label.students.by.route.club.level{% endtrans %}</a></li>
+                                </ul>
+                            </li>
                             <!-- <li><a href="{{ path('_expediente_report_penalty_students') }}">{% trans %}label.penalty.report{% endtrans %}</a></li> -->
-                            <li><a href="{{ path('_expediente_report_students_routes') }}">{% trans %}label.student.route{% endtrans %}</a></li>
-                            <li><a href="{{ path('_expediente_report_course_by_group') }}">{% trans %}label.report.grades.by.group.course{% endtrans %}</a></li>
-                            <li><a href="{{ path('_expediente_report_students_by_route_club_level') }}">{% trans %}label.students.by.route.club.level{% endtrans %}</a></li>
-                            <li><a href="{{ path('_expediente_report_students_by_route_club_route') }}">{% trans %}label.students.by.route.club.route{% endtrans %}</a></li>
-                            <li><a href="{{ path('_expediente_report_period_observations_by_group') }}">{% trans %}menu.observations.report{% endtrans %}</a></li>
-                            <li><a href="{{ path('_expediente_report_students_emergency') }}">{% trans %}label.students.emergency{% endtrans %}</a></li>
-                            <li><a href="{{ path('_expediente_report_students_by_route_filter2') }}">{% trans %}label.students.by.route{% endtrans %} Colegio</a></li>
-                            <li><a href="{{ path('_expediente_report_absences_by_route_filter2') }}">{% trans %}label.students.absences.by.route{% endtrans %} Colegio</a></li>
-                            <li><a href="{{ path('_expediente_report_daily_by_route_filter2') }}">{% trans %}label.students.daily.by.route{% endtrans %} Colegio</a></li>
+
                         </ul>
                     </li>
                     <li class="divider"></li>
