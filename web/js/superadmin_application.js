@@ -1129,7 +1129,7 @@ var Tecnotek = {
                                         $data += '    <a class="searchResult" rel="' + data.students[i].id + '" name="' +
                                             data.students[i].lastname + ' ' + data.students[i].firstname + '">';
                                         $data += '      <span class="searchheading">' + data.students[i].lastname
-                                            + ' ' + data.students[i].firstname +  '</span>';
+                                            + ' ' + data.students[i].firstname + ' ' + data.students[i].groupyear +  '</span>';
                                         $data += '      <span>Incluir este estudiante.</span>';
                                         $data += '    </a>';
                                     }
@@ -1286,11 +1286,12 @@ var Tecnotek = {
                                 if(data.error === true) {
                                     Tecnotek.showErrorMessage(data.message,true, "", false);
                                 } else {
-                                    $html = '<div id="relative_row_' + data.id + '" class="row userRow" rel="' + data.id + '" style="padding: 0px;">';
-                                    $html += '<div class="option_width" style="float: left; width: 350px;">' + $firstname + " " + $lastname + '</div>';
-                                    $html += '<div class="option_width" style="float: left; width: 100px;">' + $detail + '</div>';
-                                    $html += '<div class="right imageButton deleteButton" style="height: 16px;"  title="delete???"  rel="' + data.id + '"></div>';
+                                    $html = '<div id="relative_row_' + data.id + '" class="row" rel="' + data.id + '" style="padding: 0px;">';
+                                    $html += '<div class style="float: left; width: 325px;">' + $firstname + " " + $lastname + '</div>';
+                                    $html += '<div class style="float: left; width: 50px;">' + $detail + '</div>';
+                                    $html += '<div class="right imageButton deleteButton" style="height: 16px;"  title="Delete"  rel="' + data.id + '"></div>';
                                     $html += '<div class="right imageButton viewButton" style="height: 16px;"  title="Ver"  rel="' + data.id + '"></div>';
+                                    $html += '<div class="right imageButton editButton" title="Editar"  rel="' + data.idc + '"></div>';
                                     $html += '<div class="clear"></div>';
                                     $html += '</div>';
                                     $("#relativesList").append($html);
@@ -1301,6 +1302,12 @@ var Tecnotek = {
                                     $('#description').val("");
                                     Tecnotek.StudentShow.initDeleteButtons();
                                     Tecnotek.showInfoMessage(Tecnotek.StudentShow.translates["confirmRelative"], true, "", false);
+
+                                    $('.editButton').unbind().click(function(event){
+                                        event.preventDefault();
+                                        console.debug("AdministratorList :: initButtons :: editButton Event");
+                                        location.href = Tecnotek.UI.urls["edit"] + "/" + $(this).attr("rel");
+                                    });
                                 }
                             },
                             function(jqXHR, textStatus){

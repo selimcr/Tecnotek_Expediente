@@ -84,7 +84,7 @@
                     {% set counter = 0 %}
                     {% for student in entity.students %}
                         <div id="student_row_{{ student.id }}" class="row userRow rel="{{ student.id }}">
-                            <div class="option_width" style="float: left; width: 300px;">{{ student }}</div>
+                            <div class="option_width" style="float: left; width: 300px;">{{ student }}({{ student.groupyear }})</div>
                             <div class="right imageButton deleteButton" style="height: 16px;"  title="{% trans %}label.delete{% endtrans %}"  rel="{{ student.id }}"></div>
                             <div class="clear"></div>
                         </div>

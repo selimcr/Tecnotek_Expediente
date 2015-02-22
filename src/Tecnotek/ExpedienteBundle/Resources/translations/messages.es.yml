@@ -243,6 +243,16 @@ label.phoneh: Tel. Casa
 label.workplace: Lugar de trabajo
 label.adress: Direccion
 label.restriction: Restriccion
+label.emergency: En caso de emergencia
+
+label.nationality: Nacionalidad
+label.degree: Grado Académico
+label.sector: Sector
+label.m_status: Estado Civil
+label.religion: Religion
+label.restriction: Restriccion
+label.profession: Profesion
+label.occupation: Puesto
 
 label.routes.by.zone: Rutas por Zona
 label.students.by.route: Estudiantes por Ruta

@@ -112,7 +112,7 @@ class Contact
     private $payments_r;
 
     /**
-     * @ORM\Column(type="string", length=15, nullable=true)
+     * @ORM\Column(type="string", length=60, nullable=true)
      * @Assert\MaxLength(limit = 120)
      */
     private $restriction;
@@ -124,16 +124,32 @@ class Contact
     private $religion;
 
     /**
-     * @ORM\Column(type="string", length=15, nullable=true)
-     * @Assert\MaxLength(limit = 15)
+     * @ORM\Column(type="string", length=60, nullable=true)
+     * @Assert\MaxLength(limit = 60)
      */
     private $profession;
 
     /**
-     * @ORM\Column(type="string", length=15, nullable=true)
-     * @Assert\MaxLength(limit = 15)
+     * @ORM\Column(type="string", length=60, nullable=true)
+     * @Assert\MaxLength(limit = 60)
+     */
+    private $occupation;
+
+    /**
+     * @ORM\Column(type="string", length=30, nullable=true)
+     * @Assert\MaxLength(limit = 30)
      */
     private $birthday;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $degree;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $sector;
 
     /**
      * @ORM\Column(type="string", length=15, nullable=true)
@@ -265,7 +281,7 @@ class Contact
      *
      * @param string $m_status
      */
-    public function setM_status($m_status)
+    public function setMstatus($m_status)
     {
         $this->m_status = $m_status;
     }
@@ -275,7 +291,7 @@ class Contact
      *
      * @return string
      */
-    public function getM_status()
+    public function getMstatus()
     {
         return $this->m_status;
     }
@@ -521,6 +537,26 @@ class Contact
     }
 
     /**
+     * Set occupation
+     *
+     * @param string $occupation
+     */
+    public function setOccupation($occupation)
+    {
+        $this->occupation = $occupation;
+    }
+
+    /**
+     * Get occupation
+     *
+     * @return string
+     */
+    public function getOccupation()
+    {
+        return $this->occupation;
+    }
+
+    /**
      * Set birthday
      *
      * @param string $birthday
@@ -620,4 +656,43 @@ class Contact
         return $this->relacion;
     }
 
+    /**
+     * Set degree
+     *
+     * @param integer $degree
+     */
+    public function setDegree($degree)
+    {
+        $this->degree = $degree;
+    }
+
+    /**
+     * Get degree
+     *
+     * @return integer
+     */
+    public function getDegree()
+    {
+        return $this->degree;
+    }
+
+    /**
+     * Set sector
+     *
+     * @param integer $sector
+     */
+    public function setSector($sector)
+    {
+        $this->sector = $sector;
+    }
+
+    /**
+     * Get sector
+     *
+     * @return integer
+     */
+    public function getSector()
+    {
+        return $this->sector;
+    }
 }

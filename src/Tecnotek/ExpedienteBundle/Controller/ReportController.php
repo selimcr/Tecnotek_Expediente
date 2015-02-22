@@ -1225,6 +1225,7 @@ $kinder1 = 0;
 
         $period = $em->getRepository("TecnotekExpedienteBundle:Period")
             ->find($periodId);
+        $year = $period->getYear(); ///para filtro de año
         $periodNumber = $period->getOrderInYear();
 
         $responses = array();
@@ -1274,8 +1275,9 @@ $kinder1 = 0;
                 = $r->getMainText();
         }
         //Obtener Formularios del Grade
+        //y filtro del año
         $formularios = $em->getRepository("TecnotekExpedienteBundle:SpecialQualificationsForm")
-            ->findBy(array('grade' => $gradeId), array('sortOrder' => 'ASC'));
+            ->findBy(array('grade' => $gradeId, 'year' => $year), array('sortOrder' => 'ASC'));
 
         $headersRow =  '<thead>';
         $headersRow .=  '    <tr style="height: 30px;">';
