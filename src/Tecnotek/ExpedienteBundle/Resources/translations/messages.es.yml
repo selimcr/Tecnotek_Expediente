@@ -395,6 +395,7 @@ label.emergencyinfo: En caso de emergencia:
 
 ##psicologia
 label.psicologiaescuela: Psicologia Esc.
+select.group: Seleccione el Grupo
 
 #Validation
 not.blank.name: Probando proband.

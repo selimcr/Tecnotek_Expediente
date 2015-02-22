@@ -3,7 +3,6 @@ var Tecnotek = Tecnotek || {};
 Tecnotek.psicoProfile = {
     translates : {},
     init : function() {
-
         $( ".date-input" ).datepicker({
             defaultDate: "0d",
             changeMonth: true,
@@ -16,6 +15,9 @@ Tecnotek.psicoProfile = {
             }
         });
 
+        $("#group").change(function(e){
+            window.location = Tecnotek.UI.urls["groupUrl"] + "/" + $(this).val();
+        });
         Tecnotek.psicoProfile.initButtons();
     },
     initButtons : function() {

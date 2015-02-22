@@ -11,12 +11,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  *
- * @ORM\Table(name="tek_questionnaires")
+ * @ORM\Table(name="tek_questionnaire_groups")
  * @ORM\Entity()
  * @UniqueEntity("name")
- * @ORM\Entity(repositoryClass="Tecnotek\ExpedienteBundle\Repository\QuestionnaireRepository")
  */
-class Questionnaire
+class QuestionnaireGroup
 {
     /**
      * @ORM\Column(type="integer")
@@ -29,21 +28,9 @@ class Questionnaire
      * @ORM\Column(type="string", length=60)
      * @Assert\NotBlank()
      * @Assert\MinLength(limit = 3)
-     * @Assert\MaxLength(limit = 60)
+     * @Assert\MaxLength(limit = 120)
      */
     private $name;
-
-    /**
-     * @ORM\Column(type="integer")
-     * @Assert\NotBlank()
-     */
-    private $sortOrder;
-
-    /**
-     * @ORM\Column(type="integer")
-     * @Assert\NotBlank()
-     */
-    private $type;
 
     /**
      * @ORM\Column(name="enable_for_teacher", type="boolean")
@@ -51,18 +38,12 @@ class Questionnaire
     private $enableForTeacher;
 
     /**
-     * @var questions
+     * @var questionnaires
      *
-     * @ORM\OneToMany(targetEntity="QuestionnaireQuestion", mappedBy="questionnaire", cascade={"all"})
+     * @ORM\OneToMany(targetEntity="Questionnaire", mappedBy="group", cascade={"all"})
      * @ORM\OrderBy({"sortOrder" = "ASC"})
      */
-    private $questions;
-
-    /**
-     * @ManyToOne(targetEntity="QuestionnaireGroup")
-     * @JoinColumn(name="group_id", referencedColumnName="id")
-     */
-    private $group;
+    private $questionnaires;
 
     public function __construct()
     {
@@ -104,52 +85,12 @@ class Questionnaire
         return $this->name;
     }
 
-    /**
-     * Set sortOrder
-     *
-     * @param integer $sortOrder
-     */
-    public function setSortOrder($sortOrder)
-    {
-        $this->sortOrder = $sortOrder;
-    }
-
-    /**
-     * Get sortOrder
-     *
-     * @return integer 
-     */
-    public function getSortOrder()
-    {
-        return $this->sortOrder;
-    }
-
-    /**
-     * Set type
-     *
-     * @param integer $type
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-    }
-
-    /**
-     * Get type
-     *
-     * @return integer
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
     public function isEnabledForTeacher()
     {
         return $this->enableForTeacher;
     }
 
-    public function getQuestions(){
-        return $this->questions;
+    public function getQuestionnaires(){
+        return $this->questionnaires;
     }
 }

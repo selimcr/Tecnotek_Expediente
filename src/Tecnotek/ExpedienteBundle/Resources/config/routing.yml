@@ -263,6 +263,10 @@ _expediente_sysadmin_student_psico_profile:
     pattern:  /student/psicoProfile/{id}
     defaults: { _controller: TecnotekExpedienteBundle:Student:studentPsicoProfile }
 
+_expediente_sysadmin_student_psico_profile_group:
+    pattern:  /student/psicoProfile/{id}/{groupId}
+    defaults: { _controller: TecnotekExpedienteBundle:Student:studentPsicoProfileGroup }
+
 _expediente_sysadmin_save_student_psico_profile:
     pattern:  /student/psicoProfileSave
     defaults: { _controller: TecnotekExpedienteBundle:Student:savePsicoForm }
@@ -953,6 +957,18 @@ _expediente_teacher_course_entries:
 _expediente_teacher_observations:
   pattern:  /t/observations
   defaults: { _controller: TecnotekExpedienteBundle:Teacher:observations }
+
+_expediente_teacher_students_psico_basic:
+  pattern:  /t/psico
+  defaults: { _controller: TecnotekExpedienteBundle:Teacher:psico }
+
+_expediente_teacher_students_psico:
+  pattern:  /t/psico/{id}
+  defaults: { _controller: TecnotekExpedienteBundle:Teacher:psico }
+
+_expediente_teacher_students_psico_type:
+  pattern:  /t/psico/{id}/{groupId}
+  defaults: { _controller: TecnotekExpedienteBundle:Teacher:psicoByGroup }
 
 _expediente_teacher_load_groups_of_period:
   pattern: /t/loadGroupsOfPeriod/

@@ -1,7 +1,7 @@
 {% extends 'TecnotekExpedienteBundle::logged_layout.html.twig' %}
 
 {% block htmlTitle %}
-    Tecnotek :: Expediente :: Super Administrador :: Estudiante
+    Tecnotek :: Expediente :: Profesor :: Estudiante
 {% endblock %}
 
 {% block extracss %}
@@ -28,8 +28,7 @@
         Tecnotek.module = "psicoProfile";
         Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
         Tecnotek.UI.urls["savePsicoFormUrl"] = "{{ path("_expediente_sysadmin_save_student_psico_profile") }}";
-        Tecnotek.UI.urls["groupUrl"] = "{{ path("_expediente_sysadmin_student_psico_profile", {'id': entity.id }) }}";
-
+        Tecnotek.UI.urls["groupUrl"] = "{{ path("_expediente_teacher_students_psico", {'id': entity.id }) }}";
     </script>
     <!-- basic fancybox setup -->
     <script type="text/javascript">
@@ -42,7 +41,8 @@
         <div class="grid_24" style="width: 100%;">
             <div class="titleRow">
                 <div class="left"><h3> {{ entity }}</h3></div>
-                <div class="right"><a href="{{ path('_expediente_sysadmin_student_psico_esc') }}" class="button success-darker tiny"><span></span>{% trans %}label.back.list{% endtrans %}</a></div>
+                <!-- <div class="right"><a href="{{ path('_expediente_sysadmin_student_psico_esc') }}" class="button
+                success-darker tiny"><span></span>{% trans %}label.back.list{% endtrans %}</a></div> -->
                 <div class="clear"></div>
             </div>
             <div class="titleRow">

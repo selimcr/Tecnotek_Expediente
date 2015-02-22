@@ -104,6 +104,9 @@ var Tecnotek = {
                 case "special_qualifications":
                     Tecnotek.SpecialQualifications.init();
                     break;
+                case "psicoProfile":
+                    Tecnotek.psicoProfile.init();
+                    break;
                 default:
 					break;
 				}
@@ -1237,6 +1240,11 @@ var Tecnotek = {
                 //$('#entriesRows').empty();
                 //$('#subentriesRows').empty();
                 //$('#subentryFormParent').empty();
+
+                $(".psicoButton").unbind().click(function(e){
+                    var rel = $(this).attr("rel");
+                    window.location = Tecnotek.UI.urls["studentPsicosURL"] + "/" + rel;
+                });
 
                 $(".observation").unbind();
 

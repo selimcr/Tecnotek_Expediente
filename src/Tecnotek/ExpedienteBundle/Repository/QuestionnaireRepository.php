@@ -29,6 +29,22 @@ class QuestionnaireRepository extends EntityRepository
         return $this->findQuestionnairesByType(1);
     }
 
+    /**
+     * @return array The list of the Questionnaires with type 1: Psico and in a group
+     */
+    public function findPsicoQuestionnairesOfGroup($group, $onlyForTeachers = false){
+        $teachers = "";
+        if($onlyForTeachers){
+            $teachers = " AND q.enableForTeacher = true";
+        }
+         return $this->getEntityManager()
+             ->createQuery('SELECT q'
+             . ' FROM TecnotekExpedienteBundle:Questionnaire q'
+             . " WHERE q.group = " . $group->getId() . $teachers
+             . " ORDER BY q.sortOrder ASC")
+             ->getResult();
+    }
+
     public function findStudentQuestion($stdId, $questionId){
         $query = $this->getEntityManager()
             ->createQuery('SELECT q'
@@ -58,6 +74,27 @@ class QuestionnaireRepository extends EntityRepository
         try {
             // The Query::getSingleResult() method throws an exception
             // if there is no record matching the criteria.
+            $answers = $query->getResult();
+        } catch (NoResultException $e) {
+        }
+        return $answers;
+    }
+
+    public function findPsicoQuestionnairesAnswersOfStudentByGroup($stdId, $group, $onlyForTeachers = false){
+        $teachers = "";
+        if($onlyForTeachers){
+            $teachers = " AND qe.enableForTeacher = true";
+        }
+
+        $query = $this->getEntityManager()
+            ->createQuery('SELECT q'
+            . ' FROM TecnotekExpedienteBundle:QuestionnaireAnswer q'
+            . ' JOIN q.question question'
+            . ' JOIN question.questionnaire qe'
+            . " WHERE q.student = $stdId" . $teachers
+            . " AND qe.group = " . $group->getId());
+        $answer = null;
+        try {
             $answers = $query->getResult();
         } catch (NoResultException $e) {
         }

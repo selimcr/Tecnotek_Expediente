@@ -786,21 +786,21 @@ class TeacherController extends Controller
                     $courseClass = $query->getResult();
                     $temp = new \Tecnotek\ExpedienteBundle\Entity\CourseClass();
                     $html =  '<tr  style="height: 175px; line-height: 0px;"><td class="celesteOscuro headcolcarne" style="width: 75px; font-size: 10px; height: 175px;"></td>';
-                    $html .=  '<td class="celesteClaro bold headcolnombre" style="width: 250px; font-size: 8px; height: 175px;"></td>';
+                    $html .=  '<td class="celesteClaro bold headcolnombre" style="width: 275px; font-size: 8px; height: 175px;"></td>';
                     $html .= '<td class="azul headcoltrim" style="vertical-align: bottom; padding: 0.5625em 0.625em; height: 175px; line-height: 220px;"><div class="verticalText" style="color: #fff;">Promedio Trimestral</div></td>';
-                    $html .= '<td  style="vertical-align: bottom; padding: 0.5625em 0.625em; height: 175px; line-height: 220px;"><div class="verticalText" style="color: #fff;"></div></td>';
+                    $html .= '<td  style="vertical-align: bottom; padding: 0.5625em 26.625em; height: 175px; line-height: 220px;"><div class="verticalText" style="color: #fff;"></div></td>';
 
                     $marginLeft = 48;
                     $marginLeftCode = 62;
                     $htmlCodes =  '<tr  style="height: 30px;"><td class="celesteOscuro headcolcarne" style="width: 75px; font-size: 10px;"></td>';
-                    $htmlCodes .=  '<td class="celesteClaro bold headcolnombre" style="width: 250px; font-size: 8px;"></td>';
+                    $htmlCodes .=  '<td class="celesteClaro bold headcolnombre" style="width: 275px; font-size: 8px;"></td>';
                     $htmlCodes .= '<td class="azul headcoltrim" style="color: #fff;"></td>';
                     $htmlCodes .= '<td  style="color: #fff;"></td>';
                     $jumpRight = 46;
                     $width = 44;
 
                     $html3 =  '<tr style="height: 30px; line-height: 0px;" class="noPrint"><td class="celesteOscuro bold headcolcarne" style="width: 75px; font-size: 12px;">Carne</td>';
-                    $html3 .=  '<td class="celesteClaro bold headcolnombre" style="width: 250px; font-size: 12px;">Estudiante</td>';
+                    $html3 .=  '<td class="celesteClaro bold headcolnombre" style="width: 275px; font-size: 12px;">Estudiante</td>';
                     $html3 .= '<td class="azul headcoltrim" style="color: #fff;">TRIM</td>';
                     $html3 .= '<td  style="color: #fff;">Observaciones</td>';
                     $studentRow = '';
@@ -832,7 +832,12 @@ class TeacherController extends Controller
                         $html .=  '<tr style="height: 30px; line-height: 0px;">';
                         $studentRowIndex++;
                         $html .=  '<td class="celesteOscuro headcolcarne" style="width: 75px; font-size: 10px;">' . $stdy->getStudent()->getCarne() . '</td>';
-                        $html .=  '<td class="celesteClaro bold headcolnombre" style="width: 250px; font-size: 12px;">' . $stdy->getStudent() . '</td>';
+                        $html .=  '<td class="celesteClaro bold headcolnombre" style="width: 275px; font-size: 12px;">'
+                            . $stdy->getStudent() . '<div class="right imageButton psicoButton"'
+                            . 'title="Perfil Psicologico" rel="' . $stdy->getStudent()->getId() .
+                            '" style="margin-top:6px;"></div>'
+                            . '<div class="clearer"></div>'
+                            . '</td>';
 
 
                         $row = str_replace("stdId", $stdy->getStudent()->getId(), $studentRow);
@@ -1437,5 +1442,34 @@ class TeacherController extends Controller
         {
             return new Response("<b>Not an ajax call!!!" . "</b>");
         }
+    }
+
+    public function psicoAction($id){
+        return $this->psicoByGroupAction($id, 0);
+    }
+
+    public function psicoByGroupAction($id, $groupId){
+        $em = $this->getDoctrine()->getEntityManager();
+        $entity = $em->getRepository("TecnotekExpedienteBundle:Student")->find($id);
+        $groups = $em->getRepository("TecnotekExpedienteBundle:QuestionnaireGroup")->findByEnableForTeacher(true);
+        $group = null;
+        if($groupId == 0){ //Get the first Group
+            $group = $groups[0];
+        } else {
+            $group = $em->getRepository("TecnotekExpedienteBundle:QuestionnaireGroup")->find($groupId);
+        }
+        $forms = $em->getRepository("TecnotekExpedienteBundle:Questionnaire")->findPsicoQuestionnairesOfGroup($group,
+            true);
+
+        $answersResult = $em->getRepository("TecnotekExpedienteBundle:Questionnaire")
+            ->findPsicoQuestionnairesAnswersOfStudentByGroup($id, $group, true);
+        $answers = array();
+        foreach ($answersResult as $answer) {
+            $answers[$answer->getQuestion()->getId()] = $answer;
+        }
+
+        return $this->render('TecnotekExpedienteBundle:Teacher:psicoProfile.html.twig',
+            array('entity' => $entity,'forms'   => $forms, 'menuIndex' => 3, 'answers' => $answers,
+                  'groups' => $groups, 'currentGroup' => $groupId));
     }
 }

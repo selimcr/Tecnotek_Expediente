@@ -2220,19 +2220,32 @@ $currentPeriod = $em->getRepository("TecnotekExpedienteBundle:Period")->findOneB
 
     public function studentPsicoProfileAction($id)
     {
+        return $this->studentPsicoProfileGroupAction($id, 0);
+    }
+
+    public function studentPsicoProfileGroupAction($id, $groupId)
+    {
         $em = $this->getDoctrine()->getEntityManager();
         $entity = $em->getRepository("TecnotekExpedienteBundle:Student")->find($id);
-        $forms = $em->getRepository("TecnotekExpedienteBundle:Questionnaire")->findPsicoQuestionnaires();
+        $groups = $em->getRepository("TecnotekExpedienteBundle:QuestionnaireGroup")->findAll();
+        $group = null;
+        if($groupId == 0){ //Get the first Group
+            $group = $groups[0];
+        } else {
+            $group = $em->getRepository("TecnotekExpedienteBundle:QuestionnaireGroup")->find($groupId);
+        }
+        $forms = $em->getRepository("TecnotekExpedienteBundle:Questionnaire")->findPsicoQuestionnairesOfGroup($group);
 
         $answersResult = $em->getRepository("TecnotekExpedienteBundle:Questionnaire")
-            ->findPsicoQuestionnairesAnswersOfStudent($id);
+            ->findPsicoQuestionnairesAnswersOfStudentByGroup($id, $group);
         $answers = array();
         foreach ($answersResult as $answer) {
             $answers[$answer->getQuestion()->getId()] = $answer;
         }
 
         return $this->render('TecnotekExpedienteBundle:SuperAdmin:Student/psicoProfile.html.twig',
-            array('entity' => $entity,'forms'   => $forms, 'menuIndex' => 3, 'answers' => $answers));
+            array('entity' => $entity,'forms'   => $forms, 'menuIndex' => 3, 'answers' => $answers,
+                'groups' => $groups, 'currentGroup' => $groupId));
     }
 
     public function savePsicoFormAction(){
