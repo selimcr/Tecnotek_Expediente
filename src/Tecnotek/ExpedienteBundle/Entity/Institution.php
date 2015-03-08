@@ -43,9 +43,15 @@ class Institution
      */
     private $absenceTypePoints;
 
+    /**
+     * @var ArrayCollection $questionnaires
+     * @ORM\ManyToMany(targetEntity="Questionnaire", mappedBy="institutions")
+     */
+    private $questionnaires;
+
     public function __construct()
     {
-
+        $this->questionnaires = new ArrayCollection();
     }
 
     public function __toString()
@@ -93,5 +99,13 @@ class Institution
 
     public function getAbsenceTypePoints(){
         return $this->absenceTypePoints;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getQuestionnaires()
+    {
+        return $this->questionnaires->toArray();
     }
 }

@@ -2479,4 +2479,74 @@ class SuperAdminController extends Controller
             return new Response("<b>Not an ajax call!!!" . "</b>");
         }
     }
+
+    public function questionnairesAction(){
+        $em = $this->getDoctrine()->getEntityManager();
+        $dql = "SELECT q FROM TecnotekExpedienteBundle:Questionnaire q";
+        $query = $em->createQuery($dql);
+        $questionnaires = $query->getResult();
+        $groups = $em->getRepository('TecnotekExpedienteBundle:QuestionnaireGroup')->findAll();
+        $institutions = $em->getRepository('TecnotekExpedienteBundle:Institution')->findAll();
+
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Questionnaires/list.html.twig', array(
+            'questionnaires' => $questionnaires, 'groups' => $groups, 'institutions' => $institutions
+        ));
+    }
+
+    public function saveQuestionnaireConfigAction(){
+        $logger = $this->get('logger');
+        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
+        {
+            try {
+                $request = $this->get('request')->request;
+                $questionnaireId = $request->get('q');
+                $field = $request->get('field');
+                $val = $request->get('val');
+
+                $translator = $this->get("translator");
+
+                if( isset($questionnaireId) && isset($field) && isset($val) ) {
+                    $em = $this->getDoctrine()->getEntityManager();
+                    $q = new \Tecnotek\ExpedienteBundle\Entity\Questionnaire();
+                    $q = $em->getRepository('TecnotekExpedienteBundle:Questionnaire')->find($questionnaireId);
+
+                    switch($field){
+                        case 'group':
+                            $qGroup = $em->getRepository('TecnotekExpedienteBundle:QuestionnaireGroup')->find($val);
+                            $q->setGroup($qGroup);
+                            break;
+                        case 'teacher':
+                            $q->setEnabledForTeacher($val == 1);
+                            break;
+                        case 'institution':
+                            $values = preg_split("/[\s-]+/", $val);
+                            $institution =
+                                $em->getRepository('TecnotekExpedienteBundle:Institution')->find($values[0]);
+                            if($values[1] == 0){
+                                $q->getInstitutions()->removeElement($institution);
+                            } else {
+                                $q->getInstitutions()->add($institution);
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                    $em->persist($q);
+                    $em->flush();
+                    return new Response(json_encode(array('error' => false)));
+                } else {
+                    return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
+                }
+            }
+            catch (Exception $e) {
+                $info = toString($e);
+                $logger->err('Admin::loadGroupsOfPeriodAction [' . $info . "]");
+                return new Response(json_encode(array('error' => true, 'message' => $info)));
+            }
+        }// endif this is an ajax request
+        else
+        {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+    }
 }

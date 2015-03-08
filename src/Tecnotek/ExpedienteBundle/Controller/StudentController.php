@@ -2234,7 +2234,8 @@ $currentPeriod = $em->getRepository("TecnotekExpedienteBundle:Period")->findOneB
         } else {
             $group = $em->getRepository("TecnotekExpedienteBundle:QuestionnaireGroup")->find($groupId);
         }
-        $forms = $em->getRepository("TecnotekExpedienteBundle:Questionnaire")->findPsicoQuestionnairesOfGroup($group);
+        $forms = $em->getRepository("TecnotekExpedienteBundle:Questionnaire")->findPsicoQuestionnairesOfGroup($group,
+        false, $entity);
 
         $answersResult = $em->getRepository("TecnotekExpedienteBundle:Questionnaire")
             ->findPsicoQuestionnairesAnswersOfStudentByGroup($id, $group);

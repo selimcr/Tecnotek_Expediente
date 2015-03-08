@@ -1,0 +1,70 @@
+{% extends 'TecnotekExpedienteBundle::logged_layout.html.twig' %}
+
+{% block extrajs %}
+<script type="text/javascript" src="{{ asset('js/tek_exp_questionnaires.js') }}"></script>
+<script type="text/javascript">
+    Tecnotek.module = "questionnairesList";
+    Tecnotek.UI.urls["save"] = "{{ path('_expediente_sysadmin_save_questionnaires')}}";
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="container_24">
+    <div class="grid_24">
+        <div class="titleRow">
+            <div class="left"><h3>{% trans %}label.questionnaires.list{% endtrans %}</h3></div>
+            <div class="right">
+                <!-- <a href="{{ path('_expediente_sysadmin_admin_create') }}" class="button success-darker
+                tiny"><span></span>{% trans %}label.add{% endtrans %}</a> -->
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="grid_24 padline">
+            <div class="lineH"></div>
+        </div>
+        <div class="clear"></div>
+        <div class="table">
+            <div class="row tableHeader">
+                <div class="option_width" style="float: left; width: 200px;">{% trans %}label.name{% endtrans %}</div>
+                <div class="option_width" style="float: left; width: 200px;">{% trans %}label.group{% endtrans %}</div>
+                <div class="option_width" style="float: left; width: 250px;">
+                    {% trans %}label.enableForTeacher{% endtrans %}</div>
+                <div class="option_width" style="float: left; width: 200px;">{% trans %}label.enableInstitutions{% endtrans %}</div>
+            </div>
+
+            {% set counter = 0 %}
+
+            {% for q in questionnaires %}
+            <div class="row userRow {% if counter%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}" rel="{{ q.id }}"
+                    style="height: 76px;">
+                <div class="option_width" style="float: left; width: 200px;">{{ q }} </div>
+                <div class="option_width" style="float: left; width: 200px;">
+                    <select class="q-group" rel="{{ q.id}}" style="width: 150px;">
+                        {% for group in groups %}
+                        <option value="{{ group.id }}"
+                                {{ (q.group == group)? 'selected="selected"':'' }} >{{ group }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="option_width" style="float: left; width: 150px;">
+                    <input class="q-teacher" type="radio" name="enableForTeacher{{ q.id }}" value="1" rel="{{ q.id}}"
+                            {{ (q.isEnabledForTeacher())? 'checked':'' }}>Si
+                    <input class="q-teacher" type="radio" name="enableForTeacher{{ q.id }}" value="0" rel="{{ q.id}}"
+                            {{ (q.isEnabledForTeacher())? '':'checked' }}>No
+                </div>
+                <div class="option_width" style="float: left; width: 200px;">
+                    {% for inst in institutions %}
+                    <input type="checkbox" class="q-inst" rel="{{ q.id }}" inst="{{ inst.id }}"
+                            {{ (inst in q.institutions)? 'checked="checked"':''}}>{{ inst }} <br>
+                    {% endfor %}
+                </div>
+            </div>
+            {% set counter = counter + 1 %}
+            {% endfor %}
+        </div>
+        <br/>
+        <div class="clear"></div>
+    </div>
+    <div class="clear"></div>
+</div>
+{% endblock %}

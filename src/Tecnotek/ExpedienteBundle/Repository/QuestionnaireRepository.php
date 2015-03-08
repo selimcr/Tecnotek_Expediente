@@ -32,15 +32,35 @@ class QuestionnaireRepository extends EntityRepository
     /**
      * @return array The list of the Questionnaires with type 1: Psico and in a group
      */
-    public function findPsicoQuestionnairesOfGroup($group, $onlyForTeachers = false){
+    public function findPsicoQuestionnairesOfGroup($group, $onlyForTeachers = false,
+                                                   \Tecnotek\ExpedienteBundle\Entity\Student $student){
         $teachers = "";
         if($onlyForTeachers){
             $teachers = " AND q.enableForTeacher = true";
         }
+
+        // Get Institution of Student
+        $studentYear = $this->getEntityManager()
+            ->createQuery('SELECT stdy'
+            . ' FROM TecnotekExpedienteBundle:StudentYear stdy'
+            . ' JOIN stdy.period p '
+            . " WHERE p.isActual = 1 AND stdy.student = " . $student->getId())
+            ->getResult();
+
+        $institutionId = 0;
+        if( isset($studentYear[0]) ){
+            $stdGroup = $studentYear[0]->getGroup();
+            if( $stdGroup ){
+                $institutionId = $stdGroup->getInstitution()->getId();
+            }
+        }
+
          return $this->getEntityManager()
              ->createQuery('SELECT q'
              . ' FROM TecnotekExpedienteBundle:Questionnaire q'
+             . ' JOIN q.institutions ins'
              . " WHERE q.group = " . $group->getId() . $teachers
+             . ' AND ins.id in (' . $institutionId . ')'
              . " ORDER BY q.sortOrder ASC")
              ->getResult();
     }

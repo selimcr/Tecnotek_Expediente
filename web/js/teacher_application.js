@@ -1326,7 +1326,6 @@ var Tecnotek = {
 
                 $("#groups").change(function(event){
                     event.preventDefault();
-                    console.debug("Sera que entro a este event??? o.o");
                     Tecnotek.SpecialQualifications.loadSpecialQualificationsOfGroup();
                     Tecnotek.SpecialQualifications.loadCoursesOfGroupByTeacher($(this).val());
                 });
@@ -1422,7 +1421,6 @@ var Tecnotek = {
             },
             loadSpecialQualificationsForms: function($stdyId) {
                 $("#specialQualificationsForms").html("");
-console.debug("alo alo, voy pr aca...");
                 Tecnotek.ajaxCall(Tecnotek.UI.urls["loadStudentSpecialQualificationsURL"],
                     {   periodId: $("#period").val(),
                         stdyId: $stdyId

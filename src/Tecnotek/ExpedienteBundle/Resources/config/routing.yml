@@ -1138,3 +1138,11 @@ _expediente_sysadmin_load_period_levels:
 _expediente_sysadmin_load_period_level_groups:
     pattern:  /groupsOfPeriodByLevel/load
     defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:loadGroupsOfPeriodAndLevel }
+
+_expediente_sysadmin_questionnaires:
+    pattern:  /admin/questionnaires
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:questionnaires }
+
+_expediente_sysadmin_save_questionnaires:
+    pattern:  /admin/saveQuestionnaireConfig
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:saveQuestionnaireConfig }

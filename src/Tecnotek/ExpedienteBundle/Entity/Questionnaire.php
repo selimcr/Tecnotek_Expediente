@@ -64,9 +64,20 @@ class Questionnaire
      */
     private $group;
 
+    /**
+     * @var ArrayCollection $institutions
+     * @ORM\ManyToMany(targetEntity="Institution", inversedBy="questionnaires", cascade={"all"})
+     * @ORM\JoinTable(
+     *      name="institution_questionnaires",
+     *      joinColumns={@ORM\JoinColumn(name="questionnaire_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="institution_id", referencedColumnName="id")}
+     * )
+     */
+    private $institutions;
+
     public function __construct()
     {
-
+        $this->institutions = new ArrayCollection();
     }
 
     public function __toString()
@@ -144,6 +155,10 @@ class Questionnaire
         return $this->type;
     }
 
+    public function setEnabledForTeacher($enableForTeacher){
+        $this->enableForTeacher = $enableForTeacher;
+    }
+
     public function isEnabledForTeacher()
     {
         return $this->enableForTeacher;
@@ -151,5 +166,21 @@ class Questionnaire
 
     public function getQuestions(){
         return $this->questions;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getInstitutions()
+    {
+        return (isset($this->institutions))? $this->institutions:new ArrayCollection();
+    }
+
+    public function getGroup(){
+        return $this->group;
+    }
+
+    public function setGroup(QuestionnaireGroup $group){
+        $this->group = $group;
     }
 }

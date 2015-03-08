@@ -1465,8 +1465,7 @@ class TeacherController extends Controller
             $group = $em->getRepository("TecnotekExpedienteBundle:QuestionnaireGroup")->find($groupId);
         }
         $forms = $em->getRepository("TecnotekExpedienteBundle:Questionnaire")->findPsicoQuestionnairesOfGroup($group,
-            true);
-
+            true, $entity);
         $answersResult = $em->getRepository("TecnotekExpedienteBundle:Questionnaire")
             ->findPsicoQuestionnairesAnswersOfStudentByGroup($id, $group, true);
         $answers = array();

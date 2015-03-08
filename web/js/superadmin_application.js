@@ -156,6 +156,9 @@ var Tecnotek = {
                 case "emails":
                     Tecnotek.Emails.init();
                     break;
+                case "questionnairesList":
+                    Tecnotek.Questionnaires.init();
+                    break;
                 default:
 					break;
 				}
