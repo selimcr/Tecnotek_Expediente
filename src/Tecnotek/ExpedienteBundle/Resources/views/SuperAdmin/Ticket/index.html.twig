@@ -1,23 +1,32 @@
 {% extends 'TecnotekExpedienteBundle::logged_layout.html.twig' %}
 
-{% block htmlTitle %}
-    Tecnotek :: Expediente :: Super Administrador :: Buseta
+
+{% block extracss %}
+<link rel="stylesheet" href="{{ asset('fancybox/jquery.fancybox.css') }}" type="text/css" media="all" />
+<link rel="stylesheet" href="{{ asset('fancybox/fancybox_style.css') }}" type="text/css" media="all" />
 {% endblock %}
 
 {% block extrajs %}
+
     <script type="text/javascript">
         Tecnotek.module = "ticketsIndex";
+
         Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
         Tecnotek.UI.urls["getStudentsURL"] = "{{ path('_expediente_sysadmin_student_ajax_list')}}";
         Tecnotek.UI.urls["loadStudentRelativesURL"] = "{{ path('_expediente_sysadmin_relatives_list')}}";
         Tecnotek.UI.urls["saveTicketURL"] = "{{ path('_expediente_sysadmin_ticket_save')}}";
+        Tecnotek.UI.urls["saveNewContactURL"] = "{{ path("_expediente_save_new_contact") }}";
+        Tecnotek.UI.urls["associateContactURL"] = "{{ path("_expediente_associate_new_contact") }}";
+        Tecnotek.UI.urls["getContactsURL"] = "{{ path("_expediente_get_contacts_list") }}";
         Tecnotek.StudentShow.translates["relative.not.selected"] = "{% trans %}message.relative.not.selected{% endtrans %}";
         Tecnotek.StudentShow.translates["student.not.selected"] = "{% trans %}message.student.not.selected{% endtrans %}";
         Tecnotek.StudentShow.translates["relative.not.exists"] = "{% trans %}message.relative.not.exists{% endtrans %}";
+        Tecnotek.StudentShow.translates["emptyFields"] = "{% trans %}messages.empty.fields{% endtrans %}";
         Tecnotek.UI.translates["confirmDelete"] = "{% trans %}message.ticket.confirm.delete{% endtrans %}";
         Tecnotek.UI.urls["show"] = "{{ path('_expediente_sysadmin_student_show_ticket_simple')}}";
         Tecnotek.UI.urls["deleteTicketURL"] = "{{ path('_expediente_sysadmin_remove_ticket')}}";
     </script>
+    <script type="text/javascript" src="{{ asset('fancybox/jquery.fancybox.js?v=2.0.6') }}"></script>
     <script type="text/javascript" src="{{ asset('js/tek_exp_tickets.js') }}"></script>
 {% endblock %}
 
@@ -70,7 +79,156 @@
                         </div>
 
                         <div class="formRow" style="margin: 0; margin-bottom: 15px;">
-                            <div class="left" style="width: 85px;"><label>{% trans %}label.relative{% endtrans %}</label></div><select id="relative" name="relative"></select><br/>
+                            <div class="left" style="width: 100%;">
+                                <label style="float: left;">{% trans %}label.relative{% endtrans %}</label>
+
+                                <a id="new-relative-btn" class="modalbox right button success-darker tiny"
+                                   style="margin-bottom: 5px; margin-right: 46px; display: none;"
+                                   href="#relatives-modal-container">
+                                    {% trans %}label.new.relative{% endtrans %}
+                                </a>
+
+                                <!-- Modal with Relatives -->
+                                <div id="relatives-modal-container"
+                                     style="display: none; width: 800px; height: 400px;">
+
+                                    <div class="content">
+                                        <p>Ingresar o asociar nuevo familiar de:
+                                            <b><span id="new-relative-student"></span></b></p>
+                                        <div class="table left" style="margin-left: 10px; font-size: 14px; width: 755px;">
+                                            <div style="padding-left: 5px;">
+                                                {% trans %}student.create.new.contact{%endtrans%}</div>
+                                            <form class="customF" id="newcontact" action="{{ path('_expediente_sysadmin_club_save') }}" method="post">
+                                            <div class="left" style="font-size: 14px; width: 375px;">
+
+                                                <div style="padding: 5px;">
+                                                        <label style=""><span class="text-form" style="display: inline-block; width: 125px; min-width: 125px;">{% trans %}label.firstname{% endtrans %}</span>
+                                                            <input type="text" id="firstname" name="firstname"
+                                                                   required="required" style="margin: 0; width: 185px;"></label>
+
+                                                        <label><span class="text-form" style="display: inline-block; width: 125px;min-width: 125px;">{% trans %}label.lastname{% endtrans %}</span>
+                                                            <input type="text" id="lastname" name="lastname" required="required" style="margin: 0; width: 185px;""></label>
+
+                                                        <label><span class="text-form" style="display: inline-block; width: 125px;min-width: 125px;">{% trans %}label.identification{% endtrans %}</span>
+                                                            <input type="text" id="identification" name="identification" required="required" style="margin: 0; width: 185px;""></label>
+
+                                                        <label><span class="text-form" style="display: inline-block; width: 125px;min-width: 125px;">{% trans %}label.phonec{% endtrans %}</span>
+                                                            <input type="text" id="phonec" name="phonec" style="margin: 0; width: 185px;""></label>
+
+                                                        <label><span class="text-form" style="display: inline-block; width: 125px;min-width: 125px;">{% trans %}label.phonew{% endtrans %}</span>
+                                                            <input type="text" id="phonew" name="phonew" style="margin: 0; width: 185px;""></label>
+
+                                                        <label><span class="text-form" style="display: inline-block; width: 125px;min-width: 125px;">{% trans %}label.phoneh{% endtrans %}</span>
+                                                            <input type="text" id="phoneh" name="phoneh" style="margin: 0; width: 185px;""></label>
+
+                                                        <div class="clear"></div>
+                                                </div>
+                                            </div>
+
+                                            <div class="left" style="font-size: 14px; width: 375px;">
+                                                <div style="padding: 5px;">
+                                                    <label><span class="text-form" style="display: inline-block; width: 125px;min-width: 125px;">{% trans %}label.workplace{% endtrans %}</span>
+                                                        <input type="text" id="workplace" name="workplace" style="margin: 0; width: 185px;""></label>
+
+                                                    <label><span class="text-form" style="display: inline-block; width: 125px;min-width: 125px;">{% trans %}label.email{% endtrans %}</span>
+                                                        <input type="text" id="email" name="email" style="margin: 0; width: 185px;""></label>
+
+                                                    <label><span class="text-form" style="display: inline-block; width: 125px;min-width: 125px;">{% trans %}label.adress{% endtrans %}</span>
+                                                        <input type="text" id="adress" name="adress" style="margin: 0; width: 185px;""></label>
+
+                                                    <label><span class="text-form" style="display: inline-block; width: 125px;min-width: 125px;">{% trans %}label.restriction{% endtrans %}</span>
+                                                        <input type="text" id="restriction" name="restriction" required="required" style="margin: 0; width: 185px;""></label>
+
+                                                    <label><span class="text-form" style="display: inline-block; width: 125px; min-width: 125px;">{% trans %}label.kinship{% endtrans %}</span>
+                                                        <select id="kinship" style="width: 185px;"">
+                                                        <option value="1">{% trans %}label.father{% endtrans %}</option>
+                                                        <option value="2">{% trans %}label.mother{% endtrans %}</option>
+                                                        <option value="3">{% trans %}label.brother{% endtrans %}</option>
+                                                        <option value="4">{% trans %}label.sister{% endtrans %}</option>
+                                                        <option value="99">{% trans %}label.other{% endtrans %}</option>
+                                                        </select></label>
+
+                                                    <div id="otherDetail" style="display: none;">
+                                                        <label><span class="text-form" style="display: inline-block; width: 125px;min-width: 125px;">{% trans %}label.description{% endtrans %}</span>
+                                                            <input type="text" id="description" name="description" required="required" style="margin: 0; width: 185px;""></label>
+                                                    </div>
+
+                                                    <button id="asociateButton" style="margin-top: 0px;" type="button" class="right button success-darker tiny" name="save"><span></span>{% trans %}label.asociate{% endtrans %}</button>
+                                                    <div class="clear"></div>
+
+                                                </div>
+                                            </div>
+                                            </form>
+
+
+                                        </div>
+                                    </div>
+                                    <!-- End of form container -->
+                                    <div class="clear"></div>
+
+                                    <!-- Start of other tables -->
+                                    <div class="content">
+                                        <div class="table left" style="margin-left: 10px; font-size: 14px; width: 755px;">
+                                            <div class="left" style="font-size: 14px; width: 375px;
+                                                margin-right: 10px;">
+                                                <div class="table" id="relativesList">
+                                                    <div class="row tableHeader" style="padding: 0;">
+                                                        <div class="option_width" style="float: left; width: 250px;">
+                                                            {% trans %}label.name{% endtrans %}</div>
+                                                        <div class="option_width" style="float: left; width: 100px;">
+                                                            {% trans %}label.kinship{% endtrans %}</div>
+                                                    </div>
+
+                                                    <div id="relatives-rows">
+
+                                                    </div>
+                                                    <div class="clear"></div>
+                                                    <!--
+                                                    <div id="relative_row_" class="row" rel="" style="padding: 0px; font-size: 10px;">
+                                                        <div class="" style="float: left; width: 325px;"></div>
+                                                        <div class="" style="float: left; width: 50px;"></div>
+                                                        <div class="right imageButton deleteButton" style="height: 16px;"  title="{% trans %}label.delete{% endtrans %}"  rel=""></div>
+                                                        <div class="right imageButton viewButton" style="height: 16px;"  title="{% trans %}label.view{% endtrans %}"  rel=""></div>
+                                                        <div class="right imageButton editButton"  title="{% trans %}label.edit{% endtrans %}"  rel="relative.contact.id "></div>
+                                                        <div class="clear"></div>
+                                                    </div>
+                                                    -->
+                                                </div>
+                                            </div>
+
+                                            <div class="left" style="font-size: 14px; width: 350px;">
+                                                <form id="searchform" class="customForm">
+                                                    <div>
+                                                        <div>{% trans %}student.include.contact{%endtrans%}</div>
+                                                        <div style="font-size: 10px;">{% trans %}student.include.help{%endtrans%}</div><br/>
+                                                        <label><span class="text-form" style="display: inline-block; width: 75px;min-width: 75px;">{% trans %}label.kinship{% endtrans %}</span>
+                                                            <select id="kinship2">
+                                                                <option value="1">{% trans %}label.father{% endtrans %}</option>
+                                                                <option value="2">{% trans %}label.mother{% endtrans %}</option>
+                                                                <option value="3">{% trans %}label.brother{% endtrans %}</option>
+                                                                <option value="4">{% trans %}label.sister{% endtrans %}</option>
+                                                                <option value="99">{% trans %}label.other{% endtrans %}</option>
+                                                            </select>
+                                                        </label>
+                                                        <label><span class="text-form" style="display: inline-block; width: 75px;min-width: 75px;">{% trans %}label.name{% endtrans %}</span>
+                                                            <input type="text" size="30" value="" id="searchBox2"
+                                                                   style="margin: 0;"/></label>
+
+                                                    </div>
+                                                    <div id="suggestions2"></div>
+                                                </form>
+                                            </div>
+                                            <div class="clear"></div>
+                                        </div>
+                                        <div class="clear"></div>
+                                    </div>
+                                    <!-- End of other tables -->
+
+                                </div>
+                                <!-- End of Modal with Relatives -->
+                                <div class="clear"></div>
+                            </div>
+                            <select id="relative" name="relative"></select><br/>
                         </div>
 
                         <div class="left" style="width: 85px;"><label style="line-height: 10px;">{% trans %}label.comments{% endtrans %}</label></div><textarea id="comments" name="comments" rows="10" cols="25"></textarea><br/>
@@ -85,4 +243,6 @@
         </div>
         <div class="clear"></div>
     </div>
+
+
 {% endblock %}

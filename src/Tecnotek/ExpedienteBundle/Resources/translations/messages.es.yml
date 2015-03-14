@@ -412,6 +412,8 @@ select.group: Seleccione el Grupo
 label.enableForTeacher: Habilitado Profesores
 label.enableInstitutions: Instituciones
 
+label.new.relative: Nuevo Familiar
+
 #Validation
 not.blank.name: Probando proband.
 not:

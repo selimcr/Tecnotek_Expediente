@@ -27,6 +27,8 @@ class ContactFormType extends AbstractType
             add('phonew', 'text', array('trim' => true, 'required' => false ))->
             add('adress', 'text', array('trim' => true, 'required' => false ))->
             add('email', 'text', array('trim' => true, 'required' => false ))->
+            add('sector', 'integer')->
+            add('degree', 'integer')->
             add('restriction', 'text', array('trim' => true, 'required' => false ));
 
     }

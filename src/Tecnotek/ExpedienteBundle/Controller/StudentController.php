@@ -2501,4 +2501,8 @@ $currentPeriod = $em->getRepository("TecnotekExpedienteBundle:Period")->findOneB
             return new Response("<b>Not an ajax call!!!" . "</b>");
         }
     }// End of emailsLoadAction
+
+    public function loadStudentRelatives(){
+        $relatives = $em->getRepository("TecnotekExpedienteBundle:Relative")->findByStudent($id);
+    }
 }
