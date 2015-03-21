@@ -18,7 +18,6 @@ Tecnotek.PrintQualifications = {
             } else {
                 $(this).val(value);
             }
-
             $(this).trigger("focus");
             $(this).trigger("blur");
         });

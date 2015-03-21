@@ -83,6 +83,9 @@
         Tecnotek.UI.urls["loadQualificationsOfGroupURL"] = "{{ path("_expediente_sysadmin_load_group_qualifications") }}";
 
         Tecnotek.UI.urls["saveStudentQualificationURL"] = "{{ path("_expediente_sysadmin_save_student_qualification") }}";
+
+        Tecnotek.UI.vars["notaMin"] = {{ notaMin }};
+        console.debug("NotaMin: " + Tecnotek.UI.vars["notaMin"]);
     </script>
 
 

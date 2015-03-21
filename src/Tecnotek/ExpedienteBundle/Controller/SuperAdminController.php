@@ -1740,13 +1740,11 @@ class SuperAdminController extends Controller
             $groupId = $keywords[0];
             $gradeId = $keywords[1];
 
-
-
-
             if( isset($courseId) && isset($groupId) && isset($periodId)) {
                 $em = $this->getDoctrine()->getEntityManager();
 
                 $group = $em->getRepository("TecnotekExpedienteBundle:Group")->find( $groupId );
+                $grade = $group->getGrade();
                 $course = $em->getRepository("TecnotekExpedienteBundle:Course")->find( $courseId );
 
                 $title = "Calificaciones del grupo: " . $group->getGrade() . "-" . $group . " en la materia: " . $course. " en el Periodo: " . $periodId;
@@ -1889,15 +1887,18 @@ class SuperAdminController extends Controller
                     $query = $em->createQuery($dql);
                     $qualifications = $query->getResult();
                     foreach($qualifications as $qualification){
-                        $row = str_replace("val_" . $stdy->getStudent()->getId() . "_" . $qualification->getSubCourseEntry()->getId() . "_", "" . $qualification->getQualification(), $row);
+                        $row = str_replace("val_" . $stdy->getStudent()->getId() . "_" .
+                            $qualification->getSubCourseEntry()->getId() . "_", $qualification->getQualification(), $row);
                     }
                     $html .=  '<td id="total_trim_' . $stdy->getStudent()->getId() . '" class="azul headcoltrim" style="color: #000;">-</td>' . $row . "</tr>";
                 }
 
                 $html .= "</table>";
 
-                return $this->render('TecnotekExpedienteBundle:SuperAdmin:Qualification/courseGroupQualification.html.twig', array('table' => $html,
-                    'studentsCounter' => $studentsCount, "codesCounter" => $specialCounter, 'menuIndex' => 5, 'title' => $title));
+                return $this->render('TecnotekExpedienteBundle:SuperAdmin:Qualification/courseGroupQualification.html.twig',
+                    array('table' => $html, 'studentsCounter' => $studentsCount,
+                            "codesCounter" => $specialCounter, 'menuIndex' => 5, 'title' => $title,
+                            "notaMin" => $grade->getNotaMin()));
             } else {
                 return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
             }

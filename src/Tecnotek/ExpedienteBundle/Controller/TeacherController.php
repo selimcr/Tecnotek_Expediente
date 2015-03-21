@@ -584,6 +584,8 @@ class TeacherController extends Controller
                 if( isset($courseId) && isset($groupId) && isset($periodId)) {
                     $em = $this->getDoctrine()->getEntityManager();
 
+                    $grade = $em->getRepository("TecnotekExpedienteBundle:Grade")->findOneBy(array('id' => $gradeId));
+
                     $dql = "SELECT ce FROM TecnotekExpedienteBundle:CourseEntry ce "
                         . " JOIN ce.courseClass cc"
                         . " WHERE ce.parent IS NULL AND cc.period = " . $periodId . " AND cc.grade = " . $gradeId
@@ -743,7 +745,11 @@ class TeacherController extends Controller
                     $html .= "</table>";
 
                     $logger->err("courseEntries: " . sizeof($courseEntries) . " ---> " . json_encode($courseEntries));
-                    return new Response(json_encode(array('error' => false, 'html' => $html, "studentsCounter" => $studentsCount, "codesCounter" => $specialCounter, "entries" => $courseEntries)));
+                    return new Response(json_encode(array('error' => false, 'html' => $html,
+                                                          "notaMin" => $grade->getNotaMin(),
+                                                          "studentsCounter" => $studentsCount,
+                                                          "codesCounter" => $specialCounter,
+                                                          "entries" => $courseEntries)));
                 } else {
                     return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
                 }
