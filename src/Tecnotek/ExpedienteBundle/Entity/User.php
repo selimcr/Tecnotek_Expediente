@@ -290,6 +290,14 @@ class User implements AdvancedUserInterface
         return $this->institutions->toArray();
     }
 
+    public function getInstitutionsIdsStr(){
+        $ids = "";
+        foreach($this->institutions as $inst){
+            $ids .= (($ids == "")? "":",") . $inst->getId();
+        }
+        return $ids;
+    }
+
     public function addInstitution($entity)
     {
         $this->institutions->add($entity);

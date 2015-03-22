@@ -1654,10 +1654,15 @@ class SuperAdminController extends Controller
                 if( isset($periodId) ) {
                     $em = $this->getDoctrine()->getEntityManager();
 
+                    $user = $this->get('security.context')->getToken()->getUser();
+                    $logger->err("Current user institutions: " . $user->getInstitutionsIdsStr() );
+
                     //Get Groups
                     $sql = "SELECT CONCAT(g.id,'-',grade.id) as 'id', CONCAT(grade.name, ' :: ', g.name) as 'name'" .
                         " FROM tek_groups g, tek_grades grade" .
-                        " WHERE g.period_id = " . $periodId  . " AND g.grade_id = grade.id" .
+                        " WHERE g.period_id = " . $periodId  . " AND g.institution_id in ("
+                        . $user->getInstitutionsIdsStr() . ")"
+                        . " AND g.grade_id = grade.id" .
                         " GROUP BY g.id" .
                         " ORDER BY grade.id, g.name";
                     $stmt = $em->getConnection()->prepare($sql);
