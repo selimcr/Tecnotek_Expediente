@@ -9,19 +9,33 @@
     <link rel="stylesheet" href="{{ asset('fancybox/fancybox_style.css') }}" type="text/css" media="all" />
     <link rel="stylesheet" href="{{ asset('css/jquery-ui-timepicker-addon.css') }}" type="text/css" media="all" />
     <style type="text/css">
-        .questionnaireQuestion label{float: left; width: 350px; }
-        .questionnaireQuestion textarea { height: 80px; }
-        .questionnaireQuestion .short {max-width: 50px;}
-        .questionnaireQuestion span {margin-left: 10px; margin-right: 10px; font-family: Georgia, serif;
-            color: #646464; font-size: 1.2em;}
-        .questionnaireQuestion .questions-group { border: solid 1px; background-color: #9FEC9F; padding: 10px;
-            margin-bottom: 15px;}
-        .questionnaireQuestion .along-input { width: 415px; }
-        .btnSubmitForm { margin-top: 10px; float: right;}
+        @media all {
+            .questionnaireQuestion label{float: left; width: 350px; }
+            .questionnaireQuestion textarea { height: 80px; }
+            .questionnaireQuestion .short {max-width: 50px;}
+            .questionnaireQuestion span {margin-left: 10px; margin-right: 10px; font-family: Georgia, serif;
+                color: #646464; font-size: 1.2em;}
+            .questionnaireQuestion .questions-group { border: solid 1px; background-color: #9FEC9F; padding: 10px;
+                margin-bottom: 15px;}
+            .questionnaireQuestion .along-input { width: 415px; }
+            .form-title {display: none;}
+        }
+
+        @media only screen {
+
+            .btnSubmitForm, .btnPrintForm { margin: 10px; float: right;}
+        }
+
+        @media only print {
+
+        }
+
     </style>
 {% endblock %}
 
 {% block extrajs %}
+    <script type="text/javascript" src="{{ asset('js/jquery.printElement.min.js') }}"></script>
+
     <script type="text/javascript" src="{{ asset('js/tek_exp_psicoProfile.js') }}"></script>
     <script type="text/javascript" src="{{ asset('fancybox/jquery.fancybox.js?v=2.0.6') }}"></script>
     <script type="text/javascript">
@@ -29,7 +43,7 @@
         Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
         Tecnotek.UI.urls["savePsicoFormUrl"] = "{{ path("_expediente_sysadmin_save_student_psico_profile") }}";
         Tecnotek.UI.urls["groupUrl"] = "{{ path("_expediente_sysadmin_student_psico_profile", {'id': entity.id }) }}";
-
+        Tecnotek.UI.vars["print-extra-styles"] = "{{ asset('css/print.css') }}";
     </script>
     <!-- basic fancybox setup -->
     <script type="text/javascript">
@@ -64,13 +78,16 @@
                     <section class="section">
                         <p class="title"><a href="#panel1">{{ form.name }}</a></p>
 
-                        <div class="content">
+                        <div class="content" id="formulario-{{ form.id }}">
+                            <p class="form-title">Estudiante: {{ entity }}</p>
+                            <p class="form-title">Formulario: {{ form.name }}</p>
                             <form id="form_{{ form.id }}">
                                 <input type="hidden" id="studentId" name="studentId" value="{{ entity.id }}">
                                 {% for question in form.questions if question.parent == null %}
                                     {{ question|printQuestionnaireQuestion(answers)|raw }}
                                 {% endfor %}
                                 <input type="button" class="btnSubmitForm" value="Guardar" rel="form_{{ form.id}}">
+                                <input type="button" class="btnPrintForm" rel="formulario-{{ form.id }}" value="Imprimir">
                                 <div class="clear"></div>
                             </form>
                         </div>
