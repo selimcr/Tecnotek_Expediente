@@ -49,6 +49,11 @@ class Institution
      */
     private $questionnaires;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="User", mappedBy="institutions")
+     */
+    private $usersAccess;
+
     public function __construct()
     {
         $this->questionnaires = new ArrayCollection();

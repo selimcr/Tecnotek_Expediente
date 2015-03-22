@@ -80,8 +80,10 @@ class SecuredController extends Controller
         $query = $em->createQuery($dql);
         $permisos = $query->getResult();
 
+        $institutions = $em->getRepository("TecnotekExpedienteBundle:Institution")->findAll();
+
         return $this->render('TecnotekExpedienteBundle:SuperAdmin:Users/access.html.twig', array('menuIndex' => 1,
-            'users' => $users, 'permisos' => $permisos));
+            'users' => $users, 'permisos' => $permisos, 'institutions' => $institutions));
     }
 
     public function saveAccessAction(){
@@ -92,6 +94,9 @@ class SecuredController extends Controller
                 $request = $this->get('request')->request;
                 $userId = $request->get('userId');
                 $access = $request->get('access');
+                $institutions = $request->get('institutions');
+
+                $logger->err("Institutions: " . $institutions);
 
                 $translator = $this->get("translator");
 
@@ -101,6 +106,39 @@ class SecuredController extends Controller
 
                     $user = $em->getRepository("TecnotekExpedienteBundle:User")->find($userId);
 
+                    $currentInstitutions = $user->getInstitutions();
+                    $newInstitutions = explode(",", $institutions);
+                    $institutionsToRemove = array();
+                    foreach($currentInstitutions as $currentInstitution){
+                        if( !in_array($currentInstitution->getId(), $newInstitutions)){
+                            $logger->err("Must remove: " . $currentInstitution->getId());
+                            array_push($institutionsToRemove, $currentInstitution );
+                        }
+                    }
+
+                    foreach($institutionsToRemove as $institution){
+                        $logger->err("Removing: " . $institution);
+                        $user->removeInstitution($institution, $logger);
+                    }
+                    $found = false;
+                    foreach($newInstitutions as $newInst){
+                        $found = false;
+                        foreach($currentInstitutions as $currentInst){
+                            if($currentInst->getId() == $newInst){
+                                $found = true;
+                                break;
+                            }
+                        }
+                        if(!$found){
+                            $newEntityInstitution = $em->getRepository("TecnotekExpedienteBundle:Institution")
+                                ->find($newInst);
+                            $user->addInstitution($newEntityInstitution);
+                        }
+                    }
+
+                    $em->persist($user);
+
+                    /* Set privileges */
                     $currentPrivileges = $user->getPrivileges();
                     $newPrivileges = explode(",", $access);
 
@@ -110,7 +148,6 @@ class SecuredController extends Controller
                     //Remove already saved
                     foreach( $newPrivileges as $privilege )
                     {
-                        $logger->err("Checking: " . $privilege);
                         $found = false;
                         foreach( $currentPrivileges as $currentPrivilege )
                         {
@@ -202,7 +239,16 @@ class SecuredController extends Controller
                             array_push($privileges, $privilege->getActionMenu()->getId());
                     }
 
-                    return new Response(json_encode(array('error' => false, 'privileges' => $privileges)));
+                    $institutions = $user->getInstitutions();
+                    $institutionsId = array();
+                    foreach( $institutions as $institution )
+                    {
+                            array_push($institutionsId, $institution->getId());
+                    }
+
+                    return new Response(
+                        json_encode(array('error' => false, 'privileges' => $privileges,
+                                            'institutions' => $institutionsId)));
                 } else {
                     return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
                 }

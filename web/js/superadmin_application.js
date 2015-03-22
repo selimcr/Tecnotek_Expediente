@@ -1528,11 +1528,20 @@ var Tecnotek = {
                         $('#demo1').jstree("get_checked",null,true).each(function(){
                             checked_ids.push(this.id);
                         });
+
+                        var checked_institutions = [];
+                        $(".insti-cb").each(function(){
+                            if($(this).is(':checked')){
+                                checked_institutions.push($(this).val());
+                            }
+                        });
                         //setting to hidden field
-                        console.debug($("#users").val() + " :: " + checked_ids.join(","));
+                        //console.debug($("#users").val() + " :: " + checked_ids.join(","));
 
                         Tecnotek.ajaxCall(Tecnotek.UI.urls["savePrivilegesURL"],
-                            {userId: $("#users").val(), access: checked_ids.join(",")},
+                            {   userId: $("#users").val(),
+                                access: checked_ids.join(","),
+                                institutions: checked_institutions.join(",")},
                             function(data){
                                 if(data.error === true) {
                                     Tecnotek.showErrorMessage(data.message,true, "", false);
@@ -1549,27 +1558,38 @@ var Tecnotek = {
 
                 $("#users").change(function(event){
                     event.preventDefault();
+                    $("#privilegesContainer").hide();
+                    $("#institutions-container").hide();
                     $("#demo1").jstree("uncheck_all")
                     $("#demo1").jstree('close_all');
+                    $(".insti-cb").each(function(){
+                        $(this).removeAttr('checked');
+                    });
                     if($("#users").val() == null || $("#users").val() === "null"){
-                        $("#privilegesContainer").hide();
                         return;
                     } else {
+                        $( "#spinner-modal" ).dialog( "open" );
                         Tecnotek.ajaxCall(Tecnotek.UI.urls["getPrivilegesURL"],
                             {userId: $("#users").val()},
                             function(data){
                                 if(data.error === true) {
+                                    $( "#spinner-modal" ).dialog( "close" );
                                     Tecnotek.showErrorMessage(data.message,true, "", false);
                                 } else {
-
-                                    console.debug("-> " + data.privileges);
+                                    //console.debug("-> " + data.privileges);
                                     for(i=0; i<data.privileges.length; i++) {
                                         $("#" + data.privileges[i]).find('.jstree-checkbox').trigger("click");
                                     }
+                                    for(i=0; i<data.institutions.length; i++) {
+                                        $("#institution-" + data.institutions[i]).attr("checked", "checked");
+                                    }
                                     $("#privilegesContainer").show();
+                                    $("#institutions-container").show();
+                                    $( "#spinner-modal" ).dialog( "close" );
                                 }
                             },
                             function(jqXHR, textStatus){
+                                $( "#spinner-modal" ).dialog( "close" );
                                 Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".",
                                     true, "", false);
                             }, true);

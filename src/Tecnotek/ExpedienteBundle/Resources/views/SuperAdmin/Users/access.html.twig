@@ -36,6 +36,18 @@
                 <option value="{{ user.id }}">{{ user}}</option>
                 {% endfor %}
             </select>
+
+            <div class="institutions-list table" id="institutions-container" style="display: none;">
+                <div class="row tableHeader" style="padding: 0px 5px;">
+                    <div class="option_width selectList" style="float: left; width: 300px;">Instituciones</div>
+                </div>
+
+                <p>Seleccione las Instituaciones a las que el Usuario tiene acceso</p>
+                {% for entity in institutions %}
+                <input class="insti-cb" type="checkbox" id="institution-{{ entity.id}}" value="{{ entity.id }}">
+                {{ entity}}<br><br>
+                {% endfor %}
+            </div>
         </div>
 
         <div class="right table" style="width: 500px; display: none;" id="privilegesContainer" name="privilegesContainer">
