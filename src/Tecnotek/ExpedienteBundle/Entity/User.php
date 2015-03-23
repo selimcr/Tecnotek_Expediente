@@ -295,7 +295,7 @@ class User implements AdvancedUserInterface
         foreach($this->institutions as $inst){
             $ids .= (($ids == "")? "":",") . $inst->getId();
         }
-        return $ids;
+        return $ids == ""? "0":$ids;
     }
 
     public function addInstitution($entity)

@@ -1655,7 +1655,6 @@ class SuperAdminController extends Controller
                     $em = $this->getDoctrine()->getEntityManager();
 
                     $user = $this->get('security.context')->getToken()->getUser();
-                    $logger->err("Current user institutions: " . $user->getInstitutionsIdsStr() );
 
                     //Get Groups
                     $sql = "SELECT CONCAT(g.id,'-',grade.id) as 'id', CONCAT(grade.name, ' :: ', g.name) as 'name'" .
@@ -2417,11 +2416,12 @@ class SuperAdminController extends Controller
 
                 if( isset($year) ) {
                     $em = $this->getDoctrine()->getEntityManager();
-
+                    $user = $this->get('security.context')->getToken()->getUser();
                     //Get Groups
                     $sql = "SELECT CONCAT(g.id,'-',grade.id) as 'id', CONCAT(grade.name, ' :: ', g.name) as 'name'" .
                         " FROM tek_groups g, tek_periods p, tek_grades grade" .
                         " WHERE p.orderInYear = 3 AND g.period_id = p.id AND p.year = " .  $year . " AND g.grade_id = grade.id" .
+                        " AND g.institution_id in (" . $user->getInstitutionsIdsStr() . ")" .
                         " GROUP BY CONCAT(grade.name, ' :: ', g.name)" .
                         " ORDER BY g.id";
                     $stmt = $em->getConnection()->prepare($sql);

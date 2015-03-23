@@ -95,9 +95,6 @@ class SecuredController extends Controller
                 $userId = $request->get('userId');
                 $access = $request->get('access');
                 $institutions = $request->get('institutions');
-
-                $logger->err("Institutions: " . $institutions);
-
                 $translator = $this->get("translator");
 
                 if( isset($userId) && isset($access) ) {
@@ -107,19 +104,23 @@ class SecuredController extends Controller
                     $user = $em->getRepository("TecnotekExpedienteBundle:User")->find($userId);
 
                     $currentInstitutions = $user->getInstitutions();
-                    $newInstitutions = explode(",", $institutions);
+                    if($institutions == ""){
+                        $newInstitutions = array();
+                    } else {
+                        $newInstitutions = explode(",", $institutions);
+                    }
+
                     $institutionsToRemove = array();
                     foreach($currentInstitutions as $currentInstitution){
                         if( !in_array($currentInstitution->getId(), $newInstitutions)){
-                            $logger->err("Must remove: " . $currentInstitution->getId());
                             array_push($institutionsToRemove, $currentInstitution );
                         }
                     }
 
                     foreach($institutionsToRemove as $institution){
-                        $logger->err("Removing: " . $institution);
                         $user->removeInstitution($institution, $logger);
                     }
+
                     $found = false;
                     foreach($newInstitutions as $newInst){
                         $found = false;

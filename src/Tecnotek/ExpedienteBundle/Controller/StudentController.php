@@ -390,10 +390,12 @@ $currentPeriod = $em->getRepository("TecnotekExpedienteBundle:Period")->findOneB
                 $periodId = $request->get('periodId');
 
                 $em = $this->getDoctrine()->getEntityManager();
+                $user = $this->get('security.context')->getToken()->getUser();
 
                 $sql = "SELECT g.id, gr.name , g.name as name_group"
                     . " FROM tek_groups g, tek_grades gr"
                     . " WHERE g.period_id = " . $periodId
+                    . " AND g.institution_id in (" . $user->getInstitutionsIdsStr() . ")"
                     . " AND g.grade_id = gr.id"
                     . " ORDER BY gr.id";
                 $stmt = $em->getConnection()->prepare($sql);
