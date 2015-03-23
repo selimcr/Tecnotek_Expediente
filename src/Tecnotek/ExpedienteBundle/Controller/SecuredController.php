@@ -282,7 +282,6 @@ class SecuredController extends Controller
         $allowed = array();
 
         foreach($privileges as $privilege){
-            $logger->err("Adding privilege: " . $privilege[0]);
             array_push($allowed, $privilege[0]);
         }
 
@@ -298,7 +297,6 @@ class SecuredController extends Controller
         foreach($headers as $header){
             $menu = '';
             foreach($header->getChildrens() as $children){
-                $logger->err("---> Checking: " . $children->getLabel() . '<---');
                 $submenuHtml = '';
                 if(sizeof($children->getChildrens()) > 0){
                     foreach($children->getChildrens() as $submenu){
@@ -321,13 +319,11 @@ class SecuredController extends Controller
                     }
 
                 } else { // The children (second level) do not has a submenu
-                    $logger->err("No tiene hijos y es visible: " . in_array($children->getId(), $allowed));
                     if(in_array($children->getId(), $allowed)){
                         $menu .= '<li><a href="' .
                             ($children->getRoute() == "#"? "#":$this->generateUrl($children->getRoute())) . '">'
                             . $children->getLabel() . '</a></li>';
                     }
-                    $logger->err('Current Menu: ' . $menu);
                 }
             }//End of childrens
 
