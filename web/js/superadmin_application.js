@@ -1368,17 +1368,24 @@ var Tecnotek = {
                                                     Tecnotek.showErrorMessage(data.message,true, "", false);
                                                 } else {
                                                     $html = '<div id="relative_row_' + data.id + '" class="row" rel="' + data.id + '" style="padding: 0px; font-size: 10px;">';
-                                                    $html += '    <div class="" style="float: left; width: 350px;">' + relativeName + '</div>';
-                                                    $html += '    <div class="" style="float: left; width: 100px;">' + $detail + '</div>';
+                                                    $html += '    <div class="" style="float: left; width: 325px;">' + relativeName + '</div>';
+                                                    $html += '    <div class="" style="float: left; width: 50px;">' + $detail + '</div>';
 
                                                     $html += '    <div class="right imageButton deleteButton" style="height: 16px;" title="Eliminar" rel="' + data.id + '"></div>';
                                                     $html += '    <div class="right imageButton viewButton" style="height: 16px;"  title="Ver"  rel="' + data.id + '"></div>';
+                                                    $html += '<div class="right imageButton editButton" title="Editar"  rel="' + data.idc + '"></div>';                                                    
                                                     $html += '    <div class="clear"></div>';
                                                     $html += '</div>';
 
                                                     $("#relativesList").append($html);
                                                     $('#suggestions').fadeOut();
                                                     Tecnotek.StudentShow.initDeleteButtons();
+
+                                                    $('.editButton').unbind().click(function(event){
+                                                        event.preventDefault();
+                                                        console.debug("AdministratorList :: initButtons :: editButton Event");
+                                                        location.href = Tecnotek.UI.urls["edit"] + "/" + $(this).attr("rel");
+                                                    });
                                                 }
                                             },
                                             function(jqXHR, textStatus){
@@ -2058,5 +2065,4 @@ var Tecnotek = {
             }
         }
 	};
-
 

@@ -62,6 +62,7 @@
                     <input type="checkbox" class="check" id="identification" name="identification" {% if identification != null %}checked="checked"{% endif %}>{%trans%}label.identification{%endtrans%}
                     <input type="checkbox" class="check" id="birthday" name="birthday" {% if birthday != null %}checked="checked"{% endif %}>{%trans%}label.birthday{%endtrans%}
                     <input type="checkbox" class="check" id="laterality" name="laterality" {% if laterality != null %}checked="checked"{% endif %}>{%trans%}label.laterality{%endtrans%}
+                    <input type="checkbox" class="check" id="route" name="route" {% if route != null %}checked="checked"{% endif %}>{%trans%}label.route{%endtrans%}
                 </div>
                 <hr>
                 <div>
@@ -284,7 +285,7 @@
                                 <div class="groupContainer group_{{ group.id }} inst_{{ group.institution.id }} niv_{{ group.grade.id }}">
                                     <div class="titles" style="font-size: 10px;">
                                         <div class="left"><span style="font-family:arial;font-size:16px;">{{corpo_name}}</span></div>
-                                        <div class="right"><span style="font-family:arial;font-size:16px;">Reporte de estudiantes. Curso Lectivo 2014</span></div>
+                                        <div class="right"><span style="font-family:arial;font-size:16px;">Reporte de estudiantes. Curso Lectivo 2015</span></div>
                                         <div class="clear"></div>
 
                                         <div class="left">{{ "now"|date("d/M/Y H:i:s") }}</div>
@@ -314,6 +315,9 @@
                                         {% if laterality != null %}
                                             <div style="float: left; width: 100px;">{%trans%}label.laterality{%endtrans%}</div>
                                         {% endif %}
+                                        {% if route != null %}
+                                            <div style="float: left; width: 100px;"><span style="font-family:arial;font-size:16px;">{%trans%}label.route{%endtrans%}</span></div>
+                                        {% endif %}
                                         {% if address != null %}
                                             <div style="float: left; width: {{ widthAdress }}px;"><span style="font-family:arial;font-size:16px;">{%trans%}label.address{%endtrans%}</span></div>
                                         {% endif %}
@@ -340,6 +344,9 @@
                                             {% endif %}
                                             {% if laterality != null %}
                                                 <div style="float: left; width: 100px;"> &nbsp {% if student.laterality == 1%}{% set counterL1 = counterL1 + 1 %}{% trans %}label.diestro{% endtrans %}{% else %}{% set counterL2 = counterL2 + 1 %}{% trans %}label.zurdo{% endtrans %}{% endif %}</div>
+                                            {% endif %}
+                                            {% if route != null %}
+                                                <div style="float: left; width: 300px;"><span style="font-family:arial;font-size:16px;">  {{ student.route }} &nbsp </span></div>
                                             {% endif %}
                                             {% if address != null %}
                                                 <div style="float: left; width: {{ widthAdress }}px;"><span style="font-family:arial;font-size:16px;">  {{ student.address }} &nbsp </span></div>
@@ -375,7 +382,7 @@
                                 <div class="groupContainer groupS_{{ group.id }} inst_{{ group.institution.id }} niv_{{ group.grade.id }}">
                                     <div class="titles" style="font-size: 10px;">
                                         <div class="left">{{corpo_name}}</div>
-                                        <div class="right">Reporte de estudiantes. Curso Lectivo 2014</div>
+                                        <div class="right">Reporte de estudiantes. Curso Lectivo 2015</div>
                                         <div class="clear"></div>
 
                                         <div class="left">{{ "now"|date("d/M/Y H:i:s") }}</div>
@@ -485,7 +492,7 @@
                     <div class="groupContainer niv_{{ grade.id }}">
                         <div class="titles" style="font-size: 10px;">
                             <div class="left">{{corpo_name}}</div>
-                            <div class="right">Reporte de estudiantes. Curso Lectivo 2014</div>
+                            <div class="right">Reporte de estudiantes. Curso Lectivo 2015</div>
                             <div class="clear"></div>
 
                             <div class="left">{{ "now"|date("d/M/Y H:i:s") }}</div>
@@ -515,6 +522,9 @@
                             {% if laterality != null %}
                                 <div style="float: left; width: 100px;">{%trans%}label.laterality{%endtrans%}</div>
                             {% endif %}
+                            {% if route != null %}
+                                <div style="float: left; width: 100px;">{%trans%}label.route{%endtrans%}</div>
+                            {% endif %}
                             {% if address != null %}
                                 <div style="float: left; width: {{ widthAdress }}px;">{%trans%}label.address{%endtrans%}</div>
                             {% endif %}
@@ -542,6 +552,9 @@
                                 {% if laterality != null %}
                                     <div style="float: left; width: 100px;"> &nbsp {% if student.laterality == 1%}{% set counterL1 = counterL1 + 1 %}{% trans %}label.diestro{% endtrans %}{% else %}{% set counterL2 = counterL2 + 1 %}{% trans %}label.zurdo{% endtrans %}{% endif %}</div>
                                 {% endif %}
+                                {% if route != null %}
+                                    <div style="float: left; width: 300px;"> {{ student.route }} &nbsp </div>
+                                {% endif %}
                                 {% if address != null %}
                                     <div style="float: left; width: {{ widthAdress }}px;"> {{ student.address }} &nbsp </div>
                                 {% endif %}
@@ -567,7 +580,7 @@
                     <div class="groupContainer inst_{{ institution.id }}">
                         <div class="titles" style="font-size: 10px;">
                             <div class="left">{{corpo_name}}</div>
-                            <div class="right">Reporte de estudiantes. Curso Lectivo 2014</div>
+                            <div class="right">Reporte de estudiantes. Curso Lectivo 2015</div>
                             <div class="clear"></div>
 
                             <div class="left">{{ "now"|date("d/M/Y H:i:s") }}</div>
@@ -597,6 +610,9 @@
                             {% if laterality != null %}
                                 <div style="float: left; width: 100px;">{%trans%}label.laterality{%endtrans%}</div>
                             {% endif %}
+                            {% if route != null %}
+                                    <div style="float: left; width: 300px;">{%trans%}label.route{%endtrans%}</div>
+                                {% endif %}
                             {% if address != null %}
                                 <div style="float: left; width: {{ widthAdress }}px;">{%trans%}label.address{%endtrans%}</div>
                             {% endif %}
@@ -621,6 +637,9 @@
                                 {% endif %}
                                 {% if laterality != null %}
                                     <div style="float: left; width: 100px;"> &nbsp {% if student.laterality == 1%}{% set counterL1 = counterL1 + 1 %}{% trans %}label.diestro{% endtrans %}{% else %}{% set counterL2 = counterL2 + 1 %}{% trans %}label.zurdo{% endtrans %}{% endif %}</div>
+                                {% endif %}
+                                {% if route != null %}
+                                    <div style="float: left; width: 300px;"> {{ student.route }} &nbsp </div>
                                 {% endif %}
                                 {% if address != null %}
                                     <div style="float: left; width: {{ widthAdress }}px;"> {{ student.address }} &nbsp </div>

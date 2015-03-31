@@ -35,7 +35,7 @@
         {% for entity in pagination %}            
             <div class="row userRow {% if counter%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}" rel="{{ entity.id }}">
                 <div class="option_width" style="float: left; width: 50px;">{{ entity.code }}</div>
-                <div class="option_width" style="float: left; width: 525px;">{{ entity.description | slice (0,80)}}</div>
+                <div class="option_width" style="float: left; width: 525px;">{{ entity.description | slice (0,70)}}</div>
                 <div class="option_width" style="float: left; text-align: center; width: 75px;">{% if entity.routeType == 1 %} {{ entity.students|length }} {% else %} {{ entity.studentsToRoute|length }} {% endif %}</div>
                 <div class="option_width" style="float: left; width: 100px;">{{ entity.institution }}</div>
                 <div class="option_width" style="float: left; width: 75px;">{% if entity.routeType == 1 %}{%trans%} label.route.type.1 {% endtrans %} {% else %} {%trans%} label.route.type.2 {% endtrans %} {% endif %}</div>

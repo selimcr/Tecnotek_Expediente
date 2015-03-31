@@ -13,10 +13,10 @@ class ContactFormType extends AbstractType
             add('firstname', 'text', array('trim' => true))->
             add('lastname', 'text', array('trim' => true, 'required' => false ))->
             add('birthday', 'text', array('trim' => true, 'required' => false ))->
-            add('nationality', 'choice', array('choices' => array(  '01' => 'Costarricense', '02' => 'Panama', '03' => 'USA', '04' => 'Peruano', '09' => 'Chino', '10' => 'Colombiano', '11' => 'Nicaraguense', '99' => 'Otro'),'required'  => false))->
+            add('nationality', 'choice', array('choices' => array(  '01' => 'Costarricense', '02' => 'Panama', '03' => 'USA', '04' => 'Peruano', '09' => 'Chino', '10' => 'Colombiano', '11' => 'Nicaraguense','12' => 'Canadiense', '13' => 'Argentino', '14' => 'Cubano', '99' => 'Otro'),'required'  => false))->
             add('identification', 'text', array('trim' => true, 'required' => false ))->
             add('m_status', 'choice', array('choices' => array(  '01' => 'Soltero', '02' => 'Casado', '03' => 'Divorciado', '04' => 'Viudo', '05' => 'Union Libre'),'required'  => false))->
-            add('religion', 'choice', array('choices' => array(  '01' => 'Catolica', '02' => 'Evangelica', '03' => 'Adventista', '04' => 'Mormon', '05' => 'Musulman', '06' => 'Cristiano', '99' => 'Por Definir'),'required'  => false))->
+            add('religion', 'choice', array('choices' => array(  '01' => 'Catolica', '02' => 'Evangelica', '03' => 'Adventista', '04' => 'Mormon', '05' => 'Musulman', '06' => 'Cristiano',  '07' => 'Judio',  '08' => 'Bautista',  '09' => 'Episcopal', '99' => 'Por Definir'),'required'  => false))->
             add('degree', 'choice', array('choices' => array(  '1' => 'Secundaria incompleto', '2' => 'Secundaria completo', '3' => 'Universitario incompleto', '4' => 'Bachiller', '5' => 'Licenciatura', '6' => 'Maestría', '7' => 'Doctorado'),'required'  => false))->
             add('profession', 'text', array('trim' => true, 'required' => false ))->
             add('workplace', 'text', array('trim' => true, 'required' => false ))->

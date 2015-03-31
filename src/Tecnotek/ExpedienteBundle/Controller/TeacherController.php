@@ -833,7 +833,7 @@ class TeacherController extends Controller
                         $studentRowIndex++;
                         $html .=  '<td class="celesteOscuro headcolcarne" style="width: 75px; font-size: 10px;">' . $stdy->getStudent()->getCarne() . '</td>';
                         $html .=  '<td class="celesteClaro bold headcolnombre" style="width: 275px; font-size: 12px;">'
-                            . $stdy->getStudent() . '<div class="right imageButton psicoButton"'
+                            . substr($stdy->getStudent(), 0, 28) . '<div class="right imageButton psicoButton"'
                             . 'title="Perfil Psicologico" rel="' . $stdy->getStudent()->getId() .
                             '" style="margin-top:6px;"></div>'
                             . '<div class="clearer"></div>'

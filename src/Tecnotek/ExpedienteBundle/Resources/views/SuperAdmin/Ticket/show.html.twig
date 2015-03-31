@@ -31,13 +31,13 @@
 
                 <div class="center"><h3><img width="820" height="140" src="{{ asset('images/' ~ header) }}" alt="" class="image-hover"></h3></div>
 
-                <div class="center"><h3>{% trans %}label.ticket4{% endtrans %}</h3></div>
+                </br><div class="center"><h3>{% trans %}label.ticket4{% endtrans %}</h3></div>
 
                 <div class="center" style="float: left; width: 900px; font-size: 16px;">{% trans %}label.ticket3 {% endtrans %} {{ ticket.date|date("d-m-Y H:i:s") }}</div>
                 </br></br>
 
                 <div class="center" style="float: left; width: 900px; font-size: 16px;">{% trans %}label.ticket1 {% endtrans %} {{ ticket.student }}, SECCION: {{ ticket.student.groupyear }}</div>
-                </br></br>
+                </br>
 
                 <div class="center" style="float: left; width: 900px; font-size: 16px;">{% trans %}label.ticket2 {% endtrans %} {{ ticket.relative.contact }}</div>
                 </br></br>
@@ -45,7 +45,7 @@
                 </br></br>
 
                 </br></br></br></br>
-                <div class="center" style="float: left; width: 300px; font-size: 14px;">{% trans %}label.ticket5a {% endtrans %}</div>
+                <div class="center" style="float: left; width: 350px; font-size: 14px;">{% trans %}label.ticket5a {% endtrans %}</div>
                 <div class="center" style="float: left; width: 300px; font-size: 14px;">{% trans %}label.ticket5a {% endtrans %}</div>
                 {% if ticket.student.groupyear == '11-1' or ticket.student.groupyear == '11-2' or ticket.student.groupyear == '11-3' or
                 ticket.student.groupyear == '10-1' or ticket.student.groupyear == '10-2' or ticket.student.groupyear == '10-3' or
@@ -58,20 +58,31 @@
 
                 {% endif %}
                 </br></br>
-                <div class="center" style="float: left; width: 300px; font-size: 14px;">{% trans %}label.ticket5 {% endtrans %} {{ corpo_name }}</div>
-                <div class="center" style="float: left; width: 300px; font-size: 14px;">{% trans %}label.ticket6 {% endtrans %}</div>
+
+
+{% if ticket.student.groupyear == '1-A' or ticket.student.groupyear == '1-B' or ticket.student.groupyear == '1-C' or
+                ticket.student.groupyear == '2-A' or ticket.student.groupyear == '2-B' or ticket.student.groupyear == '2-C' or
+                ticket.student.groupyear == '3-A' or ticket.student.groupyear == '3-B' or ticket.student.groupyear == '3-C' or
+                ticket.student.groupyear == '4-A' or ticket.student.groupyear == '4-B' or ticket.student.groupyear == '4-C' or
+                ticket.student.groupyear == '5-A' or ticket.student.groupyear == '5-B' or ticket.student.groupyear == '5-C' or
+                ticket.student.groupyear == '6-A' or ticket.student.groupyear == '6-B' or ticket.student.groupyear == '6-C' %}
+                <div class="center" style="float: left; width: 350px; font-size: 14px;">{% trans %}label.ticket7 {% endtrans %} </div>
+<div class="center" style="float: left; width: 300px; font-size: 14px;">{% trans %}label.ticket6 {% endtrans %}</div>
+{% endif %}
+                
                 {% if ticket.student.groupyear == '11-1' or ticket.student.groupyear == '11-2' or ticket.student.groupyear == '11-3' or
                 ticket.student.groupyear == '10-1' or ticket.student.groupyear == '10-2' or ticket.student.groupyear == '10-3' or
                 ticket.student.groupyear == '9-1' or ticket.student.groupyear == '9-2' or ticket.student.groupyear == '9-3' or
                 ticket.student.groupyear == '8-1' or ticket.student.groupyear == '8-2' or ticket.student.groupyear == '8-3' or
                 ticket.student.groupyear == '7-1' or ticket.student.groupyear == '7-2' or ticket.student.groupyear == '7-3'  %}
-
+                    <div class="center" style="float: left; width: 350px; font-size: 14px;">{% trans %}label.ticket5 {% endtrans %} {{ corpo_name }}</div>
+<div class="center" style="float: left; width: 300px; font-size: 14px;">{% trans %}label.ticket6 {% endtrans %}</div>
                     <div class="center" style="float: left; width: 160px; font-size: 14px;">{% trans %}label.ticket7 {% endtrans %}</div>
 
 
 
                 {% endif %}
-                </br></br></br></br></br></br></br></br>
+                </br></br></br></br></br></br>
                 <div class="center" style="float: left; width: 860px; font-size: 14px;">{{ text }}</div>
 
                 {% if ticket.student.groupyear == '11-1' or ticket.student.groupyear == '11-2' or ticket.student.groupyear == '11-3' or
@@ -90,7 +101,7 @@
                 ticket.student.groupyear == '4-A' or ticket.student.groupyear == '4-B' or ticket.student.groupyear == '4-C' or
                 ticket.student.groupyear == '5-A' or ticket.student.groupyear == '5-B' or ticket.student.groupyear == '5-C' or
                 ticket.student.groupyear == '6-A' or ticket.student.groupyear == '6-B' or ticket.student.groupyear == '6-C' %}
-                    <div class="center"><h3><img width="820" height="140" src="{{ asset('images/' ~ header) }}" alt="" class="image-hover"></h3></div>
+                    </br><div class="center"><h3><img width="820" height="140" src="{{ asset('images/' ~ header) }}" alt="" class="image-hover"></h3></div></br>
 
                     <div class="center"><h3>{% trans %}label.ticket4{% endtrans %}</h3></div>
 
@@ -98,20 +109,25 @@
                     </br></br>
 
                     <div class="center" style="float: left; width: 900px; font-size: 16px;">{% trans %}label.ticket1 {% endtrans %} {{ ticket.student }}, SECCION: {{ ticket.student.groupyear }}</div>
-                    </br></br>
+                    </br>
 
                     <div class="center" style="float: left; width: 900px; font-size: 16px;">{% trans %}label.ticket2 {% endtrans %} {{ ticket.relative.contact }}</div>
                     </br></br>
                     <div class="center" style="float: left; width: 320px; font-size: 14px;">{{ ticket.comments }}</div>
                     </br></br>
                     </br></br></br></br>
-                    <div class="center" style="float: left; width: 320px; font-size: 14px;">{% trans %}label.ticket5a {% endtrans %}</div>
+                    <div class="center" style="float: left; width: 350px; font-size: 14px;">{% trans %}label.ticket5a {% endtrans %}</div>
                     <div class="center" style="float: left; width: 320px; font-size: 14px;">{% trans %}label.ticket5a {% endtrans %}</div>
                     </br></br>
-                    <div class="center" style="float: left; width: 320px; font-size: 14px;">{% trans %}label.ticket5 {% endtrans %} {{ corpo_name }}</div>
+                    <!--<div class="center" style="float: left; width: 350px; font-size: 14px;">{% trans %}label.ticket5 {% endtrans %} {{ corpo_name }}-->
+<div class="center" style="float: left; width: 350px; font-size: 14px;">{% trans %}label.ticket7 {% endtrans %} 
+
+
+
+</div>
                     <div class="center" style="float: left; width: 320px; font-size: 14px;">{% trans %}label.ticket6 {% endtrans %}</div>
 
-                    </br></br></br></br></br></br></br></br></br></br>
+                    </br></br></br></br></br></br></br>
                     <div class="center" style="float: left; width: 860px; font-size: 14px;">{{ text }}</div>
                     </br></br>
                     </br></br>

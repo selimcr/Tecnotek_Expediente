@@ -723,7 +723,7 @@ $currentPeriod = $em->getRepository("TecnotekExpedienteBundle:Period")->findOneB
                     $relative->setDescription($detail);
                     $em->persist($relative);
                     $em->flush();
-                    return new Response(json_encode(array('error' => false, 'id' => $relative->getId())));
+                    return new Response(json_encode(array('error' => false, 'id' => $relative->getId(), 'idc' => $contact->getId())));
 
                 } else {
                     return new Response(json_encode(array('error' => true, 'message' => "Student not found.")));

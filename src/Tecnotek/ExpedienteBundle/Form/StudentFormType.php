@@ -17,8 +17,8 @@ class StudentFormType extends AbstractType
             add('laterality', 'choice', array('choices' => array(  '1' => 'Diestro', '2' => 'Zurdo'),'required'  => true))->
             add('age', 'integer', array('required' => false))->
             add('address', 'text', array('trim' => true, 'required' => false))->
-            add('religion', 'choice', array('choices' => array(  '01' => 'Catolica', '02' => 'Evangelica', '03' => 'Adventista', '04' => 'Mormon', '05' => 'Musulman', '06' => 'Cristiano', '99' => 'Por Definir'),'required'  => false))->
-            add('nacionality', 'choice', array('choices' => array(  '01' => 'Costarricense', '02' => 'Panama', '03' => 'USA', '04' => 'Peruano', '09' => 'Chino', '10' => 'Colombiano', '11' => 'Nicaraguense', '99' => 'Otro'),'required'  => false))->
+            add('religion', 'choice', array('choices' => array(  '01' => 'Catolica', '02' => 'Evangelica', '03' => 'Adventista', '04' => 'Mormon', '05' => 'Musulman', '06' => 'Cristiano',  '07' => 'Judio',  '08' => 'Bautista',  '09' => 'Episcopal', '99' => 'Por Definir'),'required'  => false))->
+            add('nacionality', 'choice', array('choices' => array(  '01' => 'Costarricense', '02' => 'Panama', '03' => 'USA', '04' => 'Peruano', '09' => 'Chino', '10' => 'Colombiano', '11' => 'Nicaraguense', '12' => 'Canadiense', '13' => 'Argentino', '14' => 'Cubano', '99' => 'Otro'),'required'  => false))->
             add('fatherPhone', 'text', array('trim' => true, 'required' => false))->
             add('motherPhone', 'text', array('trim' => true, 'required' => false))->
             add('pickUp', 'text', array('trim' => true, 'required' => false))->
