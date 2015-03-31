@@ -18,11 +18,16 @@
             margin-bottom: 15px;}
         .questionnaireQuestion .along-input { width: 415px; }
         .btnSubmitForm { margin-top: 10px; float: right;}
+
+        @media screen {
+            .form-title {display: none;}
+        }
     </style>
 {% endblock %}
 
 {% block extrajs %}
     <script type="text/javascript" src="{{ asset('js/tek_exp_psicoProfile.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/jquery.printElement.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('fancybox/jquery.fancybox.js?v=2.0.6') }}"></script>
     <script type="text/javascript">
         Tecnotek.module = "psicoProfile";
@@ -64,13 +69,16 @@
                     <section class="section">
                         <p class="title"><a href="#panel1">{{ form.name }}</a></p>
 
-                        <div class="content">
+                        <div class="content" id="formulario-{{ form.id }}">
+                            <p class="form-title">Estudiante: {{ entity }}</p>
+                            <p class="form-title">Formulario: {{ form.name }}</p>
                             <form id="form_{{ form.id }}">
                                 <input type="hidden" id="studentId" name="studentId" value="{{ entity.id }}">
                                 {% for question in form.questions if question.parent == null %}
                                     {{ question|printQuestionnaireQuestion(answers)|raw }}
                                 {% endfor %}
                                 <input type="button" class="btnSubmitForm" value="Guardar" rel="form_{{ form.id}}">
+                                <input type="button" class="btnPrintForm" rel="formulario-{{ form.id }}" value="Imprimir">
                                 <div class="clear"></div>
                             </form>
                         </div>

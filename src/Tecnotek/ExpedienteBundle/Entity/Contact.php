@@ -142,7 +142,9 @@ class Contact
     private $birthday;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="integer")
+     * @Assert\NotBlank()
+     * @Assert\Min(limit = 0)
      */
     private $degree;
 
@@ -179,6 +181,7 @@ class Contact
     public function __construct()
     {
         $this->identification = "";
+        $this->degree = 0;
     }
 
     public function __toString()

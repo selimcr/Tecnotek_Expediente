@@ -95,6 +95,11 @@ class User implements AdvancedUserInterface
      */
     private $privileges;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="Institution", inversedBy="usersAccess")
+     */
+    private $institutions;
+
     public function __construct()
     {
         $this->isActive = true;
@@ -275,6 +280,46 @@ class User implements AdvancedUserInterface
 
     public function getPrivileges(){
         return $this->privileges;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getInstitutions()
+    {
+        return $this->institutions->toArray();
+    }
+
+    public function getInstitutionsIdsStr(){
+        $ids = "";
+        foreach($this->institutions as $inst){
+            $ids .= (($ids == "")? "":",") . $inst->getId();
+        }
+        return $ids == ""? "0":$ids;
+    }
+
+    public function addInstitution($entity)
+    {
+        $this->institutions->add($entity);
+        return true;
+    }
+
+    public function removeInstitution($entity)
+    {
+        $this->institutions->removeElement($entity);
+        return null;
+    }
+
+    public function removeInstitutionById($key)
+    {
+        if (isset($this->institutions[$key])) {
+            $removed = $this->institutions[$key];
+            unset($this->institutions[$key]);
+
+            return $removed;
+        }
+
+        return null;
     }
 }
 ?>

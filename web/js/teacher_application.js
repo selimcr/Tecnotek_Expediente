@@ -662,6 +662,7 @@ var Tecnotek = {
                             if(data.error === true) {
                                 Tecnotek.showErrorMessage(data.message,true, "", false);
                             } else {
+                                Tecnotek.UI.vars["notaMin"] = data.notaMin;
                                 $("#tableContainer").width(data.codesCounter * 46 + 280);
 
                                 $('#contentBody').html(data.html);
@@ -818,7 +819,11 @@ var Tecnotek = {
                         if($counter == 0){
                             $("#total_trim_" + $stdId).html("-");
                         } else {
-                            $("#total_trim_" + $stdId).html("" + Tecnotek.roundTo($sum));
+                            $totalTrim = Tecnotek.roundTo($sum);
+                            $notaMin = (Tecnotek.UI.vars["notaMin"] != undefined)?
+                                Tecnotek.UI.vars["notaMin"]:0;
+                            $beforeText = ($totalTrim >= $notaMin)? "":"(*) ";
+                            $("#total_trim_" + $stdId).html($beforeText + Tecnotek.roundTo($sum));
                         }
                     } else {
                             if(Tecnotek.updatedText === false) return;
@@ -1012,7 +1017,12 @@ var Tecnotek = {
                                     if($counter == 0){
                                         $("#total_trim_" + data.elementStdId).html("-");
                                     } else {
-                                        $("#total_trim_" + data.elementStdId).html("" + Tecnotek.roundTo($sum));
+                                        $totalTrim = Tecnotek.roundTo($sum);
+                                        $notaMin = (Tecnotek.UI.vars["notaMin"] != undefined)?
+                                            Tecnotek.UI.vars["notaMin"]:0;
+                                        $beforeText = ($totalTrim >= $notaMin)? "":"(*) ";
+                                        $("#total_trim_" + data.elementStdId).html($beforeText + Tecnotek.roundTo($sum));
+                                        //$("#total_trim_" + data.elementStdId).html("B" + Tecnotek.roundTo($sum));
                                     }
                                 }
 
@@ -1326,7 +1336,6 @@ var Tecnotek = {
 
                 $("#groups").change(function(event){
                     event.preventDefault();
-                    console.debug("Sera que entro a este event??? o.o");
                     Tecnotek.SpecialQualifications.loadSpecialQualificationsOfGroup();
                     Tecnotek.SpecialQualifications.loadCoursesOfGroupByTeacher($(this).val());
                 });
@@ -1422,7 +1431,6 @@ var Tecnotek = {
             },
             loadSpecialQualificationsForms: function($stdyId) {
                 $("#specialQualificationsForms").html("");
-console.debug("alo alo, voy pr aca...");
                 Tecnotek.ajaxCall(Tecnotek.UI.urls["loadStudentSpecialQualificationsURL"],
                     {   periodId: $("#period").val(),
                         stdyId: $stdyId

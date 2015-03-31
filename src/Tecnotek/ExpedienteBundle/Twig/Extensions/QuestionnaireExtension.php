@@ -73,11 +73,12 @@ class QuestionnaireExtension extends \Twig_Extension
             $value1 = $answers[$question->getId()]->getMainText();
             $value2 = $answers[$question->getId()]->getSecondText();
         }
+        $labelStyle = ' style="  float: left; width: 350px;" ';
         $html = "";
         $html .= "<div class='questionnaireQuestion'>";
         switch($question->getType()){
             case 1: //Simple Input
-                $html .= "<label>" . $question->getMainText() . "</label>";
+                $html .= "<label" . $labelStyle . ">" . $question->getMainText() . "</label>";
                 $html .= '<input class="along-input"' . $this->getFieldId($question) .
                     ' type="text" value="' . $value1 . '">';
                 $html .= '<div class="clear"></div>';
@@ -86,20 +87,21 @@ class QuestionnaireExtension extends \Twig_Extension
                 $html .= 'Tipo desconocido: ' . $question->getType();
                 break;
             case 3: //YesNoSelectionWithExplain
-                $html .= "<label>" . $question->getMainText() . "</label>";
+                $html .= "<label" . $labelStyle . ">" . $question->getMainText() . "</label>";
                 $html .= '<select ' . $this->getFieldId($question) .
-                    ' class="short"><option value="0"' .
+                    ' class="short" style="max-width: 50px; "><option value="0"' .
                         (($value1 == "0")? " selected":"") .
                         '>No</option><option value="1"' .
                         (($value1 == "1")? " selected":"") .
                         '>Si</option></select>';
-                $html .= '<span>' . $question->getSecondText() . '</span>';
-                $html .= '<textarea rows="5" id="qaux-' . $question->getId() . '" name="qaux-' .
+                $html .= '<span style="  margin-left: 10px; margin-right: 10px;">' . $question->getSecondText() .
+                    '</span>';
+                $html .= '<textarea style="height: 80px;" rows="5" id="qaux-' . $question->getId() . '" name="qaux-' .
                     $question->getId() . '">' . $value2 . '</textarea>';
                 $html .= "<div class='clear'></div>";
                 break;
             case 4://Group Of Questions
-                $html .= "<label>" . $question->getMainText() . '</label><div class="clear"></div>';
+                $html .= "<label" . $labelStyle . ">" . $question->getMainText() . '</label><div class="clear"></div>';
                 $texts = explode('-',$question->getSecondText());
                 $html .= '<div>' .
                     '<div class="left" style="padding-left: 10px; width: 373px;"> ' . $texts[0] . '</div>' .
@@ -114,7 +116,7 @@ class QuestionnaireExtension extends \Twig_Extension
                         $value1 = $answers[$q->getId()]->getMainText();
                         $value2 = $answers[$q->getId()]->getSecondText();
                     }
-                    $html .= "<label>" . $q->getMainText() . "</label>";
+                    $html .= "<label" . $labelStyle . ">" . $q->getMainText() . "</label>";
                     $html .= '<input ' . $this->getFieldId($q) .
                         ' type="text" value="' . $value1 . '">';
                     $html .= '<div class="clear"></div>';
@@ -122,13 +124,16 @@ class QuestionnaireExtension extends \Twig_Extension
                 $html .= '</div>';
                 break;
             case 5://Date Input
-                $html .= "<label>" . $question->getMainText() . "</label>";
+                $html .= "<label" . $labelStyle . ">" . $question->getMainText() . "</label>";
                 $html .= '<input class="date-input along-input" ' . $this->getFieldId($question) . ' type="text" value="'
                     . $value1 . '">';
                 break;
             case 6: // TextArea Input
-                $html .= "<label>" . $question->getMainText() . "</label>";
-                $html .= '<textarea  class="along-input" rows="5" ' . $this->getFieldId($question) . '>' . $value1 .
+                $html .= "<label" . $labelStyle . ">" . $question->getMainText() . "</label>";
+                $html .= '<textarea ' .
+                    'style="height: 80px;"' .
+                    ' class="along-input" rows="5" ' . $this->getFieldId($question) . '>' .
+                    $value1 .
                     '</textarea>';
                 break;
             case 7: // 3 Columns Question

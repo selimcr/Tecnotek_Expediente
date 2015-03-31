@@ -57,6 +57,8 @@ label.number: N&uacute;mero
 label.type: Tipo
 label.users: Usuarios
 label.access: Permisos
+label.questionnaires.config: Config Cuestionarios
+label.questionnaires.list: Lista de Cuestionarios
 
 label.teacher.default: Profesor Asignado
 label.include: Incluir
@@ -407,6 +409,11 @@ label.emergencyinfo: En caso de emergencia:
 ##psicologia
 label.psicologiaescuela: Psicologia Esc.
 select.group: Seleccione el Grupo
+
+label.enableForTeacher: Habilitado Profesores
+label.enableInstitutions: Instituciones
+
+label.new.relative: Nuevo Familiar
 
 #Validation
 not.blank.name: Probando proband.

@@ -156,6 +156,9 @@ var Tecnotek = {
                 case "emails":
                     Tecnotek.Emails.init();
                     break;
+                case "questionnairesList":
+                    Tecnotek.Questionnaires.init();
+                    break;
                 default:
 					break;
 				}
@@ -803,83 +806,10 @@ var Tecnotek = {
                 $('.cancelButton').click(function(event){
                     $.fancybox.close();
                 });
-                $('#searchBox').focus(function(event){
-                    $("#studentId").val(0);
-                    $('#searchBox').val("");
-                });
-                $('#searchBox').keyup(function(event){
-                    event.preventDefault();
-                    if($(this).val().length == 0) {
-                        $('#suggestions').fadeOut(); // Hide the suggestions box
-                    } else {
-                        Tecnotek.ajaxCall(Tecnotek.UI.urls["getStudentsURL"],
-                            {text: $(this).val()},
-                            function(data){
-                                if(data.error === true) {
-                                    Tecnotek.showErrorMessage(data.message,true, "", false);
-                                } else {
-                                    $data = "";
-                                    $data += '<p id="searchresults">';
-                                    $data += '    <span class="category">Estudiantes</span>';
-                                    for(i=0; i<data.students.length; i++) {
-                                        $data += '    <a class="searchResult" rel="' + data.students[i].id + '" name="' +
-                                            data.students[i].firstname + ' ' + data.students[i].lastname
-                                            + '" inst="'+data.students[i].institution_id+'">';
-                                        $data += '      <span class="searchheading">' + data.students[i].carne
-                                            + ' ' + data.students[i].firstname
-                                            + ' ' + data.students[i].lastname + ' ' + data.students[i].groupyear
-                                            + ' ' +  '</span>';
-                                        $data += '      <span>Incluir este estudiante.</span>';
-                                        $data += '    </a>';
-                                    }
-                                    $data += '</p>';
 
-                                    $('#suggestions').fadeIn(); // Show the suggestions box
-                                    $('#suggestions').html($data); // Fill the suggestions box
-                                    $('.searchResult').unbind();
-                                    $('.searchResult').click(function(event){
-                                        event.preventDefault();
-                                        $("#studentId").val($(this).attr("rel"));
-                                        //$("#institucionID").val($(this).attr("inst"));
-                                        $('#searchBox').val("");
-                                        $('#newAbsence').trigger('click');
+                //Aca estaba eso
+                Tecnotek.initRelativesSearch();
 
-                                        //if(($(this).attr("inst")<19)||(($(this).attr("inst")>33)&&($(this).attr("inst")<52))){
-                                        if($(this).attr("inst")==2){
-                                            $("select > option[insti*='3']").hide();
-                                            $("select > option[insti*='3']").removeAttr("selected");
-                                            $("select > option[insti*='2']").show();
-                                            $("select > option[insti*='2']").attr('selected','selected');
-                                        }
-
-                                        //if((($(this).attr("inst")>18)&&($(this).attr("inst")<34))||($(this).attr("inst")>51)){
-                                        if($(this).attr("inst")==3){
-                                            $("select > option[insti*='2']").hide();
-                                            $("select > option[insti*='2']").removeAttr("selected");
-                                            $("select > option[insti*='3']").show();
-                                            $("select > option[insti*='3']").attr('selected','selected');
-                                        }
-
-
-
-                                    });
-                                }
-                            },
-                            function(jqXHR, textStatus){
-                                Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".",
-                                    true, "", false);
-                                $(this).val("");
-                                $('#suggestions').fadeOut(); // Hide the suggestions box
-                            }, true);
-                    }
-                });
-
-                $('#searchBox').blur(function(event){
-                    event.preventDefault();
-                    $(this).val("");
-                    $('#suggestions').fadeOut(); // Hide the suggestions box
-                    //$("#institucionID").val("0");
-                });
                 //TODO Penalties
                 $(".deleteButton").click(function(event){
                     event.preventDefault();
@@ -1244,77 +1174,7 @@ var Tecnotek = {
 
                 $('#asociateButton').click(function(event){
                     event.preventDefault();
-                    console.debug("asociateButton click!!");
-                    $firstname = $("#firstname").val();
-                    $lastname = $("#lastname").val();
-                    $identification = $("#identification").val();
-                    $phonec = $("#phonec").val();
-                    $phonew = $("#phonew").val();
-                    $phoneh = $("#phoneh").val();
-                    $workplace = $("#workplace").val();
-                    $email = $("#email").val();
-                    $adress = $("#adress").val();
-                    $restriction = $("#restriction").val();
-                    $detail = "";
-
-                    switch($("#kinship").val()){
-                        case "1": $detail = "Padre"; break;
-                        case "2": $detail = "Madre"; break;
-                        case "3": $detail = "Hermano"; break;
-                        case "4": $detail = "Hermana"; break;
-                        case "99": $detail = $('#description').val(); break;
-                    }
-                    console.debug("FirstName: "+ $firstname + ", lastname: " + $lastname +
-                        ", id: " + $identification + ", val: " + $("#kinship").val() + ", detail: " + $detail);
-                    if($firstname == "" || $lastname == "" || $identification == "" || $detail == ""){
-                        Tecnotek.showErrorMessage(Tecnotek.StudentShow.translates["emptyFields"], true, "", false)
-                    } else {
-                        Tecnotek.ajaxCall(Tecnotek.UI.urls["saveNewContactURL"],
-                            {studentId: Tecnotek.UI.vars["studentId"],
-                                'tecnotek_expediente_contactformtype[firstname]': $firstname,
-                                'tecnotek_expediente_contactformtype[lastname]': $lastname,
-                                'tecnotek_expediente_contactformtype[identification]': $identification,
-                                'tecnotek_expediente_contactformtype[phonec]': $phonec,
-                                'tecnotek_expediente_contactformtype[phonew]': $phonew,
-                                'tecnotek_expediente_contactformtype[phoneh]': $phoneh,
-                                'tecnotek_expediente_contactformtype[workplace]': $workplace,
-                                'tecnotek_expediente_contactformtype[email]': $email,
-                                'tecnotek_expediente_contactformtype[adress]': $adress,
-                                'tecnotek_expediente_contactformtype[restriction]': $restriction,
-                                'kinship': $("#kinship").val(), 'detail': $detail},
-                            function(data){
-                                if(data.error === true) {
-                                    Tecnotek.showErrorMessage(data.message,true, "", false);
-                                } else {
-                                    $html = '<div id="relative_row_' + data.id + '" class="row" rel="' + data.id + '" style="padding: 0px;">';
-                                    $html += '<div class style="float: left; width: 325px;">' + $firstname + " " + $lastname + '</div>';
-                                    $html += '<div class style="float: left; width: 50px;">' + $detail + '</div>';
-                                    $html += '<div class="right imageButton deleteButton" style="height: 16px;"  title="Delete"  rel="' + data.id + '"></div>';
-                                    $html += '<div class="right imageButton viewButton" style="height: 16px;"  title="Ver"  rel="' + data.id + '"></div>';
-                                    $html += '<div class="right imageButton editButton" title="Editar"  rel="' + data.idc + '"></div>';
-                                    $html += '<div class="clear"></div>';
-                                    $html += '</div>';
-                                    $("#relativesList").append($html);
-                                    //Clean fields
-                                    $("#firstname").val("");
-                                    $("#lastname").val("");
-                                    $("#identification").val("");
-                                    $('#description').val("");
-                                    Tecnotek.StudentShow.initDeleteButtons();
-                                    Tecnotek.showInfoMessage(Tecnotek.StudentShow.translates["confirmRelative"], true, "", false);
-
-                                    $('.editButton').unbind().click(function(event){
-                                        event.preventDefault();
-                                        console.debug("AdministratorList :: initButtons :: editButton Event");
-                                        location.href = Tecnotek.UI.urls["edit"] + "/" + $(this).attr("rel");
-                                    });
-                                }
-                            },
-                            function(jqXHR, textStatus){
-                                Tecnotek.showErrorMessage("Error saving data: " + textStatus + ".",
-                                    true, "", false);
-                            }, true);
-                    }
+                    Tecnotek.createAndAssociateRelative(Tecnotek.afterCreateAndAssociateRelative);
                 });
 
 
@@ -1675,11 +1535,20 @@ var Tecnotek = {
                         $('#demo1').jstree("get_checked",null,true).each(function(){
                             checked_ids.push(this.id);
                         });
+
+                        var checked_institutions = [];
+                        $(".insti-cb").each(function(){
+                            if($(this).is(':checked')){
+                                checked_institutions.push($(this).val());
+                            }
+                        });
                         //setting to hidden field
-                        console.debug($("#users").val() + " :: " + checked_ids.join(","));
+                        //console.debug($("#users").val() + " :: " + checked_ids.join(","));
 
                         Tecnotek.ajaxCall(Tecnotek.UI.urls["savePrivilegesURL"],
-                            {userId: $("#users").val(), access: checked_ids.join(",")},
+                            {   userId: $("#users").val(),
+                                access: checked_ids.join(","),
+                                institutions: checked_institutions.join(",")},
                             function(data){
                                 if(data.error === true) {
                                     Tecnotek.showErrorMessage(data.message,true, "", false);
@@ -1696,27 +1565,38 @@ var Tecnotek = {
 
                 $("#users").change(function(event){
                     event.preventDefault();
+                    $("#privilegesContainer").hide();
+                    $("#institutions-container").hide();
                     $("#demo1").jstree("uncheck_all")
                     $("#demo1").jstree('close_all');
+                    $(".insti-cb").each(function(){
+                        $(this).removeAttr('checked');
+                    });
                     if($("#users").val() == null || $("#users").val() === "null"){
-                        $("#privilegesContainer").hide();
                         return;
                     } else {
+                        $( "#spinner-modal" ).dialog( "open" );
                         Tecnotek.ajaxCall(Tecnotek.UI.urls["getPrivilegesURL"],
                             {userId: $("#users").val()},
                             function(data){
                                 if(data.error === true) {
+                                    $( "#spinner-modal" ).dialog( "close" );
                                     Tecnotek.showErrorMessage(data.message,true, "", false);
                                 } else {
-
-                                    console.debug("-> " + data.privileges);
+                                    //console.debug("-> " + data.privileges);
                                     for(i=0; i<data.privileges.length; i++) {
                                         $("#" + data.privileges[i]).find('.jstree-checkbox').trigger("click");
                                     }
+                                    for(i=0; i<data.institutions.length; i++) {
+                                        $("#institution-" + data.institutions[i]).attr("checked", "checked");
+                                    }
                                     $("#privilegesContainer").show();
+                                    $("#institutions-container").show();
+                                    $( "#spinner-modal" ).dialog( "close" );
                                 }
                             },
                             function(jqXHR, textStatus){
+                                $( "#spinner-modal" ).dialog( "close" );
                                 Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".",
                                     true, "", false);
                             }, true);
@@ -1972,7 +1852,11 @@ var Tecnotek = {
                         if($counter == 0){
                             $("#total_trim_" + $stdId).html("-");
                         } else {
-                            $("#total_trim_" + $stdId).html("" + Tecnotek.roundTo($sum));
+                            $totalTrim = Tecnotek.roundTo($sum);
+                            $notaMin = (Tecnotek.UI.vars["notaMin"] != undefined)?
+                                Tecnotek.UI.vars["notaMin"]:0;
+                            $beforeText = ($totalTrim >= $notaMin)? "":"(*) ";
+                            $("#total_trim_" + $stdId).html($beforeText + Tecnotek.roundTo($sum));
                         }
                     } else {
                         if(Tecnotek.UI.vars["textFieldValue"] === $nota) return;
@@ -2063,6 +1947,164 @@ var Tecnotek = {
 
                 });
             }
+        },
+        afterCreateAndAssociateRelative: function(){
+            $html = '<div id="relative_row_' + data.id + '" class="row" rel="' + data.id + '" style="padding: 0px;">';
+            $html += '<div class style="float: left; width: 325px;">' + $firstname + " " + $lastname + '</div>';
+            $html += '<div class style="float: left; width: 50px;">' + $detail + '</div>';
+            $html += '<div class="right imageButton deleteButton" style="height: 16px;"  title="Delete"  rel="' + data.id + '"></div>';
+            $html += '<div class="right imageButton viewButton" style="height: 16px;"  title="Ver"  rel="' + data.id + '"></div>';
+            $html += '<div class="right imageButton editButton" title="Editar"  rel="' + data.idc + '"></div>';
+            $html += '<div class="clear"></div>';
+            $html += '</div>';
+            $("#relativesList").append($html);
+            //Clean fields
+            $("#firstname").val("");
+            $("#lastname").val("");
+            $("#identification").val("");
+            $('#description').val("");
+            Tecnotek.StudentShow.initDeleteButtons();
+            Tecnotek.showInfoMessage(Tecnotek.StudentShow.translates["confirmRelative"], true, "", false);
+
+            $('.editButton').unbind().click(function(event){
+                event.preventDefault();
+                console.debug("AdministratorList :: initButtons :: editButton Event");
+                location.href = Tecnotek.UI.urls["edit"] + "/" + $(this).attr("rel");
+            });
+        },
+        createAndAssociateRelative: function(whenSuccessFunction){
+            console.debug("--> createAndAssociateRelative");
+            $firstname = $("#firstname").val();
+            $lastname = $("#lastname").val();
+            $identification = $("#identification").val();
+            $phonec = $("#phonec").val();
+            $phonew = $("#phonew").val();
+            $phoneh = $("#phoneh").val();
+            $workplace = $("#workplace").val();
+            $email = $("#email").val();
+            $adress = $("#adress").val();
+            $restriction = $("#restriction").val();
+            $detail = "";
+
+            switch($("#kinship").val()){
+                case "1": $detail = "Padre"; break;
+                case "2": $detail = "Madre"; break;
+                case "3": $detail = "Hermano"; break;
+                case "4": $detail = "Hermana"; break;
+                case "99": $detail = $('#description').val(); break;
+            }
+            console.debug("FirstName: "+ $firstname + ", lastname: " + $lastname +
+                ", id: " + $identification + ", val: " + $("#kinship").val() + ", detail: " + $detail);
+            if($firstname == "" || $lastname == "" || $identification == "" || $detail == ""){
+                Tecnotek.showErrorMessage(Tecnotek.StudentShow.translates["emptyFields"], true, "", false)
+            } else {
+                Tecnotek.ajaxCall(Tecnotek.UI.urls["saveNewContactURL"],
+                    {studentId: Tecnotek.UI.vars["studentId"],
+                        'tecnotek_expediente_contactformtype[firstname]': $firstname,
+                        'tecnotek_expediente_contactformtype[lastname]': $lastname,
+                        'tecnotek_expediente_contactformtype[identification]': $identification,
+                        'tecnotek_expediente_contactformtype[phonec]': $phonec,
+                        'tecnotek_expediente_contactformtype[phonew]': $phonew,
+                        'tecnotek_expediente_contactformtype[phoneh]': $phoneh,
+                        'tecnotek_expediente_contactformtype[workplace]': $workplace,
+                        'tecnotek_expediente_contactformtype[email]': $email,
+                        'tecnotek_expediente_contactformtype[adress]': $adress,
+                        'tecnotek_expediente_contactformtype[restriction]': $restriction,
+                        'tecnotek_expediente_contactformtype[degree]': 0,
+                        'tecnotek_expediente_contactformtype[sector]': 0,
+                        'kinship': $("#kinship").val(), 'detail': $detail},
+                    function(data){
+                        if(data.error === true) {
+                            Tecnotek.showErrorMessage(data.message,true, "", false);
+                        } else {
+                            whenSuccessFunction();
+                        }
+                    },
+                    function(jqXHR, textStatus){
+                        Tecnotek.showErrorMessage("Error saving data: " + textStatus + ".",
+                            true, "", false);
+                    }, true);
+            }
+        },
+        initRelativesSearch: function(){
+            $('#searchBox').focus(function(event){
+                $("#studentId").val(0);
+                $('#searchBox').val("");
+            });
+
+            $('#searchBox').keyup(function(event){
+                event.preventDefault();
+                if($(this).val().length == 0) {
+                    $('#suggestions').fadeOut(); // Hide the suggestions box
+                } else {
+                    Tecnotek.ajaxCall(Tecnotek.UI.urls["getStudentsURL"],
+                        {text: $(this).val()},
+                        function(data){
+                            if(data.error === true) {
+                                Tecnotek.showErrorMessage(data.message,true, "", false);
+                            } else {
+                                $data = "";
+                                $data += '<p id="searchresults">';
+                                $data += '    <span class="category">Estudiantes</span>';
+                                for(i=0; i<data.students.length; i++) {
+                                    $data += '    <a class="searchResult" rel="' + data.students[i].id + '" name="' +
+                                        data.students[i].firstname + ' ' + data.students[i].lastname
+                                        + '" inst="'+data.students[i].institution_id+'">';
+                                    $data += '      <span class="searchheading">' + data.students[i].carne
+                                        + ' ' + data.students[i].firstname
+                                        + ' ' + data.students[i].lastname + ' ' + data.students[i].groupyear
+                                        + ' ' +  '</span>';
+                                    $data += '      <span>Incluir este estudiante.</span>';
+                                    $data += '    </a>';
+                                }
+                                $data += '</p>';
+
+                                $('#suggestions').fadeIn(); // Show the suggestions box
+                                $('#suggestions').html($data); // Fill the suggestions box
+                                $('.searchResult').unbind();
+                                $('.searchResult').click(function(event){
+                                    event.preventDefault();
+                                    $("#studentId").val($(this).attr("rel"));
+                                    //$("#institucionID").val($(this).attr("inst"));
+                                    $('#searchBox').val("");
+                                    $('#newAbsence').trigger('click');
+
+                                    //if(($(this).attr("inst")<19)||(($(this).attr("inst")>33)&&($(this).attr("inst")<52))){
+                                    if($(this).attr("inst")==2){
+                                        $("select > option[insti*='3']").hide();
+                                        $("select > option[insti*='3']").removeAttr("selected");
+                                        $("select > option[insti*='2']").show();
+                                        $("select > option[insti*='2']").attr('selected','selected');
+                                    }
+
+                                    //if((($(this).attr("inst")>18)&&($(this).attr("inst")<34))||($(this).attr("inst")>51)){
+                                    if($(this).attr("inst")==3){
+                                        $("select > option[insti*='2']").hide();
+                                        $("select > option[insti*='2']").removeAttr("selected");
+                                        $("select > option[insti*='3']").show();
+                                        $("select > option[insti*='3']").attr('selected','selected');
+                                    }
+
+
+
+                                });
+                            }
+                        },
+                        function(jqXHR, textStatus){
+                            Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".",
+                                true, "", false);
+                            $(this).val("");
+                            $('#suggestions').fadeOut(); // Hide the suggestions box
+                        }, true);
+                }
+            });
+
+            $('#searchBox').blur(function(event){
+                event.preventDefault();
+                $(this).val("");
+                $('#suggestions').fadeOut(); // Hide the suggestions box
+                //$("#institucionID").val("0");
+            });
         }
 	};
 

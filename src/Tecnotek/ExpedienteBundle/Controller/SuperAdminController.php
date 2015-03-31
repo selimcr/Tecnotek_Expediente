@@ -1654,10 +1654,14 @@ class SuperAdminController extends Controller
                 if( isset($periodId) ) {
                     $em = $this->getDoctrine()->getEntityManager();
 
+                    $user = $this->get('security.context')->getToken()->getUser();
+
                     //Get Groups
                     $sql = "SELECT CONCAT(g.id,'-',grade.id) as 'id', CONCAT(grade.name, ' :: ', g.name) as 'name'" .
                         " FROM tek_groups g, tek_grades grade" .
-                        " WHERE g.period_id = " . $periodId  . " AND g.grade_id = grade.id" .
+                        " WHERE g.period_id = " . $periodId  . " AND g.institution_id in ("
+                        . $user->getInstitutionsIdsStr() . ")"
+                        . " AND g.grade_id = grade.id" .
                         " GROUP BY g.id" .
                         " ORDER BY grade.id, g.name";
                     $stmt = $em->getConnection()->prepare($sql);
@@ -1740,13 +1744,11 @@ class SuperAdminController extends Controller
             $groupId = $keywords[0];
             $gradeId = $keywords[1];
 
-
-
-
             if( isset($courseId) && isset($groupId) && isset($periodId)) {
                 $em = $this->getDoctrine()->getEntityManager();
 
                 $group = $em->getRepository("TecnotekExpedienteBundle:Group")->find( $groupId );
+                $grade = $group->getGrade();
                 $course = $em->getRepository("TecnotekExpedienteBundle:Course")->find( $courseId );
 
                 $title = "Calificaciones del grupo: " . $group->getGrade() . "-" . $group . " en la materia: " . $course. " en el Periodo: " . $periodId;
@@ -1889,15 +1891,18 @@ class SuperAdminController extends Controller
                     $query = $em->createQuery($dql);
                     $qualifications = $query->getResult();
                     foreach($qualifications as $qualification){
-                        $row = str_replace("val_" . $stdy->getStudent()->getId() . "_" . $qualification->getSubCourseEntry()->getId() . "_", "" . $qualification->getQualification(), $row);
+                        $row = str_replace("val_" . $stdy->getStudent()->getId() . "_" .
+                            $qualification->getSubCourseEntry()->getId() . "_", $qualification->getQualification(), $row);
                     }
                     $html .=  '<td id="total_trim_' . $stdy->getStudent()->getId() . '" class="azul headcoltrim" style="color: #000;">-</td>' . $row . "</tr>";
                 }
 
                 $html .= "</table>";
 
-                return $this->render('TecnotekExpedienteBundle:SuperAdmin:Qualification/courseGroupQualification.html.twig', array('table' => $html,
-                    'studentsCounter' => $studentsCount, "codesCounter" => $specialCounter, 'menuIndex' => 5, 'title' => $title));
+                return $this->render('TecnotekExpedienteBundle:SuperAdmin:Qualification/courseGroupQualification.html.twig',
+                    array('table' => $html, 'studentsCounter' => $studentsCount,
+                            "codesCounter" => $specialCounter, 'menuIndex' => 5, 'title' => $title,
+                            "notaMin" => $grade->getNotaMin()));
             } else {
                 return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
             }
@@ -2411,11 +2416,12 @@ class SuperAdminController extends Controller
 
                 if( isset($year) ) {
                     $em = $this->getDoctrine()->getEntityManager();
-
+                    $user = $this->get('security.context')->getToken()->getUser();
                     //Get Groups
                     $sql = "SELECT CONCAT(g.id,'-',grade.id) as 'id', CONCAT(grade.name, ' :: ', g.name) as 'name'" .
                         " FROM tek_groups g, tek_periods p, tek_grades grade" .
                         " WHERE p.orderInYear = 3 AND g.period_id = p.id AND p.year = " .  $year . " AND g.grade_id = grade.id" .
+                        " AND g.institution_id in (" . $user->getInstitutionsIdsStr() . ")" .
                         " GROUP BY CONCAT(grade.name, ' :: ', g.name)" .
                         " ORDER BY g.id";
                     $stmt = $em->getConnection()->prepare($sql);
@@ -2464,6 +2470,76 @@ class SuperAdminController extends Controller
                     $courses = $stmt->fetchAll();
 
                     return new Response(json_encode(array('error' => false, 'courses' => $courses)));
+                } else {
+                    return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
+                }
+            }
+            catch (Exception $e) {
+                $info = toString($e);
+                $logger->err('Admin::loadGroupsOfPeriodAction [' . $info . "]");
+                return new Response(json_encode(array('error' => true, 'message' => $info)));
+            }
+        }// endif this is an ajax request
+        else
+        {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+    }
+
+    public function questionnairesAction(){
+        $em = $this->getDoctrine()->getEntityManager();
+        $dql = "SELECT q FROM TecnotekExpedienteBundle:Questionnaire q";
+        $query = $em->createQuery($dql);
+        $questionnaires = $query->getResult();
+        $groups = $em->getRepository('TecnotekExpedienteBundle:QuestionnaireGroup')->findAll();
+        $institutions = $em->getRepository('TecnotekExpedienteBundle:Institution')->findAll();
+
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Questionnaires/list.html.twig', array(
+            'questionnaires' => $questionnaires, 'groups' => $groups, 'institutions' => $institutions
+        ));
+    }
+
+    public function saveQuestionnaireConfigAction(){
+        $logger = $this->get('logger');
+        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
+        {
+            try {
+                $request = $this->get('request')->request;
+                $questionnaireId = $request->get('q');
+                $field = $request->get('field');
+                $val = $request->get('val');
+
+                $translator = $this->get("translator");
+
+                if( isset($questionnaireId) && isset($field) && isset($val) ) {
+                    $em = $this->getDoctrine()->getEntityManager();
+                    $q = new \Tecnotek\ExpedienteBundle\Entity\Questionnaire();
+                    $q = $em->getRepository('TecnotekExpedienteBundle:Questionnaire')->find($questionnaireId);
+
+                    switch($field){
+                        case 'group':
+                            $qGroup = $em->getRepository('TecnotekExpedienteBundle:QuestionnaireGroup')->find($val);
+                            $q->setGroup($qGroup);
+                            break;
+                        case 'teacher':
+                            $q->setEnabledForTeacher($val == 1);
+                            break;
+                        case 'institution':
+                            $values = preg_split("/[\s-]+/", $val);
+                            $institution =
+                                $em->getRepository('TecnotekExpedienteBundle:Institution')->find($values[0]);
+                            if($values[1] == 0){
+                                $q->getInstitutions()->removeElement($institution);
+                            } else {
+                                $q->getInstitutions()->add($institution);
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                    $em->persist($q);
+                    $em->flush();
+                    return new Response(json_encode(array('error' => false)));
                 } else {
                     return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
                 }

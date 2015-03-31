@@ -80,8 +80,10 @@ class SecuredController extends Controller
         $query = $em->createQuery($dql);
         $permisos = $query->getResult();
 
+        $institutions = $em->getRepository("TecnotekExpedienteBundle:Institution")->findAll();
+
         return $this->render('TecnotekExpedienteBundle:SuperAdmin:Users/access.html.twig', array('menuIndex' => 1,
-            'users' => $users, 'permisos' => $permisos));
+            'users' => $users, 'permisos' => $permisos, 'institutions' => $institutions));
     }
 
     public function saveAccessAction(){
@@ -92,7 +94,7 @@ class SecuredController extends Controller
                 $request = $this->get('request')->request;
                 $userId = $request->get('userId');
                 $access = $request->get('access');
-
+                $institutions = $request->get('institutions');
                 $translator = $this->get("translator");
 
                 if( isset($userId) && isset($access) ) {
@@ -101,6 +103,43 @@ class SecuredController extends Controller
 
                     $user = $em->getRepository("TecnotekExpedienteBundle:User")->find($userId);
 
+                    $currentInstitutions = $user->getInstitutions();
+                    if($institutions == ""){
+                        $newInstitutions = array();
+                    } else {
+                        $newInstitutions = explode(",", $institutions);
+                    }
+
+                    $institutionsToRemove = array();
+                    foreach($currentInstitutions as $currentInstitution){
+                        if( !in_array($currentInstitution->getId(), $newInstitutions)){
+                            array_push($institutionsToRemove, $currentInstitution );
+                        }
+                    }
+
+                    foreach($institutionsToRemove as $institution){
+                        $user->removeInstitution($institution, $logger);
+                    }
+
+                    $found = false;
+                    foreach($newInstitutions as $newInst){
+                        $found = false;
+                        foreach($currentInstitutions as $currentInst){
+                            if($currentInst->getId() == $newInst){
+                                $found = true;
+                                break;
+                            }
+                        }
+                        if(!$found){
+                            $newEntityInstitution = $em->getRepository("TecnotekExpedienteBundle:Institution")
+                                ->find($newInst);
+                            $user->addInstitution($newEntityInstitution);
+                        }
+                    }
+
+                    $em->persist($user);
+
+                    /* Set privileges */
                     $currentPrivileges = $user->getPrivileges();
                     $newPrivileges = explode(",", $access);
 
@@ -110,7 +149,6 @@ class SecuredController extends Controller
                     //Remove already saved
                     foreach( $newPrivileges as $privilege )
                     {
-                        $logger->err("Checking: " . $privilege);
                         $found = false;
                         foreach( $currentPrivileges as $currentPrivilege )
                         {
@@ -202,7 +240,16 @@ class SecuredController extends Controller
                             array_push($privileges, $privilege->getActionMenu()->getId());
                     }
 
-                    return new Response(json_encode(array('error' => false, 'privileges' => $privileges)));
+                    $institutions = $user->getInstitutions();
+                    $institutionsId = array();
+                    foreach( $institutions as $institution )
+                    {
+                            array_push($institutionsId, $institution->getId());
+                    }
+
+                    return new Response(
+                        json_encode(array('error' => false, 'privileges' => $privileges,
+                                            'institutions' => $institutionsId)));
                 } else {
                     return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
                 }
@@ -235,7 +282,6 @@ class SecuredController extends Controller
         $allowed = array();
 
         foreach($privileges as $privilege){
-            $logger->err("Adding privilege: " . $privilege[0]);
             array_push($allowed, $privilege[0]);
         }
 
@@ -251,7 +297,6 @@ class SecuredController extends Controller
         foreach($headers as $header){
             $menu = '';
             foreach($header->getChildrens() as $children){
-                $logger->err("---> Checking: " . $children->getLabel() . '<---');
                 $submenuHtml = '';
                 if(sizeof($children->getChildrens()) > 0){
                     foreach($children->getChildrens() as $submenu){
@@ -274,13 +319,11 @@ class SecuredController extends Controller
                     }
 
                 } else { // The children (second level) do not has a submenu
-                    $logger->err("No tiene hijos y es visible: " . in_array($children->getId(), $allowed));
                     if(in_array($children->getId(), $allowed)){
                         $menu .= '<li><a href="' .
                             ($children->getRoute() == "#"? "#":$this->generateUrl($children->getRoute())) . '">'
                             . $children->getLabel() . '</a></li>';
                     }
-                    $logger->err('Current Menu: ' . $menu);
                 }
             }//End of childrens
 

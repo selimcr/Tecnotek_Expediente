@@ -4,3 +4,6 @@
 .student-special-form .header{background-color: #b94a00;}
 .student-special-form .header td{text-align: center;}
 .student-special-form td{color: #000000;}
+
+.institutions-list {margin: 15px 0px; font-size: 12px; color: #000;}
+.institutions-list p {font-size: 12px; color: #000;}
