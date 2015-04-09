@@ -21,6 +21,11 @@
 
         @media screen {
             .form-title {display: none;}
+            .hiddenOnScreen {display: none;}
+        }
+        @media print {
+            .questionnaire-textarea {display: none; visibility: false;}
+            .hiddenOnScreen {display: block;}
         }
     </style>
 {% endblock %}

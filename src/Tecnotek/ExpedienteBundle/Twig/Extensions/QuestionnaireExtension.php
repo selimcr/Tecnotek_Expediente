@@ -132,9 +132,11 @@ class QuestionnaireExtension extends \Twig_Extension
                 $html .= "<label" . $labelStyle . ">" . $question->getMainText() . "</label>";
                 $html .= '<textarea ' .
                     'style="height: 80px;"' .
-                    ' class="along-input" rows="5" ' . $this->getFieldId($question) . '>' .
+                    ' class="along-input questionnaire-textarea" rows="5" ' . $this->getFieldId($question) . '>' .
                     $value1 .
                     '</textarea>';
+                $html .= '<div class="hiddenOnScreen" ' . $this->getRelatedFieldId($question, "printarea")
+                    . ' style="font-size: 12px; color:#646464; margin-bottom:15px;">' . $value1 . '</div>';
                 break;
             case 7: // 3 Columns Question
                 $html .= '<label style="width: 100%">' . $question->getMainText() . '</label><div
@@ -230,6 +232,12 @@ class QuestionnaireExtension extends \Twig_Extension
     private function getFieldId(\Tecnotek\ExpedienteBundle\Entity\QuestionnaireQuestion $question){
         $id = ' id="q-' . $question->getId() . "-" . $question->getType() . '" ' .
             ' name="q-' . $question->getId() . "-" . $question->getType() . '" ';
+        return $id;
+    }
+
+    private function getRelatedFieldId(\Tecnotek\ExpedienteBundle\Entity\QuestionnaireQuestion $question, $rel){
+        $id = ' id="' . $rel . '-q-' . $question->getId() . "-" . $question->getType() . '" ' .
+            ' name="' . $rel . '-q-' . $question->getId() . "-" . $question->getType() . '" ';
         return $id;
     }
 

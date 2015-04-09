@@ -24,10 +24,13 @@
         @media only screen {
 
             .btnSubmitForm, .btnPrintForm { margin: 10px; float: right;}
+            .form-title {display: none;}
+            .hiddenOnScreen {display: none;}
         }
 
-        @media only print {
-
+        @media print {
+            .questionnaire-textarea {display: none; visibility: false;}
+            .hiddenOnScreen {display: block;}
         }
 
     </style>
