@@ -36,8 +36,12 @@ Tecnotek.psicoProfile = {
         $(".btnPrintForm").click(function(e){
             e.preventDefault();
             $(".questionnaire-textarea").hide();
+            $(".btnPrintForm").hide();
+            $(".btnSubmitForm").hide();
             $("#" + $(this).attr("rel")).printElement({printMode:'popup', pageTitle:""});
             $(".questionnaire-textarea").show();
+            $(".btnPrintForm").show();
+            $(".btnSubmitForm").show();
         });
     },
     submitForm: function($formName) {
