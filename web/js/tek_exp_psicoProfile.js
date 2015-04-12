@@ -18,6 +18,12 @@ Tecnotek.psicoProfile = {
         $("#group").change(function(e){
             window.location = Tecnotek.UI.urls["groupUrl"] + "/" + $(this).val();
         });
+
+        $(".questionnaire-textarea").blur(function(e){
+            $this = $(this);
+            $id = $this.attr("id");
+            $("#printarea-" + $id).html($this.val());
+        });
         Tecnotek.psicoProfile.initButtons();
     },
     initButtons : function() {
@@ -29,7 +35,9 @@ Tecnotek.psicoProfile = {
 
         $(".btnPrintForm").click(function(e){
             e.preventDefault();
+            $(".questionnaire-textarea").hide();
             $("#" + $(this).attr("rel")).printElement({printMode:'popup', pageTitle:""});
+            $(".questionnaire-textarea").show();
         });
     },
     submitForm: function($formName) {
