@@ -23,10 +23,10 @@ class QuestionnaireAnswer
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=1000)
+     * @ORM\Column(type="string", length=3000)
      * @Assert\NotBlank()
      * @Assert\MinLength(limit = 3)
-     * @Assert\MaxLength(limit = 1000)
+     * @Assert\MaxLength(limit = 3000)
      */
     private $mainText;
 

@@ -1673,6 +1673,12 @@ if($convocatoria == 2){
                         break;
                 case 6: $periodIdb=3;
                         break;
+                case 7: $periodIdb=1;
+                    break;
+                case 8: $periodIdb=2;
+                    break;
+                case 9: $periodIdb=3;
+                    break;
             }
 
             for($i = 1; $i < 4; $i++){
