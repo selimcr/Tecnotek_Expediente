@@ -1312,103 +1312,40 @@ $currentPeriod = $em->getRepository("TecnotekExpedienteBundle:Period")->findOneB
         $request = $this->get('request')->request;
         $mode = $request->get('selectMode');
         $idForm = $request->get('id');
-
-        if($mode == '1'){
-            $entity = $em->getRepository("TecnotekExpedienteBundle:Absence")->find( $request->get('id'));
-            if ( isset($entity) ) {
-                $request = $this->getRequest();
-                $form    = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\AbsenceFormType(), $entity);
-                $form->bindRequest($request);
-
-                if ($form->isValid()) {
-                    $em->persist($entity);
+        $absence = $em->getRepository("TecnotekExpedienteBundle:Absence")->find( $request->get('id'));
+        if ( isset($entity) ) {
+            $request = $this->getRequest();
+            $form    = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\AbsenceFormType(), $absence);
+            $form->bindRequest($request);
+            if ($form->isValid()) {
+                if($mode == '1') { // If type is 1 update only the use absence
+                    $em->persist($absence);
                     $em->flush();
-                    return $this->redirect($this->generateUrl('_expediente_sysadmin_absence_show_simple') . "/" . $entity->getId());
-                } else {
-                    return $this->render('TecnotekExpedienteBundle:SuperAdmin:Absence/edit.html.twig', array(
-                        'entity' => $entity, 'form'   => $form->createView(), 'menuIndex' => 3
-                    ));
-                }
-            } else {
-                return $this->redirect($this->generateUrl('_expediente_absences'));
-            }
-        }
-        if($mode == '2'){ /// ausencias del mismo dia y tipo
-
-            $em = $this->getDoctrine()->getEntityManager();
-            $dql = "SELECT ab FROM TecnotekExpedienteBundle:Absence ab"
-                . " WHERE ab.id = " . $request->get('id');
-            $query = $em->createQuery($dql);
-            $absence = $query->getResult();
-
-            foreach($absence as $absence1){
-                $idForm2 = $absence1->getId();
-                $mainStd =  $absence1->getStudentYearId();
-                $mainType =  $absence1->getTypeId();
-                $mainDate =  $absence1->getDate()->format('Y-m-d');
-
-            }
-
-            $dql = "SELECT abs FROM TecnotekExpedienteBundle:Absence abs"
-                . " WHERE abs.studentYear = " . $mainStd
-                . " AND abs.type = " . $mainType
-                . " AND abs.date = '".$mainDate."'";
-            $query = $em->createQuery($dql);
-            $absences = $query->getResult();
-            foreach($absences as $absence2){
-                $row =  $absence2->getId();
-
-                $entity = $em->getRepository("TecnotekExpedienteBundle:Absence")->find($row);
-                if ( isset($entity) ) {
-                    $request = $this->getRequest();
-                    $form    = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\AbsenceFormType(), $entity);
-                    $form->bindRequest($request);
-
-                    if ($form->isValid()) {
-                        $em->persist($entity);
-                        $em->flush();
-                        //return $this->redirect($this->generateUrl('_expediente_sysadmin_absence_show_simple') . "/" . $entity->getId());
-                    } else {
-                        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Absence/edit.html.twig', array(
-                            'entity' => $entity, 'form'   => $form->createView(), 'menuIndex' => 3
-                        ));
+                } else { // If type 2 or 3 must update all related absences
+                    $typeQuery = "";
+                    if($mode == '2'){ /// ausencias del mismo dia y tipo
+                        $typeQuery =  " AND abs.type = " . $absence->getTypeId();
                     }
-                }
-
-            }
-            return $this->redirect($this->generateUrl('_expediente_sysadmin_absence_show_simple') . "/" . $idForm2);
-            //return $this->redirect($this->generateUrl('_expediente_absences'));
-        }
-
-        if($mode == '3'){ ///ausencias del mismo dia cualquier tipo
-            //Single validation of the form for current entity
-            $absence = $em->getRepository("TecnotekExpedienteBundle:Absence")->find($request->get('id'));
-            if ( isset($absence) ) {
-                $mainDate =  $absence->getDate()->format('Y-m-d');
-                $request = $this->getRequest();
-                $form    = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\AbsenceFormType(), $absence);
-                $form->bindRequest($request);
-                if ( !$form->isValid()) { // The form is invalid, render page with errors
-                    return $this->render('TecnotekExpedienteBundle:SuperAdmin:Absence/edit.html.twig', array(
-                        'entity' => $absence, 'form'   => $form->createView(), 'menuIndex' => 3
-                    ));
-                } else { //The form is valid; update all the absences of the day
+                    $mainDate =  $absence->getDate()->format('Y-m-d');
                     $updateAllAbsencesDQL = "UPDATE TecnotekExpedienteBundle:Absence abs"
                         . " SET abs.justify = " . ($absence->getJustify()? 1:0)
                         . " , abs.comments = '" . $absence->getComments() . "'"
                         . " , abs.date='" . $absence->getDate()->format('Y-m-d') . "'"
                         . " WHERE abs.studentYear = " . $absence->getStudentYearId()
-                        . " AND abs.date = '".$mainDate."'";
-                    $logger = $this->get('logger');
-                    $logger->err($updateAllAbsencesDQL);
+                        . " AND abs.date = '".$mainDate."'"
+                        . $typeQuery;
                     $updateQuery = $em->createQuery($updateAllAbsencesDQL);
                     $updateQuery->execute();
-                    return $this->redirect($this->generateUrl('_expediente_sysadmin_absence_show_simple') . "/" .
-                        $absence->getId());
                 }
-            } else { // The absence that is using for work do not exists
-                return $this->redirect($this->generateUrl('_expediente_absences'));
+                return $this->redirect($this->generateUrl('_expediente_sysadmin_absence_show_simple') . "/" .
+                    $absence->getId());
+            } else {
+                return $this->render('TecnotekExpedienteBundle:SuperAdmin:Absence/edit.html.twig', array(
+                    'entity' => $entity, 'form'   => $form->createView(), 'menuIndex' => 3
+                ));
             }
+        } else {
+            return $this->redirect($this->generateUrl('_expediente_absences'));
         }
     }
 
