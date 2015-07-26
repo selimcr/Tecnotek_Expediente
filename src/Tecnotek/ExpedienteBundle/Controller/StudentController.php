@@ -1311,9 +1311,8 @@ $currentPeriod = $em->getRepository("TecnotekExpedienteBundle:Period")->findOneB
         $em = $this->getDoctrine()->getEntityManager();
         $request = $this->get('request')->request;
         $mode = $request->get('selectMode');
-        $idForm = $request->get('id');
         $absence = $em->getRepository("TecnotekExpedienteBundle:Absence")->find( $request->get('id'));
-        if ( isset($entity) ) {
+        if ( isset($absence) ) {
             $request = $this->getRequest();
             $form    = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\AbsenceFormType(), $absence);
             $form->bindRequest($request);
@@ -1341,7 +1340,7 @@ $currentPeriod = $em->getRepository("TecnotekExpedienteBundle:Period")->findOneB
                     $absence->getId());
             } else {
                 return $this->render('TecnotekExpedienteBundle:SuperAdmin:Absence/edit.html.twig', array(
-                    'entity' => $entity, 'form'   => $form->createView(), 'menuIndex' => 3
+                    'entity' => $absence, 'form'   => $form->createView(), 'menuIndex' => 3
                 ));
             }
         } else {
