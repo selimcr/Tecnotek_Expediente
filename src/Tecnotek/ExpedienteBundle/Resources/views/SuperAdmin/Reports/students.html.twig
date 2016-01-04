@@ -131,16 +131,18 @@
                             {% set j = 0 %}
                             {% for student in group.students %}
                             {% if i == 1 %}
-                            <tr>
+                            <tr  >
                                 {% endif %}
-                                <td style="width: 425px; text-align: right;"  BACKGROUND="{{ asset('images/estudiantescarne.png') }}">
-                                    </br></br></br></br></br></br></br></br>
-                                    <span style="font-family:arial;font-size:19px;">{{ student.lastname ~ ", " ~ student.firstname }}</span></br>
-                                    </br></br></br></br>
-                                    <span style="font-family:arial;font-size:16px;">Carne: {{ student.carne }}</span></br>
-                                    <span style="font-family:arial;font-size:16px;"> Seccion: {{ student.groupyear }}</span></br>
-                                    <span style="font-family:arial;font-size:16px;">{{ student.birthday }}</span>
-                                    </br></br></br></td>
+                                <td style="padding-left:25px; width: 425px; text-align: left;" BACKGROUND="{{ asset('images/machotecarnet2.png')}}"; background-repeat:no-repeat;" >
+                                    </br></br></br></br></br></br>
+<span style="line-height: 260%; font-family:arial;font-size:10px; color:black;">&nbsp;&nbsp;&nbsp;&nbsp;</span></br>
+<img src="{{ asset('images/carnets/') }}{{ student.carne }}.png"  width="90" height="30" align="left">
+                                    <span style="line-height: 140%; font-family:arial;font-size:16px; color:black;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ student.carne }}</span></br>
+                                    <span style="line-height: 140%; font-family:arial;font-size:16px; color:black;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ student.firstname }}</span></br>
+                                    <span style="line-height: 140%; font-family:arial;font-size:16px; color:black;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ student.lastname}}</span></br>
+                                    <span style="line-height: 140%; font-family:arial;font-size:16px; color:black;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ student.groupyear }}</span></br>
+                                    <span style="line-height: 140%; font-family:arial;font-size:16px; color:black;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ student.birthday }}</span></br>
+                                    </br></br></td>
                                 <td>&nbsp;&nbsp;&nbsp;</td>
                                 {% set j = j+1 %}
                                 {% if i == 2 %}
@@ -197,7 +199,7 @@
                                 <tr>
                                     {% endif %}
                                     <td style="width: 425px; text-align: left;">
-                                        <img width="420" height="150"  src="{{ asset('images/autoTiq.png') }}"></br></br>
+                                        <img width="420" height="150"  src="{{ asset('images/autoTiq1.png') }}"></br></br>
                                         <span style="font-family:arial;font-size:16px;">Carne: {{ student.carne }}</span></br>
                                         <span style="font-family:arial;font-size:16px;">Nombre: {{ student.lastname ~ ", " ~ student.firstname }}</span>
                                         </br><span style="font-family:arial;font-size:16px;"> Seccion: {{ student.groupyear }}</span></br></br>
@@ -328,8 +330,8 @@
                                     {% set counterM = 0 %}
                                     {% for student in group.students %}
                                         <div class="student_row">
-                                            <div style="float: left; width: 75px;"><span style="font-family:arial;font-size:16px;">{{ student.carne }}</span></div>
-                                            <div style="float: left; width: 400px;"><span style="font-family:arial;font-size:16px;">{{ student.lastname ~ ", " ~ student.firstname }}</span></div>
+                                            <div style="float: left; width: 75px;"><span  style="line-height: 150%; font-family:arial;font-size:16px;">{{ student.carne }}</span></div>
+                                            <div style="float: left; width: 400px;"><span style="line-height: 150%; font-family:arial;font-size:16px;">{{ student.lastname ~ ", " ~ student.firstname }}</span></div>
                                             {% if age != null %}
                                                 <div style="float: left; width: 100px;"><span style="font-family:arial;font-size:16px;"> &nbsp {{ student.age }}</span></div>
                                             {% endif %}

@@ -56,8 +56,8 @@
                 <div class="clear"></div>
             </div>
             <div class="titleRow">
-                <div class="left" style="margin-right: 15px; font-weight: bold;">{%trans%}select.group{%endtrans%}</div>
-                <div class="left">
+                <div class="right" style="margin-right: 15px; font-weight: bold;">{%trans%}select.group{%endtrans%}</div>
+                <div class="right">
                     <select id="group" name="group" style="width: 150px;">
                         {% for group in groups %}
                         <option {% if group.id == currentGroup %}  selected="selected" {% endif %}

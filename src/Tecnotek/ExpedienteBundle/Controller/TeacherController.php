@@ -1019,10 +1019,15 @@ class TeacherController extends Controller
                     $period = $em->getRepository("TecnotekExpedienteBundle:Period")->find( $periodId );
                     if ( isset($period) ) {
                         //Get Groups
-                        $sql = "SELECT CONCAT(g.id,'-',grade.id) as 'id', CONCAT(grade.name, ' :: ', g.name) as 'name'" .
+                        /*$sql = "SELECT CONCAT(g.id,'-',grade.id) as 'id', CONCAT(grade.name, ' :: ', g.name) as 'name'" .
                             " FROM tek_groups g, tek_grades grade" .
                             " WHERE g.period_id = " . $periodId . " AND g.user_id = " . $user->getId()
                             . " AND grade.id = g.grade_id"  .
+                            " GROUP BY g.id" .
+                            " ORDER BY g.name";  //Cambiado para que se puedan asignar varios profes a un grupo */  
+                          $sql = "SELECT CONCAT(g.id,'-',grade.id) as 'id', CONCAT(grade.name, ' :: ', g.name) as 'name'" .
+                            " FROM tek_groups g, tek_assigned_teachers tat, tek_grades grade" .
+                            " WHERE g.period_id = " . $periodId . " AND tat.group_id = g.id AND grade.id = g.grade_id AND tat.user_id = "  . $user->getId() .
                             " GROUP BY g.id" .
                             " ORDER BY g.name";
                         $stmt = $em->getConnection()->prepare($sql);

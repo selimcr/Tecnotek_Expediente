@@ -1165,8 +1165,8 @@ $kinder1 = 0;
             case 1:
                 switch($q){
                     case '1': $result = "DC"; break;
-                    case '2': $result = "NDC"; break;
-                    case '3': $result = "NM"; break;
+                    case '2': $result = "HP"; break;
+                    case '3': $result = "NR"; break;
                     case '4': $result = "AV"; break;
                     default: $result = "-"; break;
                 }
@@ -1311,7 +1311,8 @@ $kinder1 = 0;
                 }
             }
         }
-$html .= '<table class="student-special-form"><tr class="header"><td colspan="2">Simbología</td></tr><tr><td>Domina el contenido</td><td>DC</td></tr><tr><td>No domina el contenido</td><td>NDC</td></tr><tr><td>Necesita mejorar</td><td>NM</td></tr><tr><td>Algunas veces</td><td>AV</td></tr><tr><td>Excelente</td><td>EX</td></tr><tr><td>Muy Buena</td><td>MB</td></tr><tr><td>Buena</td><td>B</td></tr></table>';
+if($periodNumber == 3){
+$html .= '<table class="student-special-form"><tr class="header"><td colspan="2">Simbología</td></tr><tr><td>Domina el contenido</td><td>DC</td></tr><tr><td>No domina el contenido</td><td>NDC</td><tr><td>Habilidad en proceso</td><td>HP</td></tr></tr><tr><td>Necesita mejorar</td><td>NM</td></tr><tr><td>Necesita refuerzo</td><td>NR</td></tr><tr><td>Algunas veces</td><td>AV</td></tr><tr><td>Excelente</td><td>EX</td></tr><tr><td>Muy Buena</td><td>MB</td></tr><tr><td>Buena</td><td>B</td></tr></table>';}
         $html .= '</td>';
         $html .= '<td>';
         //Pintar los de la columna 2
@@ -1912,7 +1913,7 @@ if($convocatoria != 0){
             $row = str_replace("convo2", "", $row);
         }
 
-        if($totalConducta/$period->getOrderInYear() < $notaMin->getNotaMin()){//Si se pierde conducta igual suma...
+        if(($totalConducta/$period->getOrderInYear() < $notaMin->getNotaMin()&&($convocatoria != 1)&&($convocatoria != 2))){//Si se pierde conducta igual suma...
             $numberOfLossCourses = $numberOfLossCourses + 1;
             //$logger->err("--> se perdio un curso: " . "Conducta" );
         }
@@ -1962,7 +1963,10 @@ if($convocatoria != 0){
         $html .= $row . $promedioRow . $absencesHtml;
 
         if($period->getOrderInYear() == 3){
-            if($numberOfLossCourses == 0){//Aprobado
+if(($conducta< $notaMin->getNotaMin())&&($convocatoria != 1)&&($convocatoria != 2)){         //agregado caso en que perdio conducta 3er trim   
+$condicionRow = str_replace("changeCondicion", "APLAZADO", $condicionRow);
+            } else 
+            if($numberOfLossCourses == 0){//Aprobado    
                 $condicionRow = str_replace("changeCondicion", "APROBADO", $condicionRow);
             } else if ($numberOfLossCourses > 3){//Reprobado
                 $condicionRow = str_replace("changeCondicion", "REPROBADO", $condicionRow);
@@ -3103,13 +3107,15 @@ if($convocatoria != 0){
 
             $row = $studentRow;
 
-            //Recorrer Todos los Periodos
+
+//Recorrer Todos los Periodos
             for($i = 1; $i < 4; $i++){
                 $currentPeriod = $periods[$i];
                 if(isset($currentPeriod)){
 //$logger->err("Getting student with: " .  $stdy->getStudent()->getId() . " AND " . $currentPeriod->getId());
                     $currentSTDY = $em->getRepository("TecnotekExpedienteBundle:StudentYear")->findOneBy(array('student' => $stdy->getStudent()->getId(), 'period' => $currentPeriod->getId()));
 $logger->err("Getting std: " .  $currentSTDY);
+ if(isset($currentSTDY)){
                     if($currentPeriod->isEditable()){
                         $this->calculateStudentYearQualification($currentPeriod->getId(), $currentSTDY->getId(), $currentSTDY);
                     }
@@ -3166,11 +3172,16 @@ $logger->err("Getting std: " .  $currentSTDY);
                         }
 
                     }//Fin del foreach de courses
-
+}else {$row = str_replace("Nota_Period_" . $i, "-", $row);}
                 }  else {//El periodo no existe
                     $row = str_replace("Nota_Period_" . $i, "-*-", $row);
                 }
             }
+
+
+
+
+
             /***** Obtener Notas del Estudiante Inicio *****/
             if($counter > 0){
                 $row = str_replace("Nota_Promedio", number_format($total/$counter, 2, '.', ''), $row);
@@ -3345,7 +3356,7 @@ $logger->err("Getting std: " .  $currentSTDY);
 
         $html .= '</table>';
 
-        $html .= '<div>Nota: Comunicarse con la auxiliar administrativa para asuntos de conducta y ausentismo.</div>';
+        $html .= '<div>Nota: Comunicarse con Andrea Díaz la auxiliar administrativa para asuntos de conducta y ausentismo.</div>';
 
         $html .= '</br></br>';
         $html .= '<div class="clear"></div>';
