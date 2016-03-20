@@ -7,3 +7,5 @@
 
 .institutions-list {margin: 15px 0px; font-size: 12px; color: #000;}
 .institutions-list p {font-size: 12px; color: #000;}
+
+.select2-container{z-index:9999;}

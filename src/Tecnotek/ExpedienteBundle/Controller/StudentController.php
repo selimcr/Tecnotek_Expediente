@@ -611,6 +611,34 @@ $currentPeriod = $em->getRepository("TecnotekExpedienteBundle:Period")->findOneB
         }
     }
 
+    public function changeRouteInInfoAction() {
+        $logger = $this->get('logger');
+        if ($this->get('request')->isXmlHttpRequest()) { // Is the request an ajax one?
+            try {
+                $request = $this->get('request')->request;
+                $studentId = $request->get('studentId');
+                $routeIn = $request->get('routeIn');
+                $routeType = $request->get('routeType');
+                $em = $this->getDoctrine()->getEntityManager();
+                $student = $em->getRepository("TecnotekExpedienteBundle:Student")->find($studentId);
+                if ($routeIn == 0) {
+                    $student->removeRouteIn();
+                } else {
+                    $student->setRouteIn($em->getRepository("TecnotekExpedienteBundle:Route")->find($routeIn));
+                }
+                $student->setRouteType($routeType);
+                $em->flush();
+                return new Response(json_encode(array('error' => false)));
+            } catch (Exception $e) {
+                $info = toString($e);
+                $logger->err('Student::changeRouteInInfo [' . $info . "]");
+                return new Response(json_encode(array('error' => true, 'message' => $info)));
+            }
+        } else {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+    }
+
     public function createContactAction(){
         $logger = $this->get('logger');
         if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?

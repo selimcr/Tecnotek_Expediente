@@ -974,10 +974,36 @@ var Tecnotek = {
 
                 $("#openStudentForm").fancybox({
                     'beforeLoad' : function(){
-                      console.debug("openStudentForm <-- beforeLoad");
+
                     },
                     'modal': true,
                     'width': 650
+                });
+
+                $("#studentRouteIn, #studentRouteType").select2();
+
+                $("#studentRouteForm").submit(function(e){
+                    Tecnotek.ajaxCall(Tecnotek.UI.urls["changeStudentInInfoURL"],
+                        {   studentId: Tecnotek.UI.vars["studentId"],
+                            routeIn: $("#studentRouteIn").val(),
+                            routeType: $("#studentRouteType").val()
+                        },
+                        function(data){
+                            if(data.error === true) {
+                                Tecnotek.showErrorMessage(data.message,true, "", false);
+                            } else {
+                                $("#btnEdit-" + Tecnotek.UI.vars["studentId"]).attr('routetype',$("#studentRouteType").val());
+                                    //.val($("#studentRouteType").val());
+                                $("#btnEdit-" + Tecnotek.UI.vars["studentId"]).attr('routein',$("#studentRouteIn").val());
+                                $.fancybox.close();
+                            }
+                        },
+                        function(jqXHR, textStatus){
+                            Tecnotek.showErrorMessage("Error in request: " + textStatus + ".",
+                                true, "", false);
+                        }, true);
+                    e.preventDefault();
+                    return false;
                 });
 
                 Tecnotek.RouteShow.initDeleteButtons();
@@ -1012,16 +1038,13 @@ var Tecnotek = {
                 $('.editStudent').unbind();
                 $('.editStudent').click(function(event){
                     event.preventDefault();
-
-                    console.debug("Entro al click del edit!!!");
-
-                    /*var studentId = $(this).attr("rel");
-                    Tecnotek.UI.vars["studentId"]  = studentId;
-                    $("#leaveTime").val($(this).attr("pickUp"));
-                    $("#leaveTime").val($(this).attr("leaveTime"));
-                    Tecnotek.UI.vars["fromEdit"] = true;*/
+                    var studentId = $(this).attr("rel");
+                    var routeType = $(this).attr("routetype");
+                    var routein = $(this).attr("routein");
+                    Tecnotek.UI.vars["studentId"] = studentId;
+                    $("#studentRouteType").val(routeType).trigger("change");
+                    $("#studentRouteIn").val(routein).trigger("change");
                     $('#openStudentForm').trigger('click');
-
                 });
             }
         },
