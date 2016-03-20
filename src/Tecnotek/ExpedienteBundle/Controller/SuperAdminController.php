@@ -361,8 +361,9 @@ class SuperAdminController extends Controller
             //Get Students From Other Table
             $students = $em->getRepository("TecnotekExpedienteBundle:StudentToRoute")->findByRoute($id);
         }
+        $routes = $em->getRepository("TecnotekExpedienteBundle:Route")->findAll();
         return $this->render('TecnotekExpedienteBundle:SuperAdmin:Ruta/show.html.twig', array('entity' => $entity,
-            'form'   => $form->createView(), 'menuIndex' => 2, 'students' => $students));
+            'form'   => $form->createView(), 'menuIndex' => 2, 'students' => $students, 'routes' => $routes));
     }
 
     public function routeSaveAction(){

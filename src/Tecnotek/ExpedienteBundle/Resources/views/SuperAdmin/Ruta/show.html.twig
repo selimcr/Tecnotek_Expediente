@@ -7,9 +7,11 @@
 {% block extracss %}
 <link rel="stylesheet" href="{{ asset('fancybox/jquery.fancybox.css') }}" type="text/css" media="all" />
 <link rel="stylesheet" href="{{ asset('fancybox/fancybox_style.css') }}" type="text/css" media="all" />
+<link rel="stylesheet" href="{{ asset('css/select2.min.css') }}" type="text/css" media="all" />
 {% endblock %}
 
 {% block extrajs %}
+<script type="text/javascript" src="{{ asset('js/select2.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('fancybox/jquery.fancybox.js?v=2.0.6') }}"></script>
 <script type="text/javascript">
     Tecnotek.UI.urls["deleteURL"] = "{{ path("_delete_route", {id: entity.id}) }}";
@@ -20,6 +22,7 @@
     Tecnotek.UI.urls["associateStudentsURL"] = "{{ path("_expediente_associate_student_to_route") }}";
 
     Tecnotek.UI.urls["removeStudentsFromRouteURL"] = "{{ path("_expediente_remove_student_from_route") }}";
+    Tecnotek.UI.urls["changeStudentInInfoURL"] = "{{ path("_expediente_change_student_route_in_info") }}";
     Tecnotek.UI.translates["confirmRemoveStudent"] = "{% trans %}messages.confirmation.club.remove.student{% endtrans %}";
     Tecnotek.UI.vars["routeId"] = {{ entity.id }};
     Tecnotek.UI.vars["routeType"] = {{ entity.routeType }};
@@ -102,20 +105,29 @@
                             {% set counter = 0 %}
                             {% if entity.routeType == 1 %}
                                     {% for student in students %}
-                                        <div id="student_row_{{ student.id }}" class="row userRow rel="{{ student.id }}"
-                                        typeroute="{{ student.routeType }}" routein="{{ student.routeIn }}">
+                                        <div id="student_row_{{ student.id }}" class="row userRow lala" rel="{{ student.id }}">
                                             <div class="option_width" style="float: left; width: 300px;">{{ student }} ({{ student.groupyear }})</div>
-                                            <div class="right imageButton editButton editStudent" title="Editar" rel="{{ student.id }}"></div>
-                                            <div class="right imageButton deleteButton" style="height: 16px;"  title="{% trans %}label.delete{% endtrans %}"  rel="{{ student.id }}"></div>
+                                            <div class="right imageButton editButton editStudent" title="Editar" rel="{{ student.id }}"
+                                                 routetype="{{ student.routeType? student.routeType:'0' }}"
+                                                 routein="{{ student.routeIn? student.routeIn.id:'0' }}"
+                                                 id="btnEdit-{{ student.id }}"></div>
+                                            <div class="right imageButton deleteButton" style="height: 16px;"  title="{% trans %}label.delete{% endtrans %}"
+                                                 rel="{{ student.id }}"></div>
                                             <div class="clear"></div>
                                         </div>
                                         {% set counter = counter + 1 %}
                                     {% endfor %}
                             {% else %}
                                 {% for studentToRoute in students %}
-                                    <div id="student_row_{{ studentToRoute.student.id }}" class="row userRow rel="{{ studentToRoute.student.id }}">
+                                    <div id="student_row_{{ studentToRoute.student.id }}" class="row userRow" rel="{{ studentToRoute.student.id }}"
+                                         >
                                         <div class="option_width" style="float: left; width: 300px;">{{ studentToRoute.student }}</div>
-                                        <div class="right imageButton deleteButton" style="height: 16px;"  title="{% trans %}label.delete{% endtrans %}"  rel="{{ studentToRoute.student.id }}"></div>
+                                        <div class="right imageButton editButton editStudent" title="Editar" rel="{{ studentToRoute.student.id }}"
+                                             routetype="{{ studentToRoute.student.routeType? student.routeType:'0' }}"
+                                             routein="{{ studentToRoute.student.routeIn? student.routeIn.id:'0' }}"
+                                             id="btnEdit-{{ studentToRoute.student.id }}"></div>
+                                        <div class="right imageButton deleteButton" style="height: 16px;"  title="{% trans %}label.delete{% endtrans %}"
+                                             rel="{{ studentToRoute.student.id }}"></div>
                                         <div class="clear"></div>
                                     </div>
                                     {% set counter = counter + 1 %}
@@ -125,22 +137,31 @@
                     </div>
 
                          <a id="openStudentForm" class="right button success-darker tiny modalbox" style="margin: 4px 0px 0 0;" href="#studentFormContainer"></a>
-                    <div id="studentFormContainer" style="display: none; width: 400px;">
-                        <h3 style="margin-bottom: 0px;"><div class="left" id="studentTitleOption" name="studentTitleOption"></div> &nbsp;estudiante</h3>
+                    <div id="studentFormContainer" style="display: none; width: 600px;">
+                        <h3 style="margin-bottom: 0px;"><div class="left" id="studentTitleOption" name="studentTitleOption"></div>Transporte Estudiante</h3>
 
-                        <form id="studentForm" name="studentForm">
+                        <form id="studentRouteForm" name="studentRouteForm">
 
                             <input type="hidden" id="studentId" name="studentId" value="0">
                             <div id="subformEntryError" class="formErrors"></div>
 
                             <div style="margin-bottom: 5px;">
                                 <label style="display: inline-block; width: 100px">{% trans %}label.type{% endtrans %}</label>
-                                <select id="pickUp" name="pickUp"></select>
+                                <select id="studentRouteType" name="studentRouteType" style="width: 470px;">
+                                    <option value="0"></option>
+                                    <option value="1">Tiempo Completo</option>
+                                    <option value="2">Medio Tiempo</option>
+                                </select>
                             </div>
 
                             <div style="margin-bottom: 5px;">
                                 <label style="display: inline-block; width: 100px">{% trans %}label.route{% endtrans %}&nbsp;2</label>
-                                <select id="leaveTime" name="leaveTime"></select>
+                                <select id="studentRouteIn" name="studentRouteIn" style="width: 470px;">
+                                    <option value="0"></option>
+                                    {% for route in routes %}
+                                        <option value="{{ route.id }}">{{ route.description }}</option>
+                                    {% endfor %}
+                                </select>
                             </div>
 
                             <div class="left"><input class="button success-darker tiny" style="margin-top: 0px;" type="button" name="entryFormCancel" id="entryFormCancel" value="{% trans %}label.cancelar{% endtrans %}"/></div>

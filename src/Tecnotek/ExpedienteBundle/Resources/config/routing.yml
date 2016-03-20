@@ -504,6 +504,10 @@ _expediente_remove_student_from_route:
     pattern:  /students/removeStudentFromRoute
     defaults: { _controller: TecnotekExpedienteBundle:Student:removeStudentFromRoute }
 
+_expediente_change_student_route_in_info:
+    pattern:  /students/changeStudentRouteInInfo
+    defaults: { _controller: TecnotekExpedienteBundle:Student:changeRouteInInfo }
+
 _expediente_save_new_contact:
     pattern:  /students/newContact
     defaults: { _controller: TecnotekExpedienteBundle:Student:createContact }
