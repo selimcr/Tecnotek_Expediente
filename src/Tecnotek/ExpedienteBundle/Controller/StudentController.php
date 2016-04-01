@@ -2,6 +2,7 @@
 
 namespace Tecnotek\ExpedienteBundle\Controller;
 
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Tecnotek\ExpedienteBundle\Entity\Absence;
 use Tecnotek\ExpedienteBundle\Entity\Contact;
 use Tecnotek\ExpedienteBundle\Entity\StudentExtraTest;
@@ -15,6 +16,7 @@ use Tecnotek\ExpedienteBundle\Form\ContactFormType;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 
 class StudentController extends Controller
 {
@@ -22,36 +24,66 @@ class StudentController extends Controller
     public function studentListAction($rowsPerPage = 30)
     {
         $em = $this->getDoctrine()->getEntityManager();
-
         $text = $this->get('request')->query->get('text');
-        $sqlText = "";
-        if(isset($text) && $text != "") {
-            $sqlText = " WHERE s.firstname like '%$text%' or s.lastname like '%$text%' or s.carne like '%$text%'";
-        }
-
-        $dql = "SELECT s FROM TecnotekExpedienteBundle:Student s" . $sqlText;
-        $query = $em->createQuery($dql);
-
-        $param = $this->get('request')->query->get('rowsPerPage');
-
-
-
-        if(isset($param) && $param != "")
-            $rowsPerPage = $param;
-
-        $dql2 = "SELECT count(s) FROM TecnotekExpedienteBundle:Student s" . $sqlText;
-        $page = $this->getPaginationPage($dql2, $this->get('request')->query->get('page', 1), $rowsPerPage);
-
-        $paginator = $this->get('knp_paginator');
-        $pagination = $paginator->paginate(
-            $query,
-            $page/*page number*/,
-            $rowsPerPage/*limit per page*/
-        );
-
         return $this->render('TecnotekExpedienteBundle:SuperAdmin:Student/list.html.twig', array(
-            'pagination' => $pagination, 'rowsPerPage' => $rowsPerPage, 'menuIndex' => 3, 'text' => $text
+            'menuIndex' => 3, 'text' => $text
         ));
+    }
+
+    public function searchStudentsAction($rowsPerPage = 30) {
+        $logger = $this->get('logger');
+        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
+        {
+            try {
+                $request = $this->get('request')->request;
+                $text = $request->get('text');
+                $sortBy = $request->get('sortBy');
+                $order = $request->get('order');
+                $page = $request->get('page');
+                $offset = ($page-1) * $rowsPerPage;
+                $em = $this->getDoctrine()->getEntityManager();
+                $words = explode(" ", trim($text));
+                $where = "";
+                foreach ($words as $word) {
+                    $where .= $where == ""? "":" AND ";
+                    $where .= "(std.firstname like '%" . $word . "%' OR std.lastname like '%" . $word .
+                        "%' OR std.carne like '%" . $word . "%')";
+                }
+                $sql = "SELECT SUM($where) as filtered,"
+                    . " COUNT(*) as total FROM tek_students std;";
+                $stmt = $em->getConnection()->prepare($sql);
+                $stmt->execute();
+                $filtered = 0;
+                $total = 0;
+                $result = $stmt->fetchAll();
+                foreach($result as $row) {
+                    $filtered = $row['filtered'];
+                    $total = $row['total'];
+                }
+
+                $sql = "SELECT std.id, std.lastname, std.firstname, std.groupyear, std.gender, std.carne"
+                    . " FROM tek_students std"
+                    . " WHERE $where"
+                    . " ORDER BY std.$sortBy $order"
+                    . " LIMIT $rowsPerPage OFFSET $offset";
+                $stmt2 = $em->getConnection()->prepare($sql);
+                $stmt2->execute();
+                $students = $stmt2->fetchAll();
+
+                return new Response(json_encode(array('error' => false,
+                    'filtered' => $filtered,
+                    'total' => $total,
+                    'students' => $students)));
+            } catch (Exception $e) {
+                $info = toString($e);
+                $logger->err('Student::searchStudentsAction [' . $info . "]");
+                return new Response(json_encode(array('error' => true, 'message' => $info)));
+            }
+        }// endif this is an ajax request
+        else
+        {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
     }
 
     public function studentCreateAction()
@@ -2452,7 +2484,78 @@ $currentPeriod = $em->getRepository("TecnotekExpedienteBundle:Period")->findOneB
         }
     }// End of emailsLoadAction
 
+    public function sendEmailsAction(){
+        $logger = $this->get('logger');
+        $translator = $this->get("translator");
+        if ($this->get('request')->isXmlHttpRequest()) {
+            $error = false;
+            $msg = "";
+            try {
+                $request = $this->get('request');
+                $attachment = $request->files->get("attachment-0");
+                $fullPath = "";
+                if ( isset($attachment) ) {
+                    if ($attachment instanceof UploadedFile && ($attachment->getError() == '0')) {
+                        if ($attachment->getSize() <= 5 * 1024 * 1024) { // 8MB
+                            $originalName = $attachment->getClientOriginalName();
+                            $name_array = explode('.', $originalName);
+                            $file_type = $name_array[sizeof($name_array)-1];
+                            $valid_file_types = array('jpg', 'jpeg', 'bpm', 'png','pdf','doc','docx','xls','xlsx');
+                            if (in_array(strtolower($file_type), $valid_file_types)) {
+                                $fullPath = $this->saveFile($attachment);
+                            } else {
+                                $error = true;
+                                $msg = $translator->trans("email.send.error.file.type");
+                            }
+                        } else {
+                            $error = true;
+                            $msg = $translator->trans("email.send.error.size");
+                        }
+                    } else {
+                        $error = true;
+                        $msg = $translator->trans("email.send.error.invalid");
+                    }
+                }
+                if ($error == false) {
+                    $emails = $request->request->get('emails');
+                    $body = $request->request->get('body');
+                    $subject = $request->request->get('subject');
+                    $emails = "selimdiaz@gmail.com;sdiaz@cecropiasolutions.com";
+                    $logger->info("--> Sending Email to: " . $emails);
+                    $message = \Swift_Message::newInstance()
+                        ->setSubject($subject)
+                        ->setFrom(array('web-contact@retoaprender.com' => 'Saint Michael'))
+                        ->setTo(explode(";",$emails))
+                        ->setBody($body, 'text/html');
+                    if($fullPath != "") {
+                        $message->attach(\Swift_Attachment::fromPath($fullPath));
+                    }
+                    $this->get('mailer')->send($message);
+                    if ($fullPath != "" && file_exists($fullPath)) unlink($fullPath);
+                    $msg = $translator->trans("email.send.success");
+                }
+                return new Response(json_encode(array('error' => $error, 'message' => $msg)));
+            }catch (Exception $e) {
+                $info = toString($e);
+                $logger->err('Student::sendEmailsAction [' . $info . "]");
+                return new Response(json_encode(array('error' => true, 'message' => $info)));
+            }
+        } else {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+    }
+
     public function loadStudentRelatives(){
+        $em = $this->getDoctrine()->getEntityManager();
+        $id = 1;
         $relatives = $em->getRepository("TecnotekExpedienteBundle:Relative")->findByStudent($id);
+    }
+
+    public function saveFile($uploaded_file) {
+        $uploaded_file_info = pathinfo($uploaded_file->getClientOriginalName());
+        $filename = md5(uniqid()) . "." .$uploaded_file_info['extension'];
+        $attachmentPath = $this->container->getParameter('kernel.root_dir').'/../web/uploads/attachments';
+        $uploaded_file->move($attachmentPath, $uploaded_file->getClientOriginalName());
+        return $attachmentPath . "/" . $uploaded_file->getClientOriginalName();
     }
 }

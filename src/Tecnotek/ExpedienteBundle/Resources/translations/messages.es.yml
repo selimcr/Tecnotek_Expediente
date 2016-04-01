@@ -26,6 +26,9 @@ label.psico: Perfil Psicologico
 label.volver: Volver
 label.edit: Editar
 label.delete: Eliminar
+label.send.email: Enviar Correo
+label.content: Contenido
+label.subject: Asunto
 label.eliminar: Eliminar
 label.usuarios: Usuarios
 label.level: Nivel
@@ -59,6 +62,7 @@ label.users: Usuarios
 label.access: Permisos
 label.questionnaires.config: Config Cuestionarios
 label.questionnaires.list: Lista de Cuestionarios
+label.attachment: Archivo adjunto
 
 label.teacher.default: Profesor Asignado
 label.include: Incluir
@@ -414,6 +418,12 @@ label.enableForTeacher: Habilitado Profesores
 label.enableInstitutions: Instituciones
 
 label.new.relative: Nuevo Familiar
+
+#email and attachment
+email.send.success: El correo electrónico se ha enviado a la lista seleccionada correctamente
+email.send.error.file.type: El archivo adjunto no es de un tipo permitido [jpg,jpeg,bpm,png,pdf,doc,docx,xls,xlsx]
+email.send.error.size: El archivo adjunto supera el tamaño máximo permitido de 5MB
+email.send.error.invalid: El archivo adjunto es inválido
 
 #Validation
 not.blank.name: Probando proband.

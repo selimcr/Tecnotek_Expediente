@@ -5,15 +5,16 @@
 {% endblock %}
 
 {% block extrajs %}
+<script type="text/javascript" src="{{ asset('js/tek_exp_students.js') }}"></script>
 <script type="text/javascript">
-    Tecnotek.module = "entityList";
+    Tecnotek.module = "studentList";
     Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
     Tecnotek.UI.urls["show"] = "{{ path('_expediente_sysadmin_student_show_simple')}}";
     Tecnotek.UI.urls["edit"] = "{{ path('_expediente_sysadmin_student_edit_simple')}}";
     Tecnotek.UI.urls["religion"] = "{{ path('_expediente_sysadmin_student_religion_edit_simple')}}";
     Tecnotek.UI.urls["emergency"] = "{{ path('_expediente_sysadmin_student_emergency_edit_simple')}}";
     Tecnotek.UI.urls["psico"] = "{{ path('_expediente_sysadmin_student_psico_profile_simple')}}";
-
+    Tecnotek.UI.urls["search"] = "{{ path('_expediente_sysadmin_student_search')}}";
 </script>
 {% endblock %}
 
@@ -28,58 +29,57 @@
 
         <div class="table">
             <div class="row tableHeader">
-                <div class="option_width" style="float: left; width: 100px; margin-left: -6px;">
-                    {{ pagination.sortable('Carne', 's.carne')|raw }}
+                <div class="option_width sort_header" style="float: left; width: 100px; margin-left: -6px;"
+                     field-name="carne" order="asc">
+                    <span class="header-title asc" title="Carne">Carne</span>
                 </div>
-                <div class="option_width" style="float: left; width: 200px; margin-left: -6px;">
-                    {{ pagination.sortable('Nombre', 's.firstname')|raw }}
+                <div class="option_width sort_header" style="float: left; width: 200px; margin-left: -6px;"
+                     field-name="firstname" order="asc">
+                    <span class="header-title sortable" title="Nombre">Nombre</span>
                 </div>
-                <div class="option_width" style="float: left; width: 200px; margin-left: -6px;">
-                    {{ pagination.sortable('Apellidos', 's.lastname')|raw }}
+                <div class="option_width sort_header" style="float: left; width: 200px; margin-left: -6px;"
+                     field-name="lastname" order="asc">
+                    <span class="header-title sortable" title="Apellidos">Apellidos</span>
                 </div>
-                <div class="option_width" style="float: left; width: 90px; margin-left: -6px;">
-                    {{ pagination.sortable('Seccion', 's.groupyear')|raw }}
+                <div class="option_width sort_header" style="float: left; width: 90px; margin-left: -6px;"
+                     field-name="groupyear" order="asc">
+                    <span class="header-title sortable" title="Seccion">Seccion</span>
                 </div>
-                <div class="option_width" style="float: left; width: 100px; margin-left: -6px;">
-                    {{ pagination.sortable('Genero', 's.gender')|raw }}
+                <div class="option_width sort_header" style="float: left; width: 100px; margin-left: -6px;"
+                     field-name="gender" order="asc">
+                    <span class="header-title sortable" title="Genero">Genero</span>
                 </div>
                 <div class="right" style="margin-top: -2px;"><a style="margin: 4px 0px 0px 0px;" href="#" class="button success-darker tiny" id="btnSearch" name="btnSearch"><span></span>{% trans %}label.search{% endtrans %}</a></div>
                 <div class="right" style="width: 5px; height: 26px"></div>
                 <div class="option_width right">
                     <input id="searchText" name="searchText" value="{{ text }}">
                 </div>
-
             </div>
 
-            {% set counter = 0 %}
-
-            {% for entity in pagination %}
-            <div class="row userRow {% if counter%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}" rel="{{ entity.id }}">
-                <div class="option_width" style="float: left; width: 100px; margin-left: -6px;">{{ entity.carne }}</div>
-                <div class="option_width" style="float: left; width: 200px; margin-left: -6px;">{{ entity.firstname }}</div>
-                <div class="option_width" style="float: left; width: 200px; margin-left: -6px;">{{ entity.lastname }}</div>
-                <div class="option_width" style="float: left; width: 90px; margin-left: -6px;">{{ entity.groupyear }}</div>
-                <div class="option_width" style="float: left; width: 100px; margin-left: -6px;">{% if entity.gender == 1%}{% trans %}label.male{% endtrans %}{% else %}{% trans %}label.female{% endtrans %}{% endif %}</div>
-                <div class="right imageButton editButton"  title="{% trans %}label.edit{% endtrans %}"  rel="{{ entity.id }}"></div>
-                <div class="right imageButton viewButton"  title="{% trans %}label.view{% endtrans %}"  rel="{{ entity.id }}"></div>
-                <div class="right imageButton religionButton"  title="{% trans %}label.religion{% endtrans %}"  rel="{{ entity.id }}"></div>
-                <div class="right imageButton emergencyButton"  title="{% trans %}label.emergency{% endtrans %}"  rel="{{ entity.id }}"></div>
-                <div class="right imageButton psicoButton"  title="{% trans %}label.psico{% endtrans %}"
-                     rel="{{ entity.id }}"></div>
-                <div class="clear"></div>
+            <div id="students-container">
             </div>
-            {% set counter = counter + 1 %}
-            {% endfor %}
         </div>
 
         <br/>
-    
-        <div style="margin-bottom:75px;">
-            {# display navigation #}    
-            {{ pagination.render()|raw }}
-        </div>    
+
+        <div style="margin-bottom:75px;" id="pagination-container">
+        </div>
         <div class="clear"></div>
     </div>
+    <div class="clear"></div>
+</div>
+
+<div id="studentRowTemplate" class="row userRow ROW_CLASS" rel="STUDENT_ID" style="display: none;">
+    <div class="option_width" style="float: left; width: 100px; margin-left: -6px;">STUDENT_CARNE</div>
+    <div class="option_width" style="float: left; width: 200px; margin-left: -6px;">STUDENT_FIRST_NAME</div>
+    <div class="option_width" style="float: left; width: 200px; margin-left: -6px;">STUDENT_LAST_NAME</div>
+    <div class="option_width" style="float: left; width: 90px; margin-left: -6px;">STUDENT_GROUP_YEAR</div>
+    <div class="option_width" style="float: left; width: 100px; margin-left: -6px;">STUDENT_GENDER</div>
+    <div class="right imageButton editButton"  title="{% trans %}label.edit{% endtrans %}"  rel="STUDENT_ID"></div>
+    <div class="right imageButton viewButton"  title="{% trans %}label.view{% endtrans %}"  rel="STUDENT_ID"></div>
+    <div class="right imageButton religionButton"  title="{% trans %}label.religion{% endtrans %}"  rel="STUDENT_ID"></div>
+    <div class="right imageButton emergencyButton"  title="{% trans %}label.emergency{% endtrans %}"  rel="STUDENT_ID"></div>
+    <div class="right imageButton psicoButton"  title="{% trans %}label.psico{% endtrans %}" rel="STUDENT_ID"></div>
     <div class="clear"></div>
 </div>
 {% endblock %}

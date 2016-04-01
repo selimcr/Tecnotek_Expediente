@@ -19,6 +19,8 @@ Tecnotek :: Expediente :: Super Administrador
     Tecnotek.UI.urls["saveStudentQualificationURL"] = "{{ path("_expediente_teacher_save_student_qualification") }}";
     Tecnotek.UI.urls["loadEntriesOfCourseURL"] = "{{ path("_expediente_teacher_load_entries_of_course") }}";
     Tecnotek.UI.urls["viewPrintableVersionURL"] = "{{ path("_expediente_sysadmin_printable_group_qualifications") }}";
+
+    Tecnotek.UI.urls["generateGroupExcel"] = "{{ path("_expediente_teacher_generate_group_excel") }}";
 </script>
 {% endblock %}
 
@@ -107,7 +109,10 @@ Tecnotek :: Expediente :: Super Administrador
 
             <div class="clear"></div>
 
-            <div class="right" style="padding-right: 20px;"><a href="#" class="button success-darker tiny" id="viewPrintable" name="viewPrintable"><span></span>Versi&oacute;n Imprimible</a></div>
+            <div class="right" style="padding-right: 20px;">
+                <a href="#" class="button success-darker tiny" id="generateExcelBtn" name="generateExcelBtn"><span></span>Generar Excel</a>
+                <a href="#" class="button success-darker tiny" id="viewPrintable" name="viewPrintable"><span></span>Versi&oacute;n Imprimible</a>
+            </div>
 
             <div class="clear"></div>
         </div>

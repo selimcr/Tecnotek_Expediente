@@ -12,6 +12,14 @@
 {% block extrajs %}
 <script type="text/javascript" src="{{ asset('js/tek_exp_emails.js') }}"></script>
 <script type="text/javascript" src="{{ asset('fancybox/jquery.fancybox.js?v=2.0.6') }}"></script>
+<script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
+<script>tinymce.init({ selector:'#mail-content',
+        plugins: [
+            'advlist autolink lists link image charmap preview anchor',
+            'searchreplace visualblocks code fullscreen',
+            'insertdatetime media table contextmenu paste code'
+        ],
+        toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image'});</script>
 <script type="text/javascript">
     Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
     Tecnotek.UI.urls["removeRelativeURL"] = "{{ path("_expediente_remove_relative") }}";
@@ -36,8 +44,7 @@
     Tecnotek.UI.urls["loadLevelsOfPeriodURL"] = "{{ path('_expediente_sysadmin_load_period_levels')}}";
     Tecnotek.UI.urls["loadGroupsOfPeriodAndLevelsURL"] = "{{ path('_expediente_sysadmin_load_period_level_groups')}}";
     Tecnotek.UI.urls["loadEmailsURL"] = "{{ path('_expediente_emails_load')}}";
-
-
+    Tecnotek.UI.urls["sendEmailsURL"] = "{{ path('_expediente_emails_send')}}";
 
 </script>
 <!-- basic fancybox setup -->
@@ -80,11 +87,60 @@
             <div class="clear"></div>
         </div>
 
+        <form class="custom" id="emailForm" name="emailForm" action="" method="post" enctype="multipart/form-data">
         <div id="emails-container" style="width: 100%; margin: auto; text-align: center;">
             <textarea id="emails-ta" readonly style="margin: 0px 0px 7px; width: 90%; height: 300px;">
 
             </textarea>
         </div>
+
+        <div id="mail-form" class="panelRow" style="width: 90%;">
+
+                <fieldset>
+                    <legend>{{ 'label.send.email'|trans }}</legend>
+                    <div class="formRow">
+                        <div class="large-12 columns">
+                            <div class="large-12 columns">
+                                <label>{{ 'label.subject'|trans }} *</label>
+                            </div>
+                            <div class="large-12 columns">
+                                <input type="text" id="subject" name="subject" required="required">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="formRow">
+                        <div class="large-12 columns">
+                            <div class="large-12 columns">
+                                <label>{{ 'label.content'|trans }}*</label>
+                            </div>
+                            <div class="large-12 columns">
+                                <textarea id="mail-content" name="mail-content"
+                                                                style="height: 120px; width: 100%;"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="formRow">
+                        <div class="large-12 columns"  style="margin-top: 10px;">
+                            <div class="large-12 columns">
+                                <label>{{ 'label.attachment'|trans }}*</label>
+                            </div>
+                            <div class="large-12 columns">
+                                <input type="file" id="attachmentFile" name="attachmentFile"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="formRow " style="margin: auto; text-align: center;">
+                        <div class="large-12 columns buttonsPanel">
+                            <button style="margin-left: 15px; margin-top: 0px;" type="submit" class="button success-darker tiny" name="save">
+                                <span></span>{% trans %}label.send.email{% endtrans %}</button>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+
+                </fieldset>
+
+        </div>
+        </form>
     </div>
 </div>
 {% endblock %}

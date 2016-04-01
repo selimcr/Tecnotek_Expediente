@@ -491,7 +491,18 @@ var Tecnotek = {
                     //console.debug("print!!!");
                     //$("#tableContainer").printElement({printMode:'iframe', pageTitle:$(this).attr('rel')});
                 });
+                $('#generateExcelBtn').click(function(e){
+                    e.preventDefault();
+                    var periodId = $("#period").val();
+                    var courseId = $("#courses").val();
+                    var groupId = $("#groups").val();
 
+                    if (periodId != null && courseId != null && groupId != null){
+                        Tecnotek.showInfoMessage("generando....", true, '', false);
+                    } else {
+                        Tecnotek.showInfoMessage("Necesita seleccionar el grupo y la materia antes de generar el archivo", true, '', false);
+                    }
+                });
                 $('#viewPrintable').click(function(event){
                     event.preventDefault();
 

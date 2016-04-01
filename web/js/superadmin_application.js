@@ -49,6 +49,12 @@ var Tecnotek = {
             //return Math.round(original*100)/100;
             return original.toFixed(2);
         },
+        showWaiting: function() {
+            $("body").addClass("loading");
+        },
+        hideWaiting: function() {
+            $("body").removeClass("loading");
+        },
 		init : function() {
             $( "#spinner-modal" ).dialog({
                 height: 140,
@@ -66,6 +72,7 @@ var Tecnotek = {
 				switch (module) {
                 case "penalties":
                     Tecnotek.AdministratorList.init();
+                    Tecnotek.AdministratorList.initBtnSearch();
                     Tecnotek.Penalties.init();
                     break;
                 case "absencesByGroup":
@@ -73,6 +80,7 @@ var Tecnotek = {
                     break;
                 case "absences":
                     Tecnotek.AdministratorList.init();
+                    Tecnotek.AdministratorList.initBtnSearch();
                     Tecnotek.Absences.init();
                     break;
                 case "absencesTypes":
@@ -82,7 +90,11 @@ var Tecnotek = {
                 case "coordinadorList":
                 case "profesorList":
                 case "entityList":
-                    Tecnotek.AdministratorList.init(); break;
+                    Tecnotek.AdministratorList.init();
+                    Tecnotek.AdministratorList.initBtnSearch(); break;
+                case "studentList":
+                    Tecnotek.AdministratorList.init();
+                    Tecnotek.Students.init(); break;
                 case "showAdministrador":
                 case "showCoordinador":
                 case "showProfesor":
@@ -166,6 +178,23 @@ var Tecnotek = {
 			Tecnotek.UI.init();
 
 		},
+        uniqueAjaxCall : function(url, params, succedFunction, errorFunction, showSpinner, requestId) {
+            Tecnotek.UI.vars['request-'+requestId] = $.ajax({
+                url: url,
+                type: "POST",
+                data: params,
+                dataType: "json",
+                beforeSend: function() {
+                    if (Tecnotek.UI.vars['request-'+requestId] != null) {
+                        Tecnotek.UI.vars['request-'+requestId].abort();
+                    }
+                }
+            });
+
+            Tecnotek.UI.vars['request-'+requestId].done(succedFunction);
+
+            Tecnotek.UI.vars['request-'+requestId].fail(errorFunction);
+        },
         ajaxCall : function(url, params, succedFunction, errorFunction, showSpinner) {
             var request = $.ajax({
                 url: url,
@@ -290,7 +319,57 @@ var Tecnotek = {
 				var result = $(formSelector).validationEngine('validate');
 				//alert("result "+result);
 				return result;
-			}
+			},
+            printPagination: function($total, $filtered, $currentPage, $recordsPerPage, $containerId) {
+                $total = $total * 1;
+                $filtered = $filtered * 1;
+                $currentPage = $currentPage * 1;
+                $recordsPerPage = $recordsPerPage * 1;
+                if ($filtered == 0) {
+                    var html = '<div class="empty-results">No se han encontrado resultados</div>';
+                    $("#" + $containerId).html(html);
+                    return;
+                }
+                var $totalPages = Math.ceil($filtered / $recordsPerPage);
+                var $previousPage = $currentPage - 1;
+                var $nextPage = $currentPage + 1;
+                /*console.debug("$totalPages: " + $totalPages + ", $previousPage: " + $previousPage + ", $nextPage: " + $nextPage
+                    + ", $currentPage: " + $currentPage, ", $filtered: " + $filtered );*/
+                var html = '<div class="pagination"><div class="left">';
+                if ($previousPage > 0) {
+                    html += '<span class="first paginationButton" page="1">&lt;&lt;</span>';
+                    html += '<span class="previous paginationButton" page="' + $previousPage + '">&lt;</span>';
+                }
+                var $totalButtons = 4;
+                var $totalPreviousButtons = 2;
+                for( var i = $totalPreviousButtons; i > 0; i--) {
+                    var $page = $currentPage-i;
+                    if ($page > 0) {
+                        html += '<span class="page paginationButton" page="' + $page + '">' + $page + '</span>';
+                        $totalButtons--;
+                    }
+                }
+                html += '<span class="current">' + $currentPage + '</span>';
+                for( var i = $totalButtons; i > 0; i--) {
+                    var $page = $currentPage+($totalButtons - i + 1);
+                    if ($page <= $totalPages) {
+                        html += '<span class="page paginationButton" page="' + $page + '">' + $page + '</span>';
+                    }
+                }
+                if ($nextPage <= $totalPages) {
+                    html += '<span class="next paginationButton" page="' + $nextPage + '">&gt;</span>';
+                    html += '<span class="last paginationButton" page="' + $totalPages + '">&gt;&gt;</span>';
+                }
+                html += '</div>';
+                if ($filtered == $total) {
+                    html += '<div class="right pagination-msg">Total de registros: ' + $total + '</div>';
+                } else {
+                    html += '<div class="right pagination-msg">' + $filtered + ' filtrados de un total de ' + $total + '</div>';
+                }
+                html += '</div>';
+                html += '<div class="clear"></div>';
+                $("#" + $containerId).html(html);
+            }
 		},
         Reports : {
             init : function() {
@@ -515,34 +594,8 @@ var Tecnotek = {
 			},
 			initComponents : function() {
 			},
-			initButtons : function() {
-                console.debug("AdministratorList :: initButtons");
-                $('.editButton').click(function(event){
-                    event.preventDefault();
-                    console.debug("AdministratorList :: initButtons :: editButton Event");
-                    location.href = Tecnotek.UI.urls["edit"] + "/" + $(this).attr("rel");
-                });
-                $('.viewButton').click(function(event){
-                    event.preventDefault();
-                    location.href = Tecnotek.UI.urls["show"] + "/" + $(this).attr("rel");
-				});
-                $('.adminButton').click(function(event){
-                    event.preventDefault();
-                    location.href = Tecnotek.UI.urls["admin"] + "/" + $(this).attr("rel");
-                });
-                $('.psicoButton').click(function(event){
-                    event.preventDefault();
-                    location.href = Tecnotek.UI.urls["psico"] + "/" + $(this).attr("rel");
-                });
-                $('.religionButton').click(function(event){
-                    event.preventDefault();
-                    location.href = Tecnotek.UI.urls["religion"] + "/" + $(this).attr("rel");
-                });
-                $('.emergencyButton').click(function(event){
-                    event.preventDefault();
-                    location.href = Tecnotek.UI.urls["emergency"] + "/" + $(this).attr("rel");
-                });
-                $('#btnSearch').click(function(event){
+            initBtnSearch: function() {
+                $('#btnSearch').unbind().click(function(event){
                     event.preventDefault();
                     var url = location.href;
                     var text = $("#searchText").val();
@@ -558,6 +611,34 @@ var Tecnotek = {
                         url += "?text=" + text;
                     }
                     window.location.href= url;
+                });
+            },
+			initButtons : function() {
+                console.debug("AdministratorList :: initButtons");
+                $('.editButton').unbind().click(function(event){
+                    event.preventDefault();
+                    console.debug("AdministratorList :: initButtons :: editButton Event");
+                    location.href = Tecnotek.UI.urls["edit"] + "/" + $(this).attr("rel");
+                });
+                $('.viewButton').unbind().click(function(event){
+                    event.preventDefault();
+                    location.href = Tecnotek.UI.urls["show"] + "/" + $(this).attr("rel");
+				});
+                $('.adminButton').unbind().click(function(event){
+                    event.preventDefault();
+                    location.href = Tecnotek.UI.urls["admin"] + "/" + $(this).attr("rel");
+                });
+                $('.psicoButton').unbind().click(function(event){
+                    event.preventDefault();
+                    location.href = Tecnotek.UI.urls["psico"] + "/" + $(this).attr("rel");
+                });
+                $('.religionButton').unbind().click(function(event){
+                    event.preventDefault();
+                    location.href = Tecnotek.UI.urls["religion"] + "/" + $(this).attr("rel");
+                });
+                $('.emergencyButton').unbind().click(function(event){
+                    event.preventDefault();
+                    location.href = Tecnotek.UI.urls["emergency"] + "/" + $(this).attr("rel");
                 });
 			},
 			submit : function() {
@@ -2131,3 +2212,7 @@ var Tecnotek = {
         }
 	};
 
+String.prototype.replaceAll = function(search, replacement) {
+    var target = this;
+    return target.replace(new RegExp(search, 'g'), replacement);
+};
