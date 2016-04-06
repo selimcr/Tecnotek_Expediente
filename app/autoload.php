@@ -17,11 +17,18 @@ $loader->registerNamespaces(array(
     'Knp\\Component'   => __DIR__.'/../vendor/knp-components/src',
     'Knp\\Bundle'      => __DIR__.'/../vendor/bundles',
     'Export'           => __DIR__.'/../vendor/bundles',
+    'PHPExcel'         => __DIR__.'/../vendor/phpoffice/phpexcel/Classes',
+    'Liuggio\\ExcelBundle' => __DIR__.'/../vendor/liuggio/ExcelBundle',
 ));
 $loader->registerPrefixes(array(
     'Twig_Extensions_' => __DIR__.'/../vendor/twig-extensions/lib',
     'Twig_'            => __DIR__.'/../vendor/twig/lib',
-    'PHPExcel'         => __DIR__.'/../vendor/bundles/Export/ExcelBundle/Library/phpExcel/Classes',
+    'PHPExcel'         => __DIR__.'/../vendor/phpoffice/phpexcel/Classes',
+    'Liuggio\\ExcelBundle' => __DIR__.'/../vendor/liuggio/ExcelBundle',
+
+    /*'PHPExcel'         => __DIR__.'/../vendor/bundles/Export/ExcelBundle/Library/phpExcel/Classes',
+    'PHPExcel'         => array($vendorDir . '/phpoffice/phpexcel/Classes'),
+    'Liuggio\\ExcelBundle' => array($vendorDir . '/liuggio/ExcelBundle'),*/
 ));
 
 // intl
