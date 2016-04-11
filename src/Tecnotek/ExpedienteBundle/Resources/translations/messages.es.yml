@@ -276,8 +276,9 @@ label.penalty.show: Mostrar Sancion
 label.reports.routes.by.zone: Reporte de Rutas por Zona
 label.reports.students.by.route: Reporte de Estudiantes por Ruta
 label.reports.absences.by.route: Reporte de Estudiantes Ausentes por Ruta
-label.students.by.route.club.level: Reporte Estudiantes en club por dia
+label.students.by.route.club.level: Reporte Estudiantes en rutas de club por dia
 label.students.by.route.club.route: Reporte Estudiantes rutas club por dia
+label.students.by.club.level: Reporte Estudiantes en club por dia
 
 label.reports.routes.club: Reporte de rutas de Clubes
 label.routeIn: Ruta Altarnativa

@@ -205,6 +205,58 @@ class ReportController extends Controller
 
         $text = $this->get('request')->query->get('text');
         $day = $this->get('request')->query->get('day');
+        $nday= "";
+        if($day == '1'){$nday='LUNES';}
+        if($day == '2'){$nday='MARTES';}
+        if($day == '3'){$nday='MIERCOLES';}
+        if($day == '4'){$nday='JUEVES';}
+        if($day == '5'){$nday='VIERNES';}
+        if($day == '6'){$nday='SABADO';}
+        if($day == '7'){$nday='DOMINGO';}
+
+
+        $sqlText = "";
+        if(isset($text) && $text != "") {
+            $sqlText = " WHERE r.name like '%$text%'";
+        }
+
+        $stmt = $this->getDoctrine()->getEntityManager()
+            ->getConnection()
+            ->prepare('select r.name as route, c.day, c.name, s.carne, concat (s.lastname," ",s.firstname) as student, s.groupyear
+            from tek_students s, tek_clubs c, club_student cs, tek_route r, tek_students_to_routes tr
+            where tr.student_id = s.id and tr.route_id = r.id and s.id = cs.student_id and c.id = cs.club_id and day = "'.$day.'"
+and r.name like "%'.$nday.'%"
+order by c.day, s.groupyear');
+        $stmt->execute();
+        $entity = $stmt->fetchAll();
+
+
+
+
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Reports/students_by_route_club_level.html.twig', array(
+            'menuIndex' => 4, 'text' => $text, 'day' => $day, 'entities' => $entity
+        ));
+    }
+
+    public function reportStudentByClubLevelAction(){
+
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $logger = $this->get('logger');
+        $errorMessage = "";
+        try{
+            $stmt = $em->getConnection()->prepare("CALL setStudentsDailyStatus()");
+            $stmt->execute();
+        } catch (\Exception $e) {
+            $errorMessage = $e->getMessage();
+            $logger->err('Report::reportStudentAbsencesByRouteAction [Error runing sp: ' . $errorMessage . "]");
+        } catch (PDOException $e) {
+            $errorMessage = $e->getMessage();
+            $logger->err('Report::reportStudentAbsencesByRouteAction [Error runing sp: ' . $errorMessage . "]");
+        }
+
+        $text = $this->get('request')->query->get('text');
+        $day = $this->get('request')->query->get('day');
 
         $sqlText = "";
         if(isset($text) && $text != "") {
@@ -220,7 +272,7 @@ class ReportController extends Controller
         $stmt->execute();
         $entity = $stmt->fetchAll();
 
-        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Reports/students_by_route_club_level.html.twig', array(
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Reports/students_by_club_level.html.twig', array(
             'menuIndex' => 4, 'text' => $text, 'day' => $day, 'entities' => $entity
         ));
     }
@@ -1679,6 +1731,12 @@ if($convocatoria == 2){
                 case 8: $periodIdb=2;
                     break;
                 case 9: $periodIdb=3;
+                    break;
+                case 10: $periodIdb=1;
+                    break;
+                case 11: $periodIdb=2;
+                    break;
+                case 12: $periodIdb=3;
                     break;
             }
 

@@ -143,7 +143,6 @@ class Contact
 
     /**
      * @ORM\Column(type="integer")
-     * @Assert\NotBlank()
      * @Assert\Min(limit = 0)
      */
     private $degree;
