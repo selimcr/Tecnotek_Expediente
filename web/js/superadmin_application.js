@@ -2053,7 +2053,7 @@ var Tecnotek = {
             }
         },
         afterCreateAndAssociateRelative: function(){
-            $html = '<div id="relative_row_' + data.id + '" class="row" rel="' + data.id + '" style="padding: 0px;">';
+            $html = '<div id="relative_row_' + this.data.id + '" class="row" rel="' +  this.data.id + '" style="padding: 0px;">';
             $html += '<div class style="float: left; width: 325px;">' + $firstname + " " + $lastname + '</div>';
             $html += '<div class style="float: left; width: 50px;">' + $detail + '</div>';
             $html += '<div class="right imageButton deleteButton" style="height: 16px;"  title="Delete"  rel="' + data.id + '"></div>';
@@ -2063,7 +2063,7 @@ var Tecnotek = {
             $html += '</div>';
             $("#relativesList").append($html);
             //Clean fields
-            $("#firstname").val("");
+            $("#firstname").val("gfdgfdgd");
             $("#lastname").val("");
             $("#identification").val("");
             $('#description').val("");
@@ -2117,10 +2117,36 @@ var Tecnotek = {
                         'tecnotek_expediente_contactformtype[degree]': 0,
                         'tecnotek_expediente_contactformtype[sector]': 0,
                         'kinship': $("#kinship").val(), 'detail': $detail},
+
                     function(data){
                         if(data.error === true) {
                             Tecnotek.showErrorMessage(data.message,true, "", false);
                         } else {
+
+                            $html = '<div id="relative_row_' + this.data.id + '" class="row" rel="' +  this.data.id + '" style="padding: 0px;">';
+                            $html += '<div class style="float: left; width: 325px;">' + $firstname + " " + $lastname + '</div>';
+                            $html += '<div class style="float: left; width: 50px;">' + $detail + '</div>';
+                            $html += '<div class="right imageButton deleteButton" style="height: 16px;"  title="Delete"  rel="' + data.id + '"></div>';
+                            $html += '<div class="right imageButton viewButton" style="height: 16px;"  title="Ver"  rel="' + data.id + '"></div>';
+                            $html += '<div class="right imageButton editButton" title="Editar"  rel="' + data.idc + '"></div>';
+                            $html += '<div class="clear"></div>';
+                            $html += '</div>';
+                            $("#relativesList").append($html);
+                            //Clean fields
+                            $("#firstname").val("gfdgfdgd");
+                            $("#lastname").val("");
+                            $("#identification").val("");
+                            $('#description').val("");
+                            Tecnotek.StudentShow.initDeleteButtons();
+                            Tecnotek.showInfoMessage(Tecnotek.StudentShow.translates["confirmRelative"], true, "", false);
+
+                            $('.editButton').unbind().click(function(event){
+                                event.preventDefault();
+                                console.debug("AdministratorList :: initButtons :: editButton Event");
+                                location.href = Tecnotek.UI.urls["edit"] + "/" + $(this).attr("rel");
+                            });
+
+
                             whenSuccessFunction();
                         }
                     },
@@ -2128,6 +2154,7 @@ var Tecnotek = {
                         Tecnotek.showErrorMessage("Error saving data: " + textStatus + ".",
                             true, "", false);
                     }, true);
+
             }
         },
         initRelativesSearch: function(){

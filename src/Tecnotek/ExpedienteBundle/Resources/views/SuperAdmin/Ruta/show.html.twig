@@ -122,10 +122,6 @@
                                     <div id="student_row_{{ studentToRoute.student.id }}" class="row userRow" rel="{{ studentToRoute.student.id }}"
                                          >
                                         <div class="option_width" style="float: left; width: 300px;">{{ studentToRoute.student }}</div>
-                                        <div class="right imageButton editButton editStudent" title="Editar" rel="{{ studentToRoute.student.id }}"
-                                             routetype="{{ studentToRoute.student.routeType? student.routeType:'0' }}"
-                                             routein="{{ studentToRoute.student.routeIn? student.routeIn.id:'0' }}"
-                                             id="btnEdit-{{ studentToRoute.student.id }}"></div>
                                         <div class="right imageButton deleteButton" style="height: 16px;"  title="{% trans %}label.delete{% endtrans %}"
                                              rel="{{ studentToRoute.student.id }}"></div>
                                         <div class="clear"></div>

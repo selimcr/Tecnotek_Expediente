@@ -8,8 +8,8 @@ parameters:
     database_host: localhost
     database_port: '3306'
     database_name: stmcr563_expediente
-    database_user: stmcr563
-    database_password: soporte5506
+    database_user: root
+    database_password: root
     mailer_transport: smtp
     mailer_host: localhost
     mailer_user: null
