@@ -1008,7 +1008,11 @@ _expediente_teacher_load_group_qualifications:
 
 _expediente_teacher_generate_group_excel:
   pattern:  /t/generateGroupExcel
-  defaults: { _controller: TecnotekExpedienteBundle:Teacher:generateGroupExcel }
+  defaults: { _controller: TecnotekExpedienteBundle:ExcelFileGenerator:generateGroupExcel }
+
+_expediente_teacher_load_group_excel:
+  pattern:  /t/loadGroupExcel
+  defaults: { _controller: TecnotekExpedienteBundle:ExcelFileGenerator:loadGroupExcel }
 
 _expediente_teacher_load_group_observations:
   pattern:  /t/loadGroupObservations

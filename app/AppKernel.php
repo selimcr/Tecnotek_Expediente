@@ -25,7 +25,7 @@ class AppKernel extends Kernel
             new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle(),
             new Sensio\Bundle\DistributionBundle\SensioDistributionBundle(),
             new Sensio\Bundle\GeneratorBundle\SensioGeneratorBundle(),
-            new Export\ExcelBundle\ExportExcelBundle(),
+            new Liuggio\ExcelBundle\LiuggioExcelBundle(),
         );
 
         /*if (in_array($this->getEnvironment(), array('dev', 'test'))) {

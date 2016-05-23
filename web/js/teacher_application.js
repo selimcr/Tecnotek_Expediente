@@ -492,35 +492,43 @@ var Tecnotek = {
                     //$("#tableContainer").printElement({printMode:'iframe', pageTitle:$(this).attr('rel')});
                 });
                 $('#generateExcelBtn').click(function(e){
-                    e.preventDefault();
                     var periodId = $("#period").val();
                     var courseId = $("#courses").val();
                     var groupId = $("#groups").val();
 
                     if (periodId != null && courseId != null && groupId != null){
-                        Tecnotek.showInfoMessage("generando....", true, '', false);
+                        $(this).attr("href",Tecnotek.UI.urls["generateGroupExcel"] + "?periodId="+periodId+"&courseId="+courseId
+                            +"&groupId="+groupId);
                     } else {
+                        e.preventDefault();
                         Tecnotek.showInfoMessage("Necesita seleccionar el grupo y la materia antes de generar el archivo", true, '', false);
                     }
                 });
                 $('#viewPrintable').click(function(event){
                     event.preventDefault();
-
                     var url = Tecnotek.UI.urls["viewPrintableVersionURL"];
                     var windowName = "Calificaciones de Grupo";
                     //var windowSize = windowSizeArray[$(this).attr("rel")];
-
                     var periodId = $("#period").val();
                     var courseId = $("#courses").val();
                     var groupId = $("#groups").val();
-
                     if(periodId != null && courseId != null && groupId != null){
                         url += "?periodId=" + periodId + "&groupId=" + groupId + "&courseId=" + courseId;
                         window.open(url, windowName);
                     }
-
                 });
-
+                $("#loadExcelBtn").click(function(e) {
+                    var periodId = $("#period").val();
+                    var courseId = $("#courses").val();
+                    var groupId = $("#groups").val();
+                    if(periodId == null || periodId=="null" || periodId=="-1"
+                        || courseId == null || courseId=="null" || courseId=="-1"
+                        || groupId == null || groupId=="null" || groupId=="-1"){
+                        Tecnotek.showInfoMessage("Necesita seleccionar el grupo y la materia antes de generar el archivo", true, '', false);
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
+                });
                 $('#entriesTab').click(function(event){
                     $("#subentriesSection").hide();
                     $('#entriesSection').show();
@@ -556,7 +564,10 @@ var Tecnotek = {
                     //Tecnotek.Qualifications.loadEntriesOfCourse($(this).val());
                     Tecnotek.Qualifications.loadQualificationsOfGroup($(this).val());
                 });
-
+                $('#loadButton').click(function(e) {
+                    e.preventDefault();
+                    Tecnotek.showErrorMessage("Debe seleccionar un archivo válido antes de continuar con la carga", true, '', false);
+                });
                 $("#entries").change(function(event){
                     event.preventDefault();
                     if($(this).val() === "0"){
@@ -566,7 +577,79 @@ var Tecnotek = {
                         $(".entryB_" + $(this).val() + "_").show();
                     }
                 });
-
+                //$("#progressbar").progressbar();
+                $("#progressbar").hide();
+                $('#excelFile').change(function(){
+                    var file = this.files[0];
+                    name = file.name;
+                    size = file.size;
+                    type = file.type;
+                    $msg = "";
+                    if (file.name.length < 1) {
+                        $msg = "Ha ocurrido un error al validar el archivo, intente seleccionarlo otra vez";
+                    } else if(file.size > 5 * 1024 * 1024) {
+                        $msg = "El archivo es demasiado grande y supera el máximo permitido [5MB]";
+                    } else if(file.type != 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+                        $msg = "El archivo no tiene un formato válido [xlsx]";
+                    }
+                    if ($msg != "") {
+                        $('#loadButton').unbind().click(function(e) {
+                            e.preventDefault();
+                            Tecnotek.showErrorMessage("Debe seleccionar un archivo válido antes de continuar con la carga", true, '', false);
+                        });
+                        Tecnotek.showErrorMessage($msg ,true, '', false);
+                    } else {
+                        $('#loadButton').unbind().click(function(e){
+                            e.preventDefault();
+                            e.stopPropagation();
+                            var url = $('#loadFileForm').attr("action");
+                            $("#excelFile").hide();
+                            $("#progressbar").show();
+                            var formData = new FormData();
+                            formData.append('file', document.getElementById('excelFile').files[0]);
+                            formData.append('periodId', $("#period").val());
+                            formData.append('groupId', $("#groups").val());
+                            formData.append('courseId', $("#courses").val());
+                            $.ajax({
+                                url: $('#loadFileForm').attr("action"),  //server script to process data
+                                type: 'POST',
+                                async: true,
+                                // Form data
+                                data: formData,
+                                cache: false,
+                                enctype: 'multipart/form-data',
+                                contentType: false,
+                                processData: false,
+                                xhr: function() {  // custom xhr
+                                    myXhr = $.ajaxSettings.xhr();
+                                    if(myXhr.upload){
+                                        //myXhr.upload.addEventListener('progress',showProgress, false);
+                                    }
+                                    return myXhr;
+                                },
+                                success: function(data) {
+                                    $("#progressbar").hide();
+                                    $("#excelFile").show();
+                                    data = jQuery.parseJSON(data);
+                                    if (data['error']) {
+                                        Tecnotek.showErrorMessage(data.message, true, '', false);
+                                    } else {
+                                        Tecnotek.showInfoMessage(data.message, true, '', false);
+                                        $.modal.close();
+                                        Tecnotek.Qualifications.loadQualificationsOfGroup($("#courses").val());
+                                    }
+                                },
+                                error: function(xhr, ajaxOptions, thrownError) {
+                                    $("#progressbar").hide();
+                                    $("#excelFile").show();
+                                    alert("Something went wrong!");
+                                    /*alert(xhr.status);
+                                     alert(thrownError);*/
+                                }
+                            }, 'json');
+                        });
+                    }
+                });
                 Tecnotek.Qualifications.loadGroupsOfPeriod($('#period').val());
                 Tecnotek.Qualifications.initButtons();
             },
@@ -1487,6 +1570,7 @@ var Tecnotek = {
                         value:  $value,
                         pn:     $pn
                     },
+                    cache: false,
                     type: "POST",
                     dataType: "json",
                     success: function( data ) {

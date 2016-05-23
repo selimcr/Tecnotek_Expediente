@@ -141,7 +141,7 @@ Tecnotek.Emails = {
                 if(data.error === true) {
                     Tecnotek.showErrorMessage(data.message,true, "", false);
                 } else {
-                    Tecnotek.showInfoMessage("El correo electrónico se ha enviado a la lista seleccionada correctamente",
+                    Tecnotek.showInfoMessage("El correo electrï¿½nico se ha enviado a la lista seleccionada correctamente",
                         true, '', false);
                 }
             },
@@ -167,15 +167,17 @@ Tecnotek.Emails = {
         var $subject = $("#subject").val().trim();
         var $content = tinymce.get('mail-content').getContent();
         var $emails = $("#emails-ta").val().trim();
-        if ($emails == "") {
-            Tecnotek.showErrorMessage("Antes de enviar un correo debe obtener una lista de correos en la parte superior", true, '', false);
+        var $extraEmails = $("#extraEmails").val().trim();
+        if ($emails == "" && $extraEmails == "") {
+            Tecnotek.showErrorMessage("Antes de enviar un correo debe obtener una lista de correos en la parte superior" +
+                " o definir uno o varios correos adicionales a los que enviar el mensaje", true, '', false);
             return;
         }
         if ($subject == "" || $content == "") {
             Tecnotek.showErrorMessage("Por favor defina el asunto y el contenido", true, '', false);
             return;
         }
-
+        formData.append('extraEmails', $extraEmails);
         formData.append('emails', $emails);
         formData.append('subject', $subject);
         formData.append('body', $content);
