@@ -898,51 +898,53 @@ class TeacherController extends Controller
     public function saveStudentQualificationAction(){
 
         $logger = $this->get('logger');
-        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
-        {
-            try {
-                $request = $this->get('request')->request;
-                $subentryId = $request->get('subentryId');
-                $studentYearId = $request->get('studentYearId');
-                $qualification = $request->get('qualification');
-                $translator = $this->get("translator");
-                $logger->err('--> ' . $subentryId . " :: " . $studentYearId . " :: " . $qualification);
-                if( !isset($qualification) || $qualification == ""){
-                    $qualification = -1;
-                }
-                if( isset($subentryId) || isset($studentYearId) ) {
-                    $em = $this->getDoctrine()->getEntityManager();
-
-                    $studentQ = $em->getRepository("TecnotekExpedienteBundle:StudentQualification")->findOneBy(array('subCourseEntry' => $subentryId, 'studentYear' => $studentYearId));
-
-                    if ( isset($studentQ) ) {
-                        $studentQ->setQualification($qualification);
-                    } else {
-                        $studentQ = new StudentQualification();
-                        $studentQ->setSubCourseEntry($em->getRepository("TecnotekExpedienteBundle:SubCourseEntry")->find( $subentryId ));
-                        $studentQ->setStudentYear($em->getRepository("TecnotekExpedienteBundle:StudentYear")->find( $studentYearId ));
-                        $studentQ->setQualification($qualification);
-                    }
-                    $em->persist($studentQ);
-                    $em->flush();
-
-                    return new Response(json_encode(array('error' => false, 'elementId' => $request->get('elementId'), 'elementPerc' => $request->get('elementPerc'),
-                        'elementMax' => $request->get('elementMax'), 'elementRel' => $request->get('elementRel'), 'elementChild' => $request->get('elementChild'),
-                        'qualification' => $request->get('qualification'),
-                        'elementParent' => $request->get('elementParent'), 'elementStdId' => $request->get('elementStdId'),'elementType' => $request->get('elementType'))));
-                } else {
-                    return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
-                }
-            }
-            catch (Exception $e) {
-                $info = toString($e);
-                $logger->err('SuperAdmin::saveStudentQualificationAction [' . $info . "]");
-                return new Response(json_encode(array('error' => true, 'message' => $info)));
-            }
-        }// endif this is an ajax request
-        else
-        {
+        if (!$this->get('request')->isXmlHttpRequest()) { // Is the request an ajax one?
             return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+
+        try {
+            $request = $this->get('request')->request;
+            $subentryId = $request->get('subentryId');
+            $studentYearId = $request->get('studentYearId');
+            $qualification = $request->get('qualification');
+            $translator = $this->get("translator");
+            if( !isset($qualification) || $qualification == ""){
+                $qualification = -1;
+            }
+            if( isset($subentryId) || isset($studentYearId) ) {
+                $em = $this->getDoctrine()->getEntityManager();
+                $studentQ = $em->getRepository("TecnotekExpedienteBundle:StudentQualification")
+                    ->findOneBy(array('subCourseEntry' => $subentryId, 'studentYear' => $studentYearId));
+                if ( isset($studentQ) ) {
+                    $studentQ->setQualification($qualification);
+                } else {
+                    $studentQ = new StudentQualification();
+                    $studentQ->setSubCourseEntry($em->getRepository("TecnotekExpedienteBundle:SubCourseEntry")
+                        ->find( $subentryId ));
+                    $studentQ->setStudentYear($em->getRepository("TecnotekExpedienteBundle:StudentYear")
+                        ->find( $studentYearId ));
+                    $studentQ->setQualification($qualification);
+                }
+                $em->persist($studentQ);
+                $em->flush();
+
+                return new Response(json_encode(array('error' => false,
+                    'elementId' => $request->get('elementId'),
+                    'elementPerc' => $request->get('elementPerc'),
+                    'elementMax' => $request->get('elementMax'),
+                    'elementRel' => $request->get('elementRel'),
+                    'elementChild' => $request->get('elementChild'),
+                    'qualification' => $request->get('qualification'),
+                    'elementParent' => $request->get('elementParent'),
+                    'elementStdId' => $request->get('elementStdId'),
+                    'elementType' => $request->get('elementType'))));
+            } else {
+                return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
+            }
+        } catch (Exception $e) {
+            $info = toString($e);
+            $logger->err('SuperAdmin::saveStudentQualificationAction [' . $info . "]");
+            return new Response(json_encode(array('error' => true, 'message' => $info)));
         }
     }
 

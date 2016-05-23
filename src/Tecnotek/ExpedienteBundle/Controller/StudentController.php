@@ -2520,12 +2520,13 @@ $currentPeriod = $em->getRepository("TecnotekExpedienteBundle:Period")->findOneB
                     $emails = $request->request->get('emails');
                     $body = $request->request->get('body');
                     $subject = $request->request->get('subject');
-                    $emails = "selimdiaz@gmail.com;sdiaz@cecropiasolutions.com";
-                    $logger->info("--> Sending Email to: " . $emails);
+                    $extraEmails = $request->request->get('extraEmails');
+                    $emails .= ";" . $extraEmails;
+                    $bbcEmails = explode(";",$emails);
                     $message = \Swift_Message::newInstance()
                         ->setSubject($subject)
-                        ->setFrom(array('web-contact@retoaprender.com' => 'Saint Michael'))
-                        ->setTo(explode(";",$emails))
+                        ->setFrom(array('stmmail@stmcr.com' => 'Saint Michael'))
+                        ->setBcc($bbcEmails)
                         ->setBody($body, 'text/html');
                     if($fullPath != "") {
                         $message->attach(\Swift_Attachment::fromPath($fullPath));

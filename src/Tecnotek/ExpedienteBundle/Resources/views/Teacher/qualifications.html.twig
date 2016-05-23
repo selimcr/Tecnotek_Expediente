@@ -8,6 +8,7 @@ Tecnotek :: Expediente :: Super Administrador
 
 {% block extrajs %}
 <script type="text/javascript" src="{{ asset('js/jquery.printElement.min.js') }}"></script>
+<script type="text/javascript" charset="utf-8" src="{{ asset('js/jquery.modal.js') }}"></script>
 
 <script type="text/javascript">
     Tecnotek.module = "qualifications";
@@ -29,6 +30,7 @@ Tecnotek :: Expediente :: Super Administrador
 <link rel="stylesheet" href="{{ asset('fancybox/fancybox_style.css') }}" type="text/css" media="all" />
 <link rel="stylesheet" href="{{ asset('css/jquery-ui-timepicker-addon.css') }}" type="text/css" media="all" />
 <link rel="stylesheet" href="{{ asset(style ~ '/stylesheets/waitingBar.css') }}" type="text/css" media="all" />
+<link rel="stylesheet" href="{{ asset('css/jquery.modal.css') }}" type="text/css" media="all" />
 <style>
     @media screen {
         .noPrint {/*display:block !important;*/}
@@ -110,7 +112,8 @@ Tecnotek :: Expediente :: Super Administrador
             <div class="clear"></div>
 
             <div class="right" style="padding-right: 20px;">
-                <a href="#" class="button success-darker tiny" id="generateExcelBtn" name="generateExcelBtn"><span></span>Generar Excel</a>
+                <a href="{{ path('_expediente_teacher_generate_group_excel') }}" target="_blank" class="button success-darker tiny" id="generateExcelBtn" name="generateExcelBtn"><span></span>Generar Excel</a>
+                <a href="#loadFileForm" rel="modal:open" class="button success-darker tiny" id="loadExcelBtn" name="loadExcelBtn"><span></span>Cargar Excel</a>
                 <a href="#" class="button success-darker tiny" id="viewPrintable" name="viewPrintable"><span></span>Versi&oacute;n Imprimible</a>
             </div>
 
@@ -162,4 +165,12 @@ Tecnotek :: Expediente :: Super Administrador
         </div>
     </div>
 </div>
+
+<form action="{{ path("_expediente_teacher_load_group_excel") }}"
+      id="loadFileForm" style="display:none; width: 600px;">
+    <h3>Seleccione el archivo a cargar:</h3>
+    <p><input type="file" id="excelFile"/></p>
+    <p id="progressbar"><progress></progress></p>
+    <p><input type="submit" id="loadButton" value="Cargar" /></p>
+</form>
 {% endblock %}

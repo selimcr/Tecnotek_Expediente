@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  *
  * @ORM\Table(name="tek_student_qualifications")
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="Tecnotek\ExpedienteBundle\Repository\CustomRepository")
  */
 class StudentQualification
 {

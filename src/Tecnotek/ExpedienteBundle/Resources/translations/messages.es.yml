@@ -424,6 +424,10 @@ email.send.success: El correo electrónico se ha enviado a la lista seleccionada
 email.send.error.file.type: El archivo adjunto no es de un tipo permitido [jpg,jpeg,bpm,png,pdf,doc,docx,xls,xlsx]
 email.send.error.size: El archivo adjunto supera el tamaño máximo permitido de 5MB
 email.send.error.invalid: El archivo adjunto es inválido
+extra.emails: Correos adicionales separados por ;
+
+excel.file.load.success: El archivo ha sido cargado correctamente con los siguientes detalles:
+excel.file.invalid.file: El archivo cargado no corresponde al grupo y materia seleccionado, el archivo fue generado desde el Sistema?
 
 #Validation
 not.blank.name: Probando proband.
