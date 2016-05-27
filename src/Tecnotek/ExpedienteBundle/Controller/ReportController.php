@@ -735,6 +735,43 @@ order by c.day, s.groupyear');
         ));
     }
 
+    public function averagesOfGroupAction(){   //mejores promedios
+        /*$logger = $this->get('logger');
+        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
+        {
+            $em = $this->getDoctrine()->getEntityManager();
+            $request = $this->get('request')->request;
+            $logger = $this->get('logger');
+            $errorMessage = "";
+
+            $periodId = $request->get('periodId');
+            $groupId = $request->get('groupId');
+
+            $stmt = $this->getDoctrine()->getEntityManager()
+                ->getConnection()
+                ->prepare('SELECT g.grade_id, g.name, s.carne, s.lastname, s.firstname, st.periodAverageScore, st.periodhonor, st.conducta
+                FROM tek_students_year st, tek_students s, tek_groups g
+                WHERE g.id = "%'.$groupId.'%" and st.student_id = s.id and g.id = st.group_id order by st.group_id ASC, s.lastname asc');
+            $stmt->execute();
+            $entity = $stmt->fetchAll();
+
+
+            return new Response(json_encode(array('error' => false, 'entity' => $entity, 'periodId' => $periodId)));
+
+        }// endif this is an ajax request
+        else {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+
+        }*/
+
+        $em = $this->getDoctrine()->getEntityManager();
+        $periods = $em->getRepository("TecnotekExpedienteBundle:Period")->findAll();
+        //$routes = $em->getRepository("TecnotekExpedienteBundle:Route")->findAll();
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Reports/periodBestAverages.html.twig', array('menuIndex' => 4,
+            'periods' => $periods
+        ));
+    }
+
     public function penaltiesOfPeriodAction(){
         $em = $this->getDoctrine()->getEntityManager();
         $periods = $em->getRepository("TecnotekExpedienteBundle:Period")->findAll();

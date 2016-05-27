@@ -255,21 +255,50 @@ Tecnotek.PeriodGroupAverages = {
         $("#period").change(function(event){
             event.preventDefault();
             $('#subentryFormParent').empty();
-            Tecnotek.PeriodGroupAverages.loadGroupsOfPeriod($(this).val());
+            Tecnotek.PeriodGroupAverages.loadPeriodLevels($(this).val());
+        });
+
+        $("#levels").change(function(event){
+            event.preventDefault();
+            //: function($periodId, $levelId)
+            Tecnotek.PeriodGroupAverages.loadGroupsOfPeriodAndLevel($('#period').val(), $(this).val());
         });
 
         $("#groups").change(function(event){
             event.preventDefault();
-            Tecnotek.PeriodGroupAverages.loadQualificationsOfGroup($(this).val());
+            Tecnotek.PeriodGroupAverages.loadAveragesOfGroup($('#period').val(), $('#group').val());
         });
 
-        Tecnotek.PeriodGroupAverages.loadAveragesOfGroup($('#period').val());
+        Tecnotek.PeriodGroupAverages.loadPeriodLevels($('#period').val());
         Tecnotek.PeriodGroupAverages.initButtons();
     },
     initButtons : function() {
         $('#btnPrint').click(function(event){
             $("#tableContainer").printElement({printMode:'popup', pageTitle:$(this).attr('rel')});
         });
+    },
+    loadPeriodLevels: function($periodId){
+        if(($periodId!==null)){
+            $('#levels').children().remove();
+            $('#groups').children().remove();
+            Tecnotek.ajaxCall(Tecnotek.UI.urls["loadLevelsOfPeriodURL"],
+                {   periodId: $periodId },
+                function(data){
+                    if(data.error === true) {
+                        Tecnotek.showErrorMessage(data.message,true, "", false);
+                    } else {
+                        $('#levels').append('<option value="0">Todos</option>');
+                        for(i=0; i<data.levels.length; i++) {
+                            $('#levels').append('<option value="' + data.levels[i].id + '">' + data.levels[i].name + '</option>');
+                        }
+                        Tecnotek.PeriodGroupAverages.loadGroupsOfPeriodAndLevel($('#period').val(), $('#levels').val());
+                    }
+                },
+                function(jqXHR, textStatus){
+                    Tecnotek.showErrorMessage("Error getting data : " + textStatus + ".", true, "", false);
+                    $(this).val("");
+                }, true);
+        }
     },
     loadGroupsOfPeriod: function($periodId) {
         console.debug("Load groups of period: " + $periodId);
@@ -291,31 +320,45 @@ Tecnotek.PeriodGroupAverages = {
                     }
                 },
                 function(jqXHR, textStatus){
+                    Tecnotek.showErrorMessage("Error getting data adas: " + textStatus + ".", true, "", false);
+                    $(this).val("");
+                }, true);
+        }
+    },
+    loadGroupsOfPeriodAndLevel: function($periodId, $levelId) {
+        if(($periodId!==null)){
+            $('#groups').children().remove();
+            Tecnotek.ajaxCall(Tecnotek.UI.urls["loadGroupsOfPeriodAndLevelsURL"],
+                {   periodId:   $periodId,
+                    levelId:    $levelId},
+                function(data){
+                    if(data.error === true) {
+                        Tecnotek.showErrorMessage(data.message,true, "", false);
+                    } else {
+                        $('#groups').append('<option value="0-0">Todos</option>');
+                        for(i=0; i<data.groups.length; i++) {
+                            $('#groups').append('<option value="' + data.groups[i].id + '">' + data.groups[i].name + '</option>');
+                        }
+                    }
+                },
+                function(jqXHR, textStatus){
                     Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
                     $(this).val("");
                 }, true);
         }
     },
-    loadAveragesOfGroup: function(studentId) {
+    loadAveragesOfGroup: function(periodId, groupId) {
         $('.editEntry').unbind();
         $('#contentBody').empty();
         $('#tableContainer').hide();
-        if(studentId === null || studentId == -1){//Clean page
+        if(periodId === null || groupId == 0){//Clean page
         } else {
             $('#fountainG').show();
             Tecnotek.PeriodGroupAverages.periodId = $("#period").val();
             Tecnotek.PeriodGroupAverages.groupId = $("#groups").val();
-            /*if(studentId != 0){//Single student
 
-             Tecnotek.PeriodGroupAverages.completeText = "";
-             Tecnotek.PeriodGroupAverages.studentsIndex = $('#students option').length;
-             Tecnotek.PeriodGroupAverages.studentsLength = Tecnotek.PeriodGroupAverages.studentsIndex;
-             Tecnotek.PeriodGroupAverages.loadStudentQualification(studentId);
-
-             } else {//All Students
-             */Tecnotek.ajaxCall(Tecnotek.UI.urls["loadQualificationsOfGroupURL"],
+            /*Tecnotek.ajaxCall(Tecnotek.UI.urls["loadAveragesOfGroupURL"],
                 {   periodId: Tecnotek.PeriodGroupAverages.periodId,
-                    referenceId: studentId,
                     groupId: Tecnotek.PeriodGroupAverages.groupId},
                 function(data){
                     //$('#fountainG').hide();
@@ -336,79 +379,8 @@ Tecnotek.PeriodGroupAverages = {
                     $('#fountainG').hide();
                     $( "#spinner-modal" ).dialog( "close" );
                     Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
-                }, false);
-            //}
+                }, false);*/
         }
-    },
-    loadAllStudentsQualifications: function() {
-        studentId = $('#students option:eq(' + Tecnotek.PeriodGroupAverages.studentsIndex + ')').val();
-        Tecnotek.PeriodGroupAverages.loadStudentQualification(studentId);
-    },
-    loadStudentQualification: function(studentId) {
-        var studentHtml = "";
-
-        Tecnotek.ajaxCall(Tecnotek.UI.urls["loadQualificationsOfGroupURL"],
-            {   periodId: Tecnotek.PeriodGroupAverages.periodId,
-                referenceId: studentId,
-                groupId: Tecnotek.PeriodGroupAverages.groupId},
-            function(data){
-                //$('#fountainG').hide();
-                if(data.error === true) {
-                    Tecnotek.showErrorMessage(data.message,true, "", false);
-                } else {
-                    $period = $("#period").find(":selected").text();
-                    $periodYear = $period.split("-")[1];
-                    studentHtml += '<div class="center"><h3><img width="840" height="145" src="/expediente/web/images/' + data.imgHeader + '" alt="" class="image-hover"></h3></div>';
-
-                    studentHtml += '<div class="reportContentHeader">';
-                    studentHtml += '<div class="left reportContentLabel" style="width: 100%; font-size: 18px; text-align: center;">TARJETA DE CALIFICACIONES</div>';
-                    studentHtml += '<div class="left reportContentLabel" style="width: 100%; font-size: 14px; text-align: center; margin-bottom: 15px;"></div>';
-                    studentHtml += '<div class="left reportContentLabel" style="width: 450px;">Alumno(a):&nbsp;&nbsp;' + data.studentName  + '</div>';
-                    studentHtml += '<div class="left reportContentLabel" style="width: 350px;">Secci&oacute;n:&nbsp;&nbsp;' + $("#groups").find(":selected").text() + '</div>';
-                    studentHtml += '<div class="clear"></div>';
-
-                    studentHtml += '<div class="left reportContentLabel" style="width: 450px;">Carn&eacute;:&nbsp;&nbsp;' + data.carne  + '</div>';
-                    studentHtml += '<div class="left reportContentLabel" style="width: 350px;">Trimestre:&nbsp;&nbsp;' + $period + '</div>';
-                    studentHtml += '<div class="clear"></div>';
-
-                    studentHtml += '<div class="left reportContentLabel" style="width: 450px;">&nbsp;&nbsp;</div>';
-                    studentHtml += '<div class="left reportContentLabel" style="width: 350px;">Profesor:&nbsp;&nbsp;' + data.teacherGroup + '</div>';
-                    studentHtml += '<div class="clear"></div>';
-                    //studentHtml += '<div class="left reportContentLabel">Grado y Grupo:</div><div class="left reportContentText">' + $("#groups").find(":selected").text() + '</div><div class="clear"></div>';
-                    // studentHtml += '<div class="left reportContentLabel">Estudiante:</div><div class="left reportContentText">' + $("#students").find(":selected").text() + '</div><div class="clear"></div>';
-                    studentHtml += "</div>";
-                    studentHtml += data.html  + '<div class="pageBreak"> </div>';
-
-                    Tecnotek.PeriodGroupAverages.processStudentResponse(studentHtml);
-                    //$('#contentBody').html(data.html);
-                    //$('#tableContainer').show();
-                }
-            },
-            function(jqXHR, textStatus){
-                $('#fountainG').hide();
-                $( "#spinner-modal" ).dialog( "close" );
-                Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
-            }, false);
-
-    },
-    processStudentResponse: function(html){
-
-        Tecnotek.PeriodGroupAverages.completeText += html;
-        Tecnotek.PeriodGroupAverages.studentsIndex++;
-        console.debug(Tecnotek.PeriodGroupAverages.studentsIndex + " :: " + Tecnotek.PeriodGroupAverages.studentsLength);
-        if(Tecnotek.PeriodGroupAverages.studentsIndex < Tecnotek.PeriodGroupAverages.studentsLength){
-            var studentId = $('#students option:eq(' + Tecnotek.PeriodGroupAverages.studentsIndex + ')').val();
-            console.debug("get student: " + studentId);
-            Tecnotek.PeriodGroupAverages.loadStudentQualification(studentId);
-        } else {
-            Tecnotek.PeriodGroupAverages.terminateGetAllQualifications();
-        }
-    },
-    terminateGetAllQualifications: function(){
-        //console.debug(html);
-        $('#fountainG').hide();
-        $('#contentBody').html(Tecnotek.PeriodGroupAverages.completeText);
-        $('#tableContainer').show();
     }
 };
 

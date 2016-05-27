@@ -655,6 +655,10 @@ _expediente_report_best_averages_by_group:
    pattern:  /reports/averagesOfPeriod/
    defaults: { _controller: TecnotekExpedienteBundle:Report:averagesOfPeriod }
 
+_expediente_report_best_averages_by_group:
+   pattern:  /reports/averagesOfPeriod/
+   defaults: { _controller: TecnotekExpedienteBundle:Report:averagesOfGroup }
+
 _expediente_report_group_qualifications:
    pattern:  /reports/groupQualifications/
    defaults: { _controller: TecnotekExpedienteBundle:Report:loadGroupQualifications }
