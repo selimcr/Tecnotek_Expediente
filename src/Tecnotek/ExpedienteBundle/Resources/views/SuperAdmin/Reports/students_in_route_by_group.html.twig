@@ -1,0 +1,101 @@
+{% extends 'TecnotekExpedienteBundle::logged_layout.html.twig' %}
+
+{% block htmlTitle %}
+    Tecnotek :: Expediente :: Super Administrador :: Reportes
+{% endblock %}
+
+{% block extrajs %}
+    <script type="text/javascript" src="{{ asset('js/jquery.printElement.min.js') }}"></script>
+    <script type="text/javascript">
+        Tecnotek.module = "reports";
+        Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
+
+    </script>
+{% endblock %}
+
+{% block content %}
+    <div class="container_24">
+        <div class="grid_24">
+            <div>
+
+                <div class="left">
+                    <h3>{% trans %}label.students.route.by.group{% endtrans %}</h3>
+                </div>
+                <button style="margin-left: 15px; margin-top: 0px;" type="button" class="right button success-darker
+tiny" id="btnPrint" name="btnPrint" rel="Rutas por Zona"><span></span>{% trans %}label.print{% endtrans %}</button>
+                <div class="clear"></div>
+                <div class="left" style="width: 70px; font-weight: bold;">{%trans%}label.group{%endtrans%}</div>
+                <div id="labelRoute" class="left">
+                    <select id="routesList" name="routesList" style="width: 150px;">
+                        <option value="0">Todos</option>
+                        {% for groupS in groupsT %}
+                            <option value="{{ groupS.id }}">{{groupS.grade}} - {{groupS.name}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div id="report" style="margin-top: 25px; width: 950px;">
+
+                <div class="titles" style="font-size: 10px;">
+                    <div class="left">{{corpo_name}}</div>
+                    <div class="right">Control de Buses Escuela.</div>
+                    <div class="clear"></div>
+
+                    <div class="left">{{ "now"|date("d/M/Y H:i:s") }}</div>
+                    <div class="clear"></div>
+
+                    <p style="text-align: center;padding-bottom: 0px;">{% trans %}label.students.route.by.group{% endtrans %}</p>
+                    <p style="text-align: center; padding-bottom: 0px;">Ordenados por Nombre</p>
+                </div>
+
+                {% for group in groups %}
+                    <div class="routeContainer route_{{ group.id }}">
+                        <div class="fields_row route">
+                            {% if group.name != "" %}
+                                <p style="font-size: 10px; padding-bottom: 0px;">Grupo: {{group.grade}} - {{ group.name }}</p>
+                            {% else %}
+                                <p style="font-size: 10px; padding-bottom: 0px;">No se ha definido el grupo.</p>
+                            {% endif %}
+                        </div>
+                        <div class="fields_row student_title">
+                            <div style="float: left; width: 75px;">{%trans%}label.carne{%endtrans%}</div>
+                            <div style="float: left; width: 350px;">{%trans%}label.student.name{%endtrans%}</div>
+                            <div style="float: left; width: 50px;">{%trans%}label.section{%endtrans%}</div>
+                            <div style="float: left; width: 175px;">{%trans%}label.route{%endtrans%}</div>
+                            <div style="float: left; width: 175px;">{%trans%}label.routeIn{%endtrans%}</div>
+
+                            <div class="clear"></div>
+                        </div>
+                        {% for student in group.students %}
+                            <div class="student_row">
+                                <div style="float: left; width: 75px;">&nbsp;{{ student.carne }}</div>
+                                <div style="float: left; width: 350px;">&nbsp;{{ student }}</div>
+                                <div style="float: left; width: 50px;">&nbsp;{{ student.groupyear }}</div>
+                                <div style="float: left; width: 175px;">&nbsp;{{ student.route }}</div>
+                                <div style="float: left; width: 175px;">&nbsp;{{ student.routeIn }}</div>
+                            </div>
+                            <div class="clear"></div>
+                        {% endfor %}
+                        <div class="student_footer">
+                            Total de estudiantes por ruta: {{ group.students|length}}
+                        </div>
+                        <div class="pageBreak"> </div>
+                    </div>
+                {% else %}
+                    <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
+                        <div class="option_width" style="float: left; width: 375px;">{% trans %}results.not.found{% endtrans
+                        %}</div>
+                        <div class="clear"></div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="clear"></div>
+        <div class="wrapper">
+            <div class="grid_24 padline">
+                <div class="lineH"></div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

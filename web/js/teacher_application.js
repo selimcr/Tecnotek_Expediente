@@ -916,7 +916,7 @@ var Tecnotek = {
                             $totalTrim = Tecnotek.roundTo($sum);
                             $notaMin = (Tecnotek.UI.vars["notaMin"] != undefined)?
                                 Tecnotek.UI.vars["notaMin"]:0;
-                            $beforeText = ($totalTrim >= $notaMin)? "":"(*) ";
+                            $beforeText = ($totalTrim >= $notaMin)? "":"* ";
                             $("#total_trim_" + $stdId).html($beforeText + Tecnotek.roundTo($sum));
                         }
                     } else {
@@ -1114,7 +1114,7 @@ var Tecnotek = {
                                         $totalTrim = Tecnotek.roundTo($sum);
                                         $notaMin = (Tecnotek.UI.vars["notaMin"] != undefined)?
                                             Tecnotek.UI.vars["notaMin"]:0;
-                                        $beforeText = ($totalTrim >= $notaMin)? "":"(*) ";
+                                        $beforeText = ($totalTrim >= $notaMin)? "":"* ";
                                         $("#total_trim_" + data.elementStdId).html($beforeText + Tecnotek.roundTo($sum));
                                         //$("#total_trim_" + data.elementStdId).html("B" + Tecnotek.roundTo($sum));
                                     }

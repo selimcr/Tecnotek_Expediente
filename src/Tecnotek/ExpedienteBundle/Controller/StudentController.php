@@ -1723,6 +1723,7 @@ $currentPeriod = $em->getRepository("TecnotekExpedienteBundle:Period")->findOneB
 
     public function getListStudentsForGroupAction(){
         $logger = $this->get('logger');
+        $em = $this->getDoctrine()->getEntityManager();
         if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
         {
             try {
@@ -1730,11 +1731,12 @@ $currentPeriod = $em->getRepository("TecnotekExpedienteBundle:Period")->findOneB
                 $groupId = $request->get('groupId');
                 $periodId = $request->get('periodId');
                 $text = $request->get('text');
+                $currentPeriod = $em->getRepository("TecnotekExpedienteBundle:Period")->findOneBy(array('isActual' => true)); //2016-II
 
                 $em = $this->getDoctrine()->getEntityManager();
                 $sql = "SELECT std.id, std.firstname, std.lastname, std.carne "
                     . " FROM tek_students std"
-                    . " LEFT JOIN tek_students_year stdy ON stdy.period_id = 7 AND stdy.student_id = std.id"
+                    . " LEFT JOIN tek_students_year stdy ON stdy.period_id = " . $currentPeriod->getId() . " AND stdy.student_id = std.id"
                     . " WHERE (std.firstname like '%" . $text . "%' OR std.lastname like '%" . $text . "%') "
                     . " AND (stdy.id is null or (stdy.period_id = " . $periodId . " AND stdy.group_id <> " . $groupId . " OR stdy.group_id is null))"
                     . " GROUP BY std.id"

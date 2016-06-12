@@ -91,6 +91,29 @@ class ReportController extends Controller
         ));
     }
 
+    public function reportStudentInRouteByGroupAction(){  //nuevo 2016-II
+
+        $logger = $this->get("logger");
+        $em = $this->getDoctrine()->getEntityManager();
+        $currentPeriod = $em->getRepository("TecnotekExpedienteBundle:Period")->findOneBy(array('isActual' => true));
+
+        $dql = "SELECT g FROM TecnotekExpedienteBundle:Group g JOIN g.grade grade WHERE g.period = " . $currentPeriod->getId() . " ORDER BY grade.number";
+        $query = $em->createQuery($dql);
+        $groups = $query->getResult();
+        $groupRepo = $em->getRepository("TecnotekExpedienteBundle:Group");
+        foreach($groups as $group){
+            $group->setStudents($groupRepo->findAllStudentsByLastname($group->getId()));
+        }
+
+        $dql = "SELECT g FROM TecnotekExpedienteBundle:Group g JOIN g.grade grade WHERE g.period = " . $currentPeriod->getId() . " ORDER BY grade.number";
+        $query = $em->createQuery($dql);
+        $groupsT = $query->getResult();
+
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Reports/students_in_route_by_group.html.twig', array('menuIndex' => 4,
+            'groups' => $groups, 'groupsT' => $groupsT
+        ));
+    }
+
     public function reportStudentByRouteFilter2Action(){
         $em = $this->getDoctrine()->getEntityManager();
         $entities = $em->getRepository("TecnotekExpedienteBundle:Route")->findAll();
@@ -729,47 +752,48 @@ order by c.day, s.groupyear');
     public function averagesOfPeriodAction(){
         $em = $this->getDoctrine()->getEntityManager();
         $periods = $em->getRepository("TecnotekExpedienteBundle:Period")->findAll();
-        //$routes = $em->getRepository("TecnotekExpedienteBundle:Route")->findAll();
         return $this->render('TecnotekExpedienteBundle:SuperAdmin:Reports/periodBestAverages.html.twig', array('menuIndex' => 4,
             'periods' => $periods
         ));
     }
 
-    public function averagesOfGroupAction(){   //mejores promedios
-        /*$logger = $this->get('logger');
+    public function averagesOfGroupAction(){   //mejores promedios 2016-II
+        $logger = $this->get('logger');
         if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
         {
             $em = $this->getDoctrine()->getEntityManager();
-            $request = $this->get('request')->request;
             $logger = $this->get('logger');
             $errorMessage = "";
 
+            $request = $this->get('request')->request;
             $periodId = $request->get('periodId');
+            $levelId = $request->get('levelId');
             $groupId = $request->get('groupId');
+
+            $keywords = preg_split("/[\s-]+/", $groupId);
+            $groupId = $keywords[0];
+            $gradeId = $keywords[1];
 
             $stmt = $this->getDoctrine()->getEntityManager()
                 ->getConnection()
-                ->prepare('SELECT g.grade_id, g.name, s.carne, s.lastname, s.firstname, st.periodAverageScore, st.periodhonor, st.conducta
+                ->prepare('SELECT g.grade_id as grade, g.name as `group`, s.carne as carne, concat(s.lastname, s.firstname) as name, st.periodAverageScore as average, st.periodhonor as honor, st.conducta as conducta
                 FROM tek_students_year st, tek_students s, tek_groups g
-                WHERE g.id = "%'.$groupId.'%" and st.student_id = s.id and g.id = st.group_id order by st.group_id ASC, s.lastname asc');
+                WHERE g.id = "'.$groupId.'" and st.student_id = s.id and g.id = st.group_id order by st.periodAverageScore desc, s.lastname asc');
             $stmt->execute();
             $entity = $stmt->fetchAll();
 
 
+            /*$entity = 'SELECT g.grade_id as grade, g.name as `group`, s.carne as carne, concat(s.lastname, s.firstname) as name, st.periodAverageScore as average, st.periodhonor as honor, st.conducta as conducta
+                FROM tek_students_year st, tek_students s, tek_groups g
+                WHERE g.id = "'.$groupId.'" and st.student_id = s.id and g.id = st.group_id order by st.group_id ASC, s.lastname asc';
+*/
             return new Response(json_encode(array('error' => false, 'entity' => $entity, 'periodId' => $periodId)));
 
         }// endif this is an ajax request
         else {
             return new Response("<b>Not an ajax call!!!" . "</b>");
 
-        }*/
-
-        $em = $this->getDoctrine()->getEntityManager();
-        $periods = $em->getRepository("TecnotekExpedienteBundle:Period")->findAll();
-        //$routes = $em->getRepository("TecnotekExpedienteBundle:Route")->findAll();
-        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Reports/periodBestAverages.html.twig', array('menuIndex' => 4,
-            'periods' => $periods
-        ));
+        }
     }
 
     public function penaltiesOfPeriodAction(){
@@ -1185,11 +1209,21 @@ $kinder1 = 0;
 
             $html .= '</tr>';
         }
+        $i = 0;
         if($form->getMustIncludeComments() && key_exists($form->getId() . "-c", $responses)){
             $html .= '<tr><td colspan="3" style="background-color: rgb(187, 214, 188);">';
-            $html .= '<b>Comentarios:</b> '. $responses[$form->getId() . '-c'];
+            if ($responses[$form->getId() . '-c']!= '')
+                $html .= '<b>Comentarios:</b> '. $responses[$form->getId() . '-c'];
+            $html .= '</br></br>Firma: _______________</td></tr>';
+            $i = 1;
+        }
+
+        if($form->getMustIncludeComments() && $i == 0){
+            $html .= '<tr><td colspan="3" style="background-color: rgb(187, 214, 188);">';
             $html .= '</br></br>Firma: _______________</td></tr>';
         }
+
+
 
         $html .= '';
         $html .='</table>';
@@ -1233,11 +1267,21 @@ $kinder1 = 0;
             $html .= '</tr>';
         }
         //$html .= 'blabla';
+        $i = 0;
         if($form->getMustIncludeComments() && key_exists($form->getId() . "-c", $responses)){
             $html .= '<tr><td colspan="3" style="background-color: rgb(187, 214, 188);">';
-            $html .= '<b>Comentarios:</b> '. $responses[$form->getId() . '-c'];
+            if ($responses[$form->getId() . '-c']!= '')
+                $html .= '<b>Comentarios:</b> '. $responses[$form->getId() . '-c'];
+            $html .= '</br></br>Firma: _______________</td></tr>';
+            $i = 1;
+        }
+
+        if($form->getMustIncludeComments() && $i == 0){
+            $html .= '<tr><td colspan="3" style="background-color: rgb(187, 214, 188);">';
             $html .= '</br></br>Firma: _______________</td></tr>';
         }
+
+
 
         $html .= '';
         $html .='</table>';

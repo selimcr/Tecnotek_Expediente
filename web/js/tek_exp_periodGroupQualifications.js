@@ -316,7 +316,7 @@ Tecnotek.PeriodGroupAverages = {
                         for(i=0; i<data.groups.length; i++) {
                             $('#groups').append('<option value="' + data.groups[i].id + '">' + data.groups[i].name + '</option>');
                         }
-                        Tecnotek.PeriodGroupAverages.loadGroupStudents($('#groups').val());
+                        //Tecnotek.PeriodGroupAverages.loadGroupStudents($('#groups').val());
                     }
                 },
                 function(jqXHR, textStatus){
@@ -354,32 +354,48 @@ Tecnotek.PeriodGroupAverages = {
         if(periodId === null || groupId == 0){//Clean page
         } else {
             $('#fountainG').show();
-            Tecnotek.PeriodGroupAverages.periodId = $("#period").val();
-            Tecnotek.PeriodGroupAverages.groupId = $("#groups").val();
 
-            /*Tecnotek.ajaxCall(Tecnotek.UI.urls["loadAveragesOfGroupURL"],
-                {   periodId: Tecnotek.PeriodGroupAverages.periodId,
-                    groupId: Tecnotek.PeriodGroupAverages.groupId},
+            Tecnotek.ajaxCall(Tecnotek.UI.urls["loadAveragesOfGroupURL"],
+                {   periodId:   $('#period').val(),
+                    levelId:    $('#levels').val(),
+                    groupId:    $('#groups').val()},
                 function(data){
-                    //$('#fountainG').hide();
+                    console.debug("Load groups of period: " + data.periodId);
+                    $('#fountainG').hide();
                     if(data.error === true) {
                         Tecnotek.showErrorMessage(data.message,true, "", false);
                     } else {
-                        Tecnotek.PeriodGroupAverages.completeText = '<div class="center"><h3><img width="840" height="145" src="/expediente/web/images/' + data.imgHeader + '" alt="" class="image-hover"></h3></div>'
-                            + data.html + '<div class="pageBreak"> </div>';
-                        Tecnotek.PeriodGroupAverages.studentsIndex = 1;
-                        Tecnotek.PeriodGroupAverages.studentsLength = $('#students option').length;
-                        Tecnotek.PeriodGroupAverages.processStudentResponse("");
-                        //$('#contentHeader').html(tableHeader);
-                        //$('#contentBody').html(tableHeader + data.html);
-                        //$('#tableContainer').show();
+                        $temp = '<div class="center"><h3>Promedios de la sección ' +data.entity[0].grade + '-' +data.entity[0].group + '</h3></div>';
+                        $temp += "<table><tr>";
+                        $temp += '<td style="height:50px;"><span style="font-family:arial;font-size:16px;">Carnet</span></td>';
+                        $temp += '<td style="height:50px;"><span style="font-family:arial;font-size:16px;">Nombre</span></td>';
+                        $temp += '<td style="height:50px;"><span style="font-family:arial;font-size:16px;">Promedio</span></td>';
+                        $temp += '<td style="height:50px;"><span style="font-family:arial;font-size:16px;">Cuadro de Honor</span></td>';
+                        $temp += "</tr>";
+                        for(i=0; i<data.entity.length; i++) {
+                            //Tecnotek.PeriodGroupAverages.completeText += '<div>' +data.entity[i].name + '-' + data.entity[i].average +'</div>';
+                            $temp += "<tr>";
+                            $temp += '<td style="height:20px;"><span style="font-family:arial;font-size:16px;">'+data.entity[i].carne  + '</span></td>';
+                            $temp += '<td style="height:20px;"><span style="font-family:arial;font-size:16px;">'+data.entity[i].name  + '</span></td>';
+                            $temp += '<td style="height:20px;"><span style="font-family:arial;font-size:16px;">'+data.entity[i].average  + '</span></td>';
+                            if(data.entity[i].honor == '0'){
+                                $temp += '<td align="center"><span style="font-family:arial;font-size:16px;">No</span></td>';
+                            }else {
+                                $temp += '<td align="center"><span style="font-family:arial;font-size:16px;">Si</span></td>';
+                            }
+                            $temp += "</tr>";
+                        }
+                        $temp += "</table>";
+                        $('#contentBody').html($temp);
+                        $('#fountainG').hide();
+                        $('#tableContainer').show();
                     }
                 },
                 function(jqXHR, textStatus){
                     $('#fountainG').hide();
                     $( "#spinner-modal" ).dialog( "close" );
-                    Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
-                }, false);*/
+                    Tecnotek.showErrorMessage("Error getting data svs: " + textStatus + ".", true, "", false);
+                }, false);
         }
     }
 };
