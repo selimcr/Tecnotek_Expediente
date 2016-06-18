@@ -155,6 +155,8 @@ label.club.new: Crear nuevo Club
 label.club.show: Información de Club
 label.club.listar: Lista de Clubes
 messages.confirmation.club.delete: ¿Está seguro que desea eliminar el club?
+label.mail: Correo
+label.phone: Teléfono
 
 label.students.in.club: Estudiantes Asociados
 club.include.students: Incluir estudiantes a este club
