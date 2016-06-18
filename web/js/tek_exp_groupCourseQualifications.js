@@ -7,6 +7,8 @@ Tecnotek.GroupCourseQualifications = {
     year: 0,
     groupId: 0,
     studentsLength: 0,
+    loadOnlyBachelors: false,
+    isMepReport: 0,
     init : function() {
         $("#year").change(function(event){
             event.preventDefault();
@@ -39,7 +41,8 @@ Tecnotek.GroupCourseQualifications = {
             $('#subentryFormParent').empty();
             $('#tableContainer').hide();
             Tecnotek.ajaxCall(Tecnotek.UI.urls["loadGroupsOfYearURL"],
-                { year: $year },
+                {   year: $year,
+                    loadOnlyBachelors: Tecnotek.GroupCourseQualifications.loadOnlyBachelors},
                 function(data){
                     if(data.error === true) {
                         Tecnotek.showErrorMessage(data.message,true, "", false);
@@ -94,7 +97,8 @@ Tecnotek.GroupCourseQualifications = {
             Tecnotek.ajaxCall(Tecnotek.UI.urls["loadQualificationsOfGroupByCourseURL"],
                 {   year: Tecnotek.GroupCourseQualifications.year,
                     courseId: courseId,
-                    groupId: Tecnotek.GroupCourseQualifications.groupId},
+                    groupId: Tecnotek.GroupCourseQualifications.groupId,
+                    isMepReport: Tecnotek.GroupCourseQualifications.isMepReport},
                 function(data){
                     //$('#fountainG').hide();
                     if(data.error === true) {

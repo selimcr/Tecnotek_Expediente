@@ -631,6 +631,10 @@ _expediente_report_course_by_group:
     pattern:  /reports/groupByCourse/
     defaults: { _controller: TecnotekExpedienteBundle:Report:groupByCourse }
 
+_expediente_report_quintos_mep:
+    pattern:  /reports/mep/quintos
+    defaults: { _controller: TecnotekExpedienteBundle:Report:quintosMep }
+
 _expediente_report_absences_by_route:
    pattern:  /reports/absencesByRoute/
    defaults: { _controller: TecnotekExpedienteBundle:Report:reportStudentAbsencesByRoute }

@@ -3127,6 +3127,10 @@ $condicionRow = str_replace("changeCondicion", "APLAZADO", $condicionRow);
                 $year = $request->get('year');
                 $groupId = $request->get('groupId');
                 $courseId = $request->get('courseId');
+                $isMepReport = $request->get('isMepReport');
+                if (!isset($isMepReport)) {//Default is false=0
+                    $isMepReport = 0;
+                }
 
                 $keywords = preg_split("/[\s-]+/", $groupId);
                 $groupId = $keywords[0];
@@ -3163,8 +3167,11 @@ $condicionRow = str_replace("changeCondicion", "APLAZADO", $condicionRow);
                             $director = $property->getValue();
                         }
                     }
-
-                    $html = $this->getGroupHTMLQualificationsByCourse($group, $courseId);
+                    if ($isMepReport == 0) {
+                        $html = $this->getGroupHTMLQualificationsByCourse($group, $courseId);
+                    } else {
+                        $html = $this->getMepHTMLReport($group, $courseId);
+                    }
 
                     return new Response(json_encode(array('error' => false, 'html' => $html, 'teacherGroup' => $teacherGroup, "imgHeader" => $imgHeader)));
                 } else {
@@ -3194,8 +3201,6 @@ $condicionRow = str_replace("changeCondicion", "APLAZADO", $condicionRow);
             . " ORDER BY p.orderInYear";
         $query = $em->createQuery($dql);
         $courses = $query->getResult();
-
-
 
         $dql = "SELECT stdy FROM TecnotekExpedienteBundle:Student std, TecnotekExpedienteBundle:StudentYear stdy "
             . " WHERE stdy.student = std AND stdy.group = " . $group->getId()
@@ -3253,7 +3258,6 @@ $condicionRow = str_replace("changeCondicion", "APLAZADO", $condicionRow);
                 if(isset($currentPeriod)){
 //$logger->err("Getting student with: " .  $stdy->getStudent()->getId() . " AND " . $currentPeriod->getId());
                     $currentSTDY = $em->getRepository("TecnotekExpedienteBundle:StudentYear")->findOneBy(array('student' => $stdy->getStudent()->getId(), 'period' => $currentPeriod->getId()));
-$logger->err("Getting std: " .  $currentSTDY);
  if(isset($currentSTDY)){
                     if($currentPeriod->isEditable()){
                         $this->calculateStudentYearQualification($currentPeriod->getId(), $currentSTDY->getId(), $currentSTDY);
@@ -3517,4 +3521,173 @@ $logger->err("Getting std: " .  $currentSTDY);
         ));
     }
 
+    public function quintosMepAction(){
+        $em = $this->getDoctrine()->getEntityManager();
+        $periods = $em->getRepository("TecnotekExpedienteBundle:Period")->findAll();
+        $years = array();
+
+        foreach($periods as $period){
+            if (!array_key_exists($period->getYear(), $years)) {
+                $years[$period->getYear()] = $period->getYear();
+            }
+        }
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Reports/mepQualifications.html.twig',
+            array(
+                'menuIndex' => 4,
+                'years' => $years
+        ));
+    }
+
+    public function getTenGradeStudentCourseAverage($previousYearCourseClasses, $studentId) {
+        $logger = $this->get('logger');
+        $em = $this->getDoctrine()->getEntityManager();
+        $dql = "SELECT q FROM TecnotekExpedienteBundle:StudentYearCourseQualification q"
+            . " JOIN q.studentYear stdy"
+            . " JOIN stdy.student std"
+            . " WHERE q.courseClass IN (" . $previousYearCourseClasses . ")"
+            . " AND std.id = " . $studentId;
+        $query = $em->createQuery($dql);
+        $previousYearQualifications = $query->getResult();
+        $total = 0;
+        $counter = 0;
+        foreach ($previousYearQualifications as $q) {
+            $counter++;
+            $total += $q->getQualification();
+        }
+        return ($total / $counter);
+    }
+
+    public function getMepHTMLReport($group, $courseId){
+        $logger = $this->get('logger');
+        $em = $this->getDoctrine()->getEntityManager();
+        $myCourse = $em->getRepository("TecnotekExpedienteBundle:Course")->find($courseId);
+        $dql = "SELECT cc "
+            . " FROM TecnotekExpedienteBundle:CourseClass cc "
+            . " JOIN cc.period p  "
+            . " WHERE cc.course = " . $courseId . " AND cc.grade = " . $group->getGrade()->getId()
+            . " ORDER BY p.orderInYear";
+        $query = $em->createQuery($dql);
+        $courses = $query->getResult();
+        $dql = "SELECT stdy FROM TecnotekExpedienteBundle:Student std, TecnotekExpedienteBundle:StudentYear stdy "
+            . " WHERE stdy.student = std AND stdy.group = " . $group->getId()
+            . " ORDER BY std.lastname, std.firstname";
+        $query = $em->createQuery($dql);
+        $students = $query->getResult();
+        // Get Previous Year Periods
+        $dql = "SELECT p FROM TecnotekExpedienteBundle:Period p"
+            . " WHERE p.year = " . ($group->getPeriod()->getYear()-1)
+            . " ORDER BY p.orderInYear";
+        $query = $em->createQuery($dql);
+        $previousYearPeriods = $query->getResult();
+        $previousYearPeriodsStr = "";
+        foreach ($previousYearPeriods as $p) {
+            $previousYearPeriodsStr .= "," . $p->getId();
+        }
+        $previousYearPeriodsStr = substr($previousYearPeriodsStr, 1);
+        // Get Course Classes for 10th Grade
+        $dql = "SELECT cc FROM TecnotekExpedienteBundle:CourseClass cc"
+            . " WHERE cc.course = " . $courseId . " AND cc.grade = 10 AND cc.period IN (" . $previousYearPeriodsStr . ")"
+            . " ";
+        $query = $em->createQuery($dql);
+        $previousYearCC = $query->getResult();
+        $previousYearCCStr = "";
+        foreach ($previousYearCC as $cc) {
+            $logger->err("CC: " . $cc->getId());
+            $previousYearCCStr .= "," . $cc->getId();
+        }
+        $previousYearCCStr = substr($previousYearCCStr, 1);
+        //Agregar los 3 periodos y el promedio
+        $headersRow =  '<thead>';
+        $headersRow .=  '    <tr style="height: 145px;">';
+        $headersRow .=  '        <th style="width: 75px; text-align: center;">Carne</th>';
+        $headersRow .=  '        <th style="width: 250px; text-align: center;">Estudiante</th>';
+        $headersRow .=  '<th style="vertical-align: bottom; padding: 0.5625em 0.625em;"><div class="verticalText">Anual Décimo</div></th>';
+        $headersRow .=  '<th style="vertical-align: bottom; padding: 0.5625em 0.625em;"><div class="verticalText">Trimestre I Undécimo</div></th>';
+        $headersRow .=  '<th style="vertical-align: bottom; padding: 0.5625em 0.625em;"><div class="verticalText">Trimestre II Undécimo</div></th>';
+        $headersRow .=  '<th style="vertical-align: bottom; padding: 0.5625em 0.625em;"><div class="verticalText">Promedio</div></th>';
+        $headersRow .=  '    </tr>';
+        $headersRow .=  '</thead>';
+        $studentRow = '';
+        $studentRow .= '<td>Nota_Decimo</td>';
+        $studentRow .= '<td>Nota_Period_1</td>';
+        $studentRow .= '<td>Nota_Period_2</td>';
+        $studentRow .= '<td>Nota_Promedio</td>';
+        $html =  '<b>Grupo: '.$group->getGrade().'-'. $group->getName() . ", Materia: " . $myCourse->getName() . "</b><br/>";
+        $html .= '<table class="tableQualifications" cellSpacing="0" cellPadding="0">' . $headersRow;
+        $studentRowIndex = 0;
+        $periods = array();
+        $periods[1] = $em->getRepository("TecnotekExpedienteBundle:Period")->findOneBy(array('year' => $group->getPeriod()->getYear(), 'orderInYear' => 1));
+        $periods[2] = $em->getRepository("TecnotekExpedienteBundle:Period")->findOneBy(array('year' => $group->getPeriod()->getYear(), 'orderInYear' => 2));
+        foreach ($students as $stdy) {
+            $html .=  '<tr class="rowNotas" style="height: 25px;">';
+            $studentRowIndex++;
+            $html .=  '<td>' . $stdy->getStudent()->getCarne() . '</td>';
+            $html .=  '<td>' . $stdy->getStudent() . '</td>';
+            $row = $studentRow;
+            $previousYearAverage = $this->getTenGradeStudentCourseAverage($previousYearCCStr, $stdy->getStudent()->getId());
+            $row = str_replace("Nota_Decimo", number_format($previousYearAverage, 2, '.', ''), $row);
+            $total = $previousYearAverage;
+            $counter = 1;
+            // Recorrer Todos los Periodos
+            for ($i = 1; $i < 3; $i++) {
+                $currentPeriod = $periods[$i];
+                if (isset($currentPeriod)) {
+                    $currentSTDY = $em->getRepository("TecnotekExpedienteBundle:StudentYear")
+                        ->findOneBy(array('student' => $stdy->getStudent()->getId(), 'period' => $currentPeriod->getId()));
+                    if (isset($currentSTDY)) {
+                        if ($currentPeriod->isEditable()) {
+                            $this->calculateStudentYearQualification($currentPeriod->getId(), $currentSTDY->getId(), $currentSTDY);
+                        }
+                        foreach ($courses as $course) {
+                            if ($course->getPeriod()->getId() == $currentPeriod->getId()) {
+                                $notaFinal = $em->getRepository("TecnotekExpedienteBundle:StudentYearCourseQualification")
+                                    ->findOneBy(array('courseClass' => $course->getId(), 'studentYear' => $currentSTDY->getId()));
+                                $typeC = $course->getCourse()->getType();
+                                if ($typeC==1) {
+                                    if (isset($notaFinal)) {//Si existe
+                                        if ($notaFinal->getQualification() != '0') {
+                                            $total += $notaFinal->getQualification();
+                                            $counter += 1;
+                                        }
+                                        $row = str_replace("Nota_Period_" . $i, $notaFinal->getQualification(), $row);
+                                    } else {
+                                        $row = str_replace("Nota_Period_" . $i, "-", $row);
+                                    }
+                                } else {
+                                    if (isset($notaFinal)) {//Si existe
+                                        $valorNota =  $notaFinal->getQualification();
+                                        if($valorNota == 99)
+                                            $valorNota = "Exc";
+                                        if($valorNota == 74)
+                                            $valorNota = "V.Good";
+                                        if($valorNota == 50)
+                                            $valorNota = "Good";
+                                        if($valorNota == 25)
+                                            $valorNota = "N.I.";
+                                        if($valorNota == 4)
+                                            $valorNota = "Exc";
+                                        if($valorNota == 3)
+                                            $valorNota = "V.Good";
+                                        if($valorNota == 2)
+                                            $valorNota = "Good";
+                                        if($valorNota == 1)
+                                            $valorNota = "N.I.";
+                                        $row = str_replace("Nota_Period_" . $i, $valorNota, $row);
+                                    } else {
+                                        $row = str_replace("Nota_Period_" . $i, "-", $row);
+                                    }
+                                }
+                            }
+                        }//Fin del foreach de courses
+                    }else {$row = str_replace("Nota_Period_" . $i, "-", $row);}
+                }  else {//El periodo no existe
+                    $row = str_replace("Nota_Period_" . $i, "-*-", $row);
+                }
+            }
+            $row = str_replace("Nota_Promedio", number_format($total/$counter, 2, '.', ''), $row);
+            $html .=  $row . "</tr>";
+        }
+        $html .= "</table>";
+        return $html;
+    }
 }

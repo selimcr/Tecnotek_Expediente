@@ -2413,16 +2413,23 @@ class SuperAdminController extends Controller
             try {
                 $request = $this->get('request')->request;
                 $year = $request->get('year');
+                $loadOnlyBachelors = $request->get('loadOnlyBachelors');
+                if ( !isset($loadOnlyBachelors) ) {
+                    $loadOnlyBachelors = false;
+                } else {
+                    $loadOnlyBachelors = ($loadOnlyBachelors == "true");
+                }
                 $translator = $this->get("translator");
 
                 if( isset($year) ) {
                     $em = $this->getDoctrine()->getEntityManager();
                     $user = $this->get('security.context')->getToken()->getUser();
                     //Get Groups
+                    $sqlOnlyBachelors = $loadOnlyBachelors? " AND grade.number = 11 ":"";
                     $sql = "SELECT CONCAT(g.id,'-',grade.id) as 'id', CONCAT(grade.name, ' :: ', g.name) as 'name'" .
                         " FROM tek_groups g, tek_periods p, tek_grades grade" .
                         " WHERE p.orderInYear = 3 AND g.period_id = p.id AND p.year = " .  $year . " AND g.grade_id = grade.id" .
-                        " AND g.institution_id in (" . $user->getInstitutionsIdsStr() . ")" .
+                        "" . $sqlOnlyBachelors . " AND g.institution_id in (" . $user->getInstitutionsIdsStr() . ")" .
                         " GROUP BY CONCAT(grade.name, ' :: ', g.name)" .
                         " ORDER BY g.id";
                     $stmt = $em->getConnection()->prepare($sql);
@@ -2464,6 +2471,7 @@ class SuperAdminController extends Controller
                     $sql = "SELECT course.id, course.name " .
                         " FROM tek_assigned_teachers tat, tek_course_class tcc, tek_courses course " .
                         " WHERE tat.group_id = " . $groupId . " AND tat.course_class_id =  tcc.id AND tcc.course_id = course.id" .
+                        " GROUP BY course.id" .
                         " ORDER BY course.name ";
 
                     $stmt = $em->getConnection()->prepare($sql);
