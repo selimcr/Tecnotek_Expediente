@@ -171,6 +171,9 @@ var Tecnotek = {
                 case "questionnairesList":
                     Tecnotek.Questionnaires.init();
                     break;
+                case "psicoLog":
+                    Tecnotek.Visits.init();
+                    break;
                 default:
 					break;
 				}
@@ -639,6 +642,10 @@ var Tecnotek = {
                 $('.emergencyButton').unbind().click(function(event){
                     event.preventDefault();
                     location.href = Tecnotek.UI.urls["emergency"] + "/" + $(this).attr("rel");
+                });
+                $('.logButton').unbind().click(function(event){
+                    event.preventDefault();
+                    location.href = Tecnotek.UI.urls["log"] + "/" + $(this).attr("rel");
                 });
 			},
 			submit : function() {

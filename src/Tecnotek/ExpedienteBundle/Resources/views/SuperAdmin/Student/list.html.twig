@@ -15,6 +15,7 @@
     Tecnotek.UI.urls["emergency"] = "{{ path('_expediente_sysadmin_student_emergency_edit_simple')}}";
     Tecnotek.UI.urls["psico"] = "{{ path('_expediente_sysadmin_student_psico_profile_simple')}}";
     Tecnotek.UI.urls["search"] = "{{ path('_expediente_sysadmin_student_search')}}";
+    Tecnotek.UI.urls["log"] = "{{ path('_expediente_sysadmin_student_psico_log_simple')}}";
 </script>
 {% endblock %}
 
@@ -80,6 +81,7 @@
     <div class="right imageButton religionButton"  title="{% trans %}label.religion{% endtrans %}"  rel="STUDENT_ID"></div>
     <div class="right imageButton emergencyButton"  title="{% trans %}label.emergency{% endtrans %}"  rel="STUDENT_ID"></div>
     <div class="right imageButton psicoButton"  title="{% trans %}label.psico{% endtrans %}" rel="STUDENT_ID"></div>
+    <div class="right imageButton logButton"  title="{% trans %}label.log.label{% endtrans %}" rel="STUDENT_ID"></div>
     <div class="clear"></div>
 </div>
 {% endblock %}

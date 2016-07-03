@@ -1,0 +1,135 @@
+{% extends 'TecnotekExpedienteBundle::logged_layout.html.twig' %}
+
+{% block htmlTitle %}
+    Tecnotek :: Expediente :: Super Administrador :: Estudiante
+{% endblock %}
+
+{% block extracss %}
+    <link rel="stylesheet" href="{{ asset('fancybox/jquery.fancybox.css') }}" type="text/css" media="all" />
+    <link rel="stylesheet" href="{{ asset('fancybox/fancybox_style.css') }}" type="text/css" media="all" />
+    <link rel="stylesheet" href="{{ asset('css/jquery-ui-timepicker-addon.css') }}" type="text/css" media="all" />
+    <style type="text/css">
+    </style>
+{% endblock %}
+
+{% block extrajs %}
+    <script type="text/javascript" src="{{ asset('js/jquery.printElement.min.js') }}"></script>
+
+    <script type="text/javascript" src="{{ asset('js/tek_exp_visits.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('fancybox/jquery.fancybox.js?v=2.0.6') }}"></script>
+    <script type="text/javascript">
+        Tecnotek.module = "psicoLog";
+        Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
+        Tecnotek.UI.urls["search"] = "{{ path('_expediente_sysadmin_student_tutor_visit_search')}}";
+        Tecnotek.UI.vars["student-id"] = {{ entity.id }};
+        Tecnotek.UI.vars["user-id"] = {{ app.user.id }};
+        Tecnotek.UI.urls["saveVisit"] = "{{ path("_expediente_student_tutor_visit_save") }}";
+        Tecnotek.UI.translates['editing-visit'] = "{{ 'tutor.visit.edit'|trans }}";
+        Tecnotek.UI.translates['viewing-visit'] = "{{ 'tutor.visit.view'|trans }}";
+        Tecnotek.UI.translates['creating-visit'] = "{{ 'tutor.visit.create'|trans }}";
+
+        Tecnotek.UI.urls["groupUrl"] = "{{ path("_expediente_sysadmin_student_psico_profile", {'id': entity.id }) }}";
+        Tecnotek.UI.vars["print-extra-styles"] = "{{ asset('css/print.css') }}";
+    </script>
+    <!-- basic fancybox setup -->
+    <script type="text/javascript">
+        $(function(){ $(".modalbox").fancybox(); });
+    </script>
+{% endblock %}
+
+{% block content %}
+    <div class="container_24" style="width: 900px;">
+        <div class="grid_24" style="width: 100%;">
+            <div class="titleRow">
+                <div class="left"><h3> {{ entity }}</h3></div>
+                <div class="right">
+                    <a href="{{ path('_expediente_sysadmin_student') }}" class="button success-darker tiny">
+                        <span></span>{% trans %}label.back.list{% endtrans %}</a>
+                    <a id="newVisit"  class="modalbox button success-darker tiny" href="#inline">{% trans %}label.new{% endtrans %}</a>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="section-container auto" data-section>
+                <div class="table">
+                    <div class="row tableHeader">
+                        <div class="option_width sort_header" style="float: left; width: 100px; margin-left: -6px;"
+                             field-name="v.date" order="asc">
+                            <span class="header-title asc" title="{{ 'label.date'|trans }}">{{ 'label.date'|trans }}</span>
+                        </div>
+                        <div class="option_width sort_header" style="float: left; width: 200px; margin-left: -6px;"
+                             field-name="u.firstname,u.lastname" order="asc">
+                            <span class="header-title sortable" title="{{ 'label.creator'|trans }}">
+                                {{ 'label.creator'|trans }}</span>
+                        </div>
+                        <div class="option_width sort_header" style="float: left; width: 300px; margin-left: -6px;"
+                             field-name="v.people" order="asc">
+                            <span class="header-title sortable" title="{{ 'label.visit.people'|trans }}">
+                                {{ 'label.visit.people'|trans }}</span>
+                        </div>
+                        <div class="option_width sort_header" style="float: left; margin-left: -6px;"
+                             field-name="v.comments" order="asc">
+                            <span class="header-title sortable" title="{{ 'label.comments'|trans }}">
+                                {{ 'label.comments'|trans }}</span>
+                        </div>
+                        <div class="right" style="margin-top: -2px;">
+                        </div>
+                        <div class="right" style="width: 5px; height: 26px"></div>
+                        <div class="option_width right">
+                        </div>
+                    </div>
+
+                    <div id="visits-container">
+                    </div>
+                </div>
+
+                <br/>
+
+                <div style="margin-bottom:75px;" id="pagination-container">
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="visitRowTemplate" class="row userRow ROW_CLASS" rel="VISIT_ID" style="display: none;">
+        <div class="option_width" style="float: left; width: 100px; margin-left: -6px; overflow: hidden;
+    text-overflow: ellipsis; white-space: nowrap;">VISIT_DATE</div>
+        <div class="option_width" style="float: left; width: 200px; margin-left: -6px; overflow: hidden;
+    text-overflow: ellipsis; white-space: nowrap;">VISIT_CREATOR</div>
+        <div class="option_width" style="float: left; width: 300px; margin-left: -6px; overflow: hidden;
+    text-overflow: ellipsis; white-space: nowrap;" title="VISIT_CREATOR">VISIT_PEOPLE</div>
+        <div class="option_width" style="float: left; width: 200px; margin-left: -6px; overflow: hidden;
+    text-overflow: ellipsis; white-space: nowrap;" title="VISIT_COMMENTS">VISIT_COMMENTS</div>
+        <div class="right imageButton viewButton" title="{% trans %}label.view{% endtrans %}"  rel="VISIT_ID"></div>
+    </div>
+
+    <span id="editButtonTemplate" style="display: none;">
+        <div class="right imageButton editButton" title="{% trans %}label.edit{% endtrans %}"  rel="VISIT_ID"></div>
+    </span>
+    <!-- hidden inline form -->
+    <div id="inline" style="width: 550px;">
+        <h3 id="modalTitle">Registrar nueva visita</h3>
+        <form class="customForm" id="createVisitForm" name="createVisitForm" action="#" method="post" }}>
+            <div style="margin-bottom: 5px;">
+                <label style="display: inline-block; width: 150px">{% trans %}label.date{% endtrans %} *</label>
+                <input id="date" name="date" style="width: 270px">
+            </div>
+            <div style="margin-bottom: 5px;">
+                <label style="display: inline-block; width: 150px">{% trans %}label.visit.people{% endtrans %} *</label>
+                <textarea id="people" name="people" style="height: 45px;"></textarea>
+            </div>
+            <div style="margin-bottom: 5px;">
+                <label style="display: inline-block; width: 150px">{% trans %}label.comments{% endtrans %} *</label>
+                <textarea id="comments" name="comments" style="height: 45px;"></textarea>
+            </div>
+            <div style="margin-bottom: 5px;">
+                <label style="display: inline-block; width: 150px">{% trans %}label.observations{% endtrans %}</label>
+                <textarea id="observations" name="observations" style="height: 45px;"></textarea>
+            </div>
+            <div class="left"><input id="cancelBtn" class="button success-darker tiny cancelButton" style="margin-top: 0px;" type="button" value="{% trans %}label.cancelar{% endtrans %}"/></div>
+            <div class="left"><input id="closeBtn" class="button success-darker tiny cancelButton" style="margin-top: 0px; display: none;" type="button" value="{% trans %}label.close{% endtrans %}"/></div>
+            <div class="left" style="margin-left: 25px;"><input id="saveVisitBtn" class="button success-darker tiny" style="margin-top: 0px;" type="submit" name="save" value="{% trans %}label.save{% endtrans %}"/></div>
+            <div class="clear"></div>
+        </form>
+    </div>
+{% endblock %}

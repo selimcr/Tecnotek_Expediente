@@ -11,6 +11,7 @@ use Tecnotek\ExpedienteBundle\Entity\Relative as Relative;
 use Tecnotek\ExpedienteBundle\Entity\Student;
 use Tecnotek\ExpedienteBundle\Entity\StudentPenalty;
 use Tecnotek\ExpedienteBundle\Entity\StudentToRoute;
+use Tecnotek\ExpedienteBundle\Entity\StudentTutorVisit;
 use Tecnotek\ExpedienteBundle\Entity\Ticket;
 use Tecnotek\ExpedienteBundle\Form\ContactFormType;
 
@@ -20,6 +21,100 @@ use Symfony\Component\HttpFoundation\Request;
 
 class StudentController extends Controller
 {
+    public function studentTutorVisitSaveAction(){
+        $logger = $this->get('logger');
+        if (!$this->get('request')->isXmlHttpRequest()) {// Is not the request an ajax one?
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+        try {
+            $request = $this->get('request')->request;
+            $visitId = $request->get('visitId');
+            $studentId = $request->get('studentId');
+            $date = $request->get('date');
+            $people = $request->get('people');
+            $observations = $request->get('observations');
+            $comments = $request->get('comments');
+            $visit = new StudentTutorVisit();
+            $currentUser = $this->get('security.context')->getToken()->getUser();
+            $em = $this->getDoctrine()->getEntityManager();
+            if ($visitId != 0) { // It's editing a visit
+                $visit = $em->getRepository("TecnotekExpedienteBundle:StudentTutorVisit")->find($visitId);
+            } else {
+                $visit->setCreator($currentUser);
+                $visit->setStudent($em->getRepository("TecnotekExpedienteBundle:Student")->find($studentId));
+            }
+            if ($visit->getCreator()->getId() == $currentUser->getId()) {
+                $visit->setComments($comments);
+                $format = 'd/m/Y';
+                $date = \DateTime::createFromFormat($format, $date);
+                $visit->setDate($date);
+                $visit->setObservations($observations);
+                $visit->setPeople($people);
+                $em->persist($visit);
+                $em->flush();
+                return new Response(json_encode(array('error' => false)));
+            } else {
+                return new Response(json_encode(array('error' => true, 'message' => 'Las visitas sólo pueden ser editados por quien las creó')));
+            }
+        } catch (Exception $e) {
+            $info = toString($e);
+            $logger->err('Student::studentTutorVisitSaveAction [' . $info . "]");
+            return new Response(json_encode(array('error' => true, 'message' => $info)));
+        }
+    }
+
+    public function searchStudentTutorVisitAction($rowsPerPage = 10) {
+        $logger = $this->get('logger');
+        if (!$this->get('request')->isXmlHttpRequest()) {// Is not the request an ajax one?
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+        try {
+            $request = $this->get('request')->request;
+            $text = $request->get('text');
+            $sortBy = $request->get('sortBy');
+            $order = $request->get('order');
+            $page = $request->get('page');
+            $studentId = $request->get('studentId');
+            $offset = ($page-1) * $rowsPerPage;
+            $em = $this->getDoctrine()->getEntityManager();
+            $words = explode(" ", trim($text));
+            $where = "v.student_id = $studentId";
+            foreach ($words as $word) {
+                $where .= " AND (v.people like '%" . $word . "%')";
+            }
+            $sql = "SELECT SUM($where) as filtered,"
+                . " COUNT(*) as total FROM tek_student_tutor_visit v WHERE $where;";
+            $stmt = $em->getConnection()->prepare($sql);
+            $stmt->execute();
+            $filtered = 0;
+            $total = 0;
+            $result = $stmt->fetchAll();
+            foreach($result as $row) {
+                $filtered = $row['filtered'];
+                $total = $row['total'];
+            }
+
+            $sql = "SELECT v.id, date_format(v.date,'%d/%m/%Y') as 'date', v.student_id, v.comments, v.observations, v.people, v.user_id, "
+                . " concat(u.firstname, ' ', u.lastname) as 'creator'"
+                . " FROM tek_student_tutor_visit v"
+                . " JOIN tek_users u ON u.id = v.user_id"
+                . " WHERE $where"
+                . " ORDER BY $sortBy $order"
+                . " LIMIT $rowsPerPage OFFSET $offset";
+            $stmt2 = $em->getConnection()->prepare($sql);
+            $stmt2->execute();
+            $visits = $stmt2->fetchAll();
+            return new Response(json_encode(array('error' => false,
+                'filtered' => $filtered,
+                'total' => $total,
+                'visits' => $visits)));
+        } catch (Exception $e) {
+            $info = toString($e);
+            $logger->err('Student::searchStudentTutorVisitAction [' . $info . "]");
+            return new Response(json_encode(array('error' => true, 'message' => $info)));
+        }
+    }
+
     /* Metodos para CRUD de Students */
     public function studentListAction($rowsPerPage = 30)
     {
@@ -2233,6 +2328,31 @@ $currentPeriod = $em->getRepository("TecnotekExpedienteBundle:Period")->findOneB
                 'groups' => $groups, 'currentGroup' => $groupId));
     }
 
+    public function studentPsicoLogAction($id) {
+        $em = $this->getDoctrine()->getEntityManager();
+        $entity = $em->getRepository("TecnotekExpedienteBundle:Student")->find($id);
+        $visits = $em->getRepository("TecnotekExpedienteBundle:StudentTutorVisit")->findByStudent($id);
+
+        /*$group = null;
+        if($groupId == 0){ //Get the first Group
+            $group = $groups[0];
+        } else {
+            $group = $em->getRepository("TecnotekExpedienteBundle:QuestionnaireGroup")->find($groupId);
+        }
+        $forms = $em->getRepository("TecnotekExpedienteBundle:Questionnaire")->findPsicoQuestionnairesOfGroup($group,
+            false, $entity);
+
+        $answersResult = $em->getRepository("TecnotekExpedienteBundle:Questionnaire")
+            ->findPsicoQuestionnairesAnswersOfStudentByGroup($id, $group);
+        $answers = array();
+        foreach ($answersResult as $answer) {
+            $answers[$answer->getQuestion()->getId()] = $answer;
+        }*/
+
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Student/psicoLog.html.twig',
+            array('entity' => $entity, 'menuIndex' => 3, 'visits' => $visits));
+    }
+
     public function savePsicoFormAction(){
         $logger = $this->get('logger');
         if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
@@ -2523,7 +2643,11 @@ $currentPeriod = $em->getRepository("TecnotekExpedienteBundle:Period")->findOneB
                     $body = $request->request->get('body');
                     $subject = $request->request->get('subject');
                     $extraEmails = $request->request->get('extraEmails');
-                    $emails .= ";" . $extraEmails;
+                    if ( trim($emails) == "") {
+                        $emails .= $extraEmails;
+                    } else {
+                        $emails .= ";" . $extraEmails;
+                    }
                     $bbcEmails = explode(";",$emails);
                     $message = \Swift_Message::newInstance()
                         ->setSubject($subject)

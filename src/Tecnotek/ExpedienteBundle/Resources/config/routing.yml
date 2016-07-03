@@ -267,6 +267,15 @@ _expediente_sysadmin_student_psico_profile:
     pattern:  /student/psicoProfile/{id}
     defaults: { _controller: TecnotekExpedienteBundle:Student:studentPsicoProfile }
 
+_expediente_sysadmin_student_psico_log_simple:
+    pattern:  /student/psico/log
+    defaults: { _controller: TecnotekExpedienteBundle:Student:studentPsicoLog }
+
+_expediente_sysadmin_student_psico_log:
+    pattern:  /student/psico/log/{id}
+    defaults: { _controller: TecnotekExpedienteBundle:Student:studentPsicoLog }
+
+
 _expediente_sysadmin_student_psico_profile_group:
     pattern:  /student/psicoProfile/{id}/{groupId}
     defaults: { _controller: TecnotekExpedienteBundle:Student:studentPsicoProfileGroup }
@@ -776,6 +785,10 @@ _expediente_absences_save:
     pattern:  /absences/save
     defaults: { _controller: TecnotekExpedienteBundle:Student:absenceSave }
 
+_expediente_student_tutor_visit_save:
+    pattern:  /tutor/visit/save
+    defaults: { _controller: TecnotekExpedienteBundle:Student:studentTutorVisitSave }
+
 _delete_absence:
     pattern:  /absence/delete/{id}
     defaults: { _controller: TecnotekExpedienteBundle:Student:absenceDelete }
@@ -1182,3 +1195,7 @@ _expediente_sysadmin_questionnaires:
 _expediente_sysadmin_save_questionnaires:
     pattern:  /admin/saveQuestionnaireConfig
     defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:saveQuestionnaireConfig }
+
+_expediente_sysadmin_student_tutor_visit_search:
+    pattern:  /student/tutor/visit/search
+    defaults: { _controller: TecnotekExpedienteBundle:Student:searchStudentTutorVisit }

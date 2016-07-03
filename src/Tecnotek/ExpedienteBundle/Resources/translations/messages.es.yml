@@ -23,6 +23,7 @@ label.cancelar: Cancelar
 label.save: Guardar
 label.view: Ver
 label.psico: Perfil Psicologico
+label.log.label: Bitácora Psicológica
 label.volver: Volver
 label.edit: Editar
 label.delete: Eliminar
@@ -63,6 +64,8 @@ label.access: Permisos
 label.questionnaires.config: Config Cuestionarios
 label.questionnaires.list: Lista de Cuestionarios
 label.attachment: Archivo adjunto
+label.creator: Creado por
+label.visit.people: Personas Presentes
 
 label.teacher.default: Profesor Asignado
 label.include: Incluir
@@ -117,6 +120,7 @@ label.description: Descripcion
 label.enter.by.rubro: Ingresar notas por rubro
 label.enter.convocatorias: Ingresar Convocatorias
 label.students.emergency: Reporte para emergencias
+label.close: Cerrar
 
 label.password.cambiar: Cambiar Password
 label.usuarios.admin: Administradores
@@ -349,6 +353,10 @@ error.entity.not.found: El objeto no se ha encontrado.
 error.passwords.dont.match: Los passwords no coinciden.
 error.password.emtpy: El password no puede estar en blanco.
 error.paramateres.missing: Parametros incorrectos.
+
+tutor.visit.create: Registrar nueva visita
+tutor.visit.edit: Editar visita
+tutor.visit.view: Ver información de visita
 
 #USER ROLES
 user.roles.1: Administrador del Sistema

@@ -76,6 +76,7 @@ body:before {
 .psicoButton {background: url(../images/icons/psico.jpg) no-repeat left 0px;margin-right: 0px; margin-top: 2px; width: 18px;}
 .religionButton {background: url(../images/icons/religion.png) no-repeat left 0px;margin-right: 0px; margin-top: 2px; width: 18px;}
 .emergencyButton {background: url(../images/icons/emergency.png) no-repeat left 0px;margin-right: 0px; margin-top: 2px; width: 18px;}
+.logButton {background: url(../images/icons/log.png) no-repeat left 0px;margin-right: 0px; margin-top: 2px; width: 18px;}
 
 /*KPaginator Style*/
 .pagination {
