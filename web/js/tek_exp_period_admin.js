@@ -6,28 +6,49 @@ Tecnotek.AdminPeriod = {
         $('#groupTab').click(function(event){
             $('#courseSection').hide();
             $('#entriesSection').hide();
+            $('#teachersSection').hide(); //agregado
             $("#coursesContainer").hide();
+            $("#teacherContainer").hide();
             $('#groupSection').show();
             $('#entriesTab').removeClass("tab-current");
             $('#groupTab').addClass("tab-current");
+            $('#teacherTab').removeClass("tab-current");   //agregado
             $('#courseTab').removeClass("tab-current");
         });
         $('#courseTab').click(function(event){
             $('#groupSection').hide();
             $('#entriesSection').hide();
             $("#coursesContainer").hide();
+            $('#teachersSection').hide(); //agregado
             $('#courseSection').show();
+            $("#teacherContainer").hide();
             $('#entriesTab').removeClass("tab-current");
             $('#courseTab').addClass("tab-current");
+            $('#teacherTab').removeClass("tab-current");   //agregado
             $('#groupTab').removeClass("tab-current");
+        });
+        $('#teacherTab').click(function(event){
+            $('#groupSection').hide();
+            $('#courseSection').hide();
+            $('#entriesSection').hide();
+            $('#teachersSection').show(); //agregado
+            $("#coursesContainer").hide();
+            $("#teacherContainer").show();
+            $('#courseTab').removeClass("tab-current");
+            $('#groupTab').removeClass("tab-current");
+            $('#teacherTab').addClass("tab-current");   //agregado
+            $('#entriesTab').removeClass("tab-current");  //agregado
         });
         $('#entriesTab').click(function(event){
             $('#groupSection').hide();
             $('#courseSection').hide();
             $('#entriesSection').show();
+            $('#teachersSection').hide(); //agregado
             $("#coursesContainer").show();
+            $("#teacherContainer").hide();
             $('#courseTab').removeClass("tab-current");
             $('#groupTab').removeClass("tab-current");
+            $('#teacherTab').removeClass("tab-current");   //agregado
             $('#entriesTab').addClass("tab-current");
         });
         $('#groupForm').submit(function(event){
@@ -42,9 +63,17 @@ Tecnotek.AdminPeriod = {
             event.preventDefault();
             Tecnotek.AdminPeriod.createEntry();
         });
+        $('#teacherForm').submit(function(event){
+            event.preventDefault();
+            Tecnotek.AdminPeriod.createTeacherAssigned();
+        });
         $("#periodCourses").change(function(event){
             event.preventDefault();
             Tecnotek.AdminPeriod.loadEntriesByCourse($(this).val());
+        });
+        $("#teachers").change(function(event){
+            event.preventDefault();
+            Tecnotek.AdminPeriod.loadCoursesAssignedByTeacher($(this).val());
         });
         $("#openGroupForm").fancybox({
             'afterLoad' : function(){
@@ -71,6 +100,21 @@ Tecnotek.AdminPeriod = {
                 }
                 Tecnotek.UI.vars["fromEdit"] = false;
                 Tecnotek.AdminPeriod.preloadEntryForm();
+            }
+        });
+
+        $("#openTeacherForm").fancybox({
+            'beforeLoad' : function(){
+                /*if(Tecnotek.UI.vars["fromEdit"] === false){
+                 Tecnotek.UI.vars["entryId"]  = 0;
+                 $("#entryFormName").val("");
+                 $("#entryFormCode").val("");
+                 $("#entryFormPercentage").val("");
+                 $("#entryFormMaxValue").val("");
+                 $("#entryFormSortOrder").val("");
+                 }*/
+                //Tecnotek.UI.vars["fromEdit"] = false;
+                //Tecnotek.AdminPeriod.preloadEntryForm();
             }
         });
 
@@ -183,6 +227,10 @@ Tecnotek.AdminPeriod = {
             event.preventDefault();
             $.fancybox.close();
         });
+        $("#courseFormTeacherCancel").click(function(event){
+            event.preventDefault();
+            $.fancybox.close();
+        });
         $("#entryFormCancel").click(function(event){
             event.preventDefault();
             $.fancybox.close();
@@ -194,6 +242,10 @@ Tecnotek.AdminPeriod = {
         $("#grade").change(function(event){
             event.preventDefault();
             Tecnotek.AdminPeriod.loadPeriodInfoByGrade();
+        });
+        $("#groupToFormTeacher").change(function(event){
+            event.preventDefault();
+            Tecnotek.AdminPeriod.loadCourseClassByGroup();
         });
     },
     preloadEntryForm: function(){
@@ -217,6 +269,26 @@ Tecnotek.AdminPeriod = {
                 } else {
                     for(i=0; i<data.courses.length; i++) {
                         $('#courseToAsociate').append('<option value="' + data.courses[i].id + '">' + data.courses[i].name + '</option>');
+                    }
+                }
+            },
+            function(jqXHR, textStatus){
+                Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
+                $(this).val("");
+            }, true);
+    },
+    loadCourseClassByGroup: function() {
+        $('#courseToAsociateFormTeacher').children().remove();
+        //alert($('#groupToFormTeacher').val());
+        Tecnotek.ajaxCall(Tecnotek.UI.urls["loadCoursesClassForGroupURL"],
+            {   periodId: Tecnotek.UI.vars["periodId"],
+                groupId: $('#groupToFormTeacher').val()},
+            function(data){
+                if(data.error === true) {
+                    Tecnotek.showErrorMessage(data.message,true, "", false);
+                } else {
+                    for(i=0; i<data.courses.length; i++) {
+                        $('#courseToAsociateFormTeacher').append('<option value="' + data.courses[i].courseclass + '">' + data.courses[i].name + '</option>');
                     }
                 }
             },
@@ -253,6 +325,52 @@ Tecnotek.AdminPeriod = {
                     Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
                 }, true);
         }
+    },
+    loadCoursesAssignedByTeacher: function(teacherId) {
+        //$('.editEntry').unbind();
+        $('#courseToAsociateFormTeacher').empty();
+        $('#groupToFormTeacher').empty();
+        $('#courseTeacherRows').empty();
+        if(teacherId == 0){//Clean page
+            console.debug("Clean page!!!");
+        } else {
+            Tecnotek.ajaxCall(Tecnotek.UI.urls["loadCoursesByTeacherURL"],
+                {   periodId: Tecnotek.UI.vars["periodId"],
+                    teacherId: teacherId},
+                function(data){
+                    if(data.error === true) {
+                        Tecnotek.showErrorMessage(data.message,true, "", false);
+                    } else {
+
+                        $('#courseTeacherRows').append(data.entriesHtml);
+                        $('#groupToFormTeacher').append(0);
+                        $('#groupToFormTeacher').append(data.groupOptions);
+                        Tecnotek.AdminPeriod.initializeTeachersButtons();
+                    }
+                },
+                function(jqXHR, textStatus){
+                    Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
+                }, true);
+        }
+    },
+    loadCoursesByTeacher: function() {
+        $('#courseToAsociateFormTeacher').children().remove();
+        Tecnotek.ajaxCall(Tecnotek.UI.urls["loadAvailableCoursesForTeacherURL"],
+            {   periodId: Tecnotek.UI.vars["periodId"],
+                teachers: $('#teachers').val()},
+            function(data){
+                if(data.error === true) {
+                    Tecnotek.showErrorMessage(data.message,true, "", false);
+                } else {
+                    for(i=0; i<data.courses.length; i++) {
+                        $('#courseToAsociateFormTeacher').append('<option value="' + data.courses[i].id + '">' + data.courses[i].name + '</option>');
+                    }
+                }
+            },
+            function(jqXHR, textStatus){
+                Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
+                $(this).val("");
+            }, true);
     },
     loadPeriodInfoByGrade : function() {
         $('.editGroup').unbind();
@@ -351,6 +469,23 @@ Tecnotek.AdminPeriod = {
         }
 
     },
+    deleteTeacherAssigned: function(teacherAssignedId){
+        if(Tecnotek.showConfirmationQuestion("Esta seguro que desea eliminar el grupo asignado?")) {
+            Tecnotek.ajaxCall(Tecnotek.UI.urls["deleteTeacherAssignedURL"],
+                {   teacherAssignedId: teacherAssignedId },
+                function(data){
+                    if(data.error === true) {
+                        Tecnotek.showErrorMessage(data.message,true, "", false);
+                    } else {
+                        $("#courseTeacherRows_" + teacherAssignedId).fadeOut('slow', function(){});
+                    }
+                },
+                function(jqXHR, textStatus){
+                    Tecnotek.showErrorMessage("Error deleting relacion: " + textStatus + ".", true, "", false);
+                }, true);
+        }
+
+    },
     deleteCourseAssociation: function(associationId){
         if(Tecnotek.showConfirmationQuestion("Esta seguro que desea desasociar esta materia del grado?")) {
             Tecnotek.ajaxCall(Tecnotek.UI.urls["deleteCourseAssociationURL"],
@@ -427,6 +562,29 @@ Tecnotek.AdminPeriod = {
         $('.deleteEntry').click(function(event){
             event.preventDefault();
             Tecnotek.AdminPeriod.deleteEntry($(this).attr("rel"));
+        });
+    },
+    initializeTeachersButtons: function(){
+        /*$('.edit').unbind();
+         $('.editEntry').click(function(event){
+         event.preventDefault();
+         var entryId = $(this).attr("rel");
+         Tecnotek.UI.vars["entryId"]  = entryId;
+         $("#entryFormName").val($("#entryNameField_" + entryId).text());
+         $("#entryFormCode").val($("#entryCodeField_" + entryId).text());
+         $("#entryFormPercentage").val($("#entryPercentageField_" + entryId).text());
+         $("#entryFormMaxValue").val($("#entryMaxValueField_" + entryId).text());
+         $("#entryFormSortOrder").val($("#entryOrderField_" + entryId).text());
+         $("#entryFormParent").val($(this).attr("entryparent"));
+         Tecnotek.UI.vars["fromEdit"] = true;
+         $('#openEntryForm').trigger('click');
+
+         });*/
+
+        $('.deleteTeacherAssigned').unbind();
+        $('.deleteTeacherAssigned').click(function(event){
+            event.preventDefault();
+            Tecnotek.AdminPeriod.deleteTeacherAssigned($(this).attr("rel"));
         });
     },
     initializeGroupsButtons: function(){
@@ -589,5 +747,25 @@ Tecnotek.AdminPeriod = {
                 Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
                 $(this).val("");
             }, true);
-    }
+    },
+    createTeacherAssigned: function() {
+    Tecnotek.ajaxCall(Tecnotek.UI.urls["createTeacherAssignedURL"],
+        {   periodId: Tecnotek.UI.vars["periodId"],
+            teacherId: $('#courseFormTeacher').val(),
+            courseClassId: $('#courseToAsociateFormTeacher').val(),
+            groupId: $('#groupToFormTeacher').val()
+        },
+        function(data){
+            if(data.error === true) {
+                Tecnotek.showErrorMessage(data.message,true, "", false);
+            } else {
+                $.fancybox.close();
+                Tecnotek.AdminPeriod.loadCoursesAssignedByTeacher($('#teachers').val());
+            }
+        },
+        function(jqXHR, textStatus){
+            Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
+            $(this).val("");
+        }, true);
+}
 };

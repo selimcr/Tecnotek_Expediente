@@ -5,293 +5,358 @@
 {% endblock %}
 
 {% block extracss %}
-<link rel="stylesheet" href="{{ asset('fancybox/jquery.fancybox.css') }}" type="text/css" media="all" />
-<link rel="stylesheet" href="{{ asset('fancybox/fancybox_style.css') }}" type="text/css" media="all" />
+    <link rel="stylesheet" href="{{ asset('fancybox/jquery.fancybox.css') }}" type="text/css" media="all" />
+    <link rel="stylesheet" href="{{ asset('fancybox/fancybox_style.css') }}" type="text/css" media="all" />
 {% endblock %}
 
 {% block extrajs %}
-<script type="text/javascript" src="{{ asset('fancybox/jquery.fancybox.js?v=2.0.6') }}"></script>
-<script type="text/javascript" src="{{ asset('js/tek_exp_period_admin.js') }}"></script>
-<script type="text/javascript">
-    Tecnotek.UI.urls["deleteURL"] = "{{ path("_delete_period", {id: entity.id}) }}";
-    Tecnotek.UI.translates["confirmDelete"] = "{% trans %}messages.confirmation.period.delete{% endtrans %}";
+    <script type="text/javascript" src="{{ asset('fancybox/jquery.fancybox.js?v=2.0.6') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/tek_exp_period_admin.js') }}"></script>
+    <script type="text/javascript">
+        Tecnotek.UI.urls["deleteURL"] = "{{ path("_delete_period", {id: entity.id}) }}";
+        Tecnotek.UI.translates["confirmDelete"] = "{% trans %}messages.confirmation.period.delete{% endtrans %}";
 
-    Tecnotek.UI.urls["createEntryURL"] = "{{ path("_expediente_sysadmin_create_entry") }}";
-    Tecnotek.UI.urls["associateCourseURL"] = "{{ path("_expediente_sysadmin_associate_course") }}";
-    Tecnotek.UI.urls["loadAvailableCoursesForGradeURL"] = "{{ path("_expediente_sysadmin_load_courses_by_grade") }}";
-    Tecnotek.UI.urls["deleteGroupURL"] = "{{ path("_expediente_sysadmin_group_remove") }}";
-    Tecnotek.UI.urls["deleteEntryURL"] = "{{ path("_expediente_sysadmin_entry_remove") }}";
-    Tecnotek.UI.urls["deleteCourseAssociationURL"] = "{{ path("_expediente_sysadmin_course_association_remove") }}";
-    Tecnotek.UI.urls["loadPeriodInfoByGradeURL"] = "{{ path("_expediente_sysadmin_load_period_info") }}";
-    Tecnotek.UI.urls["loadEntriesByCourseURL"] = "{{ path("_expediente_sysadmin_load_entries_by_course") }}";
-    Tecnotek.UI.urls["saveGroupURL"] = "{{ path("_expediente_sysadmin_group_save") }}";
-    Tecnotek.module = "adminPeriod";
-    Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
-    Tecnotek.UI.vars["periodId"] = {{ entity.id }};
-    Tecnotek.UI.vars["groupId"] = 0;
+        Tecnotek.UI.urls["createEntryURL"] = "{{ path("_expediente_sysadmin_create_entry") }}";
+        Tecnotek.UI.urls["associateCourseURL"] = "{{ path("_expediente_sysadmin_associate_course") }}";
+        Tecnotek.UI.urls["loadAvailableCoursesForGradeURL"] = "{{ path("_expediente_sysadmin_load_courses_by_grade") }}";
+        Tecnotek.UI.urls["deleteGroupURL"] = "{{ path("_expediente_sysadmin_group_remove") }}";
+        Tecnotek.UI.urls["deleteEntryURL"] = "{{ path("_expediente_sysadmin_entry_remove") }}";
+        Tecnotek.UI.urls["deleteCourseAssociationURL"] = "{{ path("_expediente_sysadmin_course_association_remove") }}";
+        Tecnotek.UI.urls["loadPeriodInfoByGradeURL"] = "{{ path("_expediente_sysadmin_load_period_info") }}";
+        Tecnotek.UI.urls["loadEntriesByCourseURL"] = "{{ path("_expediente_sysadmin_load_entries_by_course") }}";
+        Tecnotek.UI.urls["saveGroupURL"] = "{{ path("_expediente_sysadmin_group_save") }}";
+        Tecnotek.module = "adminPeriod";
+        Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
+        Tecnotek.UI.vars["periodId"] = {{ entity.id }};
+        Tecnotek.UI.vars["groupId"] = 0;
 
-    Tecnotek.UI.urls["getStudentsURL"] = "{{ path("_expediente_get_students_list_for_group") }}";
-    Tecnotek.UI.urls["setStudentToGroup"] = "{{ path("_expediente_set_student_to_group") }}";
-    Tecnotek.UI.urls["getGroupStudentsURL"] = "{{ path("_expediente_get_students_list_of_group") }}";
-    Tecnotek.UI.urls["removeStudentFromGroupURL"] = "{{ path("_expediente_remove_student_from_group") }}";
-</script>
+
+        Tecnotek.UI.urls["loadCoursesByTeacherURL"] = "{{ path("_expediente_sysadmin_load_courses_groups_by_teacher") }}";
+        Tecnotek.UI.urls["loadAvailableCoursesForTeacher"] = "{{ path("_expediente_sysadmin_load_courses_by_teacher_group") }}";
+        Tecnotek.UI.urls["deleteTeacherAssignedURL"] = "{{ path("_expediente_sysadmin_teacher_assigned_remove") }}";
+        Tecnotek.UI.urls["loadCoursesClassForGroupURL"] = "{{ path("_expediente_sysadmin_load_course_class_by_group") }}";
+        Tecnotek.UI.urls["createTeacherAssignedURL"] = "{{ path("_expediente_sysadmin_create_teacher_assigned") }}";
+
+        Tecnotek.UI.urls["getStudentsURL"] = "{{ path("_expediente_get_students_list_for_group") }}";
+        Tecnotek.UI.urls["setStudentToGroup"] = "{{ path("_expediente_set_student_to_group") }}";
+        Tecnotek.UI.urls["getGroupStudentsURL"] = "{{ path("_expediente_get_students_list_of_group") }}";
+        Tecnotek.UI.urls["removeStudentFromGroupURL"] = "{{ path("_expediente_remove_student_from_group") }}";
+    </script>
 {% endblock %}
 
 {% block content %}
-<div class="container_24">
+    <div class="container_24">
     <div class="grid_24">
-        <div>
-            <div class="left"><h3>{% trans %}label.period.admin{% endtrans %}: {{ entity }}</h3></div>
-            <div class="right"><a href="{{ path('_expediente_sysadmin_period') }}" class="button success-darker tiny"><span></span>{% trans %}label.back.list{% endtrans %}</a></div>
-            <div class="clear"></div>
+    <div>
+        <div class="left"><h3>{% trans %}label.period.admin{% endtrans %}: {{ entity }}</h3></div>
+        <div class="right"><a href="{{ path('_expediente_sysadmin_period') }}" class="button success-darker tiny"><span></span>{% trans %}label.back.list{% endtrans %}</a></div>
+        <div class="clear"></div>
+    </div>
+
+    <div class="centeredDiv">
+    <div class="formContainer" style="width: 920px; height: 650px;">
+    <div id="showContainer">
+    <div style="margin-bottom: 10px;">
+        <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.grade{%endtrans%}</div>
+        <div id="labelName" class="left">
+            <select id="grade" name="grade">
+                {% for grade in grades %}
+                    <option value="{{ grade.id }}">{{grade}}</option>
+                {% endfor %}
+            </select>
         </div>
 
-        <div class="centeredDiv">
-            <div class="formContainer" style="width: 920px; height: 650px;">
-                <div id="showContainer">
-                    <div style="margin-bottom: 10px;">
-                        <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.grade{%endtrans%}</div>
-                        <div id="labelName" class="left">
-                            <select id="grade" name="grade">
-                                {% for grade in grades %}
-                                    <option value="{{ grade.id }}">{{grade}}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
+        <div id="coursesContainer" class="right" style="margin-left: 50px; display: none;">
+            <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.courses{%endtrans%}</div>
+            <div class="left">
+                <select id="periodCourses" name="periodCourses">
+                </select>
+            </div>
+        </div>
 
-                        <div id="coursesContainer" class="right" style="margin-left: 50px; display: none;">
-                            <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.courses{%endtrans%}</div>
-                            <div class="left">
-                                <select id="periodCourses" name="periodCourses">
-                                </select>
-                            </div>
-                        </div>
+        <div id="teacherContainer" class="right" style="margin-left: 50px; display: none;">
+            <div class="left" style="width: 150px; font-weight: bold;">{%trans%}label.teachers{%endtrans%}</div>
+            <div class="left">
+                <select id="teachers" name="teachers">
+                    <option value="0"></option>
+                    {% for teacher in teachers %}
+                        <option value="{{ teacher.id }}">{{ teacher.firstname ~ " " ~ teacher.lastname }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
 
-                        <div class="clear"></div>
-                    </div>
-                    <!-- Tabs -->
-                    <div class="section-container auto" data-section>
-                        <section class="section">
-                            <p class="title" id="groupTab"><a href="#panel1">{%trans%}label.groups{%endtrans%}</a></p>
-                            <div class="content">
-                                <!-- Content of Tab #1 -->
-                                <div class="left">
-                                    <div class="row tableHeader">
-                                        <div class="option_width" style="float: left; width: 250px;">{% trans %}label.name{% endtrans %}</div>
-                                        <div class="option_width" style="float: left; width: 250px;">{% trans %}label.teacher.guide{% endtrans %}</div>
-                                        <div class="option_width" style="float: left; width: 250px;">{% trans %}label.institution{% endtrans %}</div>
-                                        <a id="openGroupForm" class="modalbox right button success-darker tiny" style="margin: 5px 0px 0px 0px;" href="#groupFormContainer">{% trans %}label.new{% endtrans %}</a>
-                                    </div>
-                                    <div id="groupRows" name="groupRows">
-
-                                    </div>
-                                </div>
-                                <div class="clear"></div>
-                                <br/>
-
-                                <!-- hidden groupForm form -->
-                                <div id="groupFormContainer" style="display: none;">
-                                    <h3 style="margin-bottom: 0px;">Crear nuevo grupo</h3>
-
-                                    <form class="customForm" id="groupForm" name="groupForm">
-                                        <div class="formErrors"></div>
-
-                                        <div style="margin-bottom: 5px;">
-                                            <label style="display: inline-block; width: 120px">{% trans %}label.name{% endtrans %}</label>
-                                            <input id="groupFormName" name="groupFormName" style="width: 250px">
-                                        </div>
-
-                                        <div style="margin-bottom: 5px;">
-                                            <label style="display: inline-block; width: 120px">{% trans %}label.teacher.guide{% endtrans %}</label>
-                                            <select id="groupFormTeacher" name="groupFormTeacher" style="width: 250px;">
-                                                {% for teacher in teachers %}
-                                                <option value="{{ teacher.id }}">{{ teacher.firstname ~ " " ~ teacher.lastname }}</option>
-                                                {% endfor %}
-                                            </select>
-                                        </div>
-
-                                        <div style="margin-bottom: 5px;">
-                                            <label style="display: inline-block; width: 120px">{% trans %}label.institution{% endtrans %}</label>
-                                            <select id="groupFormInstitution" name="groupFormInstitution" style="width: 250px;">
-                                                {% for institution in institutions %}
-                                                <option value="{{ institution.id }}">{{ institution.name }}</option>
-                                                {% endfor %}
-                                            </select>
-                                        </div>
-
-                                        <div class="left "><input class="button success-darker tiny" style="margin-top: 0px;" type="button" name="groupFormCancel" id="groupFormCancel" value="{% trans %}label.cancelar{% endtrans %}"/></div>
-                                        <div class="left"><input class="button success-darker tiny" style="margin-top: 0px; margin-left: 25px;" type="submit" name="save" value="{% trans %}label.save{% endtrans %}"/></div>
-                                        <div class="clear"></div>
-                                    </form>
-                                </div>
-
-                                <!-- hidden studentsToGroup form -->
-                                <div id="studentsToGroupContainer" style="display: none; width: 700px;">
-                                    <div>
-                                        <h3 style="margin-bottom: 0px;" class="left">Estudiantes en el grupo: &nbsp;<span id="groupNameOfList" name="groupNameOfList"></span></h3>
-                                        <a id="openStudentsToGroup" class="modalbox left" href="#studentsToGroupContainer">&nbsp;</a>
-                                        <div class="right"><input class="button success-darker tiny" style="margin-top: 0px;" type="button" name="studentsToGroupCancel" id="studentsToGroupCancel" value="{% trans %}label.cancelar{% endtrans %}"/></div>
-                                        <div class="clear"></div>
-                                    </div>
-
-
-                                    <div class="left table">
-                                        <div class="row tableHeader">
-                                            <div class="option_width" style="float: left; width: 300px;">{% trans %}label.name{% endtrans %}</div>
-                                        </div>
-                                        <div class="left" id="studentsList" style="height: 250px; overflow: scroll;">
-
-                                        </div>
-                                    </div>
-
-                                    <div class="left" style="width: 275px; margin-left: 20px;">
-                                        <form id="searchform">
-                                            <div>
-                                                <div>{% trans %}group.include.students{%endtrans%}</div>
-                                                <div style="font-size: 10px;">{% trans %}club.include.help{%endtrans%}</div>
-
-                                                <input type="text" size="30" value="" id="searchBox"/>
-                                            </div>
-                                            <div id="suggestions"></div>
-                                        </form>
-                                    </div>
-                                    <div class="clear"></div>
-
-                                </div>
-                                <!-- End Content of Tab #1-->
-                            </div>
-                        </section>
-                        <section class="section">
-                            <p class="title" id="courseTab"><a href="#panel2">{%trans%}label.courses{%endtrans%}</a></p>
-                            <div class="content">
-                                <!-- Content of Tab #2 -->
-                                <div class="left table">
-                                    <div class="row tableHeader">
-                                        <div class="option_width" style="float: left; width: 250px;">{% trans %}label.name{% endtrans %}</div>
-                                        <div class="option_width" style="float: left; width: 250px;">{% trans %}label.teacher.default{% endtrans %}</div>
-                                        <a id="openCourseForm" class="modalbox button success-darker tiny" href="#courseFormContainer">{% trans %}label.include{% endtrans %}</a>
-                                    </div>
-                                    <div id="courseRows" name="courseRows">
-
-                                    </div>
-                                </div>
-                                <div class="clear"></div>
-                                <br/>
-
-                                <!-- hidden courseFormContainer form -->
-                                <div id="courseFormContainer" style="display: none;">
-                                    <h3 style="margin-bottom: 0px;">Incluir materia</h3>
-
-                                    <form class="customForm" id="courseForm" name="courseForm">
-
-                                        <div style="margin-bottom: 5px;">
-                                            <label style="display: inline-block; width: 165px">{% trans %}label.course{% endtrans %}</label>
-                                            <select id="courseToAsociate" name="courseToAsociate" style="width: 250px;">
-                                            </select>
-                                        </div>
-
-                                        <div style="margin-bottom: 5px;">
-                                            <label style="display: inline-block; width: 165px">{% trans %}label.teacher.default{% endtrans %}</label>
-                                            <select id="courseFormTeacher" name="courseFormTeacher" style="width: 250px;">
-                                                {% for teacher in teachers %}
-                                                <option value="{{ teacher.id }}">{{teacher.firstname ~ " " ~ teacher.lastname}}</option>
-                                                {% endfor %}
-                                            </select>
-                                        </div>
-
-                                        <div class="left"><input class="button success-darker tiny" style="margin-top: 0px;" type="button" name="groupFormCancel" id="courseFormCancel" value="{% trans %}label.cancelar{% endtrans %}"/></div>
-                                        <div class="left"><input class="button success-darker tiny" style="margin-top: 0px; margin-left: 25px;" type="submit" name="save" value="{% trans %}label.include{% endtrans %}"/></div>
-                                        <div class="clear"></div>
-                                    </form>
-                                </div>
-
-                                <div class="clear"></div>
-                                <!-- End Content of Tab #2 -->
-                            </div>
-                        </section>
-                        <section class="section">
-                            <p class="title" id="entriesTab"><a href="#panel2">{%trans%}label.entries.by.course{%endtrans%}</a></p>
-                            <div class="content">
-                                <!-- Content of Tab #3 -->
-                                <div class="left table" style="width: 100%">
-                                    <div class="row tableHeader">
-                                        <div class="option_width" style="float: left; width: 150px;">{% trans %}label.name{% endtrans %}</div>
-                                        <div class="option_width" style="float: left; width: 100px;">{% trans %}label.code{% endtrans %}</div>
-                                        <div class="option_width" style="float: left; width: 100px;">{% trans %}label.percentage{% endtrans %}</div>
-                                        <div class="option_width" style="float: left; width: 100px;">{% trans %}label.max_value{% endtrans %}</div>
-                                        <div class="option_width" style="float: left; width: 100px;">{% trans %}label.order{% endtrans %}</div>
-                                        <div class="option_width" style="float: left; width: 150px;">{% trans %}label.parent{% endtrans %}</div>
-                                        <a id="openEntryForm" class="right modalbox button success-darker tiny" style="margin: 4px 0px 0px 0px;" href="#entryFormContainer">{% trans %}label.include{% endtrans %}</a>
-                                    </div>
-                                    <div id="entriesRows" name="entriesRows">
-                                    </div>
-                                </div>
-                                <div class="clear"></div>
-                                <br/>
-
-                                <!-- hidden courseFormContainer form -->
-                                <div id="entryFormContainer" style="display: none;">
-                                    <h3 style="margin-bottom: 0px;"><div class="left" id="entryTitleOption" name="entryTitleOption"></div> &nbsp; rubro</h3>
-
-                                    <form class="customForm" id="entryForm" name="entryForm">
-                                        <input type="hidden" id="entryFormCourseClassId" name="entryFormCourseClassId" value="0">
-                                        <div id="formEntryError" class="formErrors"></div>
-
-                                        <div style="margin-bottom: 5px;">
-                                            <label style="display: inline-block; width: 150px">{% trans %}label.name{% endtrans %}</label>
-                                            <input id="entryFormName" name="entryFormName" style="width: 250px">
-                                        </div>
-
-                                        <div style="margin-bottom: 5px;">
-                                            <label style="display: inline-block; width: 150px">{% trans %}label.code{% endtrans %}</label>
-                                            <input id="entryFormCode" name="entryFormCode" style="width: 250px">
-                                        </div>
-
-                                        <div style="margin-bottom: 5px;">
-                                            <label style="display: inline-block; width: 150px">{% trans %}label.percentage{% endtrans %}</label>
-                                            <input id="entryFormPercentage" name="entryFormPercentage" style="width: 250px">
-                                        </div>
-
-                                        <div style="margin-bottom: 5px;">
-                                            <label style="display: inline-block; width: 150px">{% trans %}label.max_value{% endtrans %}</label>
-                                            <input id="entryFormMaxValue" name="entryFormMaxValue" style="width: 250px">
-                                        </div>
-
-                                        <div style="margin-bottom: 5px;">
-                                            <label style="display: inline-block; width: 150px">{% trans %}label.order{% endtrans %}</label>
-                                            <input type="number" id="entryFormSortOrder" name="entryFormSortOrder" style="width: 250px">
-                                        </div>
-
-                                        <div style="margin-bottom: 5px;">
-                                            <label style="display: inline-block; width: 150px">{% trans %}label.parent{% endtrans %}</label>
-                                            <select id="entryFormParent" name="entryFormParent" style="width: 250px;">
-                                            </select>
-                                        </div>
-
-                                        <div class="left"><input class="button success-darker tiny" style="margin-top: 0px;" type="button" name="entryFormCancel" id="entryFormCancel" value="{% trans %}label.cancelar{% endtrans %}"/></div>
-                                        <div class="left"><input class="button success-darker tiny" style="margin-top: 0px; margin-left: 25px;" type="submit" name="save" value="{% trans %}label.save{% endtrans %}"/></div>
-                                        <div class="clear"></div>
-                                    </form>
-                                </div>
-
-                                <div class="clear"></div>
-                                <!-- End Content of Tab #3 -->
-                            </div>
-                        </section>
-                    </div>
-
-
+        <div class="clear"></div>
+    </div>
+    <!-- Tabs -->
+    <div class="section-container auto" data-section>
+    <section class="section">
+        <p class="title" id="groupTab"><a href="#panel1">{%trans%}label.groups{%endtrans%}</a></p>
+        <div class="content">
+            <!-- Content of Tab #1 -->
+            <div class="left">
+                <div class="row tableHeader">
+                    <div class="option_width" style="float: left; width: 250px;">{% trans %}label.name{% endtrans %}</div>
+                    <div class="option_width" style="float: left; width: 250px;">{% trans %}label.teacher.guide{% endtrans %}</div>
+                    <div class="option_width" style="float: left; width: 250px;">{% trans %}label.institution{% endtrans %}</div>
+                    <a id="openGroupForm" class="modalbox right button success-darker tiny" style="margin: 5px 0px 0px 0px;" href="#groupFormContainer">{% trans %}label.new{% endtrans %}</a>
+                </div>
+                <div id="groupRows" name="groupRows">
 
                 </div>
-            </div>    
-        </div>        
-        <div class="clear"></div>
+            </div>
+            <div class="clear"></div>
+            <br/>
+
+            <!-- hidden groupForm form -->
+            <div id="groupFormContainer" style="display: none;">
+                <h3 style="margin-bottom: 0px;">Crear nuevo grupo</h3>
+
+                <form class="customForm" id="groupForm" name="groupForm">
+                    <div class="formErrors"></div>
+
+                    <div style="margin-bottom: 5px;">
+                        <label style="display: inline-block; width: 120px">{% trans %}label.name{% endtrans %}</label>
+                        <input id="groupFormName" name="groupFormName" style="width: 250px">
+                    </div>
+
+                    <div style="margin-bottom: 5px;">
+                        <label style="display: inline-block; width: 120px">{% trans %}label.teacher.guide{% endtrans %}</label>
+                        <select id="groupFormTeacher" name="groupFormTeacher" style="width: 250px;">
+                            {% for teacher in teachers %}
+                                <option value="{{ teacher.id }}">{{ teacher.firstname ~ " " ~ teacher.lastname }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div style="margin-bottom: 5px;">
+                        <label style="display: inline-block; width: 120px">{% trans %}label.institution{% endtrans %}</label>
+                        <select id="groupFormInstitution" name="groupFormInstitution" style="width: 250px;">
+                            {% for institution in institutions %}
+                                <option value="{{ institution.id }}">{{ institution.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="left "><input class="button success-darker tiny" style="margin-top: 0px;" type="button" name="groupFormCancel" id="groupFormCancel" value="{% trans %}label.cancelar{% endtrans %}"/></div>
+                    <div class="left"><input class="button success-darker tiny" style="margin-top: 0px; margin-left: 25px;" type="submit" name="save" value="{% trans %}label.save{% endtrans %}"/></div>
+                    <div class="clear"></div>
+                </form>
+            </div>
+
+            <!-- hidden studentsToGroup form -->
+            <div id="studentsToGroupContainer" style="display: none; width: 700px;">
+                <div>
+                    <h3 style="margin-bottom: 0px;" class="left">Estudiantes en el grupo: &nbsp;<span id="groupNameOfList" name="groupNameOfList"></span></h3>
+                    <a id="openStudentsToGroup" class="modalbox left" href="#studentsToGroupContainer">&nbsp;</a>
+                    <div class="right"><input class="button success-darker tiny" style="margin-top: 0px;" type="button" name="studentsToGroupCancel" id="studentsToGroupCancel" value="{% trans %}label.cancelar{% endtrans %}"/></div>
+                    <div class="clear"></div>
+                </div>
+
+
+                <div class="left table">
+                    <div class="row tableHeader">
+                        <div class="option_width" style="float: left; width: 300px;">{% trans %}label.name{% endtrans %}</div>
+                    </div>
+                    <div class="left" id="studentsList" style="height: 250px; overflow: scroll;">
+
+                    </div>
+                </div>
+
+                <div class="left" style="width: 275px; margin-left: 20px;">
+                    <form id="searchform">
+                        <div>
+                            <div>{% trans %}group.include.students{%endtrans%}</div>
+                            <div style="font-size: 10px;">{% trans %}club.include.help{%endtrans%}</div>
+
+                            <input type="text" size="30" value="" id="searchBox"/>
+                        </div>
+                        <div id="suggestions"></div>
+                    </form>
+                </div>
+                <div class="clear"></div>
+
+            </div>
+            <!-- End Content of Tab #1-->
+        </div>
+    </section>
+    <section class="section">
+        <p class="title" id="courseTab"><a href="#panel2">{%trans%}label.courses{%endtrans%}</a></p>
+        <div class="content">
+            <!-- Content of Tab #2 -->
+            <div class="left table">
+                <div class="row tableHeader">
+                    <div class="option_width" style="float: left; width: 250px;">{% trans %}label.name{% endtrans %}</div>
+                    <div class="option_width" style="float: left; width: 250px;">{% trans %}label.teacher.default{% endtrans %}</div>
+                    <a id="openCourseForm" class="modalbox button success-darker tiny" href="#courseFormContainer">{% trans %}label.include{% endtrans %}</a>
+                </div>
+                <div id="courseRows" name="courseRows">
+
+                </div>
+            </div>
+            <div class="clear"></div>
+            <br/>
+
+            <!-- hidden courseFormContainer form -->
+            <div id="courseFormContainer" style="display: none;">
+                <h3 style="margin-bottom: 0px;">Incluir materia</h3>
+
+                <form class="customForm" id="courseForm" name="courseForm">
+
+
+                    <div style="margin-bottom: 5px;">
+                        <label style="display: inline-block; width: 165px">{% trans %}label.course{% endtrans %}</label>
+                        <select id="courseToAsociate" name="courseToAsociate" style="width: 250px;">
+                        </select>
+                    </div>
+
+                    <div style="margin-bottom: 5px;">
+                        <label style="display: inline-block; width: 165px">{% trans %}label.teacher.default{% endtrans %}</label>
+                        <select id="courseFormTeacher" name="courseFormTeacher" style="width: 250px;">
+                            {% for teacher in teachers %}
+                                <option value="{{ teacher.id }}">{{teacher.firstname ~ " " ~ teacher.lastname}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+
+                    <div class="left"><input class="button success-darker tiny" style="margin-top: 0px;" type="button" name="groupFormCancel" id="courseFormCancel" value="{% trans %}label.cancelar{% endtrans %}"/></div>
+                    <div class="left"><input class="button success-darker tiny" style="margin-top: 0px; margin-left: 25px;" type="submit" name="save" value="{% trans %}label.include{% endtrans %}"/></div>
+                    <div class="clear"></div>
+                </form>
+            </div>
+
+            <div class="clear"></div>
+            <!-- End Content of Tab #2 -->
+        </div>
+    </section>
+    <section class="section">
+        <p class="title" id="teacherTab"><a href="#panel2">{%trans%}label.teacher{%endtrans%}</a></p>
+        <div class="content">
+            <!-- Content of Tab #2 -->
+            <div class="left table">
+                <div class="row tableHeader">
+                    <div class="option_width" style="float: left; width: 150px;">{% trans %}label.course{% endtrans %}</div>
+                    <div class="option_width" style="float: left; width: 150px;">{% trans %}label.group{% endtrans %}</div>
+                    <a id="openTeacherForm" class="modalbox button success-darker tiny" href="#teacherAssignedFormContainer">{% trans %}label.add{% endtrans %}</a>
+                </div>
+                <div id="courseTeacherRows" name="courseTeacherRows">
+                </div>
+            </div>
+            <div class="clear"></div>
+            <br/>
+
+            <!-- hidden teacherAssignedFormContainer form -->
+            <div id="teacherAssignedFormContainer" style="display: none;">
+                <h3 style="margin-bottom: 0px;">Incluir materia</h3>
+
+                <form class="customForm" id="teacherForm" name="teacherForm">
+
+                    <div style="margin-bottom: 5px;">
+                        <label style="display: inline-block; width: 165px">{% trans %}label.group{% endtrans %}</label>
+                        <select id="groupToFormTeacher" name="groupToFormTeacher" style="width: 250px;">
+                        </select>
+                    </div>
+
+                    <div style="margin-bottom: 5px;">
+                        <label style="display: inline-block; width: 165px">{% trans %}label.course{% endtrans %}</label>
+                        <select id="courseToAsociateFormTeacher" name="courseToAsociateFormTeacher" style="width: 250px;">
+                        </select>
+                    </div>
+
+                    <div class="left"><input class="button success-darker tiny" style="margin-top: 0px;" type="button" name="courseFormTeacherCancel" id="courseFormTeacherCancel" value="{% trans %}label.cancelar{% endtrans %}"/></div>
+                    <div class="left"><input class="button success-darker tiny" style="margin-top: 0px; margin-left: 25px;" type="submit" name="save" value="{% trans %}label.include{% endtrans %}"/></div>
+                    <div class="clear"></div>
+                </form>
+            </div>
+
+            <div class="clear"></div>
+            <!-- End Content of Tab #2 -->
+        </div>
+    </section>
+    <section class="section">
+        <p class="title" id="entriesTab"><a href="#panel2">{%trans%}label.entries.by.course{%endtrans%}</a></p>
+        <div class="content">
+            <!-- Content of Tab #3 -->
+            <div class="left table" style="width: 100%">
+                <div class="row tableHeader">
+                    <div class="option_width" style="float: left; width: 150px;">{% trans %}label.name{% endtrans %}</div>
+                    <div class="option_width" style="float: left; width: 100px;">{% trans %}label.code{% endtrans %}</div>
+                    <div class="option_width" style="float: left; width: 100px;">{% trans %}label.percentage{% endtrans %}</div>
+                    <div class="option_width" style="float: left; width: 100px;">{% trans %}label.max_value{% endtrans %}</div>
+                    <div class="option_width" style="float: left; width: 100px;">{% trans %}label.order{% endtrans %}</div>
+                    <div class="option_width" style="float: left; width: 150px;">{% trans %}label.parent{% endtrans %}</div>
+                    <a id="openEntryForm" class="right modalbox button success-darker tiny" style="margin: 4px 0px 0px 0px;" href="#entryFormContainer">{% trans %}label.include{% endtrans %}</a>
+                </div>
+                <div id="entriesRows" name="entriesRows">
+                </div>
+            </div>
+            <div class="clear"></div>
+            <br/>
+
+            <!-- hidden courseFormContainer form -->
+            <div id="entryFormContainer" style="display: none;">
+                <h3 style="margin-bottom: 0px;"><div class="left" id="entryTitleOption" name="entryTitleOption"></div> &nbsp; rubro</h3>
+
+                <form class="customForm" id="entryForm" name="entryForm">
+                    <input type="hidden" id="entryFormCourseClassId" name="entryFormCourseClassId" value="0">
+                    <div id="formEntryError" class="formErrors"></div>
+
+                    <div style="margin-bottom: 5px;">
+                        <label style="display: inline-block; width: 150px">{% trans %}label.name{% endtrans %}</label>
+                        <input id="entryFormName" name="entryFormName" style="width: 250px">
+                    </div>
+
+                    <div style="margin-bottom: 5px;">
+                        <label style="display: inline-block; width: 150px">{% trans %}label.code{% endtrans %}</label>
+                        <input id="entryFormCode" name="entryFormCode" style="width: 250px">
+                    </div>
+
+                    <div style="margin-bottom: 5px;">
+                        <label style="display: inline-block; width: 150px">{% trans %}label.percentage{% endtrans %}</label>
+                        <input id="entryFormPercentage" name="entryFormPercentage" style="width: 250px">
+                    </div>
+
+                    <div style="margin-bottom: 5px;">
+                        <label style="display: inline-block; width: 150px">{% trans %}label.max_value{% endtrans %}</label>
+                        <input id="entryFormMaxValue" name="entryFormMaxValue" style="width: 250px">
+                    </div>
+
+                    <div style="margin-bottom: 5px;">
+                        <label style="display: inline-block; width: 150px">{% trans %}label.order{% endtrans %}</label>
+                        <input type="number" id="entryFormSortOrder" name="entryFormSortOrder" style="width: 250px">
+                    </div>
+
+                    <div style="margin-bottom: 5px;">
+                        <label style="display: inline-block; width: 150px">{% trans %}label.parent{% endtrans %}</label>
+                        <select id="entryFormParent" name="entryFormParent" style="width: 250px;">
+                        </select>
+                    </div>
+
+                    <div class="left"><input class="button success-darker tiny" style="margin-top: 0px;" type="button" name="entryFormCancel" id="entryFormCancel" value="{% trans %}label.cancelar{% endtrans %}"/></div>
+                    <div class="left"><input class="button success-darker tiny" style="margin-top: 0px; margin-left: 25px;" type="submit" name="save" value="{% trans %}label.save{% endtrans %}"/></div>
+                    <div class="clear"></div>
+                </form>
+            </div>
+
+            <div class="clear"></div>
+            <!-- End Content of Tab #3 -->
+        </div>
+    </section>
+    </div>
+
+
+
+    </div>
+    </div>
+    </div>
+    <div class="clear"></div>
     </div>
     <div class="clear"></div>
     <div class="wrapper">
-            <div class="grid_24 padline">
-                    <div class="lineH"></div>
-            </div>
+        <div class="grid_24 padline">
+            <div class="lineH"></div>
+        </div>
     </div>
-</div>
+    </div>
 {% endblock %}

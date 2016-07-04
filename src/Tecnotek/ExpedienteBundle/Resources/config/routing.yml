@@ -528,6 +528,10 @@ _expediente_sysadmin_get_relative_info:
     pattern:  /students/getRelativeInfo
     defaults: { _controller: TecnotekExpedienteBundle:Student:getRelativeInfo}
 
+_expediente_sysadmin_get_info_relatives:
+    pattern:  /students/getInfoRelatives
+    defaults: { _controller: TecnotekExpedienteBundle:Student:getInfoRelatives}
+
 _expediente_get_contacts_list:
     pattern:  /students/contact/list
     defaults: { _controller: TecnotekExpedienteBundle:Student:getContactList }
@@ -666,6 +670,14 @@ _expediente_report_best_averages_by_group:
 _expediente_report_best_averages_by_group_detail:
    pattern:  /reports/averagesOfPeriod/load
    defaults: { _controller: TecnotekExpedienteBundle:Report:averagesOfGroup }
+
+_expediente_report_best_absences_by_group:
+   pattern:  /reports/absencesOfPeriod/
+   defaults: { _controller: TecnotekExpedienteBundle:Report:absencesOfPeriod }
+
+_expediente_report_best_absences_by_group_detail:
+   pattern:  /reports/absencesOfPeriod/load
+   defaults: { _controller: TecnotekExpedienteBundle:Report:absencesOfGroup }
 
 _expediente_report_group_qualifications:
    pattern:  /reports/groupQualifications/
@@ -864,6 +876,26 @@ _expediente_sysadmin_associate_course:
 _expediente_sysadmin_course_association_remove:
   pattern:  /period/couseAssociationRemove/
   defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:courseAssociationRemove }
+
+_expediente_sysadmin_load_courses_groups_by_teacher:
+  pattern:  /period/teachers/load/
+  defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:loadCoursesByTeacher }
+
+_expediente_sysadmin_load_course_class_by_group:
+  pattern: /period/teachersCourses/load/
+  defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:loadAvailableCourseClass }
+
+_expediente_sysadmin_teacher_assigned_remove:
+    pattern:  /teachers/remove/
+    defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:removeTeacherAssigned }
+
+_expediente_sysadmin_load_courses_by_teacher_group:
+  pattern: /period/loadCoursesByTeacher/
+  defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:loadAvailableCoursesGroups }
+
+_expediente_sysadmin_create_teacher_assigned:
+  pattern:  /teachers/create/
+  defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:createTeacherAssigned }
 
 _expediente_sysadmin_qualifications:
   pattern:  /qualifications/

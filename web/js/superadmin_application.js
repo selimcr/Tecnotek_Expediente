@@ -153,6 +153,9 @@ var Tecnotek = {
                 case "periodGroupAverages":
                     Tecnotek.PeriodGroupAverages.init();
                     break;
+                case "periodGroupAbsences":
+                    Tecnotek.PeriodGroupAbsences.init();
+                    break;
                 case "groupQualificationsByRubro":
                     Tecnotek.GroupQualificationsByRubro.init();
                     break;
@@ -2238,6 +2241,165 @@ var Tecnotek = {
             });
         }
 	};
+
+Tecnotek.PeriodGroupAbsences = {
+    translates : {},
+    completeText: "",
+    studentsIndex: 0,
+    periodId: 0,
+    groupId: 0,
+    studentsLength: 0,
+    init : function() {
+        $("#period").change(function(event){
+            event.preventDefault();
+            $('#subentryFormParent').empty();
+            Tecnotek.PeriodGroupAbsences.loadPeriodLevels($(this).val());
+        });
+
+        $("#levels").change(function(event){
+            event.preventDefault();
+            //: function($periodId, $levelId)
+            Tecnotek.PeriodGroupAbsences.loadGroupsOfPeriodAndLevel($('#period').val(), $(this).val());
+        });
+
+        $("#groups").change(function(event){
+            event.preventDefault();
+            Tecnotek.PeriodGroupAbsences.loadAbsencesOfGroup($('#period').val(), $('#group').val());
+        });
+
+        Tecnotek.PeriodGroupAbsences.loadPeriodLevels($('#period').val());
+        Tecnotek.PeriodGroupAbsences.initButtons();
+    },
+    initButtons : function() {
+        $('#btnPrint').click(function(event){
+            $("#tableContainer").printElement({printMode:'popup', pageTitle:$(this).attr('rel')});
+        });
+    },
+    loadPeriodLevels: function($periodId){
+        if(($periodId!==null)){
+            $('#levels').children().remove();
+            $('#groups').children().remove();
+            Tecnotek.ajaxCall(Tecnotek.UI.urls["loadLevelsOfPeriodURL"],
+                {   periodId: $periodId },
+                function(data){
+                    if(data.error === true) {
+                        Tecnotek.showErrorMessage(data.message,true, "", false);
+                    } else {
+                        $('#levels').append('<option value="0">Todos</option>');
+                        for(i=0; i<data.levels.length; i++) {
+                            $('#levels').append('<option value="' + data.levels[i].id + '">' + data.levels[i].name + '</option>');
+                        }
+                        Tecnotek.PeriodGroupAbsences.loadGroupsOfPeriodAndLevel($('#period').val(), $('#levels').val());
+                    }
+                },
+                function(jqXHR, textStatus){
+                    Tecnotek.showErrorMessage("Error getting data : " + textStatus + ".", true, "", false);
+                    $(this).val("");
+                }, true);
+        }
+    },
+    loadGroupsOfPeriod: function($periodId) {
+        console.debug("Load groups of period: " + $periodId);
+        if(($periodId!==null)){
+            $('#groups').children().remove();
+            $('#students').children().remove();
+            $('#subentryFormParent').empty();
+            $('#tableContainer').hide();
+            Tecnotek.ajaxCall(Tecnotek.UI.urls["loadGroupsOfPeriodURL"],
+                {   periodId: $periodId },
+                function(data){
+                    if(data.error === true) {
+                        Tecnotek.showErrorMessage(data.message,true, "", false);
+                    } else {
+                        for(i=0; i<data.groups.length; i++) {
+                            $('#groups').append('<option value="' + data.groups[i].id + '">' + data.groups[i].name + '</option>');
+                        }
+                        //Tecnotek.PeriodGroupAverages.loadGroupStudents($('#groups').val());
+                    }
+                },
+                function(jqXHR, textStatus){
+                    Tecnotek.showErrorMessage("Error getting data adas: " + textStatus + ".", true, "", false);
+                    $(this).val("");
+                }, true);
+        }
+    },
+    loadGroupsOfPeriodAndLevel: function($periodId, $levelId) {
+        if(($periodId!==null)){
+            $('#groups').children().remove();
+            Tecnotek.ajaxCall(Tecnotek.UI.urls["loadGroupsOfPeriodAndLevelsURL"],
+                {   periodId:   $periodId,
+                    levelId:    $levelId},
+                function(data){
+                    if(data.error === true) {
+                        Tecnotek.showErrorMessage(data.message,true, "", false);
+                    } else {
+                        $('#groups').append('<option value="0-0">Todos</option>');
+                        for(i=0; i<data.groups.length; i++) {
+                            $('#groups').append('<option value="' + data.groups[i].id + '">' + data.groups[i].name + '</option>');
+                        }
+                    }
+                },
+                function(jqXHR, textStatus){
+                    Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
+                    $(this).val("");
+                }, true);
+        }
+    },
+    loadAbsencesOfGroup: function(periodId, groupId) {
+        $('.editEntry').unbind();
+        $('#contentBody').empty();
+        $('#tableContainer').hide();
+        if(periodId === null || groupId == 0){//Clean page
+        } else {
+            $('#fountainG').show();
+            Tecnotek.ajaxCall(Tecnotek.UI.urls["loadAbsencesOfGroupURL"],
+                {   periodId:   $('#period').val(),
+                    levelId:    $('#levels').val(),
+                    groupId:    $('#groups').val()},
+                function(data){
+                    console.debug("Load groups of period: " + data.periodId);
+                    $('#fountainG').hide();
+                    if(data.error === true) {
+                        Tecnotek.showErrorMessage(data.message,true, "", false);
+                    } else {
+                        $temp = '<div class="center"><h3>Ausencias de la sección ' +data.entity[0].grade + '-' +data.entity[0].group + '</h3></div>';
+                        $temp += "<table><tr>";
+                        $temp += '<td style="height:50px;"><span style="font-family:arial;font-size:16px;">Carnet</span></td>';
+                        $temp += '<td style="height:50px;"><span style="font-family:arial;font-size:16px;">Nombre</span></td>';
+                        $temp += '<td style="height:50px;"><span style="font-family:arial;font-size:16px;">Fecha</span></td>';
+                        $temp += '<td style="height:50px;"><span style="font-family:arial;font-size:16px;">Ausencia</span></td>';
+                        $temp += '<td style="height:50px;"><span style="font-family:arial;font-size:16px;">Comentarios</span></td>';
+                        $temp += '<td style="height:50px;"><span style="font-family:arial;font-size:16px;">Estado</span></td>';
+                        $temp += "</tr>";
+                        for(i=0; i<data.entity.length; i++) {
+                            //Tecnotek.PeriodGroupAverages.completeText += '<div>' +data.entity[i].name + '-' + data.entity[i].average +'</div>';
+                            $temp += "<tr>";
+                            $temp += '<td style="height:20px;"><span style="font-family:arial;font-size:16px;">'+data.entity[i].carne  + '</span></td>';
+                            $temp += '<td style="height:20px;"><span style="font-family:arial;font-size:16px;">'+data.entity[i].name  + '</span></td>';
+                            $temp += '<td style="height:20px;"><span style="font-family:arial;font-size:16px;">'+data.entity[i].date  + '</span></td>';
+                            $temp += '<td style="height:20px;"><span style="font-family:arial;font-size:16px;">'+data.entity[i].absence  + '</span></td>';
+                            $temp += '<td style="height:20px;"><span style="font-family:arial;font-size:16px;">'+data.entity[i].comments  + '</span></td>';
+                            if(data.entity[i].name == '0'){
+                                $temp += '<td align="center"><span style="font-family:arial;font-size:16px;">Sin Justificar</span></td>';
+                            }else {
+                                $temp += '<td align="center"><span style="font-family:arial;font-size:16px;">Justificada</span></td>';
+                            }
+                            $temp += "</tr>";
+                        }
+                        $temp += "</table>";
+                        $('#contentBody').html($temp);
+                        $('#fountainG').hide();
+                        $('#tableContainer').show();
+                    }
+                },
+                function(jqXHR, textStatus){
+                    $('#fountainG').hide();
+                    $( "#spinner-modal" ).dialog( "close" );
+                    Tecnotek.showErrorMessage("Error getting data svs: " + textStatus + ".", true, "", false);
+                }, false);
+        }
+    }
+};
 
 String.prototype.replaceAll = function(search, replacement) {
     var target = this;

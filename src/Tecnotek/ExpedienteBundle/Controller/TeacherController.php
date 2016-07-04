@@ -843,6 +843,9 @@ class TeacherController extends Controller
                             . '<div class="right imageButton psicoButton"'
                             . 'title="Perfil Psicologico" rel="' . $stdy->getStudent()->getId() .
                             '" style="margin-top:6px;"></div>'
+                            . '<div class="right imageButton viewButton"'
+                            . 'title="Información Estudiante" rel="' . $stdy->getStudent()->getId() .
+                            '" style="margin-top:6px;"></div>'
                             . $stdy->getStudent() . '<div class="clearer"></div>'
                             . '</td>';
 

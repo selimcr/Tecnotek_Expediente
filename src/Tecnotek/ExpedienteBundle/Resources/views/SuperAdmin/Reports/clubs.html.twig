@@ -18,65 +18,129 @@
 
 {% block content %}
     <div class="container_24">
-        <div class="grid_24">
-            <div>
-                <div class="left">
-                    <h3>{% trans %}label.report.clubs.title{% endtrans %}</h3>
-                </div>
-                <div class="left" style="line-height: 48px; margin-left: 25px;">
-                    <span>{% trans %}label.report.clubs.subtitle{% endtrans %}</span>
+    <div class="grid_24">
+    <div>
+        <div class="left">
+            <h3>{% trans %}label.report.clubs.title{% endtrans %}</h3>
+        </div>
+        <div class="left" style="line-height: 48px; margin-left: 25px;">
+            <span>{% trans %}label.report.clubs.subtitle{% endtrans %}</span>
+        </div>
+        <div class="clear"></div>
+    </div>
+
+    <div class="filter-search table">
+        <div class="internal">
+            <form id="searchForm" action="{{ path('_expediente_report_clubs') }}" method="post">
+                <input type="hidden" name="tipo" id="tipo" value="0">
+                <div>
+                    <div class="field" style="width: 100%">
+                        <div class="left">
+                            <label style="width: 175px;">{%trans%}label.report.clubs.include.students{%endtrans
+                            %}:</label>
+                            <input type="checkbox" class="check" id="withStudents" name="withStudents" {% if
+                            withStudents != null %}checked="checked"{% endif %}>
+                        </div>
+                        <button style="margin-left: 15px; margin-top: 0px;" type="submit" class="right button
+success-darker tiny" name="search"><span></span>{% trans %}label.generate{% endtrans %}</button>
+                    </div>
                 </div>
                 <div class="clear"></div>
-            </div>
-
-            <div class="filter-search table">
-                <div class="internal">
-                    <form id="searchForm" action="{{ path('_expediente_report_clubs') }}" method="post">
-                        <input type="hidden" name="tipo" id="tipo" value="0">
-                        <div>
-                            <div class="field" style="width: 100%">
-                                <div class="left">
-                                    <label style="width: 175px;">{%trans%}label.report.clubs.include.students{%endtrans
-                                    %}:</label>
-                                    <input type="checkbox" class="check" id="withStudents" name="withStudents" {% if
-                                    withStudents != null %}checked="checked"{% endif %}>
-                                </div>
-                                <button style="margin-left: 15px; margin-top: 0px;" type="submit" class="right button
-success-darker tiny" name="search"><span></span>{% trans %}label.generate{% endtrans %}</button>
-                            </div>
-                        </div>
-                        <div class="clear"></div>
-                        <div id="details" name="details" {% if withStudents == null %}style="display: none;"{% endif %}>
-                            <label style="width: 175px">{%trans%}label.include.in.report{%endtrans%}:</label>
-                            <input type="checkbox" class="check" id="gender" name="gender" {% if gender != null %}
-                                checked="checked"{% endif %}>{%trans%}label.gender{%endtrans%}
-                            <input type="checkbox" class="check" id="age" name="age" {% if age != null %}
-                                checked="checked"{% endif %}>{%trans%}label.age{%endtrans%}
-                        </div>
-                    </form>
+                <div id="details" name="details" {% if withStudents == null %}style="display: none;"{% endif %}>
+                    <label style="width: 175px">{%trans%}label.include.in.report{%endtrans%}:</label>
+                    <input type="checkbox" class="check" id="gender" name="gender" {% if gender != null %}
+                        checked="checked"{% endif %}>{%trans%}label.gender{%endtrans%}
+                    <input type="checkbox" class="check" id="age" name="age" {% if age != null %}
+                        checked="checked"{% endif %}>{%trans%}label.birthday{%endtrans%}
+                    <input type="checkbox" class="check" id="identification" name="identification" {% if identification != null %}
+                        checked="checked"{% endif %}>{%trans%}label.identification{%endtrans%}
+                    <input type="checkbox" class="check" id="telephone" name="telephone" {% if telephone != null %}
+                        checked="checked"{% endif %}>{%trans%}label.telephone{%endtrans%}
+                    <input type="checkbox" class="check" id="emails" name="emails" {% if emails != null %}
+                        checked="checked"{% endif %}>{%trans%}label.emails{%endtrans%}
                 </div>
-            </div>
+            </form>
+        </div>
+    </div>
 
-            {% if tipo != null %}
-                <div style="margin-top: 15px;">
-                    <button style="margin-left: 15px; margin-top: 0px;" type="button" class="right button success-darker
+    {% if tipo != null %}
+        <div style="margin-top: 15px;">
+            <button style="margin-left: 15px; margin-top: 0px;" type="button" class="right button success-darker
 tiny" id="btnPrint" name="btnPrint" rel="Listado de Estudiantes"><span></span>{% trans %}label.print{% endtrans %}
-                    </button>
+            </button>
+            <div class="clear"></div>
+        </div>
+        {% if withStudents != null %}
+            <div class="left" style="width: 70px; font-weight: bold;">Club:</div>
+            <div id="labelRoute" class="left">
+                <select id="ListClub" name="ListClub" style="width: 150px;">
+                    <option value="0">Todos</option>
+                    {% for club in clubs %}
+                        <option value="{{ club.id }}">{{club}}</option>
+                    {% endfor %}
+                </select>
+            </div>{% endif %}
+
+        <div id="report" style="margin-top: 25px; width: 950px;">
+            {% if withStudents == null %}
+                <div class="titles" style="font-size: 10px;">
+                    <div class="left">{{corpo_name}}</div>
+                    <div class="right">Reporte de estudiantes.</div>
+                    <div class="clear"></div>
+
+                    <div class="left">{{ "now"|date("d/M/Y H:i:s") }}</div>
+                    <div class="clear"></div>
+
+                    <p style="text-align: center;padding-bottom: 0px;">Reporte de Clubes</p>
+                    <p style="text-align: center; padding-bottom: 0px;"></p>
+                </div>
+                <div class="fields_row student_title">
+                    <div class="option_width" style="float: left; width: 200px;">{% trans %}label.name{% endtrans %}
+                    </div>
+                    <div class="option_width" style="float: left; width: 200px;">{% trans %}label.coordinator{%
+                    endtrans %}</div>
+                    <div class="option_width" style="float: left; width: 100px;">{% trans %}label.day{% endtrans %}
+                    </div>
+                    <div class="option_width" style="float: left; width: 150px;">{% trans %}label.schedule{% endtrans
+                    %}</div>
+                    <div class="option_width" style="float: left; width: 100px;">{% trans %}label.students{% endtrans
+                    %}</div>
+                    <div style="float: left; width: 60px;"></div>
                     <div class="clear"></div>
                 </div>
-                {% if withStudents != null %}
-                    <div class="left" style="width: 70px; font-weight: bold;">Club:</div>
-                    <div id="labelRoute" class="left">
-                        <select id="ListClub" name="ListClub" style="width: 150px;">
-                            <option value="0">Todos</option>
-                            {% for club in clubs %}
-                                <option value="{{ club.id }}">{{club}}</option>
-                            {% endfor %}
-                        </select>
-                    </div>{% endif %}
+                {% for entity in clubs %}
+                    <div class="student_row">
+                        <div class="option_width" style="float: left; width: 200px;">{{ entity.name }}</div>
+                        <div class="option_width" style="float: left; width: 200px;">{{ entity.coordinator }}</div>
+                        <div class="option_width" style="float: left; width: 100px;">
+                            {% transchoice entity.day %}
+                            {1} Lunes|{2} Martes|{3} Miercoles|{4} Jueves|{5} Viernes|{6} Sabado|{7} Domingo
+                            {% endtranschoice %}
+                        </div>
+                        <div class="option_width" style="float: left; width: 150px;">{{ entity.timeI ~ " / " ~
+                        entity.timeO }}</div>
+                        <div class="option_width" style="float: left; width: 100px;">{{ entity.getStudents()|length
+                        }}</div>
+                    </div>
+                    <div class="clear"></div>
 
-                <div id="report" style="margin-top: 25px; width: 950px;">
-                    {% if withStudents == null %}
+
+                    <div class="pageBreak"> </div>
+                {% else %}
+                    <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
+                        <div class="option_width" style="float: left; width: 375px;">{% trans %}results.not.found{%
+                        endtrans %}</div>
+                        <div class="clear"></div>
+                    </div>
+                {% endfor %}
+                <div class="student_footer">
+                    Total de clubes: {{ clubs|length }}
+                </div>
+            {% else %}
+
+
+                {% for club in clubs %}
+                    <div class="ContainerClub club_{{ club.id }}">
                         <div class="titles" style="font-size: 10px;">
                             <div class="left">{{corpo_name}}</div>
                             <div class="right">Reporte de estudiantes.</div>
@@ -86,127 +150,93 @@ tiny" id="btnPrint" name="btnPrint" rel="Listado de Estudiantes"><span></span>{%
                             <div class="clear"></div>
 
                             <p style="text-align: center;padding-bottom: 0px;">Reporte de Clubes</p>
-                            <p style="text-align: center; padding-bottom: 0px;"></p>
+                            <p style="text-align: center; padding-bottom: 0px;">Detalle de Estudiantes</p>
                         </div>
-                        <div class="fields_row student_title">
-                            <div class="option_width" style="float: left; width: 200px;">{% trans %}label.name{% endtrans %}
-                            </div>
-                            <div class="option_width" style="float: left; width: 200px;">{% trans %}label.coordinator{%
-                            endtrans %}</div>
-                            <div class="option_width" style="float: left; width: 100px;">{% trans %}label.day{% endtrans %}
-                            </div>
-                            <div class="option_width" style="float: left; width: 150px;">{% trans %}label.schedule{% endtrans
-                            %}</div>
-                            <div class="option_width" style="float: left; width: 100px;">{% trans %}label.students{% endtrans
-                            %}</div>
-                            <div style="float: left; width: 60px;"></div>
-                            <div class="clear"></div>
+                        <div class="fields_row route">
+                            <p style="text-decoration: underline; padding-bottom: 0px;">Club: {{ club }}</p>
+                            <p>{% trans %}label.coordinator{% endtrans %}: {{ club.coordinator }}
+                                &nbsp;&nbsp;&nbsp; {% trans %}label.schedule{% endtrans %}: {% transchoice club.day %}
+                                {1} Lunes|{2} Martes|{3} Miercoles|{4} Jueves|{5} Viernes|{6} Sabado|{7} Domingo
+                                {% endtranschoice %} de {{ club.timeI ~ " a " ~ club.timeO }} </p>
                         </div>
-                        {% for entity in clubs %}
-                            <div class="student_row">
-                                <div class="option_width" style="float: left; width: 200px;">{{ entity.name }}</div>
-                                <div class="option_width" style="float: left; width: 200px;">{{ entity.coordinator }}</div>
-                                <div class="option_width" style="float: left; width: 100px;">
-                                    {% transchoice entity.day %}
-                                    {1} Lunes|{2} Martes|{3} Miercoles|{4} Jueves|{5} Viernes|{6} Sabado|{7} Domingo
-                                    {% endtranschoice %}
-                                </div>
-                                <div class="option_width" style="float: left; width: 150px;">{{ entity.timeI ~ " / " ~
-                                entity.timeO }}</div>
-                                <div class="option_width" style="float: left; width: 100px;">{{ entity.getStudents()|length
-                                }}</div>
-                            </div>
-                            <div class="clear"></div>
-
-
-                            <div class="pageBreak"> </div>
-                        {% else %}
-                            <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
-                                <div class="option_width" style="float: left; width: 375px;">{% trans %}results.not.found{%
-                                endtrans %}</div>
-                                <div class="clear"></div>
-                            </div>
-                        {% endfor %}
-                        <div class="student_footer">
-                            Total de clubes: {{ clubs|length }}
-                        </div>
-                    {% else %}
-
-
-                        {% for club in clubs %}
-                            <div class="ContainerClub club_{{ club.id }}">
-                                <div class="titles" style="font-size: 10px;">
-                                    <div class="left">{{corpo_name}}</div>
-                                    <div class="right">Reporte de estudiantes.</div>
-                                    <div class="clear"></div>
-
-                                    <div class="left">{{ "now"|date("d/M/Y H:i:s") }}</div>
-                                    <div class="clear"></div>
-
-                                    <p style="text-align: center;padding-bottom: 0px;">Reporte de Clubes</p>
-                                    <p style="text-align: center; padding-bottom: 0px;">Detalle de Estudiantes</p>
-                                </div>
-                                <div class="fields_row route">
-                                    <p style="text-decoration: underline; padding-bottom: 0px;">Club: {{ club }}</p>
-                                    <p>{% trans %}label.coordinator{% endtrans %}: {{ club.coordinator }}
-                                        &nbsp;&nbsp;&nbsp; {% trans %}label.schedule{% endtrans %}: {% transchoice club.day %}
-                                        {1} Lunes|{2} Martes|{3} Miercoles|{4} Jueves|{5} Viernes|{6} Sabado|{7} Domingo
-                                        {% endtranschoice %} de {{ club.timeI ~ " a " ~ club.timeO }} </p>
-                                </div>
-                                <div class="fields_row student_title">
-                                    <div style="float: left; width: 50px;">{%trans%}label.carne{%endtrans%}</div>
-                                    <div style="float: left; width: 350px;">{%trans%}label.student.name{%endtrans%}</div>
-                                    <div style="float: left; width: 50px;">{%trans%}label.section{%endtrans%}</div>
+                        <table>
+                            <tr>
+                                <td style="float: left; width: 50px;">{%trans%}label.carne{%endtrans%}</td>
+                                <td style="float: left; width: 350px;">{%trans%}label.student.name{%endtrans%}</td>
+                                <td style="float: left; width: 50px;">{%trans%}label.section{%endtrans%}</td>
+                                {% if age != null %}
+                                    <td style="float: left; width: 100px;">{%trans%}label.birthday{%endtrans%}</td>
+                                {% endif %}
+                                {% if gender != null %}
+                                    <td style="float: left; width: 150px;">{%trans%}label.gender{%endtrans%}</td>
+                                {% endif %}
+                                {% if identification != null %}
+                                    <td style="float: left; width: 100px;">{%trans%}label.identification{%endtrans%}</td>
+                                {% endif %}
+                                {% if telephone != null %}
+                                    <td style="float: left; width: 100px;">{%trans%}label.telephone{%endtrans%}</td>
+                                {% endif %}
+                                {% if emails != null %}
+                                    <td style="float: left; width: 100px;">{%trans%}label.emails{%endtrans%}</td>
+                                {% endif %}
+                                <td style="float: left; width: 60px;"></td>
+                                <td class="clear"></td>
+                            </tr>
+                            {% for student in club.students %}
+                                <tr>
+                                    <td style="float: left; width: 50px;">{{ student.carne }}</td>
+                                    <td style="float: left; width: 350px;">{{ student.lastname ~ ", " ~ student.firstname }}
+                                    </td>
+                                    <td style="float: left; width: 50px;">{{ student.groupyear }}</td>
                                     {% if age != null %}
-                                        <div style="float: left; width: 100px;">{%trans%}label.age{%endtrans%}</div>
+                                        <td style="float: left; width: 100px;">{{ student.birthday }}</td>
                                     {% endif %}
                                     {% if gender != null %}
-                                        <div style="float: left; width: 150px;">{%trans%}label.gender{%endtrans%}</div>
+                                        <td style="float: left; width: 150px;">{% if student.gender == 1%}{% trans %}label.male{%
+                                        endtrans %}{% else %}{% trans %}label.female{% endtrans %}{% endif %}</td>
                                     {% endif %}
-                                    <div style="float: left; width: 60px;"></div>
-                                    <div class="clear"></div>
-                                </div>
-                                {% for student in club.students %}
-                                    <div class="student_row">
-                                        <div style="float: left; width: 50px;">{{ student.carne }}</div>
-                                        <div style="float: left; width: 350px;">{{ student.lastname ~ ", " ~ student.firstname }}
-                                        </div>
-                                        <div style="float: left; width: 50px;">{{ student.groupyear }}</div>
-                                        {% if age != null %}
-                                            <div style="float: left; width: 100px;">{{ student.birthday }}</div>
-                                        {% endif %}
-                                        {% if gender != null %}
-                                            <div style="float: left; width: 150px;">{% if student.gender == 1%}{% trans %}label.male{%
-                                            endtrans %}{% else %}{% trans %}label.female{% endtrans %}{% endif %}</div>
-                                        {% endif %}
-                                        <div style="float: left; width: 60px;">&nbsp;</div>
-                                    </div>
-                                    <div class="clear"></div>
-                                {% endfor %}
-                                <div class="student_footer" style="margin-bottom: 15px;">
-                                    Total de estudiantes en el club: {{ club.students|length }}
-                                </div>
-                                <div class="pageBreak"> </div>
-                            </div>
-                        {% else %}
-                            <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
-                                <div class="option_width" style="float: left; width: 375px;">{% trans %}results.not.found{%
-                                endtrans %}</div>
-                                <div class="clear"></div>
-                            </div>
+                                    {% if identification != null %}
+                                        <td style="float: left; width: 100px;">{{ student.identification }}</td>
+                                    {% endif %}
+                                    {% if telephone != null %}
+                                        <td style="float: left; width: 100px;">{{ student.motherPhone }}-{{ student.fatherPhone }}
+                                            {% for relative in student.relatives %}
+                                                {{ relative.contact.firstname }} &nbsp ({{ relative.contact.phonec }}) &nbsp </br>
+                                            {% endfor %}
+                                        </td>
+                                    {% endif %}
+                                    {% if emails != null %}
+                                        <td style="float: left; width: 100px;">{{ student.email }}</td>
+                                    {% endif %}
+                                    <td style="float: left; width: 60px;">&nbsp;</td>
+                                </tr>
+                                <td class="clear"></td>
+                            {% endfor %}
+                        </table>
+                        <div class="student_footer" style="margin-bottom: 15px;">
+                            Total de estudiantes en el club: {{ club.students|length }}
+                        </div>
+                        <div class="pageBreak"> </div>
+                    </div>
+                {% else %}
+                    <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
+                        <div class="option_width" style="float: left; width: 375px;">{% trans %}results.not.found{%
+                        endtrans %}</div>
+                        <div class="clear"></div>
+                    </div>
 
-                        {% endfor %}
-                    {% endif %}
-                </div>
-
+                {% endfor %}
             {% endif %}
+        </div>
 
+    {% endif %}
+
+    </div>
+    <div class="clear"></div>
+    <div class="wrapper">
+        <div class="grid_24 padline">
+            <div class="lineH"></div>
         </div>
-        <div class="clear"></div>
-        <div class="wrapper">
-            <div class="grid_24 padline">
-                <div class="lineH"></div>
-            </div>
-        </div>
+    </div>
     </div>
 {% endblock %}
