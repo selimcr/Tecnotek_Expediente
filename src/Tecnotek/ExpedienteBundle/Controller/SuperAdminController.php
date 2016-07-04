@@ -12,6 +12,7 @@ use Tecnotek\ExpedienteBundle\Entity\CourseEntry;
 use Tecnotek\ExpedienteBundle\Entity\CourseClass;
 use Tecnotek\ExpedienteBundle\Entity\StudentQualification;
 use Tecnotek\ExpedienteBundle\Entity\SubCourseEntry;
+use Tecnotek\ExpedienteBundle\Entity\AssignedTeacher;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
@@ -1181,6 +1182,236 @@ class SuperAdminController extends Controller
             return new Response("<b>Not an ajax call!!!" . "</b>");
         }
     }
+
+    public function loadAvailableCoursesGroupsAction(){   //2016 - 4
+        $logger = $this->get('logger');
+        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
+        {
+            try {
+                $request = $this->get('request')->request;
+                $periodId = $request->get('periodId');
+                //$gradeId = $request->get('gradeId');
+
+                $translator = $this->get("translator");
+
+                if(isset($periodId)) {
+                    $em = $this->getDoctrine()->getEntityManager();
+                    //Get Courses
+                    $sql = "SELECT c.id, c.name"
+                        . " FROM tek_courses c"
+                        //. " WHERE c.id not in (select cc.course_id from tek_course_class cc where cc.period_id = " . $periodId . " AND cc.grade_id = " . $gradeId . ")"
+                        . " ORDER BY c.name";
+                    $stmt = $em->getConnection()->prepare($sql);
+                    $stmt->execute();
+                    $courses = $stmt->fetchAll();
+                    return new Response(json_encode(array('error' => false, 'courses' => $courses)));
+                } else {
+                    return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
+                }
+            }
+            catch (Exception $e) {
+                $info = toString($e);
+                $logger->err('SuperAdmin::loadAvailableCoursesGroupsAction [' . $info . "]");
+                return new Response(json_encode(array('error' => true, 'message' => $info)));
+            }
+        }// endif this is an ajax request
+        else
+        {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+    }
+
+    public function loadAvailableCourseClassAction(){   //2016 -4
+        $logger = $this->get('logger');
+        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
+        {
+            try {
+                $request = $this->get('request')->request;
+                $periodId = $request->get('periodId');
+                $groupId = $request->get('groupId');
+
+                $keywords = preg_split("/[\s-]+/", $groupId);
+                $groupId = $keywords[0];
+                $gradeId = $keywords[1];
+
+                $translator = $this->get("translator");
+
+                if( isset($gradeId) && isset($periodId)) {
+                    $em = $this->getDoctrine()->getEntityManager();
+                    //Get Courses
+                    $sql = "SELECT cc.id as courseclass, c.id as course, c.name as name"
+                        . " FROM tek_courses c, tek_course_class cc"
+                        . " WHERE cc.course_id = c.id and cc.period_id = " . $periodId . " AND cc.grade_id = " . $gradeId . " "
+                        . " ORDER BY c.name";
+                    $stmt = $em->getConnection()->prepare($sql);
+                    $stmt->execute();
+                    $courses = $stmt->fetchAll();
+                    return new Response(json_encode(array('error' => false, 'courses' => $courses)));
+                } else {
+                    return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
+                }
+            }
+            catch (Exception $e) {
+                $info = toString($e);
+                $logger->err('SuperAdmin::loadAvailableCourseClassAction [' . $info . "]");
+                return new Response(json_encode(array('error' => true, 'message' => $info)));
+            }
+        }// endif this is an ajax request
+        else
+        {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+    }
+
+    public function loadCoursesByTeacherAction(){ //2016 - 4
+        $logger = $this->get('logger');
+        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
+        {
+            try {
+                $request = $this->get('request')->request;
+                $periodId = $request->get('periodId');
+                $teacherId = $request->get('teacherId');
+
+                $translator = $this->get("translator");
+
+                if( isset($periodId) && isset($teacherId)) {
+                    $em = $this->getDoctrine()->getEntityManager();
+
+                    /* $dql = "SELECT a FROM TecnotekExpedienteBundle:AssignedTeacher a WHERE a.period = $periodId AND a.user = $teacherId";
+                     $query = $em->createQuery($dql);
+                     $entries = $query->getResult();
+ */
+
+                    $stmt = $this->getDoctrine()->getEntityManager()
+                        ->getConnection()
+                        ->prepare('SELECT t.id as id, t.group_id, c.id as course, c.name as name, cc.id as courseclass, concat(g.grade_id,"-",g.name)  as groupname
+                                    FROM `tek_assigned_teachers` t, tek_courses c, tek_course_class cc, tek_groups g
+                                    where cc.course_id = c.id and t.course_class_id = cc.id and g.id = t.group_id and cc.period_id = "'.$periodId.'" and t.user_id = "'.$teacherId.'"');
+                    $stmt->execute();
+                    $entity = $stmt->fetchAll();
+
+                    $colors = array(
+                        "one" => "#38255c",
+                        "two" => "#04D0E6"
+                    );
+                    $html = "";
+                    $groupOptions = "";
+
+                    foreach( $entity as $entry ){
+                        $html .= '<div id="courseTeacherRows_' . $entry['id'] . '" class="row userRow tableRowOdd">';
+                        $html .= '    <div id="entryNameField_' . $entry['courseclass'] . '" name="entryNameField_' . $entry['courseclass'] . '" class="option_width" style="float: left; width: 150px;">' . $entry['name'] . '</div>';
+                        $html .= '    <div id="entryCodeField_' . $entry['group_id'] . '" name="entryCodeField_' . $entry['group_id'] . '" class="option_width" style="float: left; width: 100px;">' . $entry['groupname'] . '</div>';
+                        $html .= '    <div class="right imageButton deleteButton deleteTeacherAssigned" style="height: 16px;" title="Eliminar"  rel="' . $entry['id'] . '"></div>';
+                        $html .= '    <div class="clear"></div>';
+                        $html .= '</div>';
+
+                    }
+
+                    $dql = "SELECT g FROM TecnotekExpedienteBundle:Group g WHERE g.period = $periodId";
+                    $query = $em->createQuery($dql);
+                    $results = $query->getResult();
+                    $courseClassId = 0;
+                    $groupOptions .= '<option value="0"></option>';
+                    foreach( $results as $result ){
+                        $groupOptions .= '<option value="' . $result->getId() . '-' . $result->getGrade()->getId() . '">'. $result->getGrade() . '-'. $result->getName() . '</option>';
+                    }
+
+                    return new Response(json_encode(array('error' => false, 'groupOptions' => $groupOptions, 'entriesHtml' => $html)));
+                } else {
+                    return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
+                }
+            }
+            catch (Exception $e) {
+                $info = toString($e);
+                $logger->err('SuperAdmin::loadCoursesByTeacherAction [' . $info . "]");
+                return new Response(json_encode(array('error' => true, 'message' => $info)));
+            }
+        }// endif this is an ajax request
+        else
+        {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+    }
+
+    public function removeTeacherAssignedAction(){    /// 2016 - 4
+
+        $logger = $this->get('logger');
+        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
+        {
+            try {
+                $request = $this->get('request')->request;
+                $teacherAssignedId = $request->get('teacherAssignedId');
+                $translator = $this->get("translator");
+
+                if( isset($teacherAssignedId) ) {
+                    $em = $this->getDoctrine()->getEntityManager();
+                    $entity = $em->getRepository("TecnotekExpedienteBundle:AssignedTeacher")->find( $teacherAssignedId );
+                    if ( isset($entity) ) {
+                        $em->remove($entity);
+                        $em->flush();
+                    }
+                    return new Response(json_encode(array('error' => false)));
+                } else {
+                    return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
+                }
+            }
+            catch (Exception $e) {
+                $info = toString($e);
+                $logger->err('SuperAdmin::removeTeacherAssignedAction [' . $info . "]");
+                return new Response(json_encode(array('error' => true, 'message' => $info)));
+            }
+        }// endif this is an ajax request
+        else
+        {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+    }
+
+    public function createTeacherAssignedAction(){ //2016 - 4 temp
+        $logger = $this->get('logger');
+        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
+        {
+            try {
+                $request = $this->get('request')->request;
+                $periodId = $request->get('periodId');
+                $teacherId = $request->get('teacherId');
+                $courseClassId = $request->get('courseClassId');
+                $groupId = $request->get('groupId');
+
+                $keywords = preg_split("/[\s-]+/", $groupId);
+                $groupId = $keywords[0];
+                $gradeId = $keywords[1];
+
+                $translator = $this->get("translator");
+
+                if( isset($courseClassId) && isset($groupId) && isset($teacherId)) {
+                    $em = $this->getDoctrine()->getEntityManager();
+
+                    $assignedTeacher = new AssignedTeacher();
+                    $assignedTeacher->setCourseClass($em->getRepository("TecnotekExpedienteBundle:CourseClass")->find($courseClassId));
+                    $assignedTeacher->setGroup($em->getRepository("TecnotekExpedienteBundle:Group")->find($groupId));
+                    $assignedTeacher->setTeacher($em->getRepository("TecnotekExpedienteBundle:User")->find($teacherId));
+
+                    $em->persist($assignedTeacher);
+                    $em->flush();
+
+                    return new Response(json_encode(array('error' => false)));
+                } else {
+                    return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
+                }
+            }
+            catch (Exception $e) {
+                $info = toString($e);
+                $logger->err('SuperAdmin::createTeacherAssignedAction [' . $info . "]");
+                return new Response(json_encode(array('error' => true, 'message' => $info)));
+            }
+        }// endif this is an ajax request
+        else
+        {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+    }
+
     /**/
 
     public function getPaginationPage($dql, $currentPage, $rowsPerPage){

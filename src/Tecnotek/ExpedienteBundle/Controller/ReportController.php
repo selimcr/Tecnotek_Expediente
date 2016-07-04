@@ -685,6 +685,9 @@ order by c.day, s.groupyear');
         $tipo = $request->get('tipo');
         $gender = $request->get('gender');
         $age = $request->get('age');
+        $telephone = $request->get('telephone');
+        $identification = $request->get('identification');
+        $emails = $request->get('emails');
 
         /*if( !isset($tipo)){
             $tipo = 0;
@@ -736,7 +739,7 @@ order by c.day, s.groupyear');
 
         return $this->render('TecnotekExpedienteBundle:SuperAdmin:Reports/clubs.html.twig', array('menuIndex' => 4,
             'tipo' => 0, 'typeLabel' => "aaa", 'withStudents' => $withStudents, 'clubs' => $clubs,
-            'age' => $age, 'gender' => $gender, 'tipo' => $tipo
+            'age' => $age, 'gender' => $gender, 'telephone' => $telephone, 'identification' => $identification, 'emails' => $emails, 'tipo' => $tipo
         ));
     }
 
@@ -779,6 +782,53 @@ order by c.day, s.groupyear');
                 ->prepare('SELECT g.grade_id as grade, g.name as `group`, s.carne as carne, concat(s.lastname, s.firstname) as name, st.periodAverageScore as average, st.periodhonor as honor, st.conducta as conducta
                 FROM tek_students_year st, tek_students s, tek_groups g
                 WHERE g.id = "'.$groupId.'" and st.student_id = s.id and g.id = st.group_id order by st.periodAverageScore desc, s.lastname asc');
+            $stmt->execute();
+            $entity = $stmt->fetchAll();
+
+
+            /*$entity = 'SELECT g.grade_id as grade, g.name as `group`, s.carne as carne, concat(s.lastname, s.firstname) as name, st.periodAverageScore as average, st.periodhonor as honor, st.conducta as conducta
+                FROM tek_students_year st, tek_students s, tek_groups g
+                WHERE g.id = "'.$groupId.'" and st.student_id = s.id and g.id = st.group_id order by st.group_id ASC, s.lastname asc';
+*/
+            return new Response(json_encode(array('error' => false, 'entity' => $entity, 'periodId' => $periodId)));
+
+        }// endif this is an ajax request
+        else {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+
+        }
+    }
+
+    public function absencesOfPeriodAction(){
+        $em = $this->getDoctrine()->getEntityManager();
+        $periods = $em->getRepository("TecnotekExpedienteBundle:Period")->findAll();
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Reports/absences_by_group.html.twig', array('menuIndex' => 5,
+            'periods' => $periods
+        ));
+    }
+
+    public function absencesOfGroupAction(){   //ausencias de un grupo  2016-4
+        $logger = $this->get('logger');
+        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
+        {
+            $em = $this->getDoctrine()->getEntityManager();
+            $logger = $this->get('logger');
+            $errorMessage = "";
+
+            $request = $this->get('request')->request;
+            $periodId = $request->get('periodId');
+            $levelId = $request->get('levelId');
+            $groupId = $request->get('groupId');
+
+            $keywords = preg_split("/[\s-]+/", $groupId);
+            $groupId = $keywords[0];
+            $gradeId = $keywords[1];
+
+            $stmt = $this->getDoctrine()->getEntityManager()
+                ->getConnection()
+                ->prepare('SELECT DISTINCT g.grade_id as grade, g.name as `group`, s.carne as carne, concat(s.lastname, s.firstname) as name, a.date, at.name as absence, a.comments, a.justify
+                FROM tek_students_year st, tek_students s, tek_groups g, tek_absences a, tek_absence_types at
+                WHERE a.studentYear_id = st.id and at.id = a.type_id and g.id = "'.$groupId.'" and st.student_id = s.id and g.id = st.group_id ORDER BY `s`.`lastname` ASC');
             $stmt->execute();
             $entity = $stmt->fetchAll();
 

@@ -940,6 +940,80 @@ $currentPeriod = $em->getRepository("TecnotekExpedienteBundle:Period")->findOneB
         }
     }
 
+
+    public function getInfoRelativesAction(){
+        $logger = $this->get('logger');
+        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
+        {
+            try {
+                $request = $this->get('request')->request;
+                $studentId = $request->get('studentId');
+
+                $em = $this->getDoctrine()->getEntityManager();
+                $student = new Student();
+                $student = $em->getRepository("TecnotekExpedienteBundle:Student")->find($studentId);
+
+
+
+
+                if ( isset($student) ) {
+                    $html  = '<div class="fieldRow"><label>Nombre:</label><span>' . $student->getFirstname() . ' ' . $student->getLastname() . '</span></div><div style="float: right;"><p><img src="../../images/alumnos/'.$student->getCarne().'.JPG"></p></div>';
+                    $html .= '<div class="fieldRow"><label>Identificaci&oacute;n:</label><span>' . $student->getIdentification() . '</span></div>';
+                    $html .= '<div class="fieldRow"><label>Fecha de Nacimiento:</label><span></span>' . $student->getBirthday() . '</div>';
+                    $html .= '<div class="fieldRow"><label>Tel. Padre:</label><span>' . $student->getFatherPhone() . '</span></div>';
+                    $html .= '<div class="fieldRow"><label>Tel. Madre:</label><span>' . $student->getMotherPhone() . '</span></div>';
+                    $html .= '<div class="fieldRow"><label>Email:</label><span></span>' . $student->getEmail() . '</div>';
+                    $html .= '<div class="fieldRow"><label>Direcci&oacute;n:</label><span>' . $student->getAddress() . '</span></div>';
+
+                    //$relative = new Relative();
+                    $relatives = $em->getRepository("TecnotekExpedienteBundle:Relative")->findByStudent($studentId);
+                    $html .='<hr>';
+                    $html .= '<div><h3><label>Contactos:</label><span></h3></span></div>';
+                    foreach($relatives as $relative){
+                        $html .='<hr>';
+                        $html .= '<div class="fieldRow"><label>Nombre:</label><span>' . $relative->getContact()->getFirstname() . '</span></div>';
+                        $html .= '<div class="fieldRow"><label>Tel. Celular:</label><span>' . $relative->getContact()->getPhonec() . '</span></div>';
+                        $html .= '<div class="fieldRow"><label>Tel. Trabajo:</label><span>' . $relative->getContact()->getPhonew() . '</span></div>';
+                        $html .= '<div class="fieldRow"><label>Tel. Casa:</label><span>' . $relative->getContact()->getPhoneh() . '</span></div>';
+                        $html .= '<div class="fieldRow"><label>Email:</label><span></span>' . $relative->getContact()->getEmail() . '</div>';
+                        $html .= '<div class="fieldRow"><label>Relaci&oacute;n:</label><span>' . $relative->getDescription() . '</span></div>';
+                    }
+
+                    return new Response(json_encode(array('error' => false, 'html' => $html)));
+                } else {
+                    return new Response(json_encode(array('error' => true, 'message' => "No se encontro información.")));
+                }
+
+                /*$repo = $em->getRepository("TecnotekExpedienteBundle:Contact");
+                foreach($institutions as $institution){
+                    $institution->setStudents($repo->findAllStudentsByLastname($institution->getId(), $currentPeriod->getId()));
+                    $html  = '<div class="fieldRow"><label>Nombre:</label><span>' . $relative->getContact()->getFirstname() . '</span></div>';
+                    $html .= '<div class="fieldRow"><label>Identificaci&oacute;n:</label><span>' . $relative->getContact()->getIdentification() . '</span></div>';
+                    $html .= '<div class="fieldRow"><label>Tel. Celular:</label><span>' . $relative->getContact()->getPhonec() . '</span></div>';
+                    $html .= '<div class="fieldRow"><label>Tel. Trabajo:</label><span>' . $relative->getContact()->getPhonew() . '</span></div>';
+                    $html .= '<div class="fieldRow"><label>Tel. Casa:</label><span>' . $relative->getContact()->getPhoneh() . '</span></div>';
+                    $html .= '<div class="fieldRow"><label>Lugar de trabajo:</label><span>' . $relative->getContact()->getWorkplace() . '</span></div>';
+                    $html .= '<div class="fieldRow"><label>Email:</label><span></span>' . $relative->getContact()->getEmail() . '</div>';
+                    $html .= '<div class="fieldRow"><label>Direcci&oacute;n:</label><span>' . $relative->getContact()->getAdress() . '</span></div>';
+                    $html .= '<div class="fieldRow"><label>Restricci&oacute;n:</label><span>' . $relative->getContact()->getRestriction() . '</span></div>';
+                    $html .= '<div class="fieldRow"><label>Relaci&oacute;n:</label><span>' . $relative->getDescription() . '</span></div>';
+
+                }*/
+
+
+            }
+            catch (Exception $e) {
+                $info = toString($e);
+                $logger->err('Student::createContactAction [' . $info . "]");
+                return new Response(json_encode(array('error' => true, 'message' => $info)));
+            }
+        }// endif this is an ajax request
+        else
+        {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+    }
+
     public function removeRelativeAction(){
         $logger = $this->get('logger');
         if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?

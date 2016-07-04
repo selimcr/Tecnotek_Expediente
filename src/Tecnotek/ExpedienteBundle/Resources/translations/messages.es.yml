@@ -68,6 +68,8 @@ label.creator: Creado por
 label.visit.people: Personas Presentes
 
 label.teacher.default: Profesor Asignado
+label.teachers: Profesores
+label.teacher: Profesores
 label.include: Incluir
 
 label.period.listar: Lista de Periodos
@@ -329,6 +331,7 @@ menu.qualifications.of.group.by.rubro: Calificaciones de Grupo por Rubro
 menu.detail.student.qualifications: Notas detalladas de Estudiante
 menu.averages.report: Mejores Promedios
 menu.mep.report: MEP Notas Presentación
+menu.absences.report: Ausencias por grupo
 
 results.not.found: No se han encontrado resultados.
 

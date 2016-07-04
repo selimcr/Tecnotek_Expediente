@@ -1244,6 +1244,34 @@ var Tecnotek = {
                     event.preventDefault();
                     $.fancybox.close();
                 });
+
+                $("#openContactyForm").fancybox({
+                    'afterLoad' : function(){
+
+                    }
+                });
+
+                $('.viewButton').unbind();
+                $('.viewButton').click(function(event){
+                    console.debug("Click en view button: " + Tecnotek.UI.urls["getInfoRelativesURL"]);
+                    event.preventDefault();
+                    //Tecnotek.UI.vars["relativeId"] = $(this).attr("rel");
+                    Tecnotek.ajaxCall(Tecnotek.UI.urls["getInfoRelativesURL"],
+                        {studentId: $(this).attr("rel")},
+                        function(data){
+                            if(data.error === true) {
+                                Tecnotek.showErrorMessage(data.message,true, "", false);
+                            } else {
+                                //Tecnotek.showInfoMessage(data.html, true, "", false);
+                                $("#contactContainer").html(data.html);
+                                $("#openContactyForm").trigger("click");
+                            }
+                        },
+                        function(jqXHR, textStatus){
+                            Tecnotek.showErrorMessage("Error in request: " + textStatus + ".",
+                                true, "", false);
+                        }, true);
+                });
             },
             loadGroupsOfPeriod: function($periodId) {
                 if(($periodId!==null)){
@@ -1326,6 +1354,7 @@ var Tecnotek = {
                                 });
 
                                 Tecnotek.Observations.initializeTable();
+                                Tecnotek.Observations.initButtons(); //agregado
 
                                 //$( "#spinner-modal" ).dialog( "close" );
                             }

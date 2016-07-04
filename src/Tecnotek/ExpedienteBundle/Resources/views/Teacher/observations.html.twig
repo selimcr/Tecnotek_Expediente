@@ -8,6 +8,7 @@
 
 {% block extrajs %}
     <script type="text/javascript" src="{{ asset('js/jquery.printElement.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('fancybox/jquery.fancybox.js?v=2.0.6') }}"></script>
 
     <script type="text/javascript">
         Tecnotek.module = "observations";
@@ -20,6 +21,9 @@
         Tecnotek.UI.urls["studentPsicosURL"] = "{{ path("_expediente_teacher_students_psico_basic") }}";
 
         Tecnotek.UI.urls["viewPrintableVersionURL"] = "{{ path("_expediente_sysadmin_printable_group_qualifications") }}";
+
+        Tecnotek.UI.urls["getInfoRelativesURL"] = "{{ path("_expediente_sysadmin_get_info_relatives") }}";
+
     </script>
 {% endblock %}
 
@@ -126,4 +130,17 @@
             </div>
         </div>
     </div>
+
+    <div style="display: none;">
+    <a id="openContactyForm" class="right button success-darker tiny modalbox" style="margin: 4px 0px 0 0;" href="#showContactInfoLink">{% trans %}label.open{% endtrans %}</a>
+    </div>
+    <!-- hidden showContactInfoLink form -->
+    <div id="showContactInfoLink" style="display: none; width: 650px; height: 500px">
+
+        <h3>Informaci&oacute;n de Contacto</h3>
+        <div id="contactContainer" name="contactContainer" class="contactInfo">
+
+        </div>
+    </div>
+
 {% endblock %}
