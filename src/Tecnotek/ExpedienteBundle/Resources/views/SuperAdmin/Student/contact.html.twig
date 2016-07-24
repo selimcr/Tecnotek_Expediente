@@ -1,0 +1,91 @@
+{% extends 'TecnotekExpedienteBundle::logged_layout.html.twig' %}
+
+{% block htmlTitle %}
+    Tecnotek :: Expediente :: Super Administrador :: Estudiantado
+{% endblock %}
+
+{% block extrajs %}
+    <script type="text/javascript" src="{{ asset('js/tek_exp_students.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('fancybox/jquery.fancybox.js?v=2.0.6') }}"></script>
+
+    <script type="text/javascript">
+        Tecnotek.module = "contactList";
+        Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
+        Tecnotek.UI.urls["show"] = "{{ path('_expediente_sysadmin_student_show_simple')}}";
+        Tecnotek.UI.urls["edit"] = "{{ path('_expediente_sysadmin_relatives_edit_simple')}}";
+        Tecnotek.UI.urls["searchContacts"] = "{{ path('_expediente_sysadmin_contact_search')}}";
+
+        Tecnotek.UI.urls["getInfoRelativesFullURL"] = "{{ path("_expediente_sysadmin_get_info_relatives_full") }}";
+
+    </script>
+{% endblock %}
+
+{% block content %}
+    <link rel="stylesheet" href="{{ asset('fancybox/jquery.fancybox.css') }}" type="text/css" media="all" />
+    <link rel="stylesheet" href="{{ asset('fancybox/fancybox_style.css') }}" type="text/css" media="all" />
+    <link rel="stylesheet" href="{{ asset('css/jquery-ui-timepicker-addon.css') }}" type="text/css" media="all" />
+
+    <div class="container_24">
+        <div class="grid_24">
+            <div class="titleRow">
+                <div class="left"><h3>{% trans %}label.contacts.list{% endtrans %}</h3></div>
+                <div class="right"><a href="{{ path('_expediente_sysadmin_student_create') }}" class="button success-darker tiny"><span></span>{% trans %}label.add{% endtrans %}</a></div>
+                <div class="clear"></div>
+            </div>
+
+            <div class="table">
+                <div class="row tableHeader">
+                    <div class="option_width sort_header" style="float: left; width: 150px; margin-left: -6px;"
+                         field-name="identification" order="asc">
+                        <span class="header-title asc" title="Identification">Identificación</span>
+                    </div>
+                    <div class="option_width sort_header" style="float: left; width: 250px; margin-left: -6px;"
+                         field-name="firstname" order="asc">
+                        <span class="header-title sortable" title="Nombre">Nombre</span>
+                    </div>
+                    <div class="option_width sort_header" style="float: left; width: 250px; margin-left: -6px;"
+                         field-name="lastname" order="asc">
+                        <span class="header-title sortable" title="Apellidos">Apellidos</span>
+                    </div>
+                    <div class="right" style="margin-top: -2px;"><a style="margin: 4px 0px 0px 0px;" href="#" class="button success-darker tiny" id="btnSearch" name="btnSearch"><span></span>{% trans %}label.search{% endtrans %}</a></div>
+                    <div class="right" style="width: 5px; height: 26px"></div>
+                    <div class="option_width right">
+                        <input id="searchText" name="searchText" value="{{ text }}">
+                    </div>
+                </div>
+
+                <div id="students-container">
+                </div>
+            </div>
+
+            <br/>
+
+            <div style="margin-bottom:75px;" id="pagination-container">
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="clear"></div>
+    </div>
+
+    <div id="contactRowTemplate" class="row userRow ROW_CLASS" rel="CONTACT_ID" style="display: none;">
+        <div class="option_width" style="float: left; width: 150px; margin-left: -6px;">CONTACT_CIDENTIFICATION</div>
+        <div class="option_width" style="float: left; width: 250px; margin-left: -6px;">CONTACT_FIRST_NAME</div>
+        <div class="option_width" style="float: left; width: 250px; margin-left: -6px;">CONTACT_LAST_NAME</div>
+        <div class="right imageButton editButton"  title="{% trans %}label.edit{% endtrans %}"  rel="CONTACT_ID"></div>
+        <div class="right imageButton viewButton"  title="{% trans %}label.view{% endtrans %}"  rel="CONTACT_ID"></div>
+        <div class="clear"></div>
+    </div>
+
+
+    <div style="display: none;">
+        <a id="openContactyForm" class="right button success-darker tiny modalbox" style="margin: 4px 0px 0 0;" href="#showContactInfoLink">{% trans %}label.open{% endtrans %}</a>
+    </div>
+    <!-- hidden showContactInfoLink form -->
+    <div id="showContactInfoLink" style="display: none; width: 650px; height: 500px">
+
+        <h3>Informaci&oacute;n de Contacto</h3>
+        <div id="contactContainer" name="contactContainer" class="contactInfo">
+
+        </div>
+    </div>
+{% endblock %}

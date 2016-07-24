@@ -13,6 +13,7 @@ use Tecnotek\ExpedienteBundle\Entity\StudentPenalty;
 use Tecnotek\ExpedienteBundle\Entity\StudentToRoute;
 use Tecnotek\ExpedienteBundle\Entity\StudentTutorVisit;
 use Tecnotek\ExpedienteBundle\Entity\Ticket;
+use Tecnotek\ExpedienteBundle\Entity\StudentExtraPoints;
 use Tecnotek\ExpedienteBundle\Form\ContactFormType;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -181,6 +182,64 @@ class StudentController extends Controller
         }
     }
 
+    public function searchContactsAction($rowsPerPage = 30) {
+        $logger = $this->get('logger');
+        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
+        {
+            try {
+                $request = $this->get('request')->request;
+                $text = $request->get('text');
+                $sortBy = $request->get('sortBy');
+                $order = $request->get('order');
+                $page = $request->get('page');
+                $offset = ($page-1) * $rowsPerPage;
+                $em = $this->getDoctrine()->getEntityManager();
+                $words = explode(" ", trim($text));
+                $where = "";
+                foreach ($words as $word) {
+                    $where .= $where == ""? "":" AND ";
+                    $where .= "(ctd.firstname like '%" . $word . "%' OR ctd.lastname like '%" . $word .
+                        "%' OR ctd.identification like '%" . $word . "%' OR ctd.email like '%" . $word . "%'
+                        OR ctd.phonec like '%" . $word . "%' OR ctd.phonew like '%" . $word . "%'
+                        OR ctd.phoneh like '%" . $word . "%')";
+                }
+                $sql = "SELECT SUM($where) as filtered,"
+                    . " COUNT(*) as total FROM tek_contacts ctd;";
+                $stmt = $em->getConnection()->prepare($sql);
+                $stmt->execute();
+                $filtered = 0;
+                $total = 0;
+                $result = $stmt->fetchAll();
+                foreach($result as $row) {
+                    $filtered = $row['filtered'];
+                    $total = $row['total'];
+                }
+
+                $sql = "SELECT ctd.id, ctd.lastname, ctd.firstname, ctd.identification"
+                    . " FROM tek_contacts ctd"
+                    . " WHERE $where"
+                    . " ORDER BY ctd.$sortBy $order"
+                    . " LIMIT $rowsPerPage OFFSET $offset";
+                $stmt2 = $em->getConnection()->prepare($sql);
+                $stmt2->execute();
+                $contacts = $stmt2->fetchAll();
+
+                return new Response(json_encode(array('error' => false,
+                    'filtered' => $filtered,
+                    'total' => $total,
+                    'contacts' => $contacts)));
+            } catch (Exception $e) {
+                $info = toString($e);
+                $logger->err('Student::searchContactsAction [' . $info . "]");
+                return new Response(json_encode(array('error' => true, 'message' => $info)));
+            }
+        }// endif this is an ajax request
+        else
+        {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+    }
+
     public function studentCreateAction()
     {
         $entity = new Student();
@@ -330,6 +389,15 @@ class StudentController extends Controller
             return $this->redirect($this->generateUrl('_expediente_sysadmin_student'));
         }
 
+    }
+
+    public function contactListAction($rowsPerPage = 30)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $text = $this->get('request')->query->get('text');
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Student/contact.html.twig', array(
+            'menuIndex' => 3, 'text' => $text
+        ));
     }
 
     /* Final de los metodos para CRUD de students*/
@@ -1014,6 +1082,61 @@ $currentPeriod = $em->getRepository("TecnotekExpedienteBundle:Period")->findOneB
         }
     }
 
+    public function getInfoRelativesFullAction(){
+        $logger = $this->get('logger');
+        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
+        {
+            try {
+                $request = $this->get('request')->request;
+                $contactId = $request->get('contactId');
+
+                $em = $this->getDoctrine()->getEntityManager();
+                $student = new Student();
+                $contact = $em->getRepository("TecnotekExpedienteBundle:Contact")->find($contactId);
+
+
+
+
+                if ( isset($contact) ) {
+                    $html  = '<div class="fieldRow"><label>Nombre:</label><span>' . $contact->getFirstname() . ' ' . $student->getLastname() . '</span></div><div style="float: right;"><p><img src="../../images/alumnos/'.$student->getCarne().'.JPG"></p></div>';
+                    $html .= '<div class="fieldRow"><label>Identificaci&oacute;n:</label><span>' . $contact->getIdentification() . '</span></div>';
+                    $html .= '<div class="fieldRow"><label>Fecha de Nacimiento:</label><span></span>' . $contact->getBirthday() . '</div>';
+                    $html .= '<div class="fieldRow"><label>Tel. Cel:</label><span>' . $contact->getPhonec() . '</span></div>';
+                    $html .= '<div class="fieldRow"><label>Tel. Casa:</label><span>' . $contact->getPhoneh() . '</span></div>';
+                    $html .= '<div class="fieldRow"><label>Email:</label><span></span>' . $contact->getEmail() . '</div>';
+                    $html .= '<div class="fieldRow"><label>Direcci&oacute;n:</label><span>' . $contact->getAdress() . '</span></div>';
+
+                    //$relative = new Relative();
+                    $relatives = $em->getRepository("TecnotekExpedienteBundle:Relative")->findByContact($contactId);
+                    $html .='<hr>';
+                    $html .= '<div><h3><label>Estudiantes Asociados:</label><span></h3></span></div>';
+                    foreach($relatives as $relative){
+                        $html .='<hr>';
+                        $html .= '<div class="fieldRow"><label>Nombre:</label><span>' . $relative->getStudent()->getFirstname() . '</span></div>';
+                        $html .= '<div class="fieldRow"><label>Grupo:</label><span>' . $relative->getStudent()->getGroupyear() . '</span></div>';
+                        $html .= '<div class="fieldRow"><label>Carne:</label><span>' . $relative->getStudent()->getCarne() . '</span></div>';
+                        $html .= '<div class="fieldRow"><label>Relaci&oacute;n:</label><span>' . $relative->getDescription() . '</span></div>';
+                    }
+
+                    return new Response(json_encode(array('error' => false, 'html' => $html)));
+                } else {
+                    return new Response(json_encode(array('error' => true, 'message' => "No se encontro información.")));
+                }
+
+
+            }
+            catch (Exception $e) {
+                $info = toString($e);
+                $logger->err('Student::createContactAction [' . $info . "]");
+                return new Response(json_encode(array('error' => true, 'message' => $info)));
+            }
+        }// endif this is an ajax request
+        else
+        {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+    }
+
     public function removeRelativeAction(){
         $logger = $this->get('logger');
         if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
@@ -1330,7 +1453,6 @@ $currentPeriod = $em->getRepository("TecnotekExpedienteBundle:Period")->findOneB
         return $this->render('TecnotekExpedienteBundle:SuperAdmin:Student/editrelative.html.twig', array('entity' => $entity,
             'form'   => $form->createView(), 'menuIndex' => 3));
     }
-
 
     public function relativesUpdateAction(){
         $em = $this->getDoctrine()->getEntityManager();
@@ -1853,6 +1975,198 @@ $currentPeriod = $em->getRepository("TecnotekExpedienteBundle:Period")->findOneB
         }
 
         /* Final de los metodos para CRUD de Penalties*/
+
+    /* Metodos para CRUD de Extra Points*/
+    public function extrapIndexAction(){
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $logger = $this->get('logger');
+        $request = $this->get('request')->request;
+        $periodId = $request->get('periodId');
+
+        //$currentPeriod = $em->getRepository("TecnotekExpedienteBundle:Period")->findOneBy(array('isActual' => true));
+
+        if($periodId != "")
+            $currentPeriod = $em->getRepository("TecnotekExpedienteBundle:Period")->findOneBy(array('period' => $periodId));
+        $currentPeriodId = 0;
+
+        if( isset($currentPeriod) ){
+            $currentPeriodId = $currentPeriod->getId();
+        }else{
+            $currentPeriod = $em->getRepository("TecnotekExpedienteBundle:Period")->findOneBy(array('isActual' => true));
+            if( isset($currentPeriod) ){
+                $currentPeriodId = $currentPeriod->getId();
+            }
+        }
+
+        $qb = $em->createQueryBuilder();
+        $qb->add('select', 'extrapoints')
+            ->add('from', 'TecnotekExpedienteBundle:StudentExtraPoints extrapoints')
+            ->leftJoin("extrapoints.studentYear", "stdy")
+            ->leftJoin("stdy.student", "std")
+            ->add('where', "stdy.period = " . $currentPeriodId)
+            ->add('orderBy', 'std.lastname ASC');
+        $query = $qb->getQuery();
+
+        $entities = $query->getResult();
+
+        $dql = "SELECT std FROM TecnotekExpedienteBundle:StudentYear stdY, TecnotekExpedienteBundle:Student std" .
+            " WHERE stdY.period = $currentPeriodId AND stdY.student = std ORDER BY std.lastname, std.firstname";
+
+        $query = $em->createQuery($dql);
+
+        $students = $query->getResult();
+
+        $periods = $em->getRepository("TecnotekExpedienteBundle:Period")->findAll();
+
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:ExtraPoints/index.html.twig', array('menuIndex' => 3,
+            'entities' => $entities, 'student' => "",
+            'period' => "-1", 'students' => $students, "currentPeriod" => $currentPeriodId, 'periods' => $periods
+        ));
+    }
+
+    public function extrapSearchUpdateAction(){
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $logger = $this->get('logger');
+        $request = $this->get('request')->request;
+        $periodId = $request->get('periodId');
+
+        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
+        {
+            try {
+                //$currentPeriod = $em->getRepository("TecnotekExpedienteBundle:Period")->findOneBy(array('isActual' => true));
+                $currentPeriod = $em->getRepository("TecnotekExpedienteBundle:Period")->findOneBy(array('id' => $periodId));
+
+                $currentPeriodId = 0;
+                if( isset($currentPeriod) ){
+                    $currentPeriodId = $currentPeriod->getId();
+                }
+
+                $sql = "SELECT concat(s.lastname, ' ',s.firstname) as name, ex.id, ex.points, ex.typepoints, ex.course_id, c.name as coursename, ex.course_id as courseid"
+                    . " FROM tek_students s, tek_students_year std, tek_student_extra_points ex LEFT JOIN tek_courses c ON c.id = ex.course_id"
+                    . " WHERE s.id = std.student_id and std.id = ex.student_year_id and std.period_id = " . $currentPeriodId
+                    . " ORDER BY s.lastname";
+                $stmt2 = $em->getConnection()->prepare($sql);
+                $stmt2->execute();
+                $entities = $stmt2->fetchAll();
+
+
+                $dql = "SELECT std FROM TecnotekExpedienteBundle:StudentYear stdY, TecnotekExpedienteBundle:Student std" .
+                    " WHERE stdY.period = $currentPeriodId AND stdY.student = std ORDER BY std.lastname, std.firstname";
+
+                $query = $em->createQuery($dql);
+
+                $students = $query->getResult();
+
+                $periods = $em->getRepository("TecnotekExpedienteBundle:Period")->findAll();
+
+                return new Response(json_encode(array('error' => false,
+                    'students' => $students,
+                    'currentPeriod' => $currentPeriodId,
+                    'entity' => $entities)));
+            } catch (Exception $e) {
+                $info = toString($e);
+                $logger->err('Student::extrapSearchUpdateAction [' . $info . "]");
+                return new Response(json_encode(array('error' => true, 'message' => $info)));
+            }
+        }// endif this is an ajax request
+        else
+        {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+    }
+
+    public function extrapSaveAction(){
+
+        $logger = $this->get('logger');
+        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
+        {
+            try {
+                $request = $this->get('request')->request;
+                $studentId = $request->get('studentId');
+                $type = $request->get('type');
+                $periodId = $request->get('periodId');
+                $courseId = $request->get('course');
+                $pointsExtrap = $request->get('pointsExtrap');
+
+                $em = $this->getDoctrine()->getEntityManager();
+
+                $studentYear = $em->getRepository("TecnotekExpedienteBundle:StudentYear")->findOneBy(array('period' => $periodId, 'student' => $studentId));
+                $course = $em->getRepository("TecnotekExpedienteBundle:Course")->findOneBy(array('id' => $courseId));
+
+                if( isset($studentYear) && $studentYear->getGroup()!= null ){
+                    $entity  = new StudentExtraPoints();
+                    if( isset($course))
+                        $entity->setCourse($course);
+                    $entity->setPoints($pointsExtrap);
+                    $entity->setTypePoints($type);
+                    $entity->setStudentYear($studentYear);
+                    $em->persist($entity);
+                    $em->flush();
+
+                    return new Response(json_encode(array('error' => false)));
+                } else {
+                    return new Response(json_encode(array('error' => true, 'message' => "El estudiante debe pertenecer a un grupo antes de guardar.")));
+                }
+            }
+            catch (Exception $e) {
+                $info = toString($e);
+                $logger->err('Student::extrapSaveAction [' . $info . "]");
+                return new Response(json_encode(array('error' => true, 'message' => $info)));
+            }
+        }// endif this is an ajax request
+        else
+        {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+    }
+
+    public function extrapDeleteAction($id){
+        $em = $this->getDoctrine()->getEntityManager();
+        $entity = $em->getRepository("TecnotekExpedienteBundle:StudentExtraPoints")->find( $id );
+        if ( isset($entity) ) {
+            $em->remove($entity);
+            $em->flush();
+        }
+        return $this->redirect($this->generateUrl('_expediente_extrap'));
+    }
+
+    public function extrapEditAction($id)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $entity = $em->getRepository("TecnotekExpedienteBundle:StudentExtraPoints")->find($id);
+        $form   = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\StudentExtraPointsFormType(), $entity);
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:ExtraPoints/edit.html.twig', array('entity' => $entity,
+            'form'   => $form->createView(), 'menuIndex' => 3));
+    }
+
+    public function extrapUpdateAction(){
+        $em = $this->getDoctrine()->getEntityManager();
+        $request = $this->get('request')->request;
+        $logger = $this->get('logger');
+
+        $entity = $em->getRepository("TecnotekExpedienteBundle:StudentExtraPoints")->find( $request->get('id'));
+        if ( isset($entity) ) {
+            $request = $this->getRequest();
+            $form    = $this->createForm(new \Tecnotek\ExpedienteBundle\Form\StudentExtraPointsFormType(), $entity);
+            $form->bindRequest($request);
+            if ($form->isValid()) {
+                $em->persist($entity);
+                $em->flush();
+                return $this->redirect($this->generateUrl('_expediente_extrap'));
+            } else {
+                return $this->render('TecnotekExpedienteBundle:SuperAdmin:ExtraPoints/edit.html.twig', array(
+                    'entity' => $entity, 'form'   => $form->createView(), 'menuIndex' => 3
+                ));
+            }
+        } else {
+            return $this->redirect($this->generateUrl('_expediente_extrap'));
+        }
+
+    }
+
+        /* Final de los metodos para CRUD de Extra Points*/
 
     public function getListStudentsOfGroupAction(){
         $logger = $this->get('logger');

@@ -75,6 +75,11 @@ var Tecnotek = {
                     Tecnotek.AdministratorList.initBtnSearch();
                     Tecnotek.Penalties.init();
                     break;
+                case "extrapoints":
+                    Tecnotek.AdministratorList.init();
+                    Tecnotek.AdministratorList.initBtnSearch();
+                    Tecnotek.Extrapoints.init();
+                    break;
                 case "absencesByGroup":
                     Tecnotek.AbsencesByGroup.init();
                     break;
@@ -95,6 +100,9 @@ var Tecnotek = {
                 case "studentList":
                     Tecnotek.AdministratorList.init();
                     Tecnotek.Students.init(); break;
+                case "contactList":
+                    Tecnotek.ContactList.init();
+                    Tecnotek.Contacts.init(); break;
                 case "showAdministrador":
                 case "showCoordinador":
                 case "showProfesor":
@@ -655,6 +663,78 @@ var Tecnotek = {
 				//$("#frmCreateAccount").submit();
 			}
 		},
+        ContactList : {
+            init : function() {
+                Tecnotek.ContactList.initComponents();
+                Tecnotek.ContactList.initButtons();
+            },
+            initComponents : function() {
+            },
+            initBtnSearch: function() {
+                $('#btnSearch').unbind().click(function(event){
+                    event.preventDefault();
+                    var url = location.href;
+                    var text = $("#searchText").val();
+                    if( url.indexOf("?") > -1 ){
+                        if( url.indexOf("text=") > -1 ){
+                            url += "&q=1";
+                            url = url.replace(/(text=).*?(&)/,'$1' + text + '$2');
+                            url = url.replace("&q=1","");
+                        } else {
+                            url += "&text=" + text;
+                        }
+                    } else {
+                        url += "?text=" + text;
+                    }
+                    window.location.href= url;
+                });
+            },
+            initButtons : function() {
+                console.debug("AdministratorList :: initButtons");
+                $('.editButton').unbind().click(function(event){
+                    event.preventDefault();
+                    console.debug("AdministratorList :: initButtons :: editButton Event");
+                    location.href = Tecnotek.UI.urls["edit"] + "/" + $(this).attr("rel");
+                });
+
+                $('.adminButton').unbind().click(function(event){
+                    event.preventDefault();
+                    location.href = Tecnotek.UI.urls["admin"] + "/" + $(this).attr("rel");
+                });
+
+                $("#openContactyForm").fancybox({
+                    'afterLoad' : function(){
+
+                    }
+                });
+
+                $('.viewButton').unbind();
+                $('.viewButton').click(function(event){
+                    console.debug("Click en view button: " + Tecnotek.UI.urls["getInfoRelativesFullURL"]);
+                    event.preventDefault();
+                    //Tecnotek.UI.vars["relativeId"] = $(this).attr("rel");
+                    Tecnotek.ajaxCall(Tecnotek.UI.urls["getInfoRelativesFullURL"],
+                        {contactId: $(this).attr("rel")},
+                        function(data){
+                            if(data.error === true) {
+                                Tecnotek.showErrorMessage(data.message,true, "", false);
+                            } else {
+                                //Tecnotek.showInfoMessage(data.html, true, "", false);
+                                $("#contactContainer").html(data.html);
+                                $("#openContactyForm").trigger("click");
+                            }
+                        },
+                        function(jqXHR, textStatus){
+                            Tecnotek.showErrorMessage("Error in request: " + textStatus + ".",
+                                true, "", false);
+                        }, true);
+
+                });
+            },
+            submit : function() {
+                //$("#frmCreateAccount").submit();
+            }
+        },
 		AdministratorShow : {
 			init : function() {
 				Tecnotek.AdministratorShow.initComponents();
@@ -963,6 +1043,188 @@ var Tecnotek = {
                         }, true);
                 }
 
+            }
+        },
+        Extrapoints : {
+            init : function() {
+
+                $("#period").change(function(event){
+                    event.preventDefault();
+                    Tecnotek.Extrapoints.loadExtrapoints($(this).val());
+                });
+
+                $("#searchByStudent").change(function(){
+                    $this = $(this);
+                    if($this.is(':checked')){
+                        $("#" + $this.attr("rel")).removeAttr("disabled");
+                    } else {
+
+                        $("#" + $this.attr("rel")).val("").attr("disabled",true);
+                    }
+                });
+
+                $('#createExtrapointForm').submit(function(event){
+                    event.preventDefault();
+                    Tecnotek.Extrapoints.save();
+                });
+
+                $('.cancelButton').click(function(event){
+                    $.fancybox.close();
+                });
+
+                $("#newExtraPoint").fancybox({
+                    'afterLoad' : function(){
+                        Tecnotek.Extrapoints.loadCourses();
+                    }
+                });
+
+                //Aca estaba eso
+                Tecnotek.initStudentsSearch();
+
+                //TODO Penalties
+                $(".deleteButton").click(function(event){
+                    event.preventDefault();
+                    Tecnotek.Extrapoints.delete($(this).attr("rel"));
+                });
+            },
+            delete : function(extrapId){
+                //TODO delete Penalty
+                if (Tecnotek.showConfirmationQuestion(Tecnotek.UI.translates["confirmDelete"])){
+                    location.href = Tecnotek.UI.urls["deleteURL"] + "/" + extrapId;
+                }
+            },
+            save : function(){
+                if(Tecnotek.UI.vars["currentPeriod"] == 0){
+                    Tecnotek.showErrorMessage("Es necesario definir un periodo como actual antes de guardar.",true, "", false);
+                    return;
+                }
+
+
+                var $maxP = 100;
+                var $minP = 1;
+                var $pointsExtrap = 0;
+
+                var $studentId = $("#studentId").val();
+                var $course = $("#course").val();
+                var $type = $("#extrapType").val();
+                var $pointsExtrap = $("#pointsExtrap").val();
+                //$maxP = $('option:selected', '#penaltyType').attr('maxPenalty');
+                //$minP = $('option:selected', '#penaltyType').attr('minPenalty');
+
+                //window.alert();
+                if($pointsExtrap === ""){
+                    Tecnotek.showErrorMessage("Debe incluir un puntaje.",
+                        true, "", false);
+                } else if(($pointsExtrap*1 < $minP*1) || ($pointsExtrap*1 > $maxP*1)){
+                    Tecnotek.showErrorMessage("Los puntos estan fuera del rango.",
+                        true, "", false);
+
+                } else{
+                    //alert($course);
+                    Tecnotek.ajaxCall(Tecnotek.UI.urls["saveExtrapURL"],
+                        {studentId: $studentId,
+                            course: $course,
+                            type: $type,
+                            pointsExtrap: $pointsExtrap,
+                            //periodId: Tecnotek.UI.vars["currentPeriod"]
+                            periodId: $('#period').val()
+                        },
+                        function(data){
+                            if(data.error === true) {
+                                Tecnotek.showErrorMessage(data.message,true, "", false);
+                            } else {
+                                $.fancybox.close();
+                                Tecnotek.showInfoMessage("Los puntos se ha ingresado correctamente.", true, "", false)
+                                Tecnotek.Extrapoints.loadExtrapoints($('#period').val());
+                            }
+                        },
+                        function(jqXHR, textStatus){
+                            Tecnotek.showErrorMessage("Error saving extra point: " + textStatus + ".",
+                                true, "", false);
+                        }, true);
+                    //$.fancybox.close();
+                    //Tecnotek.Extrapoints.loadExtrapoints();
+                }
+
+            },
+            loadCourses: function() {
+                $('#course').children().remove();
+                //alert($('#groupToFormTeacher').val());
+                Tecnotek.ajaxCall(Tecnotek.UI.urls["loadCoursesExtraPointsURL"],
+                    {   //periodId: Tecnotek.UI.vars["currentPeriod"]
+                        periodId: $('#period').val() },
+                    function(data){
+                        if(data.error === true) {
+                            Tecnotek.showErrorMessage(data.message,true, "", false);
+                        } else {
+                            $('#course').append('<option value="0">Todos</option>');
+                            for(i=0; i<data.courses.length; i++) {
+                                $('#course').append('<option value="' + data.courses[i].id + '">' + data.courses[i].name + '</option>');
+                            }
+                        }
+                    },
+                    function(jqXHR, textStatus){
+                        Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".", true, "", false);
+                        $(this).val("");
+                    }, true);
+            },
+            loadExtrapoints: function(period) {
+                $("#extrap-container").html("");
+
+                Tecnotek.uniqueAjaxCall(Tecnotek.UI.urls["searchExtraPoints"],
+                    {
+                        periodId: period
+                    },
+                    function(data){
+                        if(data.error === true) {
+                            //Tecnotek.hideWaiting();
+                            Tecnotek.showErrorMessage(data.message,true, "", false);
+                            //$("#new-relative-btn").hide();
+                        } else {
+
+                            var label = "";
+                            var courselabel = "";
+
+                            for(i=0; i<data.entity.length; i++) {
+                                //alert("entra");
+                                var row = '<div class="row userRow tableRowOdd">';
+                                 row += '<div class="option_width" style="float: left; width: 350px;">' + data.entity[i].name + '</div>';
+                                 row += '<div class="option_width" style="float: left; width: 150px;">' +  data.entity[i].points + '</div>';
+
+                                 if(data.entity[i].typepoints == '1'){
+                                    label = 'Puntos extras';
+                                 }
+                                 if(data.entity[i].typepoints == '2'){
+                                     label = 'Puntos de traslado';
+                                 }
+
+                                if(data.entity[i].course_id == null){
+                                    courselabel = 'Todos';
+                                }else{
+                                    courselabel = data.entity[i].coursename;
+                                }
+
+                                 row += '<div class="option_width" style="float: left; width: 250px;">'+label+' (' + courselabel + ')</div>';
+
+                                 row += '<div class="right imageButton editButton"  rel="' + data.entity[i].id + '"></div>';
+                                 row += '<div class="right imageButton deleteButton" style="height: 16px;"  rel="' + data.entity[i].id + '"></div>';
+
+
+                                $("#extrap-container").append(row);
+                            }
+                            Tecnotek.initStudentsSearch();
+                            Tecnotek.AdministratorList.init();
+                            Tecnotek.AdministratorList.initBtnSearch();
+                            Tecnotek.Extrapoints.init();
+                            //Tecnotek.hideWaiting();
+                        }
+                    },
+                    function(jqXHR, textStatus){
+                        if (textStatus != "abort") {
+                            Tecnotek.hideWaiting();
+                            console.debug("Error getting data: " + textStatus);
+                        }
+                    }, true, 'searchExtraPoints');
             }
         },
         RouteShow : {
@@ -2133,7 +2395,7 @@ var Tecnotek = {
                             Tecnotek.showErrorMessage(data.message,true, "", false);
                         } else {
 
-                            $html = '<div id="relative_row_' + this.data.id + '" class="row" rel="' +  this.data.id + '" style="padding: 0px;">';
+                            $html = '<div id="relative_row_' + data.id + '" class="row" rel="' +  this.data.id + '" style="padding: 0px;">';
                             $html += '<div class style="float: left; width: 325px;">' + $firstname + " " + $lastname + '</div>';
                             $html += '<div class style="float: left; width: 50px;">' + $detail + '</div>';
                             $html += '<div class="right imageButton deleteButton" style="height: 16px;"  title="Delete"  rel="' + data.id + '"></div>';
@@ -2167,7 +2429,87 @@ var Tecnotek = {
 
             }
         },
-        initRelativesSearch: function(){
+    initStudentsSearch: function(){
+        $('#searchBox').focus(function(event){
+            $("#studentId").val(0);
+            $('#searchBox').val("");
+        });
+
+        $('#searchBox').keyup(function(event){
+            event.preventDefault();
+            if($(this).val().length == 0) {
+                $('#suggestions').fadeOut(); // Hide the suggestions box
+            } else {
+                Tecnotek.ajaxCall(Tecnotek.UI.urls["getStudentsURL"],
+                    {text: $(this).val()},
+                    function(data){
+                        if(data.error === true) {
+                            Tecnotek.showErrorMessage(data.message,true, "", false);
+                        } else {
+                            $data = "";
+                            $data += '<p id="searchresults">';
+                            $data += '    <span class="category">Estudiantes</span>';
+                            for(i=0; i<data.students.length; i++) {
+                                $data += '    <a class="searchResult" rel="' + data.students[i].id + '" name="' +
+                                    data.students[i].firstname + ' ' + data.students[i].lastname
+                                    + '" inst="'+data.students[i].institution_id+'">';
+                                $data += '      <span class="searchheading">' + data.students[i].carne
+                                    + ' ' + data.students[i].firstname
+                                    + ' ' + data.students[i].lastname + ' ' + data.students[i].groupyear
+                                    + ' ' +  '</span>';
+                                $data += '      <span>Incluir este estudiante.</span>';
+                                $data += '    </a>';
+                            }
+                            $data += '</p>';
+
+                            $('#suggestions').fadeIn(); // Show the suggestions box
+                            $('#suggestions').html($data); // Fill the suggestions box
+                            $('.searchResult').unbind();
+                            $('.searchResult').click(function(event){
+                                event.preventDefault();
+                                $("#studentId").val($(this).attr("rel"));
+                                //$("#institucionID").val($(this).attr("inst"));
+                                $('#searchBox').val("");
+                                $('#newExtraPoint').trigger('click');
+
+                                //if(($(this).attr("inst")<19)||(($(this).attr("inst")>33)&&($(this).attr("inst")<52))){
+                                if($(this).attr("inst")==2){
+                                    $("select > option[insti*='3']").hide();
+                                    $("select > option[insti*='3']").removeAttr("selected");
+                                    $("select > option[insti*='2']").show();
+                                    $("select > option[insti*='2']").attr('selected','selected');
+                                }
+
+                                //if((($(this).attr("inst")>18)&&($(this).attr("inst")<34))||($(this).attr("inst")>51)){
+                                if($(this).attr("inst")==3){
+                                    $("select > option[insti*='2']").hide();
+                                    $("select > option[insti*='2']").removeAttr("selected");
+                                    $("select > option[insti*='3']").show();
+                                    $("select > option[insti*='3']").attr('selected','selected');
+                                }
+
+
+
+                            });
+                        }
+                    },
+                    function(jqXHR, textStatus){
+                        Tecnotek.showErrorMessage("Error getting data: " + textStatus + ".",
+                            true, "", false);
+                        $(this).val("");
+                        $('#suggestions').fadeOut(); // Hide the suggestions box
+                    }, true);
+            }
+        });
+
+        $('#searchBox').blur(function(event){
+            event.preventDefault();
+            $(this).val("");
+            $('#suggestions').fadeOut(); // Hide the suggestions box
+            //$("#institucionID").val("0");
+        });
+    },
+    initRelativesSearch: function(){
             $('#searchBox').focus(function(event){
                 $("#studentId").val(0);
                 $('#searchBox').val("");

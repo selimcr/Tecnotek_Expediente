@@ -142,7 +142,7 @@ class Contact
     private $birthday;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      * @Assert\Min(limit = 0)
      */
     private $degree;

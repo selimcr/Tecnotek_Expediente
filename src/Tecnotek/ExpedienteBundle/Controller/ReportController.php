@@ -1844,7 +1844,7 @@ if($convocatoria == 2){
             $tercerTrim = 0;
 
 
-            switch($periodId){
+            /*switch($periodId){
                 case 1: $periodIdb=1;
                         break;
                 case 2: $periodIdb=2;
@@ -1869,7 +1869,12 @@ if($convocatoria == 2){
                     break;
                 case 12: $periodIdb=3;
                     break;
-            }
+            }*/
+
+            $periodOption = $em->getRepository("TecnotekExpedienteBundle:Period")
+                ->find($periodId);
+            //$year = $period->getYear(); ///para filtro de año
+            $periodIdb = $period->getOrderInYear();
 
             for($i = 1; $i < 4; $i++){
                 if (array_key_exists("nota" . $i, $courseStdQ)) {

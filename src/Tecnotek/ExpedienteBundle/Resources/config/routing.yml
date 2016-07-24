@@ -199,6 +199,10 @@ _expediente_sysadmin_student_search:
     pattern:  /student/search
     defaults: { _controller: TecnotekExpedienteBundle:Student:searchStudents }
 
+_expediente_sysadmin_contact_search:
+    pattern:  /contact/search
+    defaults: { _controller: TecnotekExpedienteBundle:Student:searchContacts }
+
 _expediente_sysadmin_student_psico_esc:
     pattern:  /studentPsico
     defaults: { _controller: TecnotekExpedienteBundle:Student:studentListPsicoEsc }
@@ -283,6 +287,11 @@ _expediente_sysadmin_student_psico_profile_group:
 _expediente_sysadmin_save_student_psico_profile:
     pattern:  /student/psicoProfileSave
     defaults: { _controller: TecnotekExpedienteBundle:Student:savePsicoForm }
+
+_expediente_sysadmin_contact:
+    pattern:  /contact
+    defaults: { _controller: TecnotekExpedienteBundle:Student:contactList }
+
 #Fin de CRUD de Students
 
 #CRUD de Clubs para SysAdmin
@@ -541,6 +550,10 @@ _expediente_sysadmin_get_info_relatives:
     pattern:  /students/getInfoRelatives
     defaults: { _controller: TecnotekExpedienteBundle:Student:getInfoRelatives}
 
+_expediente_sysadmin_get_info_relatives_full:
+    pattern:  /students/getInfoRelativesFull
+    defaults: { _controller: TecnotekExpedienteBundle:Student:getInfoRelativesFull}
+
 _expediente_get_contacts_list:
     pattern:  /students/contact/list
     defaults: { _controller: TecnotekExpedienteBundle:Student:getContactList }
@@ -783,6 +796,59 @@ _expediente_sysadmin_penalties_show_simple:
 _expediente_sysadmin_penalties_edit_simple:
     pattern:  /ap/penalties/edit
     defaults: { _controller: TecnotekExpedienteBundle:Student:penaltiesEdit }
+
+###########      Extra points      ###########
+_expediente_extrap:
+    pattern:  /ap/extrap/
+    defaults: { _controller: TecnotekExpedienteBundle:Student:extrapIndex }
+
+_expediente_extrap_search:
+    pattern:  /ap/extrap/search/
+    defaults: { _controller: TecnotekExpedienteBundle:Student:extrapSearch }
+
+_expediente_sysadmin_extrap_search:
+    pattern:  /extrap/searchUpdate
+    defaults: { _controller: TecnotekExpedienteBundle:Student:extrapSearchUpdate }
+
+_expediente_extrap_save:
+    pattern:  /ap/extrap/save
+    defaults: { _controller: TecnotekExpedienteBundle:Student:extrapSave }
+
+_delete_extrap:
+    pattern:  /extrap/delete/{id}
+    defaults: { _controller: TecnotekExpedienteBundle:Student:extrapDelete }
+
+_delete_extrap_simple:
+    pattern:  /extrap/delete
+    defaults: { _controller: TecnotekExpedienteBundle:Student:extrapDelete }
+
+_expediente_sysadmin_extrap_create:
+    pattern:  /ap/extrap/create
+    defaults: { _controller: TecnotekExpedienteBundle:Student:extrapCreate }
+
+_expediente_sysadmin_extrap_update:
+    pattern:  /ap/extrap/update
+    defaults: { _controller: TecnotekExpedienteBundle:Student:extrapUpdate }
+
+_expediente_sysadmin_extrap_show:
+    pattern:  /ap/extrap/show/{id}
+    defaults: { _controller: TecnotekExpedienteBundle:Student:extrapShow }
+
+_expediente_sysadmin_extrap_edit:
+    pattern:  /ap/extrap/edit/{id}
+    defaults: { _controller: TecnotekExpedienteBundle:Student:extrapEdit }
+
+_expediente_sysadmin_extrap_show_simple:
+    pattern:  /ap/extrap/show
+    defaults: { _controller: TecnotekExpedienteBundle:Student:extrapShow }
+
+_expediente_sysadmin_extrap_edit_simple:
+    pattern:  /ap/extrap/edit
+    defaults: { _controller: TecnotekExpedienteBundle:Student:extrapEdit }
+
+_expediente_sysadmin_load_courses_extra_points:
+  pattern: /period/CoursesExtraPoints/load/
+  defaults: { _controller: TecnotekExpedienteBundle:SuperAdmin:loadCoursesExtraPoints }
 
 ###########      REPORTS      ###########
 _expediente_absences:

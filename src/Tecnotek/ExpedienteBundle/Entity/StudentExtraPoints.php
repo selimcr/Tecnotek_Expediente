@@ -88,6 +88,26 @@ class StudentExtraPoints
     }
 
     /**
+     * Set typePoints
+     *
+     * @param int $typePoints
+     */
+    public function setTypePoints($typePoints)
+    {
+        $this->typePoints = $typePoints;
+    }
+
+    /**
+     * Get typePoints
+     *
+     * @return int
+     */
+    public function getTypePoints()
+    {
+        return $this->typePoints;
+    }
+
+    /**
      * Set studentYear
      *
      * @param \Tecnotek\ExpedienteBundle\Entity\StudentYear $studentYear
@@ -112,9 +132,14 @@ class StudentExtraPoints
      *
      * @param \Tecnotek\ExpedienteBundle\Entity\Course $Course
      */
-    public function setCourse(\Tecnotek\ExpedienteBundle\Entity\Course $Course)
+    public function setCourse($Course)
     {
         $this->course = $Course;
+    }
+
+    public function removeCourse()
+    {
+        $this->course = null;
     }
 
     /**

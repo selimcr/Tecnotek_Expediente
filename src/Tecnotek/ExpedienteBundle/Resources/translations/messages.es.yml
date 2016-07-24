@@ -171,6 +171,8 @@ club.include.help: Ingrese el nombre y seleccione el estudiante de la lista de s
 group.include.students: Incluir estudiantes a este grupo
 route.include.students: Incluir estudiantes a esta ruta
 
+label.contacts: Contactos
+label.contacts.list: Lista de Contactos
 label.relatives.in.student: Personas Autorizadas
 student.include.contact: Incluir contacto autorizado
 student.include.help: Ingrese el nombre y seleccione el contacto de la lista de sugeridos.
@@ -285,6 +287,12 @@ label.penalties.title: Administracion de Sanciones
 label.penalties.message: Puede filtrar la informacion y consultar las sanciones deseadas.
 label.penalty.type: Tipo de falta:
 label.penalty.show: Mostrar Sancion
+
+label.extrapoints: Ajuste de notas
+label.extrap.title: Punto adicionales
+label.penalties.message: Puede filtrar la asignación de puntos por estudiante
+label.extrap.type: Seleccione el tipo de puntos a sumar
+label.extrap.course: Seleccione el curso
 
 label.reports.routes.by.zone: Reporte de Rutas por Zona
 label.reports.students.by.route: Reporte de Estudiantes por Ruta

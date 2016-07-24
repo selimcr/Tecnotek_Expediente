@@ -1263,6 +1263,47 @@ class SuperAdminController extends Controller
         }
     }
 
+    public function loadCoursesExtraPointsAction(){   //2016 -5
+        $logger = $this->get('logger');
+        if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?
+        {
+            try {
+                $request = $this->get('request')->request;
+                $periodId = $request->get('periodId');
+
+                /*$keywords = preg_split("/[\s-]+/", $groupId);
+                $groupId = $keywords[0];
+                $gradeId = $keywords[1];*/
+
+                $translator = $this->get("translator");
+
+                if( isset($periodId)) {
+                    $em = $this->getDoctrine()->getEntityManager();
+                    //Get Courses
+                    $sql = "SELECT c.id, c.name as name"
+                        . " FROM tek_courses c"
+                        //. " WHERE cc.course_id = c.id and cc.period_id = " . $periodId . " AND cc.grade_id = " . $gradeId . " "
+                        . " ORDER BY c.name";
+                    $stmt = $em->getConnection()->prepare($sql);
+                    $stmt->execute();
+                    $courses = $stmt->fetchAll();
+                    return new Response(json_encode(array('error' => false, 'courses' => $courses)));
+                } else {
+                    return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
+                }
+            }
+            catch (Exception $e) {
+                $info = toString($e);
+                $logger->err('SuperAdmin::loadAvailableCourseClassAction [' . $info . "]");
+                return new Response(json_encode(array('error' => true, 'message' => $info)));
+            }
+        }// endif this is an ajax request
+        else
+        {
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+    }
+
     public function loadCoursesByTeacherAction(){ //2016 - 4
         $logger = $this->get('logger');
         if ($this->get('request')->isXmlHttpRequest())// Is the request an ajax one?

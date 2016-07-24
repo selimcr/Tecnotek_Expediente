@@ -82,7 +82,88 @@ Tecnotek.Students = {
             }, true, 'searchStudents');
     }
 };
+Tecnotek.Contacts = {
+    translates : {},
+    init : function() {
+        $('#searchText').keyup(function(event){
+            Tecnotek.UI.vars["page"] = 1;
+            Tecnotek.Contacts.searchContacts();
+        });
+        $('#btnSearch').unbind().click(function(event){
+            Tecnotek.Contacts.searchContacts();
+        });
+        $(".sort_header").click(function() {
+            Tecnotek.UI.vars["sortBy"] = $(this).attr("field-name");
+            Tecnotek.UI.vars["order"] = $(this).attr("order");
+            console.debug("Order by " + Tecnotek.UI.vars["sortBy"] + " " + Tecnotek.UI.vars["order"]);
+            $(this).attr("order", Tecnotek.UI.vars["order"] == "asc"? "desc":"asc");
+            $(".header-title").removeClass("asc").removeClass("desc").addClass("sortable");
+            $(this).children().addClass(Tecnotek.UI.vars["order"]);
+            Tecnotek.Contacts.searchContacts();
+        });
+        Tecnotek.UI.vars["order"] = "asc";
+        Tecnotek.UI.vars["sortBy"] = "identification";
+        Tecnotek.UI.vars["page"] = 1;
+        Tecnotek.Contacts.searchContacts();
+    },
+    searchContacts: function() {
+        $("#students-container").html("");
+        $("#pagination-container").html("");
+        Tecnotek.showWaiting();
+        Tecnotek.uniqueAjaxCall(Tecnotek.UI.urls["searchContacts"],
+            {
+                text: $("#searchText").val(),
+                sortBy: Tecnotek.UI.vars["sortBy"],
+                order: Tecnotek.UI.vars["order"],
+                page: Tecnotek.UI.vars["page"]
+            },
+            function(data){
+                if(data.error === true) {
+                    Tecnotek.hideWaiting();
+                    Tecnotek.showErrorMessage(data.message,true, "", false);
+                    //$("#new-relative-btn").hide();
+                } else {
+                    var baseHtml = $("#contactRowTemplate").html();
+                    /*$data = "";
+                     $data += '<p id="searchresults">';
+                     $data += '    <span class="category">Estudiantes</span>';*/
+                    for(i=0; i<data.contacts.length; i++) {
+                        //console.debug(data.students[i]);
+                        var row = '<div id="contactRowTemplate" class="row userRow ROW_CLASS" rel="CONTACT_ID">' +
+                            baseHtml + '</div>';
+                        row = row.replaceAll('ROW_CLASS', (i % 2 == 0? 'tableRowOdd':'tableRow'));
+                        row = row.replaceAll('CONTACT_ID', data.contacts[i].id);
+                        row = row.replaceAll('CONTACT_CIDENTIFICATION', data.contacts[i].identification);
+                        row = row.replaceAll('CONTACT_FIRST_NAME', data.contacts[i].firstname);
+                        row = row.replaceAll('CONTACT_LAST_NAME', data.contacts[i].lastname);
+                        /*var group = (data.students[i].groupyear == null || data.students[i].groupyear == "null")? "":data.students[i].groupyear;
+                        row = row.replaceAll('STUDENT_GROUP_YEAR', group);
+                        if (data.students[i].gender == 1) {
+                            row = row.replaceAll('STUDENT_GENDER', "Hombre");
+                        } else {
+                            row = row.replaceAll('STUDENT_GENDER', "Mujer");
+                        }*/
 
+                        $("#students-container").append(row);
+                    }
+                    Tecnotek.ContactList.initButtons();
+                    Tecnotek.UI.printPagination(data.total, data.filtered, Tecnotek.UI.vars["page"], 30, "pagination-container");
+                    $(".paginationButton").unbind().click(function() {
+                        Tecnotek.UI.vars["page"] = $(this).attr("page");
+                        Tecnotek.Contacts.searchContacts();
+                    });
+                    Tecnotek.hideWaiting();
+                    //$data += '</p>';
+                }
+            },
+            function(jqXHR, textStatus){
+                if (textStatus != "abort") {
+                    Tecnotek.hideWaiting();
+                    console.debug("Error getting data: " + textStatus);
+                }
+            }, true, 'searchContacts');
+    }
+};
 Tecnotek.Tickets = {
     translates : {},
     init : function() {

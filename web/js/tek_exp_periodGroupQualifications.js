@@ -33,6 +33,19 @@ Tecnotek.PeriodGroupQualifications = {
         });
     },
     loadGroupsOfPeriod: function($periodId) {
+        //alert($('#period').attr("convo").val());
+        $valVar = $('#period option:selected').attr("convo");
+        //alert($valVar);
+        if($valVar == 1){
+            $('input[name=conv]').val(1);
+        }else{
+            if($valVar == 2){
+                $('input[name=conv]').val(2);
+            }else{
+                $('input[name=conv]').val(0);
+            }
+        }
+        /*
         if( $('#period option:selected').html() == "CONVI 2013"){
             $('input[name=conv]').val(1);
         }else{
@@ -57,7 +70,7 @@ Tecnotek.PeriodGroupQualifications = {
                    }
                 }
             }
-        }
+        }*/
         console.debug("Load groups of period: " + $periodId);
         if(($periodId!==null)){
             $('#groups').children().remove();

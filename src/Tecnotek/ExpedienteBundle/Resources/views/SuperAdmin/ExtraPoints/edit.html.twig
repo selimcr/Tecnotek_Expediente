@@ -1,0 +1,83 @@
+{% extends 'TecnotekExpedienteBundle::logged_layout.html.twig' %}
+
+{% block htmlTitle %}
+    Tecnotek :: Expediente :: Super Administrador :: Ajustar calificación
+{% endblock %}
+
+{% block extracss %}
+{% endblock %}
+
+{% block extrajs %}
+    <script type="text/javascript">
+        Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
+    </script>
+{% endblock %}
+
+{% block content %}
+    <div class="container_24" style="width: 800px;">
+        <div class="grid_24" style="width: 100%;">
+            <div class="titleRow">
+                <div class="left"><h3>{% trans %}label.penalty.show{% endtrans %}</h3></div>
+                <div class="right"><a href="{{ path('_expediente_extrap') }}" class="button success-darker tiny"><span></span>{% trans %}label.back.list{% endtrans %}</a></div>
+                <div class="clear"></div>
+            </div>
+
+            <div class="panelRow" id="doc-forms">
+                <div class="large-12 columns">
+
+                    <form class="customForm" id="mainForm" name="mainForm" action="{{ path('_expediente_sysadmin_extrap_update') }}" method="post">
+                        <input type="hidden" id="id" name="id" value="{{ entity.id }}">
+                        {{ form_errors(form) }}
+
+                        {{ form_widget(form._token) }}
+
+                        <fieldset>
+                            <legend></legend>
+
+                            <div class="formRow">
+                                <label class="error">{{ form_errors(form.studentYear) }}</label>
+                                <div class="large-12 columns">
+                                    <label>{% trans %}label.student{% endtrans %}</label>
+                                    <input type="hidden" id="tecnotek_expediente_studentExtraPointsformtype_studentYear" name="tecnotek_expediente_studentExtraPointsformtype[studentYear]" value="{{ entity.studentYear.id }}">
+                                    {{ entity.studentYear }}
+                                </div>
+                            </div>
+
+                            <div class="formRow">
+                                <label class="error">{{ form_errors(form.course) }}</label>
+                                <div class="large-12 columns">
+                                    <label>{% trans %}label.course{% endtrans %}</label>{{ form_widget(form.course) }}
+                                </div>
+                            </div>
+
+                            <div class="formRow">
+                                <label class="error">{{ form_errors(form.typePoints) }}</label>
+                                <div class="large-12 columns">
+                                    <label>{% trans %}label.typePoints{% endtrans %}</label>{{ form_widget(form.typePoints) }}
+                                </div>
+                            </div>
+
+                            <div class="formRow">
+                                <label class="error">{{ form_errors(form.points) }}</label>
+                                <div class="large-12 columns">
+                                    <label>{% trans %}label.points{% endtrans %}</label>{{ form_widget(form.points) }}
+                                </div>
+                            </div>
+
+                            <div class="formRow ">
+                                <div class="large-12 columns buttonsPanel">
+                                    <a href="{{ path('_expediente_extrap') }}" class="button success-darker tiny"><span></span>{% trans %}label.cancelar{% endtrans %}</a>
+                                    <button style="margin-left: 15px; margin-top: 0px;" type="submit" class="button success-darker tiny" name="save"><span></span>{% trans %}label.save{% endtrans %}</button>
+                                </div>
+                                <div class="clear"></div>
+                            </div>
+
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+
+{% endblock %}

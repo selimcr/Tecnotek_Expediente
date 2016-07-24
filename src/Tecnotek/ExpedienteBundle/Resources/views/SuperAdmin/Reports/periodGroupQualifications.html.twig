@@ -45,14 +45,18 @@
             <div id="labelPeriod" class="left">
                 <select id="period" name="period" style="width: 150px;">
                     {% for period in periods %}
-                    <option {% if period.isActual == '1' %}  selected="selected" {% endif %} value="{{ period.id }}">{{period}}</option>
+                        <option convo="0" {% if period.isActual == '1' %}  selected="selected" {% endif %} value="{{ period.id }}">{{period}}</option>
+                        {% if period.orderInYear == '3' %}
+                            <option value="{{ period.id }}" convo="1">CONVI {{period.year}}</option>
+                            <option value="{{ period.id }}" convo="2">CONVII {{period.year}}</option>
+                        {% endif %}
                     {% endfor %}
-                    <option value="3" convo="1">CONVI 2013</option>
+                    <!--<option value="3" convo="1">CONVI 2013</option>
                     <option value="3" convo="2">CONVII 2013</option>
                     <option value="6" convo="1">CONVI 2014</option>
                     <option value="6" convo="2">CONVII 2014</option>
                     <option value="9" convo="1">CONVI 2015</option>
-                    <option value="9" convo="2">CONVII 2015</option>
+                    <option value="9" convo="2">CONVII 2015</option>-->
                 </select>
             </div>
             <input id="conv" name="conv" hidden="hidden" value = "0">

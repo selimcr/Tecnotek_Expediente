@@ -524,7 +524,7 @@ class Student
      *
      * @param \Tecnotek\ExpedienteBundle\Entity\Route $route
      */
-    public function setRoute(\Tecnotek\ExpedienteBundle\Entity\Route $route)
+    public function setRoute($route)
     {
         $this->route = $route;
     }
@@ -549,7 +549,7 @@ class Student
      *
      * @param \Tecnotek\ExpedienteBundle\Entity\Route $routeIn
      */
-    public function setRouteIn(\Tecnotek\ExpedienteBundle\Entity\Route $routeIn)
+    public function setRouteIn($routeIn)
     {
         $this->routeIn = $routeIn;
     }
