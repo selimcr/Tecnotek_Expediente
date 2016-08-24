@@ -2795,4 +2795,38 @@ class SuperAdminController extends Controller
             return new Response("<b>Not an ajax call!!!" . "</b>");
         }
     }
+
+    public function loadCoursesOfPeriodAndLevelAction(){
+        $logger = $this->get('logger');
+        if (!$this->get('request')->isXmlHttpRequest()) {// Is the request not an ajax one?
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+        try {
+            $request = $this->get('request')->request;
+            $periodId = $request->get('periodId');
+            $levelId = $request->get('levelId');
+            $translator = $this->get("translator");
+            if( isset($periodId) && isset($levelId) ) {
+                $em = $this->getDoctrine()->getEntityManager();
+                // Get Courses
+                $sql = "SELECT c.id, c.name
+                        FROM tek_course_class tcc
+                        JOIN tek_courses c ON c.id = tcc.course_id
+                        WHERE tcc.period_id = $periodId AND tcc.grade_id = $levelId
+                        GROUP BY c.id
+                        ORDER BY c.name;";
+                $stmt = $em->getConnection()->prepare($sql);
+                $stmt->execute();
+                $courses = $stmt->fetchAll();
+                return new Response(json_encode(array('error' => false, 'courses' => $courses)));
+            } else {
+                return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
+            }
+        }
+        catch (Exception $e) {
+            $info = toString($e);
+            $logger->err('Admin::loadGroupsOfPeriodAction [' . $info . "]");
+            return new Response(json_encode(array('error' => true, 'message' => $info)));
+        }
+    }
 }

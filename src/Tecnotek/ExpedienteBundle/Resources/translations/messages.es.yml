@@ -332,6 +332,9 @@ menu.detail.student.qualifications: Notas detalladas de Estudiante
 menu.averages.report: Mejores Promedios
 menu.mep.report: MEP Notas Presentación
 menu.absences.report: Ausencias por grupo
+convo.report: Convocatorias
+label.convocatorias: Convocatorias
+report.by: Reporte por
 
 results.not.found: No se han encontrado resultados.
 

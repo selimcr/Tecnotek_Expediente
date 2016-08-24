@@ -1,0 +1,107 @@
+{% extends 'TecnotekExpedienteBundle::logged_layout.html.twig' %}
+
+{% block extrajs %}
+<script type="text/javascript" src="{{ asset('js/jquery.printElement.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/tek_exp_report_convo.js') }}"></script>
+
+<script type="text/javascript">
+    Tecnotek.module = "reportConvocatorias";
+    Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
+    Tecnotek.UI.urls["loadGroupsOfPeriodURL"] = "{{ path('_expediente_sysadmin_load_groups_of_period_q')}}";
+    Tecnotek.UI.urls["loadLevelsOfPeriodURL"] = "{{ path('_expediente_sysadmin_load_period_levels')}}";
+    Tecnotek.UI.urls["loadCoursesOfPeriodAndLevelURL"] = "{{ path('_expediente_sysadmin_load_courses_of_period_and_level')}}";
+
+    /**/
+    Tecnotek.UI.urls["loadGroupsOfYearURL"] = "{{ path('_expediente_sysadmin_load_groups_of_year')}}";
+    Tecnotek.UI.urls["loadCoursesOfGroupURL"] = "{{ path("_expediente_sysadmin_load_courses_of_group") }}";
+
+    Tecnotek.UI.urls["loadQualificationsOfGroupByCourseURL"] = "{{ path("_expediente_report_group_qualifications_by_course") }}";
+    Tecnotek.UI.urls["viewPrintableVersionURL"] = "{{ path("_expediente_sysadmin_printable_group_qualifications") }}";
+
+    Tecnotek.UI.urls["getStudentsURL"] = "{{ path('_expediente_sysadmin_student_ajax_list')}}";
+    Tecnotek.StudentShow.translates["relative.not.selected"] = "{% trans %}message.relative.not.selected{% endtrans %}";
+</script>
+{% endblock %}
+
+{% block extracss %}
+<link rel="stylesheet" href="{{ asset('fancybox/jquery.fancybox.css') }}" type="text/css" media="all" />
+<link rel="stylesheet" href="{{ asset('fancybox/fancybox_style.css') }}" type="text/css" media="all" />
+<link rel="stylesheet" href="{{ asset('css/jquery-ui-timepicker-addon.css') }}" type="text/css" media="all" />
+<link rel="stylesheet" href="{{ asset(style ~ '/stylesheets/waitingBar.css') }}" type="text/css" media="all" />
+<link rel="stylesheet" href="{{ asset(style ~ '/stylesheets/qualificationsOfPeriod.css') }}" type="text/css" media="all" />
+
+<style type="text/css" type="text/css" media="all">
+    input {font-weight:bold;}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container_24">
+    <div class="grid_24">
+        <div style="line-height: 26px;">
+            <div class="left" style="width: 100px; font-weight: bold;">{%trans%}report.by{%endtrans%}</div>
+            <div id="labelReportType" class="left">
+                <select id="reportType" name="reportType" style="width: 100px;">
+                    <option value="1" selected>Grupo</option>
+                    <option value="2">Materia</option>
+                </select>
+            </div>
+
+            <div class="left" style="margin-left: 15px; width: 65px; font-weight: bold;">{%trans%}label.period{%endtrans%}</div>
+            <div id="labelPeriod" class="left">
+                <select id="period" name="period" style="width: 150px;">
+                    {% for period in periods %}
+                        <option {% if period.isActual == '1' %}  selected="selected" {% endif %} value="{{ period.id }}">{{period}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div id="groupsContainer" class="left" style="margin-left: 15px;">
+                <div class="left" style="width: 65px; font-weight: bold;">{%trans%}label.groups{%endtrans%}</div>
+                <div class="left">
+                    <select id="groups" name="groups" style="width: 150px;">
+                    </select>
+                </div>
+            </div>
+
+            <div id="levelsContainer" class="left" style="margin-left: 15px; display: none;">
+                <div class="left" style="width: 45px; font-weight: bold;">{%trans%}label.level{%endtrans%}</div>
+                <div class="left">
+                    <select id="levels" name="levels" style="width: 130px;">
+                    </select>
+                </div>
+            </div>
+
+            <div id="coursesContainer" class="left" style="margin-left: 15px; display: none;">
+                <div class="left" style="width: 65px; font-weight: bold;">{%trans%}label.course{%endtrans%}</div>
+                <div class="left">
+                    <select id="courses" name="courses" style="width: 130px;">
+                    </select>
+                </div>
+            </div>
+
+            <button style="margin-left: 15px; margin-top: 0px;" type="button" class="right button success-darker tiny" id="btnPrint" name="btnPrint" rel="Calificaciones"><span></span>{% trans %}label.print{% endtrans %}</button>
+            <div class="clear"></div>
+        </div>
+        <!-- Qualifications -->
+        <div>
+            <div class="left">
+                <h3>{% trans %}label.convocatorias{% endtrans %}</h3>
+            </div>
+            <div class="left" style="line-height: 48px; margin-left: 25px;">
+                <span>Reporte de las Convocatorias</span>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="clear"></div>
+
+        <div id="tableContainer" name="tableContainer" style="display: none;">
+            <div class="qualificationTable" id="tablaCalificacion" name="tablaCalificacion">
+                <div  name="contentBody" id="contentBody"></div>
+                <div class="clear"></div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+</div>
+{% endblock %}

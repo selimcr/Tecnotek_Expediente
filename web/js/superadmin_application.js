@@ -177,6 +177,9 @@ var Tecnotek = {
                 case "psicoLog":
                     Tecnotek.Visits.init();
                     break;
+                case "reportConvocatorias":
+                    Tecnotek.ReportConvocatorias.init();
+                    break;
                 default:
 					break;
 				}

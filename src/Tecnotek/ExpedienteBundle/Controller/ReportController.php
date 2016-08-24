@@ -3740,4 +3740,14 @@ $condicionRow = str_replace("changeCondicion", "APLAZADO", $condicionRow);
         $html .= "</table>";
         return $html;
     }
+
+    public function convoAction(){
+        $em = $this->getDoctrine()->getEntityManager();
+        $periods = $em->getRepository("TecnotekExpedienteBundle:Period")->findAll();
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Reports/convo.html.twig',
+            array(
+                'menuIndex' => 4,
+                'periods' => $periods
+            ));
+    }
 }
