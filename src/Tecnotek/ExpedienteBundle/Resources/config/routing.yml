@@ -911,6 +911,25 @@ _expediente_sysadmin_save_group_absences:
   pattern: /absence/saveGroupAbsences/
   defaults: { _controller: TecnotekExpedienteBundle:Student:saveGroupAbsences }
 #########################################
+_expediente_sysadmin_period_migrations:
+    pattern:  /period/migrations
+    defaults: { _controller: TecnotekExpedienteBundle:Period:listPeriodMigrations }
+
+_expediente_sysadmin_period_migration_create:
+    pattern:  /period/migrations/manage
+    defaults: { _controller: TecnotekExpedienteBundle:Period:managePeriodMigrations }
+
+_expediente_sysadmin_period_migration_manage_simple:
+    pattern:  /period/migrations/manage
+    defaults: { _controller: TecnotekExpedienteBundle:Period:managePeriodMigrations }
+
+_expediente_sysadmin_period_migration_manage:
+    pattern:  /period/migrations/manage/{id}
+    defaults: { _controller: TecnotekExpedienteBundle:Period:managePeriodMigrations }
+
+_expediente_sysadmin_period_migrations_execute_step:
+    pattern:  /period/migrations/execute-step
+    defaults: { _controller: TecnotekExpedienteBundle:Period:executePeriodMigrationStep }
 
 _expediente_sysadmin_period_admin_simple:
     pattern:  /period/admin

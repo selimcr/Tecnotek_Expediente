@@ -185,6 +185,9 @@ var Tecnotek = {
                 case "psicoLog":
                     Tecnotek.Visits.init();
                     break;
+                case "managePeriodMigration":
+                    Tecnotek.periodMigration.init();
+                    break;
                 default:
 					break;
 				}
