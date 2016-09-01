@@ -478,6 +478,10 @@ extra.emails: Correos adicionales separados por ;
 excel.file.load.success: El archivo ha sido cargado correctamente con los siguientes detalles:
 excel.file.invalid.file: El archivo cargado no corresponde al grupo y materia seleccionado, el archivo fue generado desde el Sistema?
 
+label.transportation.tickets.from.site: Boletas de Transporte
+label.transportation.tickets.from.site.type.1: Completo
+label.transportation.tickets.from.site.type.2: Medio
+
 #Validation
 not.blank.name: Probando proband.
 not:

@@ -1316,3 +1316,33 @@ _expediente_sysadmin_save_questionnaires:
 _expediente_sysadmin_student_tutor_visit_search:
     pattern:  /student/tutor/visit/search
     defaults: { _controller: TecnotekExpedienteBundle:Student:searchStudentTutorVisit }
+
+#CRUD de Transportation Tickets From Site para SysAdmin
+_expediente_sysadmin_transportation_tickets:
+    pattern:  /transportation-tickets
+    defaults: { _controller: TecnotekExpedienteBundle:Report:transportationTicketFromSiteList }
+
+_expediente_sysadmin_transportation_tickets_search:
+    pattern:  /transportation-tickets/search
+    defaults: { _controller: TecnotekExpedienteBundle:Report:searchTransportationTicketFromSiteList }
+
+#############################################
+_expediente_api_get_states:
+    pattern:  /api/states
+    defaults: { _controller: TecnotekExpedienteBundle:Api:getAllStates }
+
+_expediente_api_get_cantones:
+    pattern:  /api/cantones
+    defaults: { _controller: TecnotekExpedienteBundle:Api:getCantonesOfState }
+
+_expediente_api_get_districts:
+    pattern:  /api/districts
+    defaults: { _controller: TecnotekExpedienteBundle:Api:getDistrictsOfCanton }
+
+_expediente_api_get_student:
+    pattern:  /api/students
+    defaults: { _controller: TecnotekExpedienteBundle:Api:getStudent }
+
+_expediente_api_post_transportation_tickets:
+    pattern:  /api/transportation-tickets
+    defaults: { _controller: TecnotekExpedienteBundle:Api:saveTransportationTicket }

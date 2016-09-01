@@ -97,6 +97,9 @@ var Tecnotek = {
                 case "entityList":
                     Tecnotek.AdministratorList.init();
                     Tecnotek.AdministratorList.initBtnSearch(); break;
+                case "transportationTicketsFromSiteList":
+                    Tecnotek.AdministratorList.init();
+                    Tecnotek.TransportationTicket.init(); break;
                 case "studentList":
                     Tecnotek.AdministratorList.init();
                     Tecnotek.Students.init(); break;
@@ -216,6 +219,18 @@ var Tecnotek = {
             var request = $.ajax({
                 url: url,
                 type: "POST",
+                data: params,
+                dataType: "json"
+            });
+
+            request.done(succedFunction);
+
+            request.fail(errorFunction);
+        },
+        ajaxGetCall : function(url, params, succedFunction, errorFunction, showSpinner) {
+            var request = $.ajax({
+                url: url,
+                type: "GET",
                 data: params,
                 dataType: "json"
             });

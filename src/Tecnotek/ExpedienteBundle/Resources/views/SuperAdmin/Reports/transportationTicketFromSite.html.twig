@@ -1,0 +1,105 @@
+{% extends 'TecnotekExpedienteBundle::logged_layout.html.twig' %}
+
+{% block htmlTitle %}
+    Tecnotek :: Expediente :: Super Administrador :: Estudiantado
+{% endblock %}
+{% block extracss %}
+    <style type="text/css">
+        #searchForm input, .filter-search .internal #searchForm select {height: 26px; line-height: 26px; vertical-align: middle;}
+        button.tiny, .button.tiny {margin: 0px 0px 0px 0px; padding-top: 7px;}
+    </style>
+{% endblock %}
+{% block extrajs %}
+<script type="text/javascript" src="{{ asset('js/tek_exp_transportation_tickets.js') }}"></script>
+<script type="text/javascript">
+    Tecnotek.module = "transportationTicketsFromSiteList";
+    Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
+    Tecnotek.UI.urls["search"] = "{{ path('_expediente_sysadmin_transportation_tickets_search')}}";
+    Tecnotek.UI.translates["ticket-type-1"] = "{{ 'label.transportation.tickets.from.site.type.1'|trans }}";
+    Tecnotek.UI.translates["ticket-type-2"] = "{{ 'label.transportation.tickets.from.site.type.2'|trans }}";
+    Tecnotek.UI.urls["load-cantones"] = "{{ path('_expediente_api_get_cantones')}}";
+    Tecnotek.UI.urls["load-districts"] = "{{ path('_expediente_api_get_districts')}}";
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="container_24">
+    <div class="grid_24">
+        <div class="titleRow">
+            <div class="left"><h3>{% trans %}label.transportation.tickets.from.site{% endtrans %}</h3></div>
+            <div class="clear"></div>
+        </div>
+        <div class="filter-search table">
+            <div class="internal">
+                <form id="searchForm" action="#">
+                    <div style="height: 26px; line-height: 26px; vertical-align: middle;">
+                        <label style="width: 70px;">Provincia:</label>
+                        <select id="state" name="state" style="width: 110px">
+                            <option value="0">Todos</option>
+                            {% for state in states %}
+                                <option value="{{ state.id }}">{{ state.name }}</option>
+                            {% endfor %}
+                        </select>
+                        <label style="width: 57px;">Cantón:</label>
+                        <select id="canton" name="canton" style="width: 150px">
+                            <option value="0">Todos</option>
+                        </select>
+                        <label style="width: 54px;">Distrito:</label>
+                        <select id="district" name="district" style="width: 150px">
+                            <option value="0">Todos</option>
+                        </select>
+                        <label style="width: 40px;">Filtro:</label>
+                        <input id="searchText" name="searchText" style="width: 190px;" value="{{ text }}">
+                        <a style="margin: 4px 0px 0px 0px;" href="#" class="button success-darker tiny" id="btnSearch" name="btnSearch"><span></span>{% trans %}label.search{% endtrans %}</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="table">
+            <div class="row tableHeader">
+                <div class="option_width sort_header" style="float: left; width: 130px;"
+                     field-name="tickets.date" order="asc">
+                    <span class="header-title asc" title="Fecha">Fecha</span>
+                </div>
+                <div class="option_width sort_header" style="float: left; width: 300px; margin-left: -6px;"
+                     field-name="std.firstname" order="asc">
+                    <span class="header-title sortable" title="Nombre">Nombre</span>
+                </div>
+                <div class="option_width sort_header" style="float: left; width: 100px; margin-left: -6px;"
+                     field-name="tickets.service" order="asc">
+                    <span class="header-title sortable" title="Tipo de Servicio">Tiempo</span>
+                </div>
+                <div class="option_width sort_header" style="float: left; width: 90px; margin-left: -6px;"
+                     field-name="s.name, c.name, d.name" order="asc">
+                    <span class="header-title sortable" title="Dirección">Dirección</span>
+                </div>
+
+                <div class="right" style="margin-top: -2px;"></div>
+                <div class="right" style="width: 5px; height: 26px"></div>
+                <div class="option_width right">
+
+                </div>
+            </div>
+
+            <div id="students-container">
+            </div>
+        </div>
+
+        <br/>
+
+        <div style="margin-bottom:75px;" id="pagination-container">
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div class="clear"></div>
+</div>
+
+<div id="studentRowTemplate" class="row userRow ROW_CLASS" rel="TICKET_ID" style="display: none;">
+    <div class="option_width" style="float: left; width: 130px;">TICKET_DATE</div>
+    <div class="option_width" style="float: left; width: 300px; margin-left: -6px;">STUDENT_FULLNAME</div>
+    <div class="option_width" style="float: left; width: 100px; margin-left: -6px;">TICKET_TYPE</div>
+    <div class="option_width" style="float: left; width: 350px; margin-left: -6px;">TICKET_ADDRESS</div>
+    <div class="clear"></div>
+</div>
+{% endblock %}
