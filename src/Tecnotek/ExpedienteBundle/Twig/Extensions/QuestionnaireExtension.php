@@ -21,11 +21,39 @@ class QuestionnaireExtension extends \Twig_Extension
         return array(
             'include_raw' => new \Twig_Function_Method($this, 'twig_include_raw'),
             'print_package_box_raw' => new \Twig_Function_Method($this, 'print_package_box_raw'),
+            'printMigrationStep' => new \Twig_Function_Method($this, 'printMigrationStep'),
         );
     }
 
     public function twig_include_raw($file) {
         return file_get_contents($file);
+    }
+
+    public function printMigrationStep($canExecute, $stepNumber, $executed, $disabledText) {
+        $html = "";
+        $html .= '<div class="small-12 columns">';
+        $html .= '    <label style="width: 100%;"><span style="font-weight: bold;">Paso ' . $stepNumber . ':</span> '
+            . $this->translator->trans('period.migration.step.' . $stepNumber);
+        $html .= '<span id="step-action-' . $stepNumber . '" class="right">';
+        if ($canExecute) {
+            if ($executed) {
+                $html .= $this->translator->trans('label.completed');
+            } else {
+                $html .= '<button id="btn-step-' . $stepNumber . '" class="button success-darker tiny btn-step" '
+                    . $disabledText . ' rel="' . $stepNumber . '">';
+                $html .= $this->translator->trans('label.execute') . '</button>';
+            }
+        } else {
+            if ($executed) {
+                $html .= $this->translator->trans('label.completed');
+            } else {
+                $html .= $this->translator->trans('label.unrealized');
+            }
+        }
+        $html .= '</span>';
+        $html .= '    </label>';
+        $html .= '</div>';
+        return $html;
     }
 
     /**

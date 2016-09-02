@@ -1,0 +1,82 @@
+{% extends 'TecnotekExpedienteBundle::logged_layout.html.twig' %}
+
+{% block htmlTitle %}
+    Tecnotek :: Expediente :: Super Administrador :: Periodo
+{% endblock %}
+
+{% block extracss %}
+{% endblock %}
+
+{% block extrajs %}
+<script type="text/javascript" src="{{ asset('js/tek_exp_period_migration.js') }}"></script>
+<script type="text/javascript">
+    Tecnotek.module = "managePeriodMigration";
+    Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
+    Tecnotek.UI.urls["execute-migration-step"] = "{{ path('_expediente_sysadmin_period_migrations_execute_step') }}";
+    Tecnotek.UI.vars["migration-id"] = {{ migrationId }};
+    Tecnotek.UI.vars["period-source-id"] = {{ sourcePeriod.id }};
+    Tecnotek.UI.vars["period-destination-id"] = {{ destinationPeriod.id }};
+    Tecnotek.UI.translates['label-completed'] = "{{ 'label.completed'|trans }}";
+    Tecnotek.UI.translates['migration-step-confirmation'] = "{{ 'period.migration.step.execute.confirmation'|trans }}";
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="container_24" style="width: 800px;">
+    <div class="grid_24" style="width: 100%;">
+        <div class="titleRow">
+            <div class="left"><h3>{% trans %}label.period.migration.manage{% endtrans %}</h3></div>
+            <div class="right"><a href="{{ path('_expediente_sysadmin_period_migrations') }}" class="button success-darker tiny"><span></span>{% trans %}label.back.list{% endtrans %}</a></div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="panelRow" id="doc-forms">
+            <div class="large-12 columns">
+
+                <form class="customForm" id="mainForm" name="mainForm" action="{{ path('_expediente_sysadmin_period_update') }}" method="post">
+
+                    <fieldset>
+                        <legend></legend>
+
+                        <div class="formRow">
+                            <div class="small-12 large-6 columns">
+                                <label>Periodo Origen:</label>
+                                <span>{{ sourcePeriod }}</span>
+                            </div>
+                            <div class="small-12 large-6 columns">
+                                <label>Periodo destino:</label>
+                                <span>{{ destinationPeriod }}</span>
+                            </div>
+                        </div>
+                        <div class="formRow">
+                            <div class="small-12 columns">
+                                <span class="small-note">* Al crear una nueva migración el origen sólo puede ser el periodo actual</span>
+                            </div>
+                        </div>
+                        <div class="formRow">
+                            {% set disabledText = ""  %}
+                            {{ printMigrationStep(canExecute, 1, stepsStatus['1'] == 1, disabledText)|raw }}
+                            {% if entity.status == 1 %}
+                                {% set disabledText = "disabled"  %}
+                            {% endif %}
+                            {{ printMigrationStep(canExecute, 2, stepsStatus['2'] == 1, disabledText)|raw }}
+                            {{ printMigrationStep(canExecute, 3, stepsStatus['3'] == 1, disabledText)|raw }}
+                            {% if entity.status == 2 %}
+                                {% set disabledText = "disabled"  %}
+                            {% endif %}
+                            {{ printMigrationStep(canExecute, 4, stepsStatus['4'] == 1, disabledText)|raw }}
+                            {{ printMigrationStep(canExecute, 5, stepsStatus['5'] == 1, disabledText)|raw }}
+                            {{ printMigrationStep(canExecute, 6, stepsStatus['6'] == 1, disabledText)|raw }}
+                            {% if entity.status == 3 %}
+                                {% set disabledText = "disabled"  %}
+                            {% endif %}
+                            {{ printMigrationStep(canExecute, 7, stepsStatus['7'] == 1, disabledText)|raw }}
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>
+{% endblock %}

@@ -3745,4 +3745,91 @@ $condicionRow = str_replace("changeCondicion", "APLAZADO", $condicionRow);
         $html .= "</table>";
         return $html;
     }
+
+    public function transportationTicketFromSiteListAction() {
+        $text = $this->get('request')->query->get('text');
+        $em = $this->getDoctrine()->getEntityManager();
+        return $this->render('TecnotekExpedienteBundle:SuperAdmin:Reports/transportationTicketFromSite.html.twig',
+            array(
+                'menuIndex' => 3,
+                'text' => $text,
+                'states' => $em->getRepository("TecnotekExpedienteBundle:State")->findAll(),
+        ));
+    }
+
+    public function searchTransportationTicketFromSiteListAction($rowsPerPage = 30) {
+        $logger = $this->get('logger');
+        if (!$this->get('request')->isXmlHttpRequest()) { // Is the request an ajax one?
+            return new Response("<b>Not an ajax call!!!" . "</b>");
+        }
+        try {
+            $request = $this->get('request')->request;
+            $text = $request->get('text');
+            $sortBy = $request->get('sortBy');
+            $order = $request->get('order');
+            $page = $request->get('page');
+            $offset = ($page-1) * $rowsPerPage;
+            $em = $this->getDoctrine()->getEntityManager();
+            $words = explode(" ", trim($text));
+            $where = "";
+            foreach ($words as $word) {
+                $where .= $where == ""? "":" AND ";
+                $where .= "(std.firstname like '%" . $word . "%' OR std.lastname like '%" . $word .
+                    "%' OR std.carne like '%" . $word . "%')";
+            }
+            $state = $request->get('state');
+            if ($state != 0) {
+                $where .= $where == ""? "":" AND ";
+                $where .= " s.id = " . $state;
+            }
+            $canton = $request->get('canton');
+            if ($canton != 0) {
+                $where .= $where == ""? "":" AND ";
+                $where .= " c.id = " . $canton;
+            }
+            $district = $request->get('district');
+            if ($district != 0) {
+                $where .= $where == ""? "":" AND ";
+                $where .= " d.id = " . $district;
+            }
+            $sql = "SELECT SUM($where) as filtered,"
+                . " COUNT(*) as total FROM tek_site_transportation_tickets tickets"
+                . " JOIN tek_students std ON std.id = tickets.student_id"
+                . " JOIN tek_states s ON tickets.state_id = s.id"
+                . " JOIN tek_cantones c ON tickets.canton_id = c.id"
+                . " JOIN tek_districts d ON tickets.district_id = d.id"
+                . ";";
+            $stmt = $em->getConnection()->prepare($sql);
+            $stmt->execute();
+            $filtered = 0;
+            $total = 0;
+            $result = $stmt->fetchAll();
+            foreach($result as $row) {
+                $filtered = $row['filtered'];
+                $total = $row['total'];
+            }
+            $sql = "SELECT tickets.id, DATE_FORMAT(tickets.date,'%d-%m-%Y %T') as 'date', std.id, "
+                . " CONCAT(std.firstname, ' ', std.lastname) as 'fullName', std.groupyear, std.gender, std.carne, "
+                . " CONCAT(s.name, ', ', c.name, ', ', d.name) as 'fullAddress', tickets.service"
+                . " FROM tek_site_transportation_tickets tickets"
+                . " JOIN tek_students std ON std.id = tickets.student_id"
+                . " JOIN tek_states s ON tickets.state_id = s.id"
+                . " JOIN tek_cantones c ON tickets.canton_id = c.id"
+                . " JOIN tek_districts d ON tickets.district_id = d.id"
+                . " WHERE $where"
+                . " ORDER BY $sortBy $order"
+                . " LIMIT $rowsPerPage OFFSET $offset";
+            $stmt2 = $em->getConnection()->prepare($sql);
+            $stmt2->execute();
+            $tickets = $stmt2->fetchAll();
+            return new Response(json_encode(array('error' => false,
+                'filtered' => $filtered,
+                'total' => $total,
+                'tickets' => $tickets)));
+        } catch (Exception $e) {
+            $info = toString($e);
+            $logger->err('Report::searchTransportationTicketFromSiteListAction [' . $info . "]");
+            return new Response(json_encode(array('error' => true, 'message' => $info)));
+        }
+    }
 }

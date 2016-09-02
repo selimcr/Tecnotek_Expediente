@@ -294,3 +294,5 @@ body.loading {
 body.loading .modal-waiting {
     display: block;
 }
+
+.small-note {font-size: 10px; font-weight: bold; color: black;}
