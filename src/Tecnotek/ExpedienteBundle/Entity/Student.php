@@ -133,7 +133,7 @@ class Student
     private $religion;
 
     /**
-     * @ORM\Column(type="string", length=15, nullable=true)
+     * @ORM\Column(type="string", length=120, nullable=true)
      * @Assert\MaxLength(limit = 120)
      */
     private $observation;

@@ -23,202 +23,202 @@
 
 {% block content %}
     <div class="container_24">
-    <div class="grid_24">
-    <div>
-        <div class="left">
-            <h3>{% trans %}label.report.students.title{% endtrans %}</h3>
-        </div>
-        <div class="left" style="line-height: 48px; margin-left: 25px;">
-            <span>{% trans %}label.report.students.subtitle{% endtrans %}</span>
+        <div class="grid_24">
+            <div>
+                <div class="left">
+                    <h3>{% trans %}label.report.students.title{% endtrans %}</h3>
+                </div>
+                <div class="left" style="line-height: 48px; margin-left: 25px;">
+                    <span>{% trans %}label.report.students.subtitle{% endtrans %}</span>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="filter-search table">
+                <div class="internal">
+                    <form id="searchForm" action="{{ path('_expediente_report_students_emergency') }}" method="post">
+
+                        <button style="margin-left: 15px; margin-top: 0px;" type="submit" class="right button success-darker tiny" name="search"><span></span>{% trans %}label.generate{% endtrans %}</button>
+                        <div class="clear"></div>
+                        <div>
+                            <label style="width: 126px;">{%trans%}label.include.in.report{%endtrans%}:</label>
+                            <input type="checkbox" class="check" id="fatherPhone" name="fatherPhone" {% if fatherPhone != null %}checked="checked"{% endif %}>Telefonos contactos
+                            <input type="checkbox" class="check" id="motherPhone" name="motherPhone" {% if motherPhone != null %}checked="checked"{% endif %}>{%trans%}label.fatherPhone{%endtrans%}-{%trans%}label.motherPhone{%endtrans%}
+                            <input type="checkbox" class="check" id="address" name="address" {% if address != null %}checked="checked"{% endif %}>{%trans%}label.address{%endtrans%}
+                            <input type="checkbox" class="check" id="emergencyout" name="emergencyout" {% if emergencyout != null %}checked="checked"{% endif %}>{%trans%}label.emergencyout{%endtrans%}
+                            <input type="checkbox" class="check" id="emergencyoutinst" name="emergencyoutinst" {% if emergencyoutinst != null %}checked="checked"{% endif %}>{%trans%}label.emergencyoutinst{%endtrans%}
+                            <input type="checkbox" class="check" id="brethren" name="brethren" {% if brethren != null %}checked="checked"{% endif %}>{%trans%}label.brethren{%endtrans%}
+                            <input type="checkbox" class="check" id="familiars" name="familiars" {% if familiars != null %}checked="checked"{% endif %}>{%trans%}label.familiars{%endtrans%}
+                            <input type="checkbox" class="check" id="emergencyinfo" name="emergencyinfo" {% if emergencyinfo != null %}checked="checked"{% endif %}>{%trans%}label.emergencyinfo{%endtrans%}
+                        </div>
+                        <hr>
+                        <div>
+                            <label style="width: 126px;">Filtrar por:</label>
+                            <label style="width: 45px;">Grupo:</label>
+                            <select  {% if institutions != null  %} disabled {% else %} {% if  grades != null %} disabled {% endif %}{% endif %} id="groupSelect" name="groupSelect" style="width: 100px">
+                                <option value="0">Todos</option>
+                                {% for groupT in groupsT %}
+                                    <option value="{{ groupT.id }}">{{groupT.grade}} {{groupT}}</option>
+                                {% endfor %}
+                            </select>
+                            <label style="width: 40px;">Nivel:</label>
+                            <select {% if institutions != null %} disabled {% endif %} id="grade" name="grade" style="width: 100px">
+                                <option value="0">Todos</option>
+                                {% for gradeT in gradesT %}
+                                    <option value="{{ gradeT.id }}">{{gradeT}}</option>
+                                {% endfor %}
+                            </select>
+                            <label style="width: 75px;">Institucion:</label>
+                            <select {% if grades != null %} disabled {% endif %} id="institution" name="institution" style="width: 100px">
+                                <option value="0">Todos</option>
+                                {% for institutionT in institutionsT %}
+                                    <option value="{{ institutionT.id }}">{{institutionT}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+
+
+                    </form>
+                </div>
+            </div>
+
+
+            {% set numColumns = 0 %}
+            {% if birthday == null %}{% set numColumns = numColumns + 1 %}{% endif %}
+            {% if identification == null %}{% set numColumns = numColumns + 1 %}{% endif %}
+            {% set widthAdress = 150 + (75* numColumns) %}
+
+
+
+            {% if tipo != 0 %}
+                <div style="margin-top: 15px;">
+                    <button style="margin-left: 15px; margin-top: 0px;" type="button" class="right button success-darker tiny" id="btnPrint" name="btnPrint" rel="Reporte de Clubes"><span></span>{% trans %}label.print{% endtrans %}</button>
+                    <div class="clear"></div>
+                </div>
+
+                <div id="report" style="margin-top: 25px; width: 1050px;">
+
+                    <!-- special  -->
+                    {% for group in groups %}
+                        <div class="groupContainer groupS_{{ group.id }} inst_{{ group.institution.id }} niv_{{ group.grade.id }}">
+                            <div class="titles" style="font-size: 10px;">
+                                <div class="left">{{corpo_name}}</div>
+                                <div class="right">Reporte de emergencias.</div>
+                                <div class="clear"></div>
+
+                                <div class="left">{{ "now"|date("d/M/Y H:i:s") }}</div>
+                                <div class="clear"></div>
+
+                                <p style="text-align: center;padding-bottom: 0px;">Estudiantes por {{ typeLabel }}</p>
+                                <p style="text-align: center; padding-bottom: 0px;">Ordenados por Nombre</p>
+                            </div>
+                            <div class="fields_row route">
+                                <p style="text-decoration: underline; padding-bottom: 0px;">Nivel: {{ group.grade ~ " - " ~ group }}</p>
+                            </div>
+                            <table style="border-width: 1px; border-style: solid;">
+                                <tr>
+                                    <td style="float: left;  width: 50px; height: 22px;"><span style="font-family:arial;font-size:14px;">{%trans%}label.carne{%endtrans%}</span></td>
+                                    <td style="float: left; width: 275px; height: 22px;"><span style="font-family:arial;font-size:14px;">{%trans%}label.student.name{%endtrans%}</span></td>
+                                    {% if fatherPhone != null %}
+                                        <td style="float: left; width: 350px;"><span style="font-family:arial;font-size:14px;">Telefonos contactos</span></td>
+                                    {% endif %}
+                                    {% if motherPhone != null %}
+                                        <td style="float: left; width: 100px;"><span style="font-family:arial;font-size:14px;">{%trans%}label.fatherPhone{%endtrans%}-{%trans%}label.motherPhone{%endtrans%}</span></td>
+                                    {% endif %}
+                                    {% if birthday != null %}
+                                        <td style="float: left; width: 100px;"><span style="font-family:arial;font-size:14px;">{%trans%}label.birthday{%endtrans%}</span></td>
+                                    {% endif %}
+                                    {% if identification != null %}
+                                        <td style="float: left; width: 100px;"><span style="font-family:arial;font-size:14px;">{%trans%}label.identification{%endtrans%}</span></td>
+                                    {% endif %}
+                                    {% if address != null %}
+                                        <td style="float: left; width: {{ widthAdress }}px;"><span style="font-family:arial;font-size:14px;">{%trans%}label.address{%endtrans%}</span></td>
+                                    {% endif %}
+                                    {% if emergencyout != null %}
+                                        <td style="float: left; width: 50px;"><span style="font-family:arial;font-size:14px;">{%trans%}label.emergencyout{%endtrans%}</span></td>
+                                    {% endif %}
+                                    {% if emergencyoutinst != null %}
+                                        <td style="float: left; width: 50px;"><span style="font-family:arial;font-size:14px;">Salida:</span></td>
+                                    {% endif %}
+                                    {% if brethren != null %}
+                                        <td style="float: left; width: 50px;"><span style="font-family:arial;font-size:14px;">{%trans%}label.brethren{%endtrans%}</span></td>
+                                    {% endif %}
+                                    {% if familiars != null %}
+                                        <td style="float: left; width: 275px;"><span style="font-family:arial;font-size:14px;">{%trans%}label.familiars{%endtrans%}</span></td>
+                                    {% endif %}
+                                    {% if emergencyinfo != null %}
+                                        <td style="float: left; width: 150px;"><span style="font-family:arial;font-size:14px;">{%trans%}label.emergencyinfo{%endtrans%}</span></td>
+                                    {% endif %}
+                                </tr>
+
+                                {% set counterF = 0 %}
+                                {% set counterM = 0 %}
+                                {% for student in group.students %}
+                                    <tr>
+                                        <td style="float: left; width: 50px;  height: 16px;"><span style="font-family:arial;font-size:12px;">{{ student.carne }}</span></td>
+                                        <td style="float: left; width: 275px;  height: 16px;"><span style="font-family:arial;font-size:12px;">{{ student.lastname ~ ", " ~ student.firstname }}</span></td>
+                                        {% if fatherPhone != null %}
+                                            <td style="float: left; width: 350px;"><span style="font-family:arial;font-size:10px;"> &nbsp
+                                                {% for relative in student.relatives %}
+                                                    {{ relative.contact.firstname }} &nbsp ({{ relative.contact.phonec }}) &nbsp
+                                                {% endfor %}
+                                            </td>
+                                            <td style="float: left; width: 100px;"> <span style="font-family:arial;font-size:11px;">&nbsp {{ student.fatherPhone }}</span></td>
+                                            <td style="float: left; width: 100px;"> <span style="font-family:arial;font-size:11px;">&nbsp {{ student.motherPhone }}</span></td>
+                                        {% endif %}
+                                        {% if birthday != null %}
+                                            <td style="float: left; width: 100px;"> &nbsp {{ student.birthday }}</td>
+                                        {% endif %}
+                                        {% if identification != null %}
+                                            <td style="float: left; width: 100px;"> &nbsp {{ student.identification }}</td>
+                                        {% endif %}
+                                        {% if address != null %}
+                                            <td style="float: left; width: {{ widthAdress }}px;">  {{ student.address }} &nbsp </td>
+                                        {% endif %}
+                                        {% if emergencyout != null %}
+                                            <td style="float: left; width: 50px;"> &nbsp {% if student.emergencyout == 1%}{% trans %}Si{% endtrans %}{% else %}{% trans %}No{% endtrans %}{% endif %}</td>
+                                        {% endif %}
+                                        {% if emergencyoutinst != null %}
+                                            <td style="float: left; width: 60px;"> &nbsp {% if student.emergencyoutinst == 1%}{% trans %}Kinder{% endtrans %}{% endif %}
+                                                {% if student.emergencyoutinst == 2%}{% trans %}Escuela{% endtrans %}{% endif %}
+                                                {% if student.emergencyoutinst == 3%}{% trans %}Colegio{% endtrans %}{% endif %}</td>
+                                        {% endif %}
+                                        {% if brethren != null %}
+                                            <td style="float: left; width: 50px;"> &nbsp {% if student.brethren == 1%}{% trans %}Si{% endtrans %}{% else %}{% trans %}No{% endtrans %}{% endif %}</td>
+                                        {% endif %}
+                                        {% if familiars != null %}
+                                            <td style="float: left; width: 275px;"><span style="font-family:arial;font-size:12px;"> &nbsp {{ student.familiars }}</span></td>
+                                        {% endif %}
+                                        {% if emergencyinfo != null %}
+                                            <td style="float: left; width: 150px;"><span style="font-family:arial;font-size:12px;"> &nbsp {{ student.emergencyinfo }}</span></td>
+                                        {% endif %}
+                                    </tr>
+
+                                    <div class="clear"></div>
+                                {% endfor %}
+                            </table>
+
+                            <div class="pageBreak"> </div>
+                        </div>
+                    {% else %}
+                        <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
+                            <div class="option_width" style="float: left; width: 375px;">{% trans %}results.not.found{% endtrans %}</div>
+                            <div class="clear"></div>
+                        </div>
+
+                    {% endfor %}
+
+
+                </div>
+
+            {% endif %}
+
         </div>
         <div class="clear"></div>
-    </div>
-    <div class="filter-search table">
-        <div class="internal">
-            <form id="searchForm" action="{{ path('_expediente_report_students_emergency') }}" method="post">
-
-                <button style="margin-left: 15px; margin-top: 0px;" type="submit" class="right button success-darker tiny" name="search"><span></span>{% trans %}label.generate{% endtrans %}</button>
-                <div class="clear"></div>
-                <div>
-                    <label style="width: 126px;">{%trans%}label.include.in.report{%endtrans%}:</label>
-                    <input type="checkbox" class="check" id="fatherPhone" name="fatherPhone" {% if fatherPhone != null %}checked="checked"{% endif %}>{%trans%}label.fatherPhone{%endtrans%}
-                    <input type="checkbox" class="check" id="motherPhone" name="motherPhone" {% if motherPhone != null %}checked="checked"{% endif %}>{%trans%}label.motherPhone{%endtrans%}
-                    <input type="checkbox" class="check" id="address" name="address" {% if address != null %}checked="checked"{% endif %}>{%trans%}label.address{%endtrans%}
-                    <input type="checkbox" class="check" id="emergencyout" name="emergencyout" {% if emergencyout != null %}checked="checked"{% endif %}>{%trans%}label.emergencyout{%endtrans%}
-                    <input type="checkbox" class="check" id="emergencyoutinst" name="emergencyoutinst" {% if emergencyoutinst != null %}checked="checked"{% endif %}>{%trans%}label.emergencyoutinst{%endtrans%}
-                    <input type="checkbox" class="check" id="brethren" name="brethren" {% if brethren != null %}checked="checked"{% endif %}>{%trans%}label.brethren{%endtrans%}
-                    <input type="checkbox" class="check" id="familiars" name="familiars" {% if familiars != null %}checked="checked"{% endif %}>{%trans%}label.familiars{%endtrans%}
-                    <input type="checkbox" class="check" id="emergencyinfo" name="emergencyinfo" {% if emergencyinfo != null %}checked="checked"{% endif %}>{%trans%}label.emergencyinfo{%endtrans%}
-                </div>
-                <hr>
-                <div>
-                    <label style="width: 126px;">Filtrar por:</label>
-                    <label style="width: 45px;">Grupo:</label>
-                    <select  {% if institutions != null  %} disabled {% else %} {% if  grades != null %} disabled {% endif %}{% endif %} id="groupSelect" name="groupSelect" style="width: 100px">
-                        <option value="0">Todos</option>
-                        {% for groupT in groupsT %}
-                            <option value="{{ groupT.id }}">{{groupT.grade}} {{groupT}}</option>
-                        {% endfor %}
-                    </select>
-                    <label style="width: 40px;">Nivel:</label>
-                    <select {% if institutions != null %} disabled {% endif %} id="grade" name="grade" style="width: 100px">
-                        <option value="0">Todos</option>
-                        {% for gradeT in gradesT %}
-                            <option value="{{ gradeT.id }}">{{gradeT}}</option>
-                        {% endfor %}
-                    </select>
-                    <label style="width: 75px;">Institucion:</label>
-                    <select {% if grades != null %} disabled {% endif %} id="institution" name="institution" style="width: 100px">
-                        <option value="0">Todos</option>
-                        {% for institutionT in institutionsT %}
-                            <option value="{{ institutionT.id }}">{{institutionT}}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-
-
-
-            </form>
+        <div class="wrapper">
+            <div class="grid_24 padline">
+                <div class="lineH"></div>
+            </div>
         </div>
-    </div>
-
-
-    {% set numColumns = 0 %}
-    {% if birthday == null %}{% set numColumns = numColumns + 1 %}{% endif %}
-    {% if identification == null %}{% set numColumns = numColumns + 1 %}{% endif %}
-    {% set widthAdress = 150 + (75* numColumns) %}
-
-
-
-    {% if tipo != 0 %}
-        <div style="margin-top: 15px;">
-            <button style="margin-left: 15px; margin-top: 0px;" type="button" class="right button success-darker tiny" id="btnPrint" name="btnPrint" rel="Reporte de Clubes"><span></span>{% trans %}label.print{% endtrans %}</button>
-            <div class="clear"></div>
-        </div>
-
-        <div id="report" style="margin-top: 25px; width: 1050px;">
-
-            <!-- special  -->
-                            {% for group in groups %}
-                                <div class="groupContainer groupS_{{ group.id }} inst_{{ group.institution.id }} niv_{{ group.grade.id }}">
-                                    <div class="titles" style="font-size: 10px;">
-                                        <div class="left">{{corpo_name}}</div>
-                                        <div class="right">Reporte de emergencias.</div>
-                                        <div class="clear"></div>
-
-                                        <div class="left">{{ "now"|date("d/M/Y H:i:s") }}</div>
-                                        <div class="clear"></div>
-
-                                        <p style="text-align: center;padding-bottom: 0px;">Estudiantes por {{ typeLabel }}</p>
-                                        <p style="text-align: center; padding-bottom: 0px;">Ordenados por Nombre</p>
-                                    </div>
-                                    <div class="fields_row route">
-                                        <p style="text-decoration: underline; padding-bottom: 0px;">Nivel: {{ group.grade ~ " - " ~ group }}</p>
-                                    </div>
-                                    <table style="border-width: 1px; border-style: solid;">
-                                        <tr>
-                                            <td style="float: left;  width: 50px; height: 22px;"><span style="font-family:arial;font-size:14px;">{%trans%}label.carne{%endtrans%}</span></td>
-                                            <td style="float: left; width: 275px; height: 22px;"><span style="font-family:arial;font-size:14px;">{%trans%}label.student.name{%endtrans%}</span></td>
-                                            {% if fatherPhone != null %}
-                                                <td style="float: left; width: 550px;"><span style="font-family:arial;font-size:14px;">{%trans%}label.fatherPhone{%endtrans%}</span></td>
-                                            {% endif %}
-                                            {% if motherPhone != null %}
-                                                <td style="float: left; width: 100px;"><span style="font-family:arial;font-size:14px;">{%trans%}label.motherPhone{%endtrans%}</span></td>
-                                            {% endif %}
-                                            {% if birthday != null %}
-                                                <td style="float: left; width: 100px;"><span style="font-family:arial;font-size:14px;">{%trans%}label.birthday{%endtrans%}</span></td>
-                                            {% endif %}
-                                            {% if identification != null %}
-                                                <td style="float: left; width: 100px;"><span style="font-family:arial;font-size:14px;">{%trans%}label.identification{%endtrans%}</span></td>
-                                            {% endif %}
-                                            {% if address != null %}
-                                                <td style="float: left; width: {{ widthAdress }}px;"><span style="font-family:arial;font-size:14px;">{%trans%}label.address{%endtrans%}</span></td>
-                                            {% endif %}
-{% if emergencyout != null %}
-                                                <td style="float: left; width: 50px;"><span style="font-family:arial;font-size:14px;">{%trans%}label.emergencyout{%endtrans%}</span></td>
-                                            {% endif %}
-{% if emergencyoutinst != null %}
-                                                <td style="float: left; width: 50px;"><span style="font-family:arial;font-size:14px;">Salida:</span></td>
-                                            {% endif %}
-{% if brethren != null %}
-                                                <td style="float: left; width: 50px;"><span style="font-family:arial;font-size:14px;">{%trans%}label.brethren{%endtrans%}</span></td>
-                                            {% endif %}
-{% if familiars != null %}
-                                                <td style="float: left; width: 275px;"><span style="font-family:arial;font-size:14px;">{%trans%}label.familiars{%endtrans%}</span></td>
-                                            {% endif %}
-{% if emergencyinfo != null %}
-                                                <td style="float: left; width: 150px;"><span style="font-family:arial;font-size:14px;">{%trans%}label.emergencyinfo{%endtrans%}</span></td>
-                                            {% endif %}
-                                        </tr>
-
-                                        {% set counterF = 0 %}
-                                        {% set counterM = 0 %}
-                                        {% for student in group.students %}
-                                            <tr>
-                                                <td style="float: left; width: 50px;  height: 16px;"><span style="font-family:arial;font-size:12px;">{{ student.carne }}</span></td>
-                                                <td style="float: left; width: 275px;  height: 16px;"><span style="font-family:arial;font-size:12px;">{{ student.lastname ~ ", " ~ student.firstname }}</span></td>
-                                                {% if fatherPhone != null %}
-                                                    <td style="float: left; width: 150px;  height: 16px;"><span style="font-family:arial;font-size:10px;"> &nbsp
-                                                    {% for relative in student.relatives %}
-                                                   {{ relative.contact.firstname }} &nbsp ({{ relative.contact.phonec }}) &nbsp </br>
-                                                    {% endfor %}
-                                                    </td>
-                                                    <td style="float: left; width: 100px;"> <span style="font-family:arial;font-size:11px;">&nbsp {{ student.fatherPhone }}</span></td>
-                                                    <td style="float: left; width: 100px;"> <span style="font-family:arial;font-size:11px;">&nbsp {{ student.motherPhone }}</span></td>
-                                                {% endif %}
-                                                {% if birthday != null %}
-                                                    <td style="float: left; width: 100px;"> &nbsp {{ student.birthday }}</td>
-                                                {% endif %}
-                                                {% if identification != null %}
-                                                    <td style="float: left; width: 100px;"> &nbsp {{ student.identification }}</td>
-                                                {% endif %}
-                                                {% if address != null %}
-                                                    <td style="float: left; width: {{ widthAdress }}px;">  {{ student.address }} &nbsp </td>
-                                                {% endif %}
-{% if emergencyout != null %}
-                                                    <td style="float: left; width: 50px;"> &nbsp {% if student.emergencyout == 1%}{% trans %}Si{% endtrans %}{% else %}{% trans %}No{% endtrans %}{% endif %}</td>
-                                                {% endif %}
-{% if emergencyoutinst != null %}
-                                                    <td style="float: left; width: 60px;"> &nbsp {% if student.emergencyoutinst == 1%}{% trans %}Kinder{% endtrans %}{% endif %}
-{% if student.emergencyoutinst == 2%}{% trans %}Escuela{% endtrans %}{% endif %}
-{% if student.emergencyoutinst == 3%}{% trans %}Colegio{% endtrans %}{% endif %}</td>
-                                                {% endif %}
-{% if brethren != null %}
-                                                    <td style="float: left; width: 50px;"> &nbsp {% if student.brethren == 1%}{% trans %}Si{% endtrans %}{% else %}{% trans %}No{% endtrans %}{% endif %}</td>
-                                                {% endif %}
-{% if familiars != null %}
-                                                    <td style="float: left; width: 275px;"><span style="font-family:arial;font-size:12px;"> &nbsp {{ student.familiars }}</span></td>
-                                                {% endif %}
-{% if emergencyinfo != null %}
-                                                    <td style="float: left; width: 150px;"><span style="font-family:arial;font-size:12px;"> &nbsp {{ student.emergencyinfo }}</span></td>
-                                                {% endif %}
-                                            </tr>
-
-                                            <div class="clear"></div>
-                                        {% endfor %}
-                                    </table>
-
-                                    <div class="pageBreak"> </div>
-                                </div>
-                            {% else %}
-                                <div class="row userRow {% if loop.index%2 == 0 %}tableRowOdd{%else%}tableRow{% endif %}">
-                                    <div class="option_width" style="float: left; width: 375px;">{% trans %}results.not.found{% endtrans %}</div>
-                                    <div class="clear"></div>
-                                </div>
-
-                            {% endfor %}
-
-
-        </div>
-
-    {% endif %}
-
-    </div>
-    <div class="clear"></div>
-    <div class="wrapper">
-        <div class="grid_24 padline">
-            <div class="lineH"></div>
-        </div>
-    </div>
     </div>
 {% endblock %}

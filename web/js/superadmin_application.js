@@ -578,6 +578,17 @@ var Tecnotek = {
                     $('#subentryFormParent').empty();
                     Tecnotek.ReportClubs.loadListClub($(this).val());
                 });
+
+                $('#generateExcelBtn').click(function(e){
+                    var periodId = 5;
+
+                    if (periodId != null){
+                        $(this).attr("href",Tecnotek.UI.urls["generateGroupExcel"] + "?periodId="+periodId);
+                    } else {
+                        e.preventDefault();
+                        Tecnotek.showInfoMessage("Necesita seleccionar el grupo y la materia antes de generar el archivo", true, '', false);
+                    }
+                });
             },
             initComponents : function() {
                 $('#withStudents').change(function(event){

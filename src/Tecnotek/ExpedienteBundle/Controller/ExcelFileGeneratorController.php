@@ -349,6 +349,88 @@ class ExcelFileGeneratorController extends Controller {
         return $this->responseExcelFile($phpExcelObject, $fileName);
     }
 
+    public function generateClubExcelAction() {
+        $logger = $this->get('logger');
+        $fileName = "Clubs.xlsx";
+        $phpExcelObject = $this->createExcelObjectFromFile("Tecnotek", $fileName);
+        $activeSheet = $phpExcelObject->getActiveSheet();
+        $excelRow = 4;
+        $fileName = "Clubes.xlsx";
+        try {
+            $request = $this->get('request');
+            $translator = $this->get("translator");
+            $periodId = $request->get('periodId');
+
+            if (isset($periodId)) {
+                $em = $this->getDoctrine()->getEntityManager();
+
+                $dql = "SELECT c FROM TecnotekExpedienteBundle:Club c "
+                    . " ORDER BY c.name";
+                $query = $em->createQuery($dql);
+                $entries = $query->getResult();
+
+                $colsCounter = 1;
+                $specialCounter = 1;
+                $columns = array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'
+                ,'AA','AB','AC','AD','AE','AF','AG','AH','AI','AJ','AK','AL','AM','AN','AO','AP','AQ','AR','AS','AT','AU','AV','AW','AX','AY','AZ'
+                ,'BA','BB','BC','BD','BE','BF','BG','BH','BI','BJ','BK','BL','BM','BN','BO','BP','BQ','BR','BS','BT','BU','BV','BW','BX','BY','BZ');
+                $excelColum = 1;
+                $initialHeaderRow = 8;
+                $studentsTitleRow = 9;
+                $entriesRow = 11;
+                $columnDefinitions = array();
+                $trimFormula = "=0+";
+                foreach( $entries as $entry ) {
+                    $temp = $entry;
+                    $sql = "SELECT carne, concat(s.lastname, ' ', s.firstname) as name, s.identification, s.birthday, s.gender, s.groupyear  FROM club_student cs, tek_clubs c, tek_students s "
+                        . " WHERE c.id = cs.club_id and s.id = cs.student_id and c.id = " . $temp->getId()
+                        . " ORDER BY s.lastname";
+
+                    $stmt = $em->getConnection()->prepare($sql);
+                    $stmt->execute();
+                    $subentries = $stmt->fetchAll();
+                    $size = sizeof($subentries);
+                    $activeSheet->setCellValue($columns[$excelColum] . $entriesRow, $temp->getName());
+                    $entriesRow++;
+                    if($size > 1) {
+                        $colsCounter = $excelColum;
+                        foreach( $subentries as $subentry ) {
+
+                            $activeSheet->setCellValue($columns[$excelColum] . $entriesRow, $subentry['carne']);
+                            $activeSheet->setCellValue($columns[$excelColum+1] . $entriesRow, $subentry['name']);
+                            $activeSheet->setCellValue($columns[$excelColum+2] . $entriesRow, $subentry['groupyear']);
+                            $activeSheet->setCellValue($columns[$excelColum+3] . $entriesRow, $subentry['identification']);
+                            $activeSheet->setCellValue($columns[$excelColum+4] . $entriesRow, $subentry['birthday']);
+                            if($subentry['gender']=='1')
+                                $activeSheet->setCellValue($columns[$excelColum+5] . $entriesRow, "Masculino");
+                            else{
+                                $activeSheet->setCellValue($columns[$excelColum+5] . $entriesRow, "Femenino");
+                            }
+                            $colsCounter++;
+                            $entriesRow++;
+
+                        }
+                        $entriesRow++;
+                        //$objPHPExcel->getActiveSheet()->setBreak( 'A' . $i, \PHPExcel\Worksheet::BREAK_ROW );
+                        //$activeSheet->setBreak( $columns[$excelColum] . $entriesRow, \Clubes::BREAK_ROW);
+                    }
+                }
+            } else {
+                return new Response(json_encode(array('error' => true, 'message' =>$translator->trans("error.paramateres.missing"))));
+            }
+        } catch (Exception $e) {
+            $info = toString($e);
+            $logger->err('Teacher::loadEntriesByCourseAction [' . $info . "]");
+            return new Response(json_encode(array('error' => true, 'message' => $info)));
+        }
+        //$phpExcelObject->getActiveSheet()->getProtection()->setSheet(true);
+        //$phpExcelObject->getActiveSheet()->getProtection()->setSort(true);
+        //$phpExcelObject->getActiveSheet()->getProtection()->setInsertRows(true);
+        //$phpExcelObject->getActiveSheet()->getProtection()->setFormatCells(true);
+        //$phpExcelObject->getActiveSheet()->getProtection()->setPassword('123');
+        return $this->responseExcelFile($phpExcelObject, $fileName);
+    }
+
     private function copyStudentRowFormat($activeSheet, $row) {
         $this->copyBlueCarneFormatCell($activeSheet, "B$row");
         $this->copyBlueStudentFormatCell($activeSheet, "C$row");

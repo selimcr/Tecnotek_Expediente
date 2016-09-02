@@ -13,6 +13,9 @@
     <script type="text/javascript">
         Tecnotek.module = "reportClubs";
         Tecnotek.assetsURL = "{{ path('TecnotekExpedienteBundle_homepage')}}";
+
+        Tecnotek.UI.urls["generateGroupExcel"] = "{{ path("_expediente_teacher_generate_club_excel") }}";
+
     </script>
 {% endblock %}
 
@@ -71,6 +74,8 @@ tiny" id="btnPrint" name="btnPrint" rel="Listado de Estudiantes"><span></span>{%
             <div class="clear"></div>
         </div>
         {% if withStudents != null %}
+            <a href="{{ path('_expediente_teacher_generate_club_excel') }}" target="_blank" class="button success-darker tiny" id="generateExcelBtn" name="generateExcelBtn"><span></span>Generar Excel</a>
+            <div class="clear"></div>
             <div class="left" style="width: 70px; font-weight: bold;">Club:</div>
             <div id="labelRoute" class="left">
                 <select id="ListClub" name="ListClub" style="width: 150px;">
