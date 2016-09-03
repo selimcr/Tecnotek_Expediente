@@ -16,9 +16,9 @@ class ApiController extends Controller
 {
 
     public function getAllStatesAction() {
-        if (!$this->get('request')->isXmlHttpRequest()) { // Is the request an ajax one?
+        /*if (!$this->get('request')->isXmlHttpRequest()) { // Is the request an ajax one?
             return new Response("<b>Not an ajax call!!!" . "</b>");
-        }
+        }*/
         $logger = $this->get('logger');
         $translator = $this->get("translator");
         $em = $this->getDoctrine()->getEntityManager();
@@ -31,18 +31,20 @@ class ApiController extends Controller
                     "name"  => $state->getName()
                 ));
             }
-            return new Response(json_encode(array('code' => 200, 'states' => $statesArray)));
+            $response = new Response(json_encode(array('code' => 200, 'states' => $statesArray)));
         } catch (Exception $e) {
             $info = toString($e);
             $logger->err('SuperAdmin::executePeriodMigrationStepAction [' . $info . "]");
-            return new Response(json_encode(array('code' => 500, 'message' => $info)));
+            $response = new Response(json_encode(array('code' => 500, 'message' => $info)));
         }
+        $response->headers->set('Access-Control-Allow-Origin', '*');
+        return $response;
     }
 
     public function getCantonesOfStateAction() {
-        if (!$this->get('request')->isXmlHttpRequest()) { // Is the request an ajax one?
+        /*if (!$this->get('request')->isXmlHttpRequest()) { // Is the request an ajax one?
             return new Response("<b>Not an ajax call!!!" . "</b>");
-        }
+        }*/
         $logger = $this->get('logger');
         $em = $this->getDoctrine()->getEntityManager();
         try {
@@ -65,9 +67,9 @@ class ApiController extends Controller
     }
 
     public function getDistrictsOfCantonAction() {
-        if (!$this->get('request')->isXmlHttpRequest()) { // Is the request an ajax one?
+        /*if (!$this->get('request')->isXmlHttpRequest()) { // Is the request an ajax one?
             return new Response("<b>Not an ajax call!!!" . "</b>");
-        }
+        }*/
         $logger = $this->get('logger');
         $em = $this->getDoctrine()->getEntityManager();
         try {
@@ -90,21 +92,21 @@ class ApiController extends Controller
     }
 
     public function getStudentAction() {
-        if (!$this->get('request')->isXmlHttpRequest()) { // Is the request an ajax one?
+        /*if (!$this->get('request')->isXmlHttpRequest()) { // Is the request an ajax one?
             return new Response("<b>Not an ajax call!!!" . "</b>");
-        }
+        }*/
         $logger = $this->get('logger');
         $translator = $this->get("translator");
         $em = $this->getDoctrine()->getEntityManager();
         try {
-            $request = $this->get('request')->request;
+            $request = $this->get('request');
             $carne = $request->get('carne');
             if (isset($carne) && strlen(trim($carne)) > 0) {
                 $student = $em->getRepository("TecnotekExpedienteBundle:Student")->findOneBy(array("carne" => $carne));
                 if (isset($student)) {
-                    return new Response(json_encode(array('code' => 200, 'full_name' => $student->__toString())));
+                    $response = new Response(json_encode(array('code' => 200, 'full_name' => $student->__toString())));
                 } else {
-                    return new Response(json_encode(array('code' => 400, 'message' => 'El estudiante no fue encontrado')));
+                    $response = new Response(json_encode(array('code' => 400, 'message' => 'El estudiante no fue encontrado')));
                 }
             } else {
                 return new Response(json_encode(array('code' => 400)));
@@ -112,14 +114,16 @@ class ApiController extends Controller
         } catch (Exception $e) {
             $info = toString($e);
             $logger->err('SuperAdmin::executePeriodMigrationStepAction [' . $info . "]");
-            return new Response(json_encode(array('code' => 500, 'message' => $info)));
+            $response = new Response(json_encode(array('code' => 500, 'message' => $info)));
         }
+        $response->headers->set('Access-Control-Allow-Origin', '*');
+        return $response;
     }
 
     public function saveTransportationTicketAction() {
-        if (!$this->get('request')->isXmlHttpRequest()) { // Is the request an ajax one?
+        /*if (!$this->get('request')->isXmlHttpRequest()) { // Is the request an ajax one?
             return new Response("<b>Not an ajax call!!!" . "</b>");
-        }
+        }*/
         $logger = $this->get('logger');
         $translator = $this->get("translator");
         $em = $this->getDoctrine()->getEntityManager();

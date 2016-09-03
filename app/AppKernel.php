@@ -26,6 +26,7 @@ class AppKernel extends Kernel
             new Sensio\Bundle\DistributionBundle\SensioDistributionBundle(),
             new Sensio\Bundle\GeneratorBundle\SensioGeneratorBundle(),
             new Liuggio\ExcelBundle\LiuggioExcelBundle(),
+            new Nelmio\CorsBundle\NelmioCorsBundle(),
         );
 
         /*if (in_array($this->getEnvironment(), array('dev', 'test'))) {
