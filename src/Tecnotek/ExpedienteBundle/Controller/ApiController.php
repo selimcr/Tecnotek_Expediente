@@ -153,6 +153,17 @@ class ApiController extends Controller
                     $ticket->setService($service);
                     $em->persist($ticket);
                     $em->flush();
+
+                    if ($sendCopy === "true") {
+                        $bbcEmails = explode(";","selimdiaz@gmail.com");
+                        $message = \Swift_Message::newInstance()
+                            ->setSubject("Inscripción Boleta de Transporte")
+                            ->setTo($email)
+                            ->setFrom(array('stmmail@stmcr.com' => 'Saint Michael'))
+                            ->setBcc($bbcEmails)
+                            ->setBody($ticket->printEmailHtmlBody(), 'text/html');
+                        $this->get('mailer')->send($message);
+                    }
                     return new Response(json_encode(array('code' => 200, 'id' => $ticket->getId())));
                 } else {
                     return new Response(json_encode(array('code' => 404, 'message' => 'No existe un estudiante con ese carné')));
