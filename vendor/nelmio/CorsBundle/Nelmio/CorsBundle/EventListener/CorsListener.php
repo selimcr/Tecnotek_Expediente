@@ -92,11 +92,14 @@ class CorsListener
         if ($this->options['expose_headers']) {
             $response->headers->set('Access-Control-Expose-Headers', strtolower(implode(', ', $this->options['expose_headers'])));
         }
+<<<<<<< HEAD
         /*$responseHeaders = $event->getResponse()->headers;
         $responseHeaders->set('Access-Control-Allow-Headers', 'origin, content-type, accept');
         $responseHeaders->set('Access-Control-Allow-Origin', '*');
         $responseHeaders->set('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE, PATCH, OPTIONS');
         $responseHeaders->set('Customheader', 'selim1');*/
+=======
+>>>>>>> b489b6f32ea597c3dd8d5bcc12af6c4ebdfa1523
     }
 
     protected function getPreflightResponse(Request $request, array $options)
