@@ -382,7 +382,7 @@ class ExcelFileGeneratorController extends Controller {
                 $trimFormula = "=0+";
                 foreach( $entries as $entry ) {
                     $temp = $entry;
-                    $sql = "SELECT carne, concat(s.lastname, ' ', s.firstname) as name, s.identification, s.birthday, s.gender, s.groupyear  FROM club_student cs, tek_clubs c, tek_students s "
+                    $sql = "SELECT carne, concat(s.lastname, ' ', s.firstname) as name, s.identification, s.birthday, s.gender, s.groupyear, s.fatherPhone, s.motherPhone FROM club_student cs, tek_clubs c, tek_students s "
                         . " WHERE c.id = cs.club_id and s.id = cs.student_id and c.id = " . $temp->getId()
                         . " ORDER BY s.lastname";
 
@@ -401,6 +401,8 @@ class ExcelFileGeneratorController extends Controller {
                             $activeSheet->setCellValue($columns[$excelColum+2] . $entriesRow, $subentry['groupyear']);
                             $activeSheet->setCellValue($columns[$excelColum+3] . $entriesRow, $subentry['identification']);
                             $activeSheet->setCellValue($columns[$excelColum+4] . $entriesRow, $subentry['birthday']);
+                            $activeSheet->setCellValue($columns[$excelColum+6] . $entriesRow, $subentry['fatherPhone']);
+                            $activeSheet->setCellValue($columns[$excelColum+7] . $entriesRow, $subentry['motherPhone']);
                             if($subentry['gender']=='1')
                                 $activeSheet->setCellValue($columns[$excelColum+5] . $entriesRow, "Masculino");
                             else{

@@ -10,7 +10,7 @@ class PeriodMigrationRepository extends CustomRepository {
         $query = $this->getEntityManager()
             ->createQuery('SELECT pm'
                 . ' FROM TecnotekExpedienteBundle:PeriodMigration pm'
-                . ' WHERE pm.status <> 6'
+                . ' WHERE pm.status <> 5'
                 . " ORDER BY pm.id DESC");
         $answers = $query->getResult();
         return (sizeof($answers) > 0)? $answers[0]:null;

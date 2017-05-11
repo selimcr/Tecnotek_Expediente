@@ -1034,7 +1034,7 @@ $kinder1 = 0;
                     if(isset($notaFinal)){//Si existe
 
                         //// nuevo
-                        if($notaFinal->getQualification() != '0'){
+                        if($notaFinal->getQualification() != '0' || $notaFinal->getQualification() != '-1'){
                             $total += $notaFinal->getQualification();
                             $counter += 1;
                         }
@@ -1260,18 +1260,49 @@ $kinder1 = 0;
             $html .= '</tr>';
         }
         $i = 0;
-        if($form->getMustIncludeComments() && key_exists($form->getId() . "-c", $responses)){
+        
+
+        if($form->getMustIncludeComments() && key_exists($form->getId() . "-c", $responses)  && ($form->getName() == 'Unit Assessment' || $form->getName() == 'Unit Assessment II' || $form->getName() == 'Unit Assessment III')){
+            $html .='</table>';
+            $html .= '<table class="student-special-form" style="width: 100%">';
+            $html .= '<tr><td colspan="3" style="background-color: rgb(187, 214, 188);">';
+            if ($responses[$form->getId() . '-c']!= '')
+                $html .= '<b>Comments:</b> '. $responses[$form->getId() . '-c'];
+            $html .= '</br></br>Signature: _______________</td></tr>';
+            $i = 1;
+            $html .= '';
+        }
+        else {
+          if($form->getMustIncludeComments() && key_exists($form->getId() . "-c", $responses)){
+            $html .='</table>';
+            $html .= '<table class="student-special-form" style="width: 100%">';
             $html .= '<tr><td colspan="3" style="background-color: rgb(187, 214, 188);">';
             if ($responses[$form->getId() . '-c']!= '')
                 $html .= '<b>Comentarios:</b> '. $responses[$form->getId() . '-c'];
             $html .= '</br></br>Firma: _______________</td></tr>';
             $i = 1;
+            $html .= '';
+          }
         }
 
-        if($form->getMustIncludeComments() && $i == 0){
+        if($form->getMustIncludeComments() && $i == 0 && ($form->getName() == 'Unit Assessment' || $form->getName() == 'Unit Assessment II' || $form->getName() == 'Unit Assessment III')){
+            $html .='</table>';
+            $html .= '<table class="student-special-form" style="width: 100%">';
+            $html .= '<tr><td colspan="3" style="background-color: rgb(187, 214, 188);">';
+            $html .= '</br></br>Signature: _______________</td></tr>';
+            $html .= '';
+        }
+        else {
+          if($form->getMustIncludeComments() && $i == 0){
+            $html .='</table>';
+            $html .= '<table class="student-special-form" style="width: 100%">';
             $html .= '<tr><td colspan="3" style="background-color: rgb(187, 214, 188);">';
             $html .= '</br></br>Firma: _______________</td></tr>';
+            $html .= '';
+          }
         }
+        
+
 
 
 
@@ -1957,14 +1988,14 @@ if($convocatoria == 2){
                         $notaConP = $notaCon->getQualification();
                         // remplazar conv1 por nota
                         $row = str_replace("convo1",$notaConP, $row);
-                        if(number_format($notaConP, 0, '.', '')< $notaMin->getNotaMin()){ //sino lo pasa mantener promedio original
+                        if(number_format($notaConP, 0, '.', '')< $notaMin->getNotaMin() && $convocatoria != 2){ //sino lo pasa mantener promedio original
                             $row = str_replace("courseRowNotaProm","*".number_format( ($totalForAverage/$counterForAverage), 2, '.', ''), $row);
                         }else{ // si lo paso nota del periodo es la minima
                             $row = str_replace("courseRowNotaProm",$notaMin->getNotaMin(), $row);
                             //totales[3] =  /// necesario para actualizar el promedio general
                         }
 if($convocatoria == 1){
-if($notaConP < $notaMin->getNotaMin()){//Si se pierde curso igual suma...
+if($notaConP < $notaMin->getNotaMin() && $convocatoria != 2){//Si se pierde curso igual suma...
                             $numberOfLossCourses = $numberOfLossCourses + 1;
                             
                         }
@@ -2136,9 +2167,8 @@ if($convocatoria != 0){
                     }
                     $studentYear->setPeriodAverageScore($promedioPeriodo);
                 }
-
-                $promedioGeneral += $promedioPeriodo;
-                $counter++;
+                 $promedioGeneral += $promedioPeriodo;
+                 $counter++;
             }
         }
 
@@ -2327,7 +2357,7 @@ $condicionRow = str_replace("changeCondicion", "APLAZADO", $condicionRow);
                     }else{
                         $course_of_cc = $em->getRepository("TecnotekExpedienteBundle:CourseClass")->findOneBy(array('id' => $i));
                         $cour = $course_of_cc->getCourse();
-                        if($course != $cour){
+                        if($course == $cour){
                             $valuetemp = $valuetemp + $extraPoints;
                         }
                     }

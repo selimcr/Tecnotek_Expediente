@@ -214,4 +214,18 @@ class TransportationTicketFromSite
     {
         $this->district = $district;
     }
+
+    public function printEmailHtmlBody() {
+        $html = "<h2>Boleta de Transporte</h2><br/>";
+        $html .= '<p><span style="font-weight: bold;">Carné: </span>' . $this->student->getCarne() . '</p>';
+        $html .= '<p><span style="font-weight: bold;">Nombre: </span>' . $this->student->getFirstname() .
+            ' ' . $this->student->getLastname() . '</p>';
+        $html .= '<p><span style="font-weight: bold;">Dirección: </span>'
+            . $this->state->getName() . ', ' . $this->canton->getName() . ', '
+            . $this->district->getName() . '</p>';
+        $html .= '<p><span style="font-weight: bold;">Servicio: </span>'
+            . ($this->service==1? 'Tiempo Completo':' Medio Tiempo') . '</p>';
+        $html .= '<p><span style="font-weight: bold;">Observaciones: </span>' . $this->observations . '</p>';
+        return $html;
+    }
 }

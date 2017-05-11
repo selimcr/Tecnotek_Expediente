@@ -749,9 +749,11 @@ Tecnotek.AdminPeriod = {
             }, true);
     },
     createTeacherAssigned: function() {
+    //alert($('#teachers').val());
     Tecnotek.ajaxCall(Tecnotek.UI.urls["createTeacherAssignedURL"],
-        {   periodId: Tecnotek.UI.vars["periodId"],
-            teacherId: $('#courseFormTeacher').val(),
+        {   
+            periodId: Tecnotek.UI.vars["periodId"],
+            teacherId: $('#teachers').val(),
             courseClassId: $('#courseToAsociateFormTeacher').val(),
             groupId: $('#groupToFormTeacher').val()
         },
